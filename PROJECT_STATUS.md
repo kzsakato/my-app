@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-09（GitHub Pages公開準備）
+最終更新: 2026-09-10（実運用フィードバック：予定一覧・カテゴリ順を実装）
 
 ## 1. アプリの目的
 
@@ -25,6 +25,12 @@
 - 種目一覧・実施項目一覧のカテゴリ絞り込みと非表示表示、カテゴリ一覧の非表示表示は、編集画面から戻っても維持する。
 - 設定 → データ管理で、状態全体を日付付きJSONとしてバックアップできる。JSON復元はv4形式・必須配列・プロフィールを確認し、確認後に端末内データ全体を置換する。
 - `.github/workflows/deploy-pages.yml` を追加。`main` へのpushでGitHub Actionsが本番ビルドし、GitHub Pagesへ公開する。
+- GitHub Pagesの`/my-app/`配下でJS/CSSを正しく参照するため、`vite.config.ts` に`base: './'`を設定した。
+- データスキーマをv5へ移行。部位に「腕」を追加し、既存の「体幹・腕」カテゴリにも自動追加する。肩は既存のまま。
+- カテゴリ一覧で↑／↓により登録順を保存できる。各カテゴリ順表示・カテゴリ選択肢はこの順を使用する。
+- トップにカテゴリ表示／推奨曜日表示の切替を追加。推奨曜日表示は過去推奨日の未実施を先頭にし、任意・未来推奨は表示しない。実施済表示は任意、初期オフ。
+- トップの実施数は予定単位で表示する。今日=`今日推奨の完了数/今日推奨予定数`、今週=`週メニュー予定の完了数/全予定数`。追加トレーニングは含めない。
+- カテゴリ画面に実施済表示チェックを追加し、初期は未実施のみ表示する。
 - グラフは直近12区間、空白期間は0、当期は「途中」と表示。縦軸は最大値・中央値・0を表示する。
 - トップ下部に今週の総トレーニング負荷、完了週の平均負荷、ACWR（直近完了週÷その前4週平均）を表示。5週未満は「データ不足」。
 
@@ -41,7 +47,7 @@
 
 ## 3. 現在の作業内容
 
-- 最後に完了した課題: 実行取消を今週分だけに限定し、JSONバックアップ／復元を追加して本番PWAをビルドした。
+- 最後に完了した課題: 実運用フィードバックのUI・集計変更を実装し、本番ビルドを確認した。GitHubへのpush待ち。
 - 現在発生している問題: GitHub Pagesを選択済み。公開先は`https://github.com/kzsakato/my-app.git`。ローカルGitリポジトリは初期化済みだが、Codex実行環境が`.git`へのロックファイル作成を拒否するため、Codexからコミット・pushできない。ユーザー自身のPowerShellでGit操作を行う必要がある。
 - 現在発生している問題: 自動テストは未作成。計算結果とスマホ表示は実データで手動確認が必要。
 - 注意: v3保存データをv4へ移行した時点を`analysisStartDate`に設定する。既存のテスト実績は分析対象から除外される。
@@ -61,8 +67,8 @@
 
 | パス | 役割 | 現在の状態 |
 |---|---|---|
-| `src/App.tsx` | 画面、設定、実行、集計・折れ線グラフ、JSON入出力 | バックアップ／復元まで実装済み。 |
-| `src/data.ts` | 型、初期データ、IndexedDB、v3→v4移行 | v4実装済み。 |
+| `src/App.tsx` | 画面、設定、実行、集計・折れ線グラフ、JSON入出力 | v5画面変更まで実装済み。 |
+| `src/data.ts` | 型、初期データ、IndexedDB、スキーマ移行 | v4→v5移行を実装済み。 |
 | `src/styles.css` | スマホ優先スタイル、分析グラフ | 分析表示用スタイルを追加済み。 |
 | `.github/workflows/deploy-pages.yml` | GitHub Pages公開用GitHub Actions | 追加済み。公開リポジトリへのpush後に実行される。 |
 | `.gitignore` | Gitで追跡しない生成物 | `node_modules`、`dist`等を対象に追加済み。 |
@@ -78,7 +84,7 @@
 ## 7. 次にやるべきこと
 
 1. `src/App.tsx` の `valueOf`、`LoadSummary`、`Analysis` を確認する。
-2. ユーザー自身のPowerShellで、ローカルGitのコミットユーザー名・メールを設定してから、`git add .`、初回コミット、`git remote add origin https://github.com/kzsakato/my-app.git`、`git push -u origin main`を実行する。GitHubリポジトリの Settings → Pages で公開元を「GitHub Actions」に設定する。
+2. ユーザー自身のPowerShellで、`git add src/App.tsx src/data.ts src/styles.css vite.config.ts PROJECT_STATUS.md`、`git commit -m "Improve weekly training workflow"`、`git push`を実行する。GitHub Actionsの成功後、`https://kzsakato.github.io/my-app/`で更新を確認する。
 
 3. 次を実行してPCまたはLAN上のスマホで最終確認する。
 
