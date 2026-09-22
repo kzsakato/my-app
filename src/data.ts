@@ -1,21 +1,30 @@
 import { openDB } from 'idb'
+import { DATA_VERSION, type AppData, type Category, type Exercise, type Item, type Menu, type MenuItem, type Profile, type Session, type SettingHistory, validateCanonical } from './domain'
 
-export type MeasureType='reps'|'time'; export type WeightMode='total'|'perSide'
-export type Exercise={id:string;name:string;bodyPart:string;measureType:MeasureType;usesWeight:boolean;weightMode?:WeightMode;selfWeightRatio?:number;secondsLoadRatio?:number;archived?:boolean}
-export type Category={id:string;name:string;bodyParts:string[];exerciseIds:string[];archived?:boolean}
-export type Item={id:string;name:string;categoryId:string;exerciseId:string;weight?:number;reps?:number;seconds?:number;sets:number;seat?:string;memo1?:string;memo1Date?:string;memo2?:string;memo2Date?:string;archived?:boolean}
-export type Menu={id:string;name:string;memo?:string;archived?:boolean};export type MenuItem={id:string;menuId:string;itemId:string;recommendedDay:number|null;archived?:boolean}
-export type Session={id:string;itemId:string;menuId?:string;menuItemId?:string;date:string;weight?:number;reps?:number;seconds?:number;sets:number;weightFactor?:number;bodyWeight?:number;memo2?:string;isExtra?:boolean}
-export type SettingHistory={id:string;itemId:string;date:string;weight?:number;reps?:number;seconds?:number;sets:number;seat?:string;memo1?:string}
-export type Profile={weight:number;height?:number;age?:number;sex?:string;analysisStartDate:string}
-export type AppData={version:5;activeMenuId:string;profile:Profile;exercises:Exercise[];categories:Category[];items:Item[];menus:Menu[];menuItems:MenuItem[];sessions:Session[];settingHistories:SettingHistory[]}
-export const bodyParts=['胸','肩','腕','背中','体幹','下半身'] as const;const uid=(x:string)=>`seed-${x}`
+export type { AppData, Category, Exercise, Item, Menu, MenuItem, Profile, Session, SettingHistory } from './domain'
+export type { MeasureType, WeightMode } from './domain'
+export { createSessionSnapshot, makeBackup, migrateV5, parseBackup, validateCanonical } from './domain'
+
+export const bodyParts=['胸','肩','腕','背中','体幹','下半身'] as const
+const seedId=(x:string)=>`seed-${x}`
 const raw=[['pull','プルダウン','背中','reps',1,0],['shrug','シュラッグ','背中','reps',1,1],['row-o','ロー（オーバーグリップ）','背中','reps',1,0],['row-u','ロー（アンダーグリップ）','背中','reps',1,0],['backext','バックエクステンション','背中','reps',1,0],['pullover','ストレートアーム・プルオーバー','背中','reps',1,0],['dbpress','ダンベルプレス','胸','reps',1,0],['fly','ペクトラルフライ（マシン）','胸','reps',1,0],['bench','ベンチプレス（逆手）','胸','reps',1,0],['inc','インクラインショルダープレス','肩','reps',1,0],['side','サイドレイズ','肩','reps',1,1],['bend','ダンベルサイドベント','体幹','reps',1,1],['raise','レッグレイズ','体幹','reps',0,0],['rotation','トーソローテーション','体幹','reps',1,0],['front','フロントプランク','体幹','time',0,0],['sideplank','サイドプランク','体幹','time',0,0],['legpress','レッグプレス','下半身','reps',1,0],['calf','カーフレイズ','下半身','reps',1,0],['curl','レッグカール','下半身','reps',1,0],['add','ヒップアダクション','下半身','reps',1,0],['abd','ヒップアブダクション','下半身','reps',1,0]] as const
-const exercises=raw.map(([i,name,bodyPart,measure,uses,side])=>({id:uid(i),name,bodyPart,measureType:measure as MeasureType,usesWeight:Boolean(uses),weightMode:side?'perSide' as WeightMode:'total' as WeightMode,selfWeightRatio:0,secondsLoadRatio:0}))
-const groups=[['chest','胸・肩',['胸','肩']],['back','背中',['背中']],['core','体幹・腕',['体幹','腕']],['lower','下半身',['下半身']]] as const;const cats=groups.map(([i,name,parts])=>({id:uid(i),name,bodyParts:[...parts],exerciseIds:exercises.filter(e=>(parts as readonly string[]).includes(e.bodyPart)).map(e=>e.id)}))
-const values:any[]=[[42.5,15,,5],[34,15,,5],[18,20,,5],[54,15,,5],[89,15,,5],[24,15,,5],[18,15,,5],[22.5,15,,5],[30,15,,3],[14,15,,5],[4,20,,5],[18,20,,5],[,10,,4],[57,15,,5],[,,30,3],[,,30,3],[115,15,,5],[125,15,,5],[42.5,15,,5],[124,15,,5],[,,,3]]
-const items=exercises.map((e,n)=>{const v=values[n],c=cats.find(x=>x.exerciseIds.includes(e.id))!;return{id:uid(`item-${n}`),name:e.name,categoryId:c.id,exerciseId:e.id,weight:v[0],reps:v[1],seconds:v[2],sets:v[3]}})
-const base:AppData={version:5,activeMenuId:uid('ramp'),profile:{weight:66,analysisStartDate:localDate()},exercises,categories:cats,items,menus:[{id:uid('ramp'),name:'助走トレーニング'},{id:uid('normal'),name:'通常メニュー'}],menuItems:items.map((x,n)=>({id:uid(`mi-${n}`),menuId:uid('ramp'),itemId:x.id,recommendedDay:null})),sessions:[],settingHistories:[]}
+const exercises:Exercise[]=raw.map(([i,name,bodyPart,measure,uses,side])=>({id:seedId(i),name,bodyPart,measureType:measure,usesWeight:Boolean(uses),weightMode:side?'perSide':'total',selfWeightRatio:0,secondsLoadRatio:0}))
+const groups=[['chest','胸・肩',['胸','肩']],['back','背中',['背中']],['core','体幹・腕',['体幹','腕']],['lower','下半身',['下半身']]] as const
+const cats:Category[]=groups.map(([i,name,parts])=>({id:seedId(i),name,bodyParts:[...parts],exerciseIds:exercises.filter(e=>(parts as readonly string[]).includes(e.bodyPart)).map(e=>e.id)}))
+const values:(number|undefined)[][]=[[42.5,15,undefined,5],[34,15,undefined,5],[18,20,undefined,5],[54,15,undefined,5],[89,15,undefined,5],[24,15,undefined,5],[18,15,undefined,5],[22.5,15,undefined,5],[30,15,undefined,3],[14,15,undefined,5],[4,20,undefined,5],[18,20,undefined,5],[undefined,10,undefined,4],[57,15,undefined,5],[undefined,undefined,30,3],[undefined,undefined,30,3],[115,15,undefined,5],[125,15,undefined,5],[42.5,15,undefined,5],[124,15,undefined,5],[undefined,undefined,undefined,3]]
+const items:Item[]=exercises.map((e,n)=>{const v=values[n],c=cats.find(x=>x.exerciseIds.includes(e.id))!;return{id:seedId(`item-${n}`),name:e.name,categoryId:c.id,exerciseId:e.id,weight:v[0],reps:v[1],seconds:v[2],sets:v[3]??0}})
+export const base:AppData={version:DATA_VERSION,activeMenuId:seedId('ramp'),profile:{weight:66,analysisStartDate:localDate()},exercises,categories:cats,items,menus:[{id:seedId('ramp'),name:'助走トレーニング'},{id:seedId('normal'),name:'通常メニュー'}],menuItems:items.map((x,n)=>({id:seedId(`mi-${n}`),menuId:seedId('ramp'),itemId:x.id,recommendedDay:null})),sessions:[],settingHistories:[]}
+
 const dbPromise=openDB('training-check',5,{upgrade(db){if(!db.objectStoreNames.contains('state'))db.createObjectStore('state')}})
-export async function loadData():Promise<AppData>{const db=await dbPromise,v=await db.get('state','app');if(v?.version===5)return v;if(!v?.items)return base;const es=(v.exercises??exercises).map((e:any)=>({...e,selfWeightRatio:e.selfWeightRatio??0,secondsLoadRatio:e.secondsLoadRatio??0})),rawCats=v.categories??cats,cs=rawCats.map((c:Category)=>c.name==='体幹・腕'&&!c.bodyParts.includes('腕')?{...c,bodyParts:[...c.bodyParts,'腕']}:c);const xs:Item[]=v.items.map((x:any)=>{const e=es.find((z:Exercise)=>z.id===x.exerciseId)||es.find((z:Exercise)=>z.name===x.name)||exercises[0],c=cs.find((z:Category)=>z.id===x.categoryId)||cs.find((z:Category)=>z.exerciseIds.includes(e.id))||cats[0];return{...x,categoryId:c.id,exerciseId:e.id}});const menus=v.menus??base.menus;return{version:5,activeMenuId:v.activeMenuId??menus[0].id,profile:{weight:66,analysisStartDate:localDate(),...(v.profile??{})},exercises:es,categories:cs,items:xs,menus,menuItems:(v.menuItems??xs.map((x:Item,n:number)=>({id:uid(`migrate-${n}`),menuId:menus[0].id,itemId:x.id}))).map((m:any)=>({...m,recommendedDay:Array.isArray(m.recommendedDays)?(m.recommendedDays[0]??null):m.recommendedDay??null})),sessions:v.sessions??[],settingHistories:v.settingHistories??[]}}
-export async function saveData(d:AppData){const db=await dbPromise;await db.put('state',d,'app')};export function localDate(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};export function weekStart(d=new Date()){const x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x}
+export type LoadResult={kind:'ready';data:AppData}|{kind:'migration';legacy:unknown}|{kind:'invalid';errors:string[]}
+export async function loadData():Promise<LoadResult>{
+ const db=await dbPromise,v:unknown=await db.get('state','app')
+ if(v===undefined||v===null)return{kind:'ready',data:base}
+ if((v as {version?:unknown}).version===DATA_VERSION){const checked=validateCanonical(v);return checked.errors.length?{kind:'invalid',errors:checked.errors.map(x=>`${x.path}: ${x.message}`)}:{kind:'ready',data:v as AppData}}
+ if((v as {version?:unknown}).version===5)return{kind:'migration',legacy:v}
+ return{kind:'invalid',errors:['version: 未対応の保存データです。復元またはサポートへの相談が必要です。']}
+}
+export async function saveData(d:AppData){const checked=validateCanonical(d);if(checked.errors.length)throw new Error(checked.errors.map(x=>`${x.path}: ${x.message}`).join('\n'));const db=await dbPromise;await db.put('state',d,'app')}
+export async function readBackData(){return loadData()}
+export function localDate(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+export function weekStart(d=new Date()){const x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x}
