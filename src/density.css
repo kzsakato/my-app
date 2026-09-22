@@ -1,0 +1,9 @@
+/* OIC-005 trial: apply denser spacing to the extra-training list only. */
+.list-density-trial .row{padding:9px 0}
+.list-density-trial .row small{margin-top:1px}
+
+/* OIC-007: retain 0.25kg controls while adding 1kg steps. */
+.weight-controls{display:flex;align-items:center;gap:4px}
+.weight-controls button{width:36px;height:42px;border:0;border-radius:9px;background:#e6ebe5;font-size:15px;white-space:nowrap}
+.weight-controls b{min-width:72px;text-align:center;font-size:14px;white-space:nowrap}
+@media(max-width:360px){.weight-controls{gap:2px}.weight-controls button{width:33px}.weight-controls b{min-width:64px;font-size:13px}}
