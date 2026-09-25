@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-22（H-20260922-07: v6正式データ境界・明示Migration・Backup検証を実装、ローカル本番ビルド成功）
+最終更新: 2026-09-25（H-20260924-06: canonical Stage 0の純粋domain基盤と自動テストを追加、通常PowerShellでテスト・本番ビルド成功）
 
 ## 1. アプリの目的
 
@@ -26,6 +26,7 @@
 ### 実装中の機能
 
 - Issue #16のAndroid実機確認およびQA確認。追加トレーニング一覧以外への高密度表示の横断適用は保留。
+- canonical正式データへの切替は未着手。Stage 0として、現行runtimeから分離した型・validation・操作scaffold・fixture・自動テストだけを追加済み。
 
 ### 未着手の機能
 
@@ -37,9 +38,9 @@
 
 ## 3. 現在の作業内容
 
-- 最後に取り組んだ課題: H-20260922-07の正式データ境界実装。
-- 完了状況: `src/domain.ts`へpure domain validation／v5 Migration／backup envelope／MenuProposal検証・新規Menu生成を実装し、UI・IndexedDB adapterを分離した。`npm run build` は成功。
-- 現在の問題: v5→v6移行、v6 backup restore、Session snapshotによる分析をAndroid実機で確認していない。自動テストは未作成。
+- 最後に取り組んだ課題: H-20260924-06のcanonical Stage 0基盤。
+- 完了状況: `src/canonical/` に、canonical contract用の純粋型、validation、操作scaffold、payload識別、fixture、Vitestテストを追加した。既存のReact runtime、IndexedDB、UI、legacy migration実行、既存データは接続・変更していない。`pnpm test` は15件成功、`pnpm build` は成功。
+- 現在の問題: Codex実行環境は `node_modules` 読取りをEPERMで拒否するため、依存ツールの実行確認は通常PowerShellで行う必要がある。v5→v6移行、v6 backup restore、Session snapshotによる分析をAndroid実機で確認していない。
 
 ## 4. 重要な設計上の決定
 
@@ -57,6 +58,8 @@
 |---|---|---|
 | `src/App.tsx` | 画面、実行、集計、設定、分析、JSON入出力 | Issue #16のUI先行改修を実装済み。 |
 | `src/domain.ts` | 正式データ型、参照検証、Migration、backup／proposal境界 | H-20260922-07で追加。UIやIndexedDBに依存しない。 |
+| `src/canonical/` | canonical正式化予定のStage 0純粋domain基盤 | runtime未接続。types／validation／operations／識別fixture／Vitestテストを保持。 |
+| `vitest.config.ts` | Stage 0自動テスト設定 | Node環境で `src/**/*.test.ts` を実行する。 |
 | `src/data.ts` | 初期データとIndexedDB adapter | v6のみ読込。v5はMigration画面へ渡す。 |
 | `src/styles.css` | 既存のスマホ優先スタイル | 今回は変更なし。 |
 | `src/density.css` | UI先行改修用の追加スタイル | 追加トレーニング一覧の高密度表示試行、重量±1kg操作のスタイル。 |
@@ -66,8 +69,8 @@
 
 ## 6. 動作確認
 
-- 実行済み: 2026-09-22に `npm run build` が成功（TypeScript build + Vite production build）。
-- 確認できたこと: TypeScriptがv6 domain型・Migration／backup UI・Session snapshotをコンパイルでき、PWA配布物を `dist/` に生成できる。
+- 実行済み: 2026-09-25に通常PowerShellで `pnpm test` が15件成功、`pnpm build` が成功（TypeScript build + Vite production build）。
+- 確認できたこと: Stage 0 canonical fixture／識別／validation／operation scaffoldが自動テストを通過し、既存アプリを含むPWA配布物を `dist/` に生成できる。
 - 未確認: Android実機でのv5移行（Recovery Pointを保存後にSession／SettingHistory除外）、v6 backup restore、Session snapshot分析。Issue #16のUI先行改修も実機確認が必要。
 - 既知の不具合: なし。OIC-009は当日Sessionの件数を分子にするため、同じItemを複数回完了した場合もその回数を数える。
 
@@ -78,3 +81,4 @@
 3. v6バックアップを作成し、別端末またはテストデータで復元する。エラーは中止、警告は確認後だけ復元されることを確認する。
 4. 実施完了後、Sessionにsnapshotが残り、種目設定変更後も分析換算係数がSessionの値を使うことを確認する。
 5. Issue #16のUI先行改修もAndroidで確認し、QAへH-20260922-07の実装・テスト結果を返却する。
+6. canonical runtime/storage/UIの切替、legacy migration実行、cutover／rollbackは、Data Design・PMOの次段階HandoffとOwner GOなしに開始しない。まず `src/canonical/` と `training-project/handoff/H-20260924-06.md` を確認する。
