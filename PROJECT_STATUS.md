@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-25（H-20260925-01: canonical Stage 1のlegacy preview／Recovery Point／再作成候補を追加、通常PowerShellでテスト・本番ビルド成功）
+最終更新: 2026-09-25（H-20260925-09: Playwright Chromium E0/E1 Trialを追加、Unit／Build／E2E成功）
 
 ## 1. アプリの目的
 
@@ -28,6 +28,7 @@
 - Issue #16のAndroid実機確認およびQA確認。追加トレーニング一覧以外への高密度表示の横断適用は保留。
 - canonical正式データへの切替は未着手。Stage 0として、現行runtimeから分離した型・validation・操作scaffold・fixture・自動テストだけを追加済み。
 - Stage 1として、legacy v5/v6の非破壊previewと、現在のactive stateとは分離したRecovery Point保存・取得を追加済み。canonical storageへの切替・legacyの自動canonical化は未着手。
+- Playwright ChromiumのE0/E1 Trialを追加済み。Vitestはpure domain、Playwrightはbrowser UI・IndexedDB・日時・ファイル操作のE2Eとして分離している。
 
 ### 未着手の機能
 
@@ -39,8 +40,8 @@
 
 ## 3. 現在の作業内容
 
-- 最後に取り組んだ課題: H-20260925-01のcanonical Stage 1基盤。
-- 完了状況: `src/canonical/legacy.ts` にlegacy入力の構造識別・再作成previewを追加した。Profileの同義fieldだけを候補化し、旧Master／Menu／Session／SettingHistoryを自動canonical化しない。`src/data.ts` のIndexedDB `recovery` storeに、active stateと分離した最新legacy sourceのraw JSONを保存・取得できる。DataManagementからpreview・Recovery Point保存・保存済みPoint確認を行える。`pnpm test` は20件成功、`pnpm build` は成功。
+- 最後に取り組んだ課題: H-20260925-09のPlaywright E0/E1 Trial。
+- 完了状況: `playwright.config.ts`、`e2e/`、CI workflowを追加した。Chromiumで固定日時、IndexedDB v6 test seed／read-back、失敗traceを使う。3本のE2E（実施・週境界・backup restore）が成功。`pnpm test` は20件、`pnpm build`、`pnpm test:e2e` は3件成功。
 - 現在の問題: Codex実行環境は `node_modules` 読取りをEPERMで拒否するため、依存ツールの実行確認は通常PowerShellで行う必要がある。v5→v6移行、v6 backup restore、Session snapshotによる分析をAndroid実機で確認していない。
 
 ## 4. 重要な設計上の決定
@@ -62,25 +63,29 @@
 | `src/canonical/` | canonical正式化予定のStage 0純粋domain基盤 | runtime未接続。types／validation／operations／識別fixture／Vitestテストを保持。 |
 | `src/canonical/legacy.ts` | Stage 1のlegacy再作成preview | legacy payloadを構造識別し、Profile候補と参照材料件数だけを非破壊で生成する。 |
 | `vitest.config.ts` | Stage 0自動テスト設定 | Node環境で `src/**/*.test.ts` を実行する。 |
+| `playwright.config.ts` | Chromium E2E Trial設定 | ViteをE2E時だけ起動し、failure evidenceを保持する。 |
+| `e2e/` | Playwright E0/E1 browser test | production hookなしでIndexedDB seed/read-backとbrowser clockを扱う。 |
+| `.github/workflows/test.yml` | test CI | Vitest/build jobとChromium Playwright jobを分離する。 |
 | `src/data.ts` | 初期データとIndexedDB adapter | v6のみ読込。v5はMigration画面へ渡す。 |
 | `src/styles.css` | 既存のスマホ優先スタイル | 今回は変更なし。 |
 | `src/density.css` | UI先行改修用の追加スタイル | 追加トレーニング一覧の高密度表示試行、重量±1kg操作のスタイル。 |
 | `src/main.tsx` | React起動とスタイル読込 | `density.css`を追加読込。 |
 | `PROJECT_STATUS.md` | 開発再開用の状態記録 | この内容に更新済み。 |
-| `training-project/HANDOFF.md` | Role間の一時Handoff | Issue #16の完了時にQA返却情報を更新予定。 |
+| `training-project/handoff/H-20260925-09.md` | Playwright TrialのRole間Handoff | DONE。my-appの実装commitと検証結果を記録。 |
 
 ## 6. 動作確認
 
-- 実行済み: 2026-09-25に通常PowerShellで `pnpm test` が20件成功、`pnpm build` が成功（TypeScript build + Vite production build）。
-- 確認できたこと: Stage 0 canonical fixture／識別／validation／operation scaffold、およびStage 1のlegacy再作成previewが自動テストを通過し、既存アプリを含むPWA配布物を `dist/` に生成できる。
+- 実行済み: 2026-09-25に通常PowerShellで `pnpm test` が20件成功、`pnpm build` が成功、`pnpm test:e2e` がChromiumで3件成功。
+- 確認できたこと: Stage 0 canonical fixture／識別／validation／operation scaffold、Stage 1 legacy再作成preview、およびE2E Trialの実施保存・週境界・backup restoreが通過し、既存アプリを含むPWA配布物を `dist/` に生成できる。
 - 未確認: Android実機でのv5移行（Recovery Pointを保存後にSession／SettingHistory除外）、v6 backup restore、Session snapshot分析。Issue #16のUI先行改修も実機確認が必要。
 - 既知の不具合: なし。OIC-009は当日Sessionの件数を分子にするため、同じItemを複数回完了した場合もその回数を数える。
 
 ## 7. 次にやるべきこと
 
-1. rootの変更対象をユーザーPowerShellでコミットし、GitHub Pagesへpushする（Codexはroot `.git/index.lock` を作成できない）。
+1. GitHub ActionsのTest workflowの初回実行結果を確認する。失敗時はActionsログと `playwright-report` artifactを確認する。
 2. 初回v6公開後、Androidでv5移行画面を確認する。復旧JSONを保存後、移行により設定を保持し、Session／SettingHistoryが除外されることを確認する。
 3. v6バックアップを作成し、別端末またはテストデータで復元する。エラーは中止、警告は確認後だけ復元されることを確認する。
 4. 実施完了後、Sessionにsnapshotが残り、種目設定変更後も分析換算係数がSessionの値を使うことを確認する。
 5. Issue #16のUI先行改修もAndroidで確認し、QAへH-20260922-07の実装・テスト結果を返却する。
 6. canonical runtime/storage/UIの切替、legacy migration実行、cutover／rollbackは、Data Design・PMOの次段階HandoffとOwner GOなしに開始しない。まず `src/canonical/` と `training-project/handoff/H-20260925-01.md` を確認する。
+7. Playwright Trialを正式採用・拡張するかは別判断。現時点ではChromiumのみ。UIまたは現行v6 IndexedDB構造を変更する場合、`e2e/` のfixture・selectorを更新してから `pnpm test:e2e` を実行する。
