@@ -1,5 +1,7 @@
 import { openDB } from 'idb'
 import { DATA_VERSION, type AppData, type Category, type Exercise, type Item, type Menu, type MenuItem, type Profile, type Session, type SettingHistory, validateCanonical } from './domain'
+import { loadCanonicalStartup, type CanonicalStorage, type CutoverState, type LegacyBaseline } from './canonical/cutover'
+import type { CanonicalAppData } from './canonical/types'
 
 export type { AppData, Category, Exercise, Item, Menu, MenuItem, Profile, Session, SettingHistory } from './domain'
 export type { MeasureType, WeightMode } from './domain'
@@ -15,10 +17,32 @@ const values:(number|undefined)[][]=[[42.5,15,undefined,5],[34,15,undefined,5],[
 const items:Item[]=exercises.map((e,n)=>{const v=values[n],c=cats.find(x=>x.exerciseIds.includes(e.id))!;return{id:seedId(`item-${n}`),name:e.name,categoryId:c.id,exerciseId:e.id,weight:v[0],reps:v[1],seconds:v[2],sets:v[3]??0}})
 export const base:AppData={version:DATA_VERSION,activeMenuId:seedId('ramp'),profile:{weight:66,analysisStartDate:localDate()},exercises,categories:cats,items,menus:[{id:seedId('ramp'),name:'助走トレーニング'},{id:seedId('normal'),name:'通常メニュー'}],menuItems:items.map((x,n)=>({id:seedId(`mi-${n}`),menuId:seedId('ramp'),itemId:x.id,recommendedDay:null})),sessions:[],settingHistories:[]}
 
-const dbPromise=openDB('training-check',6,{upgrade(db){if(!db.objectStoreNames.contains('state'))db.createObjectStore('state');if(!db.objectStoreNames.contains('recovery'))db.createObjectStore('recovery')}})
+const dbPromise=openDB('training-check',7,{upgrade(db){
+ if(!db.objectStoreNames.contains('state'))db.createObjectStore('state')
+ if(!db.objectStoreNames.contains('recovery'))db.createObjectStore('recovery')
+ if(!db.objectStoreNames.contains('canonical'))db.createObjectStore('canonical')
+ if(!db.objectStoreNames.contains('cutover'))db.createObjectStore('cutover')
+ if(!db.objectStoreNames.contains('baseline'))db.createObjectStore('baseline')
+}})
 export type RecoveryPoint={id:'latest-legacy-source';sourceKind:string;capturedAt:string;rawJson:string}
-export type LoadResult={kind:'ready';data:AppData}|{kind:'migration';legacy:unknown}|{kind:'invalid';errors:string[]}
+const canonicalKey='app',cutoverKey='state',baselineKey='pre-migration-legacy-source'
+/**
+ * Stage 2 adapter. The legacy `state/app` value and the Stage 1 `recovery`
+ * value remain separate and are never overwritten by these operations.
+ */
+export const canonicalStorage:CanonicalStorage={
+ async readCutoverState(){const db=await dbPromise;return (await db.get('cutover',cutoverKey) as CutoverState|undefined)??{authoritative:false}},
+ async writeCutoverState(value){const db=await dbPromise;await db.put('cutover',value,cutoverKey)},
+ async readBaseline(){const db=await dbPromise;return db.get('baseline',baselineKey) as Promise<LegacyBaseline|undefined>},
+ async writeBaseline(value){const db=await dbPromise;await db.put('baseline',value,baselineKey)},
+ async readCanonical(){const db=await dbPromise;return db.get('canonical',canonicalKey) as Promise<CanonicalAppData|undefined>},
+ async writeCanonical(value){const db=await dbPromise;await db.put('canonical',value,canonicalKey)},
+}
+export type LoadResult={kind:'ready';data:AppData}|{kind:'migration';legacy:unknown}|{kind:'invalid';errors:string[]}|{kind:'canonical-ready';data:CanonicalAppData}|{kind:'canonical-recovery';errors:string[]}
 export async function loadData():Promise<LoadResult>{
+ const canonical=await loadCanonicalStartup(canonicalStorage)
+ if(canonical.kind==='canonical-ready')return{kind:'canonical-ready',data:canonical.data}
+ if(canonical.kind==='canonical-recovery-required')return{kind:'canonical-recovery',errors:canonical.diagnostics.map(x=>`${x.stage}: ${x.message}`)}
  const db=await dbPromise,v:unknown=await db.get('state','app')
  if(v===undefined||v===null)return{kind:'ready',data:base}
  if((v as {version?:unknown}).version===DATA_VERSION){const checked=validateCanonical(v);return checked.errors.length?{kind:'invalid',errors:checked.errors.map(x=>`${x.path}: ${x.message}`)}:{kind:'ready',data:v as AppData}}

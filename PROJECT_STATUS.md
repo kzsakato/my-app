@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-25（H-20260925-09: Playwright Chromium E0/E1 Trialを追加、Unit／Build／E2E成功）
+最終更新: 2026-09-26（H-20260926-09: canonical Stage 2の保存・cutover・復旧基盤を追加、Unit／Build／E2E成功）
 
 ## 1. アプリの目的
 
@@ -26,7 +26,7 @@
 ### 実装中の機能
 
 - Issue #16のAndroid実機確認およびQA確認。追加トレーニング一覧以外への高密度表示の横断適用は保留。
-- canonical正式データへの切替は未着手。Stage 0として、現行runtimeから分離した型・validation・操作scaffold・fixture・自動テストだけを追加済み。
+- canonical正式データのStage 2基盤を追加済み。専用IndexedDB store、切替marker、移行前legacy baseline、cutover／read-back／rollback、canonical backup Restore、起動時のcanonical authority分岐を実装した。通常の現行画面はlegacy v6のままで、cutoverを起動するUIおよびcanonicalデータを通常画面へ接続するUIは未実装。
 - Stage 1として、legacy v5/v6の非破壊previewと、現在のactive stateとは分離したRecovery Point保存・取得を追加済み。canonical storageへの切替・legacyの自動canonical化は未着手。
 - Playwright ChromiumのE0/E1 Trialを追加済み。Vitestはpure domain、Playwrightはbrowser UI・IndexedDB・日時・ファイル操作のE2Eとして分離している。
 
@@ -40,14 +40,16 @@
 
 ## 3. 現在の作業内容
 
-- 最後に取り組んだ課題: H-20260925-09のPlaywright E0/E1 Trial。
-- 完了状況: `playwright.config.ts`、`e2e/`、CI workflowを追加した。Chromiumで固定日時、IndexedDB v6 test seed／read-back、失敗traceを使う。3本のE2E（実施・週境界・backup restore）が成功。`pnpm test` は20件、`pnpm build`、`pnpm test:e2e` は3件成功。
-- 現在の問題: Codex実行環境は `node_modules` 読取りをEPERMで拒否するため、依存ツールの実行確認は通常PowerShellで行う必要がある。v5→v6移行、v6 backup restore、Session snapshotによる分析をAndroid実機で確認していない。
+- 最後に取り組んだ課題: H-20260926-09のcanonical Stage 2。
+- 完了状況: `src/canonical/cutover.ts` と `src/data.ts` に、legacy baseline保護、canonical保存・検証・rollback、明示的canonical Restore、startup authority分岐を追加した。E2E helperはIndexedDB v7へ追従済み。`pnpm test` は29件、`pnpm build`、`pnpm test:e2e` は3件成功。
+- 現在の問題: Codex実行環境は `node_modules` 読取りをEPERMで拒否するため、依存ツールの実行確認は通常PowerShellで行う必要がある。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）は未検証。v5→v6移行、v6 backup restore、Session snapshotによる分析をAndroid実機で確認していない。
 
 ## 4. 重要な設計上の決定
 
 - 技術: TypeScript + React + Vite + vite-plugin-pwa + idb。Playストア用ネイティブアプリではない。
 - 保存: AppData schema version 6。JSON Exportはenvelope内のAppData全体、Restoreは検証と利用者確認後に端末内データ全体を置換する。
+- canonical Stage 2の保存は旧AppDataとは別のIndexedDB store（`canonical`、`cutover`、`baseline`）を使う。既存の`state/app`とStage 1の`recovery`は切替成功前後も削除・上書きしない。
+- canonical authority後の起動失敗はlegacyへ自動フォールバックせず、明示的復旧状態で停止する。canonical cutover前の失敗ではmarkerをlegacy-activeへ戻すよう試みる。
 - 関係: Exercise → Item → MenuItem（週メニュー所属）。Categoryは表示／分析のまとまり。
 - 日付は端末のローカル日付、週は月曜始まり。
 - 削除は完全削除でなく `archived` による非表示化。
@@ -62,11 +64,13 @@
 | `src/domain.ts` | 正式データ型、参照検証、Migration、backup／proposal境界 | H-20260922-07で追加。UIやIndexedDBに依存しない。 |
 | `src/canonical/` | canonical正式化予定のStage 0純粋domain基盤 | runtime未接続。types／validation／operations／識別fixture／Vitestテストを保持。 |
 | `src/canonical/legacy.ts` | Stage 1のlegacy再作成preview | legacy payloadを構造識別し、Profile候補と参照材料件数だけを非破壊で生成する。 |
+| `src/canonical/cutover.ts` | Stage 2のcanonical storage/cutover/Restore境界 | baseline保護、保存後read-back、authority marker、rollback、明示的Restore入力検証を実装済み。 |
+| `src/canonical/cutover.test.ts` | Stage 2自動テスト | in-memory adapterで保存失敗、read-back不一致、runtime/restart失敗、rollback/recovery失敗を注入して検証する。 |
 | `vitest.config.ts` | Stage 0自動テスト設定 | Node環境で `src/**/*.test.ts` を実行する。 |
 | `playwright.config.ts` | Chromium E2E Trial設定 | ViteをE2E時だけ起動し、failure evidenceを保持する。 |
 | `e2e/` | Playwright E0/E1 browser test | production hookなしでIndexedDB seed/read-backとbrowser clockを扱う。 |
 | `.github/workflows/test.yml` | test CI | Vitest/build jobとChromium Playwright jobを分離する。 |
-| `src/data.ts` | 初期データとIndexedDB adapter | v6のみ読込。v5はMigration画面へ渡す。 |
+| `src/data.ts` | 初期データとIndexedDB adapter | legacy v6／v5読込に加え、DB v7のcanonical/cutover/baseline adapterとauthority起動分岐を実装済み。 |
 | `src/styles.css` | 既存のスマホ優先スタイル | 今回は変更なし。 |
 | `src/density.css` | UI先行改修用の追加スタイル | 追加トレーニング一覧の高密度表示試行、重量±1kg操作のスタイル。 |
 | `src/main.tsx` | React起動とスタイル読込 | `density.css`を追加読込。 |
@@ -75,9 +79,9 @@
 
 ## 6. 動作確認
 
-- 実行済み: 2026-09-25に通常PowerShellで `pnpm test` が20件成功、`pnpm build` が成功、`pnpm test:e2e` がChromiumで3件成功。
-- 確認できたこと: Stage 0 canonical fixture／識別／validation／operation scaffold、Stage 1 legacy再作成preview、およびE2E Trialの実施保存・週境界・backup restoreが通過し、既存アプリを含むPWA配布物を `dist/` に生成できる。
-- 未確認: Android実機でのv5移行（Recovery Pointを保存後にSession／SettingHistory除外）、v6 backup restore、Session snapshot分析。Issue #16のUI先行改修も実機確認が必要。
+- 実行済み: 2026-09-26に通常PowerShellで `pnpm test` が29件成功、`pnpm build` が成功、`pnpm test:e2e` がChromiumで3件成功。
+- 確認できたこと: Stage 2のcandidate識別・validation、baseline保存、canonical保存/read-back、runtime/restart相当read、rollback、canonical Restoreのfailure injectionをVitestで確認した。E2Eはv7 IndexedDBでも既存v6画面の実施保存・週境界・backup restoreを確認した。
+- 未確認: Stage 2の実ブラウザ永続化固有リスク（cold boot、quota/storage failure、interrupted transaction、multi-tab）。Android実機でのv5移行（Recovery Pointを保存後にSession／SettingHistory除外）、v6 backup restore、Session snapshot分析。Issue #16のUI先行改修も実機確認が必要。
 - 既知の不具合: なし。OIC-009は当日Sessionの件数を分子にするため、同じItemを複数回完了した場合もその回数を数える。
 
 ## 7. 次にやるべきこと
@@ -87,5 +91,5 @@
 3. v6バックアップを作成し、別端末またはテストデータで復元する。エラーは中止、警告は確認後だけ復元されることを確認する。
 4. 実施完了後、Sessionにsnapshotが残り、種目設定変更後も分析換算係数がSessionの値を使うことを確認する。
 5. Issue #16のUI先行改修もAndroidで確認し、QAへH-20260922-07の実装・テスト結果を返却する。
-6. canonical runtime/storage/UIの切替、legacy migration実行、cutover／rollbackは、Data Design・PMOの次段階HandoffとOwner GOなしに開始しない。まず `src/canonical/` と `training-project/handoff/H-20260925-01.md` を確認する。
+6. Stage 3のcanonical通常画面接続・cutover起動UIは、Data Design・PMOの次段階HandoffとOwner GOなしに開始しない。着手時は `src/canonical/`、`src/data.ts`、`training-project/handoff/H-20260926-09.md` を確認する。
 7. Playwright Trialを正式採用・拡張するかは別判断。現時点ではChromiumのみ。UIまたは現行v6 IndexedDB構造を変更する場合、`e2e/` のfixture・selectorを更新してから `pnpm test:e2e` を実行する。

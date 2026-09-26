@@ -32,10 +32,13 @@ export function seedData(recommendedDay = 0): LegacyAppData {
 async function openDatabase(page: Page, operation: 'seed' | 'read', value?: LegacyAppData): Promise<unknown> {
   return page.evaluate(async ({ operation, value }) => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
-      const request = indexedDB.open('training-check', 6)
+      const request = indexedDB.open('training-check', 7)
       request.onupgradeneeded = () => {
         if (!request.result.objectStoreNames.contains('state')) request.result.createObjectStore('state')
         if (!request.result.objectStoreNames.contains('recovery')) request.result.createObjectStore('recovery')
+        if (!request.result.objectStoreNames.contains('canonical')) request.result.createObjectStore('canonical')
+        if (!request.result.objectStoreNames.contains('cutover')) request.result.createObjectStore('cutover')
+        if (!request.result.objectStoreNames.contains('baseline')) request.result.createObjectStore('baseline')
       }
       request.onsuccess = () => resolve(request.result)
       request.onerror = () => reject(request.error)
