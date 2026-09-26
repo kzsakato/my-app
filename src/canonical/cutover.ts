@@ -1,6 +1,7 @@
 import { identifyInput } from './identify'
 import type { BackupEnvelope, CanonicalAppData, ValidationIssue } from './types'
 import { validateBackupEnvelope, validateCanonical } from './validate'
+import { migrateV5, parseBackup, validateCanonical as validateLegacyV6 } from '../domain'
 
 export type CutoverState = { authoritative: false } | { authoritative: true; establishedAt: string }
 export type LegacyBaseline = { sourceKind: 'legacy-v5-payload' | 'legacy-v6-payload' | 'legacy-v5-backup-envelope' | 'legacy-v6-backup-envelope'; rawJson: string; capturedAt: string }
@@ -20,8 +21,31 @@ export interface CanonicalStorage {
 const invalid = (issues: ValidationIssue[]): StorageDiagnostic[] => issues.map(issue => ({ stage: issue.path, message: issue.message }))
 const same = (left: unknown, right: unknown) => JSON.stringify(left) === JSON.stringify(right)
 const legacyKinds = new Set(['legacy-v5-payload', 'legacy-v6-payload', 'legacy-v5-backup-envelope', 'legacy-v6-backup-envelope'])
+const isRecord = (value: unknown): value is Record<string, unknown> => !!value && typeof value === 'object' && !Array.isArray(value)
 
 function validateCandidate(candidate: CanonicalAppData): StorageDiagnostic[] { return invalid(validateCanonical(candidate).errors) }
+
+/**
+ * Establishes a minimum non-repairing validation boundary for legacy data.
+ * v6 uses the existing full AppData validator. v5 has no full historical
+ * Session/SettingHistory validator: it validates the migration-relevant
+ * payload with the existing deterministic migration validator and requires
+ * the excluded historical fields to remain arrays in the preserved source.
+ */
+function validateLegacyBaseline(source: unknown, kind: string): StorageDiagnostic[] {
+  const envelope = kind.endsWith('-backup-envelope')
+  if (!isRecord(source)) return [{ stage: 'baseline.unwrap', message: 'legacy sourceがオブジェクトではありません' }]
+  if (envelope && typeof source.createdAt !== 'string') return [{ stage: 'baseline.envelope.createdAt', message: 'createdAtが文字列ではありません' }]
+  const payload = envelope ? source.payload : source
+  if (!isRecord(payload)) return [{ stage: 'baseline.unwrap', message: 'legacy payloadを展開できません' }]
+  if (kind.includes('-v6-')) {
+    const checked = envelope ? parseBackup(source) : { errors: validateLegacyV6(payload).errors }
+    return invalid(checked.errors).map(value => ({ ...value, stage: `baseline.validate.${value.stage}` }))
+  }
+  if (!Array.isArray(payload.sessions) || !Array.isArray(payload.settingHistories)) return [{ stage: 'baseline.validate.history', message: 'v5 Session/SettingHistoryが配列ではありません' }]
+  const migrated = migrateV5(payload)
+  return invalid(migrated.errors).map(value => ({ ...value, stage: `baseline.validate.${value.stage}` }))
+}
 async function readValidCanonical(storage: CanonicalStorage): Promise<StorageResult<CanonicalAppData>> {
   try {
     const value = await storage.readCanonical()
@@ -34,6 +58,8 @@ async function readValidCanonical(storage: CanonicalStorage): Promise<StorageRes
 async function ensureBaseline(storage: CanonicalStorage, legacySource: unknown, now: string): Promise<StorageResult<void>> {
   const kind = identifyInput(legacySource)
   if (!legacyKinds.has(kind)) return { ok: false, diagnostics: [{ stage: 'baseline.identify', message: 'known-good legacy sourceではありません' }] }
+  const validation = validateLegacyBaseline(legacySource, kind)
+  if (validation.length) return { ok: false, diagnostics: validation }
   try {
     if (await storage.readBaseline()) return { ok: true, value: undefined, diagnostics: [] }
     await storage.writeBaseline({ sourceKind: kind as LegacyBaseline['sourceKind'], rawJson: JSON.stringify(legacySource), capturedAt: now })

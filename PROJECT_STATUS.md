@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-26（H-20260926-09: canonical Stage 2の保存・cutover・復旧基盤を追加、Unit／Build／E2E成功）
+最終更新: 2026-09-26（H-20260926-09: canonical Stage 2のlegacy baseline検証を補正、Unit／Build／E2E成功）
 
 ## 1. アプリの目的
 
@@ -41,7 +41,7 @@
 ## 3. 現在の作業内容
 
 - 最後に取り組んだ課題: H-20260926-09のcanonical Stage 2。
-- 完了状況: `src/canonical/cutover.ts` と `src/data.ts` に、legacy baseline保護、canonical保存・検証・rollback、明示的canonical Restore、startup authority分岐を追加した。E2E helperはIndexedDB v7へ追従済み。`pnpm test` は29件、`pnpm build`、`pnpm test:e2e` は3件成功。
+- 完了状況: `src/canonical/cutover.ts` と `src/data.ts` に、legacy baseline保護、canonical保存・検証・rollback、明示的canonical Restore、startup authority分岐を追加した。baseline保存前にはv6の既存完全検証、またはv5の既存決定的移行検証を適用する。E2E helperはIndexedDB v7へ追従済み。`pnpm test` は30件、`pnpm build`、`pnpm test:e2e` は3件成功。
 - 現在の問題: Codex実行環境は `node_modules` 読取りをEPERMで拒否するため、依存ツールの実行確認は通常PowerShellで行う必要がある。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）は未検証。v5→v6移行、v6 backup restore、Session snapshotによる分析をAndroid実機で確認していない。
 
 ## 4. 重要な設計上の決定
@@ -79,8 +79,8 @@
 
 ## 6. 動作確認
 
-- 実行済み: 2026-09-26に通常PowerShellで `pnpm test` が29件成功、`pnpm build` が成功、`pnpm test:e2e` がChromiumで3件成功。
-- 確認できたこと: Stage 2のcandidate識別・validation、baseline保存、canonical保存/read-back、runtime/restart相当read、rollback、canonical Restoreのfailure injectionをVitestで確認した。E2Eはv7 IndexedDBでも既存v6画面の実施保存・週境界・backup restoreを確認した。
+- 実行済み: 2026-09-26に通常PowerShellで `pnpm test` が30件成功、`pnpm build` が成功、`pnpm test:e2e` がChromiumで3件成功。
+- 確認できたこと: Stage 2のcandidate識別・validation、legacy baselineのv6完全検証／v5決定的移行検証、baseline保存、canonical保存/read-back、runtime/restart相当read、rollback、canonical Restoreのfailure injectionをVitestで確認した。構造識別できるだけの不正v6入力はbaselineへ保存されない。E2Eはv7 IndexedDBでも既存v6画面の実施保存・週境界・backup restoreを確認した。
 - 未確認: Stage 2の実ブラウザ永続化固有リスク（cold boot、quota/storage failure、interrupted transaction、multi-tab）。Android実機でのv5移行（Recovery Pointを保存後にSession／SettingHistory除外）、v6 backup restore、Session snapshot分析。Issue #16のUI先行改修も実機確認が必要。
 - 既知の不具合: なし。OIC-009は当日Sessionの件数を分子にするため、同じItemを複数回完了した場合もその回数を数える。
 
