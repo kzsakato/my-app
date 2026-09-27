@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-26（H-20260926-09: canonical Stage 2のlegacy baseline検証を補正、Unit／Build／E2E成功）
+最終更新: 2026-09-27（H-20260927-02: Owner確認済みPrototypeをQAへ返却準備）
 
 ## 1. アプリの目的
 
@@ -25,6 +25,7 @@
 
 ### 実装中の機能
 
+- H-20260927-02として、OIC-012の高密度化をProduction実装前にOwner確認するため、独立HTML Prototypeを作成した。Ownerは最終ラフをOKとした。ProductionのReactコード、データ構造、正式仕様は未変更で、QAの要求整合確認待ち。
 - Issue #16のAndroid実機確認およびQA確認。追加トレーニング一覧以外への高密度表示の横断適用は保留。
 - canonical正式データのStage 2基盤を追加済み。専用IndexedDB store、切替marker、移行前legacy baseline、cutover／read-back／rollback、canonical backup Restore、起動時のcanonical authority分岐を実装した。通常の現行画面はlegacy v6のままで、cutoverを起動するUIおよびcanonicalデータを通常画面へ接続するUIは未実装。
 - Stage 1として、legacy v5/v6の非破壊previewと、現在のactive stateとは分離したRecovery Point保存・取得を追加済み。canonical storageへの切替・legacyの自動canonical化は未着手。
@@ -40,9 +41,9 @@
 
 ## 3. 現在の作業内容
 
-- 最後に取り組んだ課題: H-20260926-09のcanonical Stage 2。
-- 完了状況: `src/canonical/cutover.ts` と `src/data.ts` に、legacy baseline保護、canonical保存・検証・rollback、明示的canonical Restore、startup authority分岐を追加した。baseline保存前にはv6の既存完全検証、またはv5の既存決定的移行検証を適用する。E2E helperはIndexedDB v7へ追従済み。`pnpm test` は30件、`pnpm build`、`pnpm test:e2e` は3件成功。
-- 現在の問題: Codex実行環境は `node_modules` 読取りをEPERMで拒否するため、依存ツールの実行確認は通常PowerShellで行う必要がある。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）は未検証。v5→v6移行、v6 backup restore、Session snapshotによる分析をAndroid実機で確認していない。
+- 最後に取り組んだ課題: H-20260927-02のOIC-012画面高密度化Prototype。
+- 完了状況: `public/prototypes/oic-012-density-prototype.html` を追加し、共通ヘッダー、二行の実施種目一覧、Run画面の省スペース配置をラフ化した。Owner確認済みで、HandoffはQA / TestへDONE返却した。Production実装には未着手。
+- 現在の問題: Codexのブラウザ自動操作はローカル `file:///` URLをポリシーで開けないため、Prototypeの視覚確認はOwnerが当該HTMLを直接開いて行う必要がある。Codex環境での `pnpm build` は `node_modules` 再作成後にnpm registryへのアクセスがEACCESで失敗したため、依存関係の再構築を要する検証は通常PowerShellで行う必要がある。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）は未検証。v5→v6移行、v6 backup restore、Session snapshotによる分析をAndroid実機で確認していない。
 
 ## 4. 重要な設計上の決定
 
@@ -73,6 +74,7 @@
 | `src/data.ts` | 初期データとIndexedDB adapter | legacy v6／v5読込に加え、DB v7のcanonical/cutover/baseline adapterとauthority起動分岐を実装済み。 |
 | `src/styles.css` | 既存のスマホ優先スタイル | 今回は変更なし。 |
 | `src/density.css` | UI先行改修用の追加スタイル | 追加トレーニング一覧の高密度表示試行、重量±1kg操作のスタイル。 |
+| `public/prototypes/oic-012-density-prototype.html` | OIC-012のOwner確認専用・独立HTML Prototype | 作成済み。Productionコードには未接続。Ownerレビュー中。 |
 | `src/main.tsx` | React起動とスタイル読込 | `density.css`を追加読込。 |
 | `PROJECT_STATUS.md` | 開発再開用の状態記録 | この内容に更新済み。 |
 | `training-project/handoff/H-20260925-09.md` | Playwright TrialのRole間Handoff | DONE。my-appの実装commitと検証結果を記録。 |
@@ -86,7 +88,8 @@
 
 ## 7. 次にやるべきこと
 
-1. GitHub ActionsのTest workflowの初回実行結果を確認する。失敗時はActionsログと `playwright-report` artifactを確認する。
+1. QA / TestがH-20260927-02のOwner確認済みPrototypeと未決事項を確認し、Production実装へ接続する要求を作るか判断する。Production実装にはOwner GOおよび正式な後続Handoffなしに着手しない。
+2. GitHub ActionsのTest workflowの初回実行結果を確認する。失敗時はActionsログと `playwright-report` artifactを確認する。
 2. 初回v6公開後、Androidでv5移行画面を確認する。復旧JSONを保存後、移行により設定を保持し、Session／SettingHistoryが除外されることを確認する。
 3. v6バックアップを作成し、別端末またはテストデータで復元する。エラーは中止、警告は確認後だけ復元されることを確認する。
 4. 実施完了後、Sessionにsnapshotが残り、種目設定変更後も分析換算係数がSessionの値を使うことを確認する。
