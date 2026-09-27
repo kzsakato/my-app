@@ -63,6 +63,10 @@ async function openDatabase(page: Page, operation: 'seed' | 'read', value?: Lega
 /** Opens the app once, writes a deterministic test state through IndexedDB, then reloads it. */
 export async function seedAndReload(page: Page, value: LegacyAppData): Promise<void> {
   await page.goto('/')
+  // Let the initial AppData load and its persistence effect settle before
+  // replacing IndexedDB with this test's deterministic state.
+  await page.getByRole('heading', { name: '今週の実施メニュー' }).waitFor()
+  await page.waitForTimeout(100)
   await openDatabase(page, 'seed', value)
   await page.reload()
 }

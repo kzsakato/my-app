@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-27（H-20260927-02: Owner確認済みPrototypeをQAへ返却準備）
+最終更新: 2026-09-27（H-20260927-04: OIC-012 Production実装・自動回帰確認完了、Android実機確認待ち）
 
 ## 1. アプリの目的
 
@@ -22,10 +22,10 @@
 - 設定履歴、分析（実施総重量／総トレーニング負荷、週〜年、全体／カテゴリ／詳細）、JSONバックアップ／復元。
 - GitHub Pages公開用のGitHub Actionsワークフロー。
 - Issue #16 UI先行改修: 追加トレーニングで同一ExerciseのItemを省略せず表示、設定登録後にRun画面へ留まる、14日表示の月曜境界、実施済みへの「やり残し」非表示、今日実施数の分子を当日Session件数へ変更、追加トレーニング一覧の高密度表示試行、重量の±1kg操作追加。
+- H-20260927-04 OIC-012: 共通ヘッダー／メニュー、実施種目一覧の二行化、Exercise単位の14日実施状況、Run画面の高密度化を実装。Unit 35件、build、Chromium E2E 4件が成功。
 
 ### 実装中の機能
 
-- H-20260927-02として、OIC-012の高密度化をProduction実装前にOwner確認するため、独立HTML Prototypeを作成した。Ownerは最終ラフをOKとした。ProductionのReactコード、データ構造、正式仕様は未変更で、QAの要求整合確認待ち。
 - Issue #16のAndroid実機確認およびQA確認。追加トレーニング一覧以外への高密度表示の横断適用は保留。
 - canonical正式データのStage 2基盤を追加済み。専用IndexedDB store、切替marker、移行前legacy baseline、cutover／read-back／rollback、canonical backup Restore、起動時のcanonical authority分岐を実装した。通常の現行画面はlegacy v6のままで、cutoverを起動するUIおよびcanonicalデータを通常画面へ接続するUIは未実装。
 - Stage 1として、legacy v5/v6の非破壊previewと、現在のactive stateとは分離したRecovery Point保存・取得を追加済み。canonical storageへの切替・legacyの自動canonical化は未着手。
@@ -41,9 +41,9 @@
 
 ## 3. 現在の作業内容
 
-- 最後に取り組んだ課題: H-20260927-02のOIC-012画面高密度化Prototype。
-- 完了状況: `public/prototypes/oic-012-density-prototype.html` を追加し、共通ヘッダー、二行の実施種目一覧、Run画面の省スペース配置をラフ化した。Owner確認済みで、HandoffはQA / TestへDONE返却した。Production実装には未着手。
-- 現在の問題: Codexのブラウザ自動操作はローカル `file:///` URLをポリシーで開けないため、Prototypeの視覚確認はOwnerが当該HTMLを直接開いて行う必要がある。Codex環境での `pnpm build` は `node_modules` 再作成後にnpm registryへのアクセスがEACCESで失敗したため、依存関係の再構築を要する検証は通常PowerShellで行う必要がある。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）は未検証。v5→v6移行、v6 backup restore、Session snapshotによる分析をAndroid実機で確認していない。
+- 最後に取り組んだ課題: H-20260927-04のOIC-012画面高密度化Production実装。
+- 完了状況: 共通ヘッダー、二行の実施種目一覧、Exercise単位の14日実施状況、Run画面の省スペース配置を実装し、通常PowerShellでUnit 35件、build、Chromium E2E 4件の成功を確認した。HandoffはQA / TestへDONE返却済み。PrototypeはQA / OwnerのProduction確認まで保持する。
+- 現在の問題: Codexのブラウザ自動操作はローカル `file:///` URLをポリシーで開けないため、Prototypeの視覚確認はOwnerが当該HTMLを直接開いて行う必要がある。Codex環境では依存関係へアクセスできないため、Node／pnpmの回帰確認は通常PowerShellで行う必要がある。H-20260927-04のAndroid実機での見た目・タップ確認は未実施。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）は未検証。v5→v6移行、v6 backup restore、Session snapshotによる分析をAndroid実機で確認していない。
 
 ## 4. 重要な設計上の決定
 
@@ -61,7 +61,9 @@
 
 | パス | 役割 | 現在の状態 |
 |---|---|---|
-| `src/App.tsx` | 画面、実行、集計、設定、分析、JSON入出力 | Issue #16のUI先行改修を実装済み。 |
+| `src/App.tsx` | 画面、実行、集計、設定、分析、JSON入出力 | H-20260927-04の共通ヘッダー、一覧高密度化、Run画面圧縮を実装済み。 |
+| `src/history.ts` | Exercise単位の14日実施状況表示 | H-20260927-04で追加、通常／追加実施を統合表示。 |
+| `src/history.test.ts` | 14日実施状況のUnit test | 同一Exerciseの複数Item、通常／追加実施を対象に追加・成功。 |
 | `src/domain.ts` | 正式データ型、参照検証、Migration、backup／proposal境界 | H-20260922-07で追加。UIやIndexedDBに依存しない。 |
 | `src/canonical/` | canonical正式化予定のStage 0純粋domain基盤 | runtime未接続。types／validation／operations／識別fixture／Vitestテストを保持。 |
 | `src/canonical/legacy.ts` | Stage 1のlegacy再作成preview | legacy payloadを構造識別し、Profile候補と参照材料件数だけを非破壊で生成する。 |
@@ -73,7 +75,7 @@
 | `.github/workflows/test.yml` | test CI | Vitest/build jobとChromium Playwright jobを分離する。 |
 | `src/data.ts` | 初期データとIndexedDB adapter | legacy v6／v5読込に加え、DB v7のcanonical/cutover/baseline adapterとauthority起動分岐を実装済み。 |
 | `src/styles.css` | 既存のスマホ優先スタイル | 今回は変更なし。 |
-| `src/density.css` | UI先行改修用の追加スタイル | 追加トレーニング一覧の高密度表示試行、重量±1kg操作のスタイル。 |
+| `src/density.css` | UI先行改修用の追加スタイル | H-20260927-04の共通ヘッダー、一覧・Run高密度化スタイルを追加済み。 |
 | `public/prototypes/oic-012-density-prototype.html` | OIC-012のOwner確認専用・独立HTML Prototype | 作成済み。Productionコードには未接続。Ownerレビュー中。 |
 | `src/main.tsx` | React起動とスタイル読込 | `density.css`を追加読込。 |
 | `PROJECT_STATUS.md` | 開発再開用の状態記録 | この内容に更新済み。 |
@@ -81,14 +83,14 @@
 
 ## 6. 動作確認
 
-- 実行済み: 2026-09-26に通常PowerShellで `pnpm test` が30件成功、`pnpm build` が成功、`pnpm test:e2e` がChromiumで3件成功。
+- 実行済み: 2026-09-27に通常PowerShellで `pnpm test` が4 file・35件成功、`pnpm build` がPWA生成を含め成功、`pnpm test:e2e` がChromiumで4件成功。
 - 確認できたこと: Stage 2のcandidate識別・validation、legacy baselineのv6完全検証／v5決定的移行検証、baseline保存、canonical保存/read-back、runtime/restart相当read、rollback、canonical Restoreのfailure injectionをVitestで確認した。構造識別できるだけの不正v6入力はbaselineへ保存されない。E2Eはv7 IndexedDBでも既存v6画面の実施保存・週境界・backup restoreを確認した。
-- 未確認: Stage 2の実ブラウザ永続化固有リスク（cold boot、quota/storage failure、interrupted transaction、multi-tab）。Android実機でのv5移行（Recovery Pointを保存後にSession／SettingHistory除外）、v6 backup restore、Session snapshot分析。Issue #16のUI先行改修も実機確認が必要。
+- 未確認: H-20260927-04のモバイル実機での共通メニュー・二行一覧・Run操作。Stage 2の実ブラウザ永続化固有リスク（cold boot、quota/storage failure、interrupted transaction、multi-tab）。Android実機でのv5移行（Recovery Pointを保存後にSession／SettingHistory除外）、v6 backup restore、Session snapshot分析。Issue #16のUI先行改修も実機確認が必要。
 - 既知の不具合: なし。OIC-009は当日Sessionの件数を分子にするため、同じItemを複数回完了した場合もその回数を数える。
 
 ## 7. 次にやるべきこと
 
-1. QA / TestがH-20260927-02のOwner確認済みPrototypeと未決事項を確認し、Production実装へ接続する要求を作るか判断する。Production実装にはOwner GOおよび正式な後続Handoffなしに着手しない。
+1. Android実機で共通メニュー、カテゴリ／推奨曜日の二行一覧、同一Exerciseの14日表示、Runの重量・回数・セット数操作を確認する。結果をQA / Testへ渡し、Prototype cleanup可否を判断する。
 2. GitHub ActionsのTest workflowの初回実行結果を確認する。失敗時はActionsログと `playwright-report` artifactを確認する。
 2. 初回v6公開後、Androidでv5移行画面を確認する。復旧JSONを保存後、移行により設定を保持し、Session／SettingHistoryが除外されることを確認する。
 3. v6バックアップを作成し、別端末またはテストデータで復元する。エラーは中止、警告は確認後だけ復元されることを確認する。

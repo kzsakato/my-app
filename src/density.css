@@ -7,3 +7,35 @@
 .weight-controls button{width:36px;height:42px;border:0;border-radius:9px;background:#e6ebe5;font-size:15px;white-space:nowrap}
 .weight-controls b{min-width:72px;text-align:center;font-size:14px;white-space:nowrap}
 @media(max-width:360px){.weight-controls{gap:2px}.weight-controls button{width:33px}.weight-controls b{min-width:64px;font-size:13px}}
+
+/* OIC-012: common navigation and high-density training screens. */
+.app{padding-top:0;padding-bottom:28px}
+.app-header{min-height:62px;display:grid;grid-template-columns:64px minmax(0,1fr) 64px;align-items:center;margin-bottom:14px;border-bottom:1px solid #e4e9e3}
+.app-header h1{margin:0;text-align:center;font-size:18px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.header-back{width:58px;min-height:36px;padding:0;border:1px solid #b8cbbd;border-radius:10px;background:#f8fbf8;color:#285c37;font-size:13px;font-weight:600;box-shadow:0 1px 2px #183d1c12}
+.header-back:disabled{visibility:hidden}
+.header-menu{position:relative;justify-self:end}
+.header-menu-button{width:44px;min-height:44px;padding:0;border:0;border-radius:10px;background:transparent;color:#326a41;font-size:25px;line-height:1}
+.header-menu-panel{position:absolute;z-index:3;top:47px;right:0;width:160px;padding:6px;border:1px solid #d8e1d7;border-radius:12px;background:#fff;box-shadow:0 8px 20px #183d1c22}
+.header-menu-panel button{width:100%;min-height:44px;padding:0 12px;border:0;border-radius:8px;background:#fff;text-align:left;color:#245d34}
+.header-menu-panel button:hover{background:#edf5ed}
+.page-frame{min-height:100vh;max-width:520px;margin:0 auto;background:#fff}
+.page-frame>.app{min-height:0;max-width:none;padding:0 16px 28px}
+.page-frame>.app>.back,.page-frame>.app>h1:first-of-type{display:none}
+.item-density{min-height:62px;padding:9px 0}
+.item-density b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item-density small{display:inline;font-size:12px}
+.item-density .item-history{margin-left:4px;letter-spacing:.4px;color:#4d8459;white-space:nowrap}
+.run-weight{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:center;min-height:64px;border-bottom:1px solid #e4e9e3}
+.run-weight>span,.run-slot>span{color:#657267;font-size:12px}
+.run-slot-grid{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #e4e9e3}
+.run-slot{min-height:88px;padding:10px 16px 10px 0}
+.run-slot+.run-slot{padding:10px 0 10px 16px;border-left:1px solid #dbe3da}
+.run-slot>div{display:grid;grid-template-columns:40px minmax(0,1fr) 40px;align-items:center;gap:4px;margin-top:6px}
+.run-slot button{width:40px;height:40px;border:0;border-radius:50%;background:#e6ebe5;color:#254a2e;font-size:19px}
+.run-slot b{text-align:center;font-size:15px}
+.run-weight .weight-controls{margin:0}
+.run-meta{min-height:42px;margin:0;padding:11px 0;border-bottom:1px solid #e4e9e3;font-size:13px}
+.run-meta small{display:inline;margin-left:4px}
+.history-link{min-height:42px;margin-top:0;padding:0}
+@media(max-width:360px){.app-header{grid-template-columns:58px minmax(0,1fr) 50px}.header-back{width:54px;font-size:12px}.item-density .item-history{letter-spacing:0}.run-slot{padding-right:12px}.run-slot+.run-slot{padding-left:12px}.run-weight{grid-template-columns:40px minmax(0,1fr)}}

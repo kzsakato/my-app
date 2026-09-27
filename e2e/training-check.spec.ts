@@ -4,6 +4,19 @@ import { readStoredState, seedAndReload, seedData } from './helpers/state'
 
 const monday = new Date('2026-09-21T10:00:00+09:00')
 
+test('common menu reaches settings and the bottom navigation is absent', async ({ page }) => {
+  await page.clock.install({ time: monday })
+  await seedAndReload(page, seedData(0))
+
+  await expect(page.locator('nav')).toHaveCount(0)
+  await page.getByRole('button', { name: '共通メニュー' }).click()
+  await page.getByRole('button', { name: '設定' }).click()
+  await expect(page.getByRole('heading', { name: '設定' })).toBeVisible()
+  await page.getByRole('button', { name: '共通メニュー' }).click()
+  await page.getByRole('button', { name: '実施メニュー' }).click()
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+})
+
 test('seeded menu item can be completed, persisted, and retained after reload', async ({ page }) => {
   await page.clock.install({ time: monday })
   await seedAndReload(page, seedData(0))
@@ -11,9 +24,14 @@ test('seeded menu item can be completed, persisted, and retained after reload', 
   await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
   await page.getByRole('button', { name: /胸.*項目/ }).click()
   await page.getByRole('button', { name: /テストプレス/ }).click()
+  await expect(page.getByRole('button', { name: '重量を1kg増やす' })).toBeVisible()
+  await page.getByRole('button', { name: '重量を1kg増やす' }).click()
+  await page.getByRole('button', { name: '重量を0.25kg減らす' }).click()
+  await expect(page.getByText('20.75 kg')).toBeVisible()
   await page.getByRole('button', { name: '種目を完了' }).click()
   await expect(page.getByText('未実施の項目はありません。')).toBeVisible()
-  await page.getByRole('button', { name: /実施メニュー/ }).click()
+  await page.getByRole('button', { name: '共通メニュー' }).click()
+  await page.getByRole('button', { name: '実施メニュー' }).click()
   await expect(page.locator('.totals span').first()).toContainText('1/1')
 
   await expect.poll(async () => (await readStoredState(page)).sessions.length).toBe(1)
@@ -45,6 +63,7 @@ test('backup export can restore the original state through the visible import co
   await page.clock.install({ time: monday })
   const original = seedData(0)
   await seedAndReload(page, original)
+  await page.getByRole('button', { name: '共通メニュー' }).click()
   await page.getByRole('button', { name: '設定' }).click()
   await page.getByRole('button', { name: 'データ管理' }).click()
 
@@ -55,6 +74,7 @@ test('backup export can restore the original state through the visible import co
 
   const changed = { ...original, profile: { ...original.profile, weight: 80 } }
   await seedAndReload(page, changed)
+  await page.getByRole('button', { name: '共通メニュー' }).click()
   await page.getByRole('button', { name: '設定' }).click()
   await page.getByRole('button', { name: 'データ管理' }).click()
   page.on('dialog', dialog => dialog.accept())
