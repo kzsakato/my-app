@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { canonicalStorage } from "./data";
+import { buildIdentifier } from "./buildInfo";
 import {
   addTrainingItem,
   appendMenuEntry,
@@ -990,6 +991,7 @@ function SettingsPage({
       {tab === "settingHistory" && (
         <SettingHistory data={data} commit={commit} />
       )}
+      <p className="meta" aria-label="ビルド識別子">{buildIdentifier}</p>
     </Frame>
   );
 }

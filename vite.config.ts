@@ -2,8 +2,14 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+const buildDate = (process.env.VITE_BUILD_DATE ?? new Date().toISOString()).slice(0, 10)
+const buildSha = (process.env.VITE_BUILD_SHA ?? process.env.GITHUB_SHA ?? 'local').slice(0, 8)
+
 export default defineConfig({
   base: './',
+  define: {
+    __BUILD_IDENTIFIER__: JSON.stringify(`Build ${buildDate} / ${buildSha}`),
+  },
   plugins: [
     react(),
     VitePWA({

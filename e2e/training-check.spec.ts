@@ -101,6 +101,7 @@ test('canonical settings imports a verified MenuProposal without changing the ac
   await page.getByRole('button', { name: '共通メニュー' }).click()
   await page.getByRole('button', { name: '設定' }).click()
   await expect(page.getByRole('heading', { name: '正規データの設定' })).toBeVisible()
+  await expect(page.getByLabel('ビルド識別子')).toHaveText(/^Build \d{4}-\d{2}-\d{2} \/ (?:[0-9a-f]{8}|local)$/)
   await page.getByRole('button', { name: 'メニュー投入' }).click()
   await page.getByLabel('提案ファイルを選択').setInputFiles({
     name: 'proposal.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({
