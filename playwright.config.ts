@@ -2,7 +2,9 @@ import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './e2e',
-  fullyParallel: true,
+  // All current browser cases intentionally exercise the same IndexedDB name.
+  // Keep them serial so one case cannot replace another case's persisted state.
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: 0,
   reporter: [['list'], ['html', { open: 'never' }]],

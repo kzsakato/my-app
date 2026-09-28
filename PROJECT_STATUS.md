@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-28（H-20260928-03: canonical Stage 3実装・自動回帰確認完了）
+最終更新: 2026-09-28（H-20260928-03: canonical Stage 3受入FIX・自動回帰確認完了）
 
 ## 1. アプリの目的
 
@@ -30,7 +30,7 @@
 - canonical正式データのStage 2基盤を追加済み。専用IndexedDB store、切替marker、移行前legacy baseline、cutover／read-back／rollback、canonical backup Restore、起動時のcanonical authority分岐を実装した。通常の現行画面はlegacy v6のままで、cutoverを起動するUIおよびcanonicalデータを通常画面へ接続するUIは未実装。
 - Stage 1として、legacy v5/v6の非破壊previewと、現在のactive stateとは分離したRecovery Point保存・取得を追加済み。canonical storageへの切替・legacyの自動canonical化は未着手。
 - Playwright ChromiumのE0/E1 Trialを追加済み。Vitestはpure domain、Playwrightはbrowser UI・IndexedDB・日時・ファイル操作のE2Eとして分離している。
-- canonical Stage 3を実装済み。Data Managementの明示cutover、Profile候補の明示採用、canonical専用のTop／Menu／Run／追加実施／標準設定／Session履歴、canonical authority後の明示Recoveryを追加した。legacy master/menu/session/historyを自動変換しない。
+- canonical Stage 3を実装済み。Data Managementの明示cutover、Profile候補の明示採用、canonical専用のTop／Menu／Run／追加実施／標準設定／Session履歴、canonical authority後の明示Recoveryを追加した。legacy master/menu/session/historyを自動変換しない。受入FIXとして、実際に採用する全Profile候補の開示と、authority化前のbaseline readiness preflightを追加した。
 
 ### 未着手の機能
 
@@ -43,7 +43,7 @@
 ## 3. 現在の作業内容
 
 - 最後に取り組んだ課題: H-20260928-03のcanonical Stage 3（canonical通常画面接続＋cutover起動UI）。
-- 完了状況: root `main` を `git fetch` / `git pull --ff-only` で最新化後、Data Managementから明示的に初期canonical candidateを作りcutoverできるようにした。candidateには明示確認済みProfileだけを採用し、legacyのmaster/menu/session/historyは移さない。authority後はcanonicalだけを保存・参照する通常画面（Top、Menu、Run、追加実施、標準設定、履歴）へ接続した。Unit 38件、PWA build、Chromium E2E 6件が成功。
+- 完了状況: root `main` を `git fetch` / `git pull --ff-only` で最新化後、Data Managementから明示的に初期canonical candidateを作りcutoverできるようにした。candidateには明示確認済みProfileだけを採用し、legacyのmaster/menu/session/historyは移さない。authority後はcanonicalだけを保存・参照する通常画面（Top、Menu、Run、追加実施、標準設定、履歴）へ接続した。Profileの体重・身長・年齢・性別は採用前に全て表示し、切替前にlegacy source検証とimmutable baseline保存/read-backだけを実行するpreflightを追加した。Unit 39件、PWA build、Chromium E2E 6件が成功。
 - 現在の問題: canonical Stage 3のAndroid実機でのcutover、通常トレーニング、Recovery画面は未確認。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）も未検証。canonicalのBackup/Restore完成、Analysis全面刷新、Trainer JSON投入、Setting Change Historyの追加Product変更は別work item。
 
 ## 4. 重要な設計上の決定
@@ -72,6 +72,7 @@
 | `src/CanonicalApp.tsx` | Stage 3のcanonical通常画面とcutover／Recovery UI | canonical専用のTop、Menu、Run、追加実施、標準設定、Session履歴を実装。legacy AppDataは二重読書きしない。 |
 | `src/canonical/runtime.ts` | Stage 3の初期candidate、週境界、Session作成 | Profile候補だけを採用した空candidateを作り、legacy entityを自動変換しない。 |
 | `src/canonical/runtime.test.ts` | Stage 3 pure runtime test | candidate境界、週開始、Session snapshotを検証。 |
+| `playwright.config.ts` | Chromium E2E設定 | 共用IndexedDBを安全に検証するため、現行single-specのtest caseを直列実行する。 |
 | `src/canonical/cutover.test.ts` | Stage 2自動テスト | in-memory adapterで保存失敗、read-back不一致、runtime/restart失敗、rollback/recovery失敗を注入して検証する。 |
 | `vitest.config.ts` | Stage 0自動テスト設定 | Node環境で `src/**/*.test.ts` を実行する。 |
 | `playwright.config.ts` | Chromium E2E Trial設定 | ViteをE2E時だけ起動し、failure evidenceを保持する。 |

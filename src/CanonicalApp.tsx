@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { canonicalStorage } from './data'
-import { addTrainingItem, appendMenuEntry, archiveMenuEntry, createCanonicalSession, createInitialCanonicalCandidate, cutoverCanonical, localDate, prepareCanonicalBackupRestore, recoverCanonical, updateTrainingItem, weekStart } from './canonical'
+import { addTrainingItem, appendMenuEntry, archiveMenuEntry, createCanonicalSession, createInitialCanonicalCandidate, cutoverCanonical, localDate, prepareCanonicalBackupRestore, prepareCanonicalCutover, recoverCanonical, updateTrainingItem, weekStart } from './canonical'
 import type { CanonicalAppData, Exercise, Menu, MenuEntry, RecommendedDay, TrainingItem } from './canonical'
 import { validateCanonical } from './canonical'
 
@@ -149,17 +149,30 @@ function MenuEditor({ data, commit }: { data: CanonicalAppData; commit: (next: C
 export function CanonicalCutover({ profile, legacySource, onSuccess, onBack }: { profile: { weight: number; height?: number; age?: number; sex?: string }; legacySource: unknown; onSuccess: (data: CanonicalAppData) => void; onBack: () => void }) {
   const [adoptProfile, setAdoptProfile] = useState(false)
   const [acknowledge, setAcknowledge] = useState(false)
+  const [ready, setReady] = useState(false)
   const [message, setMessage] = useState('')
   const candidate = useMemo(() => createInitialCanonicalCandidate(profile), [profile])
   const validation = validateCanonical(candidate)
+  const profileFields = [
+    ['体重', `${candidate.profile.weight} kg`],
+    ...(candidate.profile.height === undefined ? [] : [['身長', `${candidate.profile.height} cm`]] as const),
+    ...(candidate.profile.age === undefined ? [] : [['年齢', `${candidate.profile.age}`]] as const),
+    ...(candidate.profile.sex === undefined ? [] : [['性別', candidate.profile.sex]] as const),
+  ]
+  const preflight = async () => {
+    setMessage('')
+    const result = await prepareCanonicalCutover(canonicalStorage, legacySource, candidate, new Date().toISOString())
+    if (result.ok) { setReady(true); setMessage('準備完了: legacy sourceの検証とprotected baselineの保存・read-backを確認しました。') }
+    else { setReady(false); setMessage(`準備に失敗しました: ${result.diagnostics.map(value => `${value.stage}: ${value.message}`).join(' / ')}`) }
+  }
   const execute = async () => {
-    if (!adoptProfile || !acknowledge || validation.errors.length) return
+    if (!adoptProfile || !acknowledge || !ready || validation.errors.length) return
     if (!confirm('正規データへ切り替えます。旧データへ自動では戻りません。続けますか？')) return
     const result = await cutoverCanonical(canonicalStorage, legacySource, candidate, new Date().toISOString())
     if (result.ok) onSuccess(result.value)
     else setMessage(result.diagnostics.map(value => `${value.stage}: ${value.message}`).join(' / '))
   }
-  return <main className="app"><button className="back" onClick={onBack}>‹ データ管理</button><h1>正規データへ切替</h1><section className="card"><p>旧データの種目・実施項目・週メニュー・実施履歴・設定履歴は自動移行しません。</p><p>Profile候補として体重 {profile.weight} kg{profile.height ? `、身長 ${profile.height} cm` : ''}のみを初期正規データへ採用できます。</p><label><input type="checkbox" checked={adoptProfile} onChange={event => setAdoptProfile(event.target.checked)}/> 表示したProfile候補を採用する</label><label><input type="checkbox" checked={acknowledge} onChange={event => setAcknowledge(event.target.checked)}/> 切替後は正規データが正本であり、旧データへ自動復帰しないことを確認した</label><p className="meta">初期candidate: 種目 0件、実施項目 0件、週メニュー 0件、実施履歴 0件</p>{validation.errors.length > 0 && <ul>{validation.errors.map(value => <li key={value.path}>{value.path}: {value.message}</li>)}</ul>}<button className="primary" disabled={!adoptProfile || !acknowledge || validation.errors.length > 0} onClick={execute}>正規データへ切替</button>{message && <p className="week">{message}</p>}</section></main>
+  return <main className="app"><button className="back" onClick={onBack}>‹ データ管理</button><h1>正規データへ切替</h1><section className="card"><p>旧データの種目・実施項目・週メニュー・実施履歴・設定履歴は自動移行しません。</p><p>初期正規データに採用するProfile候補:</p><ul>{profileFields.map(([label, value]) => <li key={label}>{label}: {value}</li>)}</ul><p className="meta">初期candidate: 種目 0件、実施項目 0件、週メニュー 0件、実施履歴 0件</p><h2>切替前の準備</h2><p className="meta">legacy sourceの検証と、切替前baselineの保存・read-backを行います。準備だけではcanonicalを正本に切り替えません。</p><button className="save-setting" disabled={validation.errors.length > 0} onClick={preflight}>切替準備を確認</button>{ready && <p className="meta">baseline / Recovery準備: 確認済み</p>}<label><input type="checkbox" checked={adoptProfile} onChange={event => setAdoptProfile(event.target.checked)}/> 表示したProfile候補を採用する</label><label><input type="checkbox" checked={acknowledge} onChange={event => setAcknowledge(event.target.checked)}/> 切替後は正規データが正本であり、旧データへ自動復帰しないことを確認した</label>{validation.errors.length > 0 && <ul>{validation.errors.map(value => <li key={value.path}>{value.path}: {value.message}</li>)}</ul>}<button className="primary" disabled={!ready || !adoptProfile || !acknowledge || validation.errors.length > 0} onClick={execute}>正規データへ切替</button>{message && <p className="week">{message}</p>}</section></main>
 }
 
 export function CanonicalRecovery({ errors, onRecovered }: { errors: string[]; onRecovered: (data: CanonicalAppData) => void }) {

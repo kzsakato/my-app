@@ -69,6 +69,18 @@ async function ensureBaseline(storage: CanonicalStorage, legacySource: unknown, 
   } catch (error) { return { ok: false, diagnostics: [{ stage: 'baseline.save', message: String(error) }] } }
 }
 
+/**
+ * Explicit, pre-authority readiness check used by the Stage 3 UI. It validates
+ * the candidate and prepares the immutable legacy baseline, but never writes
+ * canonical data or changes the authority marker.
+ */
+export async function prepareCanonicalCutover(storage: CanonicalStorage, legacySource: unknown, candidate: CanonicalAppData, now: string): Promise<StorageResult<void>> {
+  if (identifyInput(candidate) !== 'canonical-payload') return { ok: false, diagnostics: [{ stage: 'candidate.identify', message: 'canonical payloadではありません' }] }
+  const candidateErrors = validateCandidate(candidate)
+  if (candidateErrors.length) return { ok: false, diagnostics: candidateErrors.map(value => ({ ...value, stage: `candidate.${value.stage}` })) }
+  return ensureBaseline(storage, legacySource, now)
+}
+
 async function rollback(storage: CanonicalStorage, diagnostics: StorageDiagnostic[]): Promise<StorageDiagnostic[]> {
   try { await storage.writeCutoverState({ authoritative: false }); return diagnostics }
   catch (error) { return [...diagnostics, { stage: 'rollback.write', message: String(error) }] }
