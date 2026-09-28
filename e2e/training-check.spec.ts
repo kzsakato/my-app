@@ -122,6 +122,27 @@ test('canonical settings imports a verified MenuProposal without changing the ac
   expect(stored.appliedProposalIds).toEqual(['e2e-proposal-1'])
 })
 
+test('canonical settings opens snapshot-based analysis', async ({ page }) => {
+  await page.clock.install({ time: monday })
+  const data = canonicalData()
+  data.sessions = [{
+    id: 'analysis-session', trainingItemId: 'canonical-item', menuEntryId: 'canonical-entry-a', date: '2026-09-21',
+    weight: 20, reps: 10, sets: 3, bodyWeight: 66,
+    snapshot: {
+      exerciseId: 'canonical-exercise', exerciseName: '正規テストプレス', trainingItemDisplayName: '正規テストプレス',
+      measureType: 'reps', weightMode: 'total', classifications: [{ kind: 'bodyRegion', label: '胸' }],
+    },
+  }]
+  await seedCanonicalAndReload(page, data)
+  await page.getByRole('button', { name: '共通メニュー' }).click()
+  await page.getByRole('button', { name: '設定' }).click()
+  await page.getByRole('button', { name: '分析' }).click()
+  await expect(page.getByRole('heading', { name: '分析' })).toBeVisible()
+  await expect(page.getByText('● 全体', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: '部位別負荷' }).click()
+  await expect(page.getByText('● 胸', { exact: true })).toBeVisible()
+})
+
 test('explicit cutover adopts only the confirmed Profile candidate and does not copy legacy master data', async ({ page }) => {
   await page.clock.install({ time: monday })
   const legacy = { ...seedData(0), profile: { ...seedData(0).profile, height: 170, age: 40, sex: 'male' } }

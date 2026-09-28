@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-28（H-20260928-07 QA-H07-01: Menu投入後の確認導線を追加・自動検証完了）
+最終更新: 2026-09-28（H-20260928-14: canonical Ver1分析を追加・自動検証完了）
 
 ## 1. アプリの目的
 
@@ -35,6 +35,7 @@
 - QA-H05-01を修正済み。canonical実施項目一覧の2行目に、左側の部位・推奨曜日と右端のSession snapshot基準14日履歴を追加した。
 - H-20260928-07として、canonicalの「メニュー投入」と「トレーニング履歴出力」を追加した。MenuProposalはfile parse→検証→preview→Warning確認→最終確認→新規Menu/MenuEntry作成→canonical validation・persist・read-backの順で処理し、既存のactive Menuは切り替えない。Trainer Historyは期間指定または全履歴のread-only JSONであり、Backup/Restore形式ではない。
 - QA-H07-01を修正済み。MenuProposal投入成功後に作成Menu名を表示し、「週メニューで内容を確認」からそのMenuを選択済みの週メニュー設定へ遷移できる。active Menuは切り替えない。
+- H-20260928-14としてcanonical Ver1分析を追加した。全体／bodyRegion別のderived training-load推移、種目別の最大重量・合計回数・合計セット、種目別／bodyRegion別の実施頻度を、週・月・四半期・年の直近12区間で表示する。再集計はSession actual factsとsnapshotだけを使用し、現在のMasterやMenuEntryの有無で過去の意味を変更しない。未分類snapshotは「未分類」として保持する。
 
 ### 未着手の機能
 
@@ -46,9 +47,9 @@
 
 ## 3. 現在の作業内容
 
-- 最後に取り組んだ課題: H-20260928-07のQA-H07-01（MenuProposal投入成功後の作成Menu識別・週メニュー確認導線）。
+- 最後に取り組んだ課題: H-20260928-14（canonical Ver1 Analysis）。
 - 完了状況: root `main` を `git fetch` / `git pull --ff-only` で最新化後、Data Managementから明示的に初期canonical candidateを作りcutoverできるようにした。candidateには明示確認済みProfileだけを採用し、legacyのmaster/menu/session/historyは移さない。authority後はcanonicalだけを保存・参照する通常画面（Top、Menu、Run、追加実施、標準設定、履歴）へ接続した。Profileの体重・身長・年齢・性別は採用前に全て表示し、切替前にlegacy source検証とimmutable baseline保存/read-backだけを実行するpreflightを追加した。Unit 39件、PWA build、Chromium E2E 6件が成功。
-- 現在の問題: canonical Stage 3、H-20260928-05、H-20260928-07のAndroid実機でのcutover、通常トレーニング、設定変更履歴、Recovery、JSON file download/uploadは未確認。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）も未検証。Analysis全面刷新は別work item。
+- 現在の問題: canonical Stage 3、H-20260928-05、H-20260928-07、H-20260928-14のAndroid実機でのcutover、通常トレーニング、設定変更履歴、Recovery、JSON file download/upload、分析表示は未確認。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）も未検証。
 
 ## 4. 重要な設計上の決定
 
@@ -78,6 +79,8 @@
 | `src/CanonicalApp.tsx` | Stage 3のcanonical通常画面とcutover／Recovery UI | canonical専用のTop、Menu、Run、追加実施、標準設定、Session履歴、設定変更履歴を実装。legacy AppDataは二重読書きしない。 |
 | `src/canonical/runtime.ts` | Stage 3の初期candidate、週境界、Session作成 | Profile候補だけを採用した空candidateを作り、legacy entityを自動変換しない。 |
 | `src/canonical/trainer.ts` | Ver1 MenuProposal／Trainer Historyの純粋domain I/F | proposal検証、candidate生成、persist/read-back適用、Trainer History projectionを実装。 |
+| `src/canonical/analysis.ts` | canonical Ver1 Analysisの純粋domain集計 | formal `referenceTrainingLoad`、週／月／四半期／年bucket、snapshot基準の全体・bodyRegion・種目・頻度集計を実装。 |
+| `src/canonical/analysis.test.ts` | Analysis domain test | formal換算、週境界、archive済Master、未分類、Menu外追加、種目実績・頻度を検証。 |
 | `src/canonical/trainer.test.ts` | Ver1 Trainer I/FのUnit test | proposal検証・idempotence・rollback、履歴期間・baseline・archived contextを検証。 |
 | `src/canonical/runtime.test.ts` | Stage 3 pure runtime test | candidate境界、週開始、Session snapshotを検証。 |
 | `playwright.config.ts` | Chromium E2E設定 | 共用IndexedDBを安全に検証するため、現行single-specのtest caseを直列実行する。 |
@@ -96,7 +99,7 @@
 
 ## 6. 動作確認
 
-- 実行済み: 2026-09-28にH-20260928-07およびQA-H07-01後の `pnpm test` が7 file・49件成功、`pnpm build` がPWA生成を含め成功、`pnpm test:e2e` がChromiumで7件成功。
+- 実行済み: 2026-09-28にH-20260928-14後の `pnpm test` が8 file・53件成功、`pnpm build` がPWA生成を含め成功、`pnpm test:e2e` がChromiumで8件成功。
 - 確認できたこと: Stage 2のcandidate識別・validation、legacy baselineのv6完全検証／v5決定的移行検証、baseline保存、canonical保存/read-back、runtime/restart相当read、rollback、canonical Restoreのfailure injectionをVitestで確認した。構造識別できるだけの不正v6入力はbaselineへ保存されない。E2Eはv7 IndexedDBでも既存v6画面の実施保存・週境界・backup restoreを確認した。
 - 未確認: H-20260928-07のAndroid実機でのMenuProposal file選択・Warning確認・適用後の週メニュー確認、Trainer History file download。H-20260927-04のモバイル実機での共通メニュー・二行一覧・Run操作。Stage 2の実ブラウザ永続化固有リスク（cold boot、quota/storage failure、interrupted transaction、multi-tab）。Android実機でのv5移行（Recovery Pointを保存後にSession／SettingHistory除外）、v6 backup restore、Session snapshot分析。Issue #16のUI先行改修も実機確認が必要。
 - 既知の不具合: なし。OIC-009は当日Sessionの件数を分子にするため、同じItemを複数回完了した場合もその回数を数える。

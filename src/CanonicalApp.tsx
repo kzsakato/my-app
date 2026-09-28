@@ -16,9 +16,16 @@ import {
   weekStart,
   exerciseHistory,
   applyMenuProposal,
+  bodyRegionDerivedLoad,
+  bodyRegionFrequency,
   createTrainerHistory,
+  exerciseActuals,
+  exerciseFrequency,
+  exerciseOptions,
+  overallDerivedLoad,
   validateMenuProposal,
 } from "./canonical";
+import type { AnalysisPeriod, AnalysisSeries } from "./canonical";
 import type {
   CanonicalAppData,
   Exercise,
@@ -36,6 +43,7 @@ type Page =
   | "extra"
   | "settings"
   | "history"
+  | "analysis"
   | "menuImport"
   | "trainerHistoryExport";
 type SettingsTab =
@@ -231,6 +239,8 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
     );
   if (page === "history")
     return <HistoryPage data={data} onBack={toTop} {...header} />;
+  if (page === "analysis")
+    return <AnalysisPage data={data} onBack={() => openSettings()} {...header} />;
   if (page === "menuImport")
     return (
       <MenuImportPage
@@ -258,6 +268,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
         menuToInspectId={menuToInspectId}
         onMenuImport={() => setPage("menuImport")}
         onTrainerHistoryExport={() => setPage("trainerHistoryExport")}
+        onAnalysis={() => setPage("analysis")}
         onBack={toTop}
         {...header}
       />
@@ -645,6 +656,141 @@ function HistoryPage({
   );
 }
 
+const analysisPeriods: Array<{ value: AnalysisPeriod; label: string }> = [
+  { value: "week", label: "週" },
+  { value: "month", label: "月" },
+  { value: "quarter", label: "四半期" },
+  { value: "year", label: "年" },
+];
+const analysisColors = ["#2f6f73", "#c47d48", "#7968a8", "#6c9448", "#bd5e77", "#4f7db4"];
+const formatLoad = (value: number) => Math.round(value).toLocaleString();
+const analysisLabel = (start: string, period: AnalysisPeriod) => {
+  const [year, month] = start.split("-");
+  if (period === "week") return `${month}/${start.slice(8)}`;
+  if (period === "month") return `${year.slice(2)}/${month}`;
+  if (period === "quarter") return `${year.slice(2)} Q${Math.floor((Number(month) - 1) / 3) + 1}`;
+  return year;
+};
+
+function AnalysisChart({ series, labels, unit }: { series: AnalysisSeries[]; labels: string[]; unit: string }) {
+  const max = Math.max(1, ...series.flatMap((value) => value.values));
+  const width = 640;
+  const height = 280;
+  const left = 56;
+  const top = 22;
+  const right = 12;
+  const bottom = 48;
+  const innerWidth = width - left - right;
+  const innerHeight = height - top - bottom;
+  const point = (value: number, index: number) => `${left + (innerWidth / Math.max(1, labels.length - 1)) * index},${top + innerHeight - (value / max) * innerHeight}`;
+  return (
+    <section className="chart" aria-label="分析グラフ">
+      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="トレーニング負荷推移グラフ">
+        {[0, 0.5, 1].map((ratio) => (
+          <line key={ratio} x1={left} x2={width - right} y1={top + innerHeight * ratio} y2={top + innerHeight * ratio} className="grid" />
+        ))}
+        <text x="2" y={top + 5}>{formatLoad(max)} {unit}</text>
+        <text x="2" y={top + innerHeight / 2 + 5}>{formatLoad(max / 2)}</text>
+        <text x="26" y={top + innerHeight}>0</text>
+        {labels.map((label, index) => (
+          <text key={`${label}-${index}`} className="axis" x={left + (innerWidth / Math.max(1, labels.length - 1)) * index} y={height - 15} textAnchor="middle">{label}</text>
+        ))}
+        {series.map((value, index) => (
+          <polyline key={value.id} points={value.values.map(point).join(" ")} fill="none" stroke={analysisColors[index % analysisColors.length]} strokeWidth="3" />
+        ))}
+      </svg>
+      <div className="legend">
+        {series.map((value, index) => <span key={value.id} style={{ color: analysisColors[index % analysisColors.length] }}>● {value.name}</span>)}
+      </div>
+    </section>
+  );
+}
+
+function AnalysisPage({ data, onBack, onSettings, onTop }: { data: CanonicalAppData; onBack: () => void; onSettings: () => void; onTop: () => void }) {
+  const [period, setPeriod] = useState<AnalysisPeriod>("week");
+  const [view, setView] = useState<"overall" | "bodyRegion" | "exercise" | "frequency">("overall");
+  const [frequencyKind, setFrequencyKind] = useState<"exercise" | "bodyRegion">("exercise");
+  const options = useMemo(() => exerciseOptions(data), [data]);
+  const [exerciseId, setExerciseId] = useState("");
+  const selectedExerciseId = options.some((value) => value.id === exerciseId) ? exerciseId : (options[0]?.id ?? "");
+  const now = localDate();
+  const overall = useMemo(() => overallDerivedLoad(data, period, now), [data, period, now]);
+  const byBodyRegion = useMemo(() => bodyRegionDerivedLoad(data, period, now), [data, period, now]);
+  const actual = useMemo(() => selectedExerciseId ? exerciseActuals(data, selectedExerciseId, period, now) : undefined, [data, selectedExerciseId, period, now]);
+  const rows = useMemo(() => frequencyKind === "exercise" ? exerciseFrequency(data, period, now) : bodyRegionFrequency(data, period, now), [data, frequencyKind, period, now]);
+  const labels = overall.bucketStarts.map((value) => analysisLabel(value, period));
+  const selectedExercise = options.find((value) => value.id === selectedExerciseId);
+  const actualWeight = actual ? actual.maxWeight.map((value) => value ?? 0) : [];
+  return (
+    <Frame title="分析" back={onBack} onSettings={onSettings} onTop={onTop}>
+      <label>
+        期間
+        <select value={period} onChange={(event) => setPeriod(event.target.value as AnalysisPeriod)}>
+          {analysisPeriods.map((value) => <option key={value.value} value={value.value}>{value.label}</option>)}
+        </select>
+      </label>
+      <div className="view-toggle analysis-toggle" aria-label="分析表示">
+        <button className={view === "overall" ? "active" : ""} onClick={() => setView("overall")}>全体負荷</button>
+        <button className={view === "bodyRegion" ? "active" : ""} onClick={() => setView("bodyRegion")}>部位別負荷</button>
+        <button className={view === "exercise" ? "active" : ""} onClick={() => setView("exercise")}>種目実績</button>
+        <button className={view === "frequency" ? "active" : ""} onClick={() => setView("frequency")}>実施頻度</button>
+      </div>
+      {data.sessions.length === 0 ? (
+        <p className="week">この期間に表示できる実施記録はありません。</p>
+      ) : view === "overall" ? (
+        <>
+          <p className="week">自重寄与を含む参考負荷です。保存済み実績とsnapshotから再集計します。</p>
+          <AnalysisChart series={[{ id: "overall", name: "全体", values: overall.values }]} labels={labels} unit="負荷" />
+        </>
+      ) : view === "bodyRegion" ? (
+        <>
+          <p className="week">部位は実行時のsnapshot分類です。未分類は現在の設定で補完しません。</p>
+          {byBodyRegion.series.length ? <AnalysisChart series={byBodyRegion.series} labels={byBodyRegion.bucketStarts.map((value) => analysisLabel(value, period))} unit="負荷" /> : <p className="week">この期間に部位別の実績はありません。</p>}
+        </>
+      ) : view === "exercise" ? (
+        <>
+          <label>
+            種目
+            <select value={selectedExerciseId} onChange={(event) => setExerciseId(event.target.value)}>
+              {options.map((value) => <option key={value.id} value={value.id}>{value.name}</option>)}
+            </select>
+          </label>
+          {!actual || !selectedExercise ? <p className="week">実施記録のある種目を選択してください。</p> : <>
+            <p className="week">{selectedExercise.name} の期間ごとの最大重量と、合計回数・セット数です。</p>
+            <AnalysisChart series={[{ id: "weight", name: "最大重量 (kg)", values: actualWeight }]} labels={actual.bucketStarts.map((value) => analysisLabel(value, period))} unit="kg" />
+            <div className="analysis-table" aria-label="種目実績一覧">
+              {actual.bucketStarts.map((start, index) => (
+                <section className="card" key={start}>
+                  <b>{analysisLabel(start, period)}</b>
+                  <p className="meta">最大重量: {actual.maxWeight[index] === undefined ? "—" : `${actual.maxWeight[index]} kg`}　実施: {actual.sessions[index]} 回</p>
+                  <p className="meta">合計回数: {actual.reps[index]} 回　合計時間: {actual.seconds[index]} 秒　合計セット: {actual.sets[index]}</p>
+                </section>
+              ))}
+            </div>
+          </>}
+        </>
+      ) : (
+        <>
+          <label>
+            集計対象
+            <select value={frequencyKind} onChange={(event) => setFrequencyKind(event.target.value as "exercise" | "bodyRegion")}>
+              <option value="exercise">種目別</option>
+              <option value="bodyRegion">部位別</option>
+            </select>
+          </label>
+          {rows.length === 0 ? <p className="week">この期間に実施記録はありません。</p> : <div className="analysis-table" aria-label="実施頻度一覧">
+            {rows.map((row) => <section className="card" key={row.id}>
+              <b>{row.name}</b>
+              <p className="meta">実施: {row.sessions} 回　セット: {row.sets}</p>
+              <p className="meta">回数: {row.reps} 回　時間: {row.seconds} 秒</p>
+            </section>)}
+          </div>}
+        </>
+      )}
+    </Frame>
+  );
+}
+
 function SettingsPage({
   data,
   commit,
@@ -652,6 +798,7 @@ function SettingsPage({
   onTab,
   onMenuImport,
   onTrainerHistoryExport,
+  onAnalysis,
   menuToInspectId,
   onBack,
   onSettings,
@@ -663,6 +810,7 @@ function SettingsPage({
   onTab: (tab: SettingsTab) => void;
   onMenuImport: () => void;
   onTrainerHistoryExport: () => void;
+  onAnalysis: () => void;
   menuToInspectId?: string;
   onBack: () => void;
   onSettings: () => void;
@@ -708,6 +856,10 @@ function SettingsPage({
         </button>
       </div>
       <section className="card">
+        <button className="save-setting" onClick={onAnalysis}>
+          分析
+        </button>
+        <p className="meta">実施記録の負荷推移・実績・頻度を確認します。</p>
         <button className="save-setting" onClick={onMenuImport}>
           メニュー投入
         </button>

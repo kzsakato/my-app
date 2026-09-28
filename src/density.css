@@ -44,4 +44,5 @@
 .day-picker{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}
 .day-picker label{display:flex;align-items:center;gap:3px;margin:0;padding:6px 8px;border:1px solid #ccd5cc;border-radius:8px;font-size:13px}
 .day-picker input{width:16px;min-height:16px;margin:0;accent-color:#326a41}
+.view-toggle{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.view-toggle button{flex:1;min-height:38px;border:1px solid #b8cbbd;border-radius:9px;background:#f8fbf8;color:#285c37;font-size:13px}.view-toggle button.active{background:#326a41;color:#fff;border-color:#326a41}.analysis-toggle button{min-width:calc(50% - 3px)}.analysis-table .card{margin:8px 0}.analysis-table .meta{margin:6px 0;padding:0;border:0}
 @media(max-width:360px){.app-header{grid-template-columns:58px minmax(0,1fr) 50px}.header-back{width:54px;font-size:12px}.item-density .item-history{letter-spacing:0}.run-slot{padding-right:12px}.run-slot+.run-slot{padding-left:12px}.run-weight{grid-template-columns:40px minmax(0,1fr)}}
