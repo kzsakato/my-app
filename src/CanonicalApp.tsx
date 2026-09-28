@@ -142,6 +142,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   const [extraItemId, setExtraItemId] = useState<string>();
   const [notice, setNotice] = useState("");
   const [settingsTab, setSettingsTab] = useState<SettingsTab>("profile");
+  const [menuToInspectId, setMenuToInspectId] = useState<string>();
   const commit = async (next: CanonicalAppData) => {
     const checked = validateCanonical(next);
     if (checked.errors.length) {
@@ -174,8 +175,9 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
     if (await commit({ ...data, sessions: [...data.sessions, session] }))
       toTop();
   };
-  const openSettings = (tab: SettingsTab = "profile") => {
+  const openSettings = (tab: SettingsTab = "profile", menuId?: string) => {
     setSettingsTab(tab);
+    if (menuId !== undefined) setMenuToInspectId(menuId);
     setPage("settings");
   };
   const header = { onSettings: () => openSettings(), onTop: toTop };
@@ -237,8 +239,8 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
         onApplied={(next) => {
           setData(next);
           setNotice("メニューを投入しました。");
-          openSettings("menu");
         }}
+        onInspectMenu={(menuId) => openSettings("menu", menuId)}
         {...header}
       />
     );
@@ -253,6 +255,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
         commit={commit}
         tab={settingsTab}
         onTab={setSettingsTab}
+        menuToInspectId={menuToInspectId}
         onMenuImport={() => setPage("menuImport")}
         onTrainerHistoryExport={() => setPage("trainerHistoryExport")}
         onBack={toTop}
@@ -649,6 +652,7 @@ function SettingsPage({
   onTab,
   onMenuImport,
   onTrainerHistoryExport,
+  menuToInspectId,
   onBack,
   onSettings,
   onTop,
@@ -659,6 +663,7 @@ function SettingsPage({
   onTab: (tab: SettingsTab) => void;
   onMenuImport: () => void;
   onTrainerHistoryExport: () => void;
+  menuToInspectId?: string;
   onBack: () => void;
   onSettings: () => void;
   onTop: () => void;
@@ -715,7 +720,13 @@ function SettingsPage({
       {tab === "profile" && <ProfileEditor data={data} commit={commit} />}{" "}
       {tab === "exercise" && <ExerciseEditor data={data} commit={commit} />}{" "}
       {tab === "item" && <ItemEditor data={data} commit={commit} />}{" "}
-      {tab === "menu" && <MenuEditor data={data} commit={commit} />}{" "}
+      {tab === "menu" && (
+        <MenuEditor
+          data={data}
+          commit={commit}
+          initialMenuId={menuToInspectId}
+        />
+      )}{" "}
       {tab === "settingHistory" && (
         <SettingHistory data={data} commit={commit} />
       )}
@@ -1149,12 +1160,14 @@ function ItemEditor({
 function MenuEditor({
   data,
   commit,
+  initialMenuId,
 }: {
   data: CanonicalAppData;
   commit: (next: CanonicalAppData) => Promise<boolean>;
+  initialMenuId?: string;
 }) {
   const [menuId, setMenuId] = useState(
-    data.activeMenuId ?? active(data.menus)[0]?.id ?? "",
+    initialMenuId ?? data.activeMenuId ?? active(data.menus)[0]?.id ?? "",
   );
   const [name, setName] = useState("");
   const [itemId, setItemId] = useState("");
@@ -1373,12 +1386,14 @@ function MenuImportPage({
   data,
   onBack,
   onApplied,
+  onInspectMenu,
   onSettings,
   onTop,
 }: {
   data: CanonicalAppData;
   onBack: () => void;
   onApplied: (next: CanonicalAppData) => void;
+  onInspectMenu: (menuId: string) => void;
   onSettings: () => void;
   onTop: () => void;
 }) {
@@ -1388,6 +1403,7 @@ function MenuImportPage({
   });
   const [acknowledged, setAcknowledged] = useState(false);
   const [message, setMessage] = useState("");
+  const [applied, setApplied] = useState<{ id: string; name: string }>();
   const read = (file?: File) => {
     if (!file) return;
     setAcknowledged(false);
@@ -1406,7 +1422,7 @@ function MenuImportPage({
     reader.readAsText(file, "UTF-8");
   };
   const apply = async () => {
-    if (!checked.proposal || checked.errors.length || (checked.warnings.length && !acknowledged)) return;
+    if (applied || !checked.proposal || checked.errors.length || (checked.warnings.length && !acknowledged)) return;
     if (!confirm("既存の週メニューを上書きせず、新しい週メニューを作成します。投入しますか？")) return;
     const result = await applyMenuProposal(canonicalStorage, data, checked.proposal, uid);
     if (!result.ok) {
@@ -1414,6 +1430,7 @@ function MenuImportPage({
       return;
     }
     onApplied(result.value);
+    setApplied({ id: result.menu.id, name: result.menu.name });
   };
   const proposal = checked.proposal;
   return (
@@ -1431,7 +1448,7 @@ function MenuImportPage({
           {formatIssues(checked.errors)}
         </section>
       )}
-      {proposal && checked.errors.length === 0 && (
+      {proposal && checked.errors.length === 0 && !applied && (
         <section className="card">
           <h2>内容確認</h2>
           <p><b>{proposal.menu.name}</b>　{proposal.entries.length}件</p>
@@ -1457,6 +1474,16 @@ function MenuImportPage({
           )}
           <button className="primary" disabled={checked.warnings.length > 0 && !acknowledged} onClick={apply}>
             新しい週メニューを作成
+          </button>
+        </section>
+      )}
+      {applied && (
+        <section className="card">
+          <h2>メニューを作成しました</h2>
+          <p><b>{applied.name}</b></p>
+          <p className="meta">現在使用中の週メニューは変更していません。</p>
+          <button className="primary" onClick={() => onInspectMenu(applied.id)}>
+            週メニューで内容を確認
           </button>
         </section>
       )}
