@@ -17,6 +17,7 @@ export const canonicalFixture: CanonicalAppData = {
     snapshot: { exerciseId: 'exercise-1', exerciseName: 'ダンベルプレス', trainingItemDisplayName: 'ダンベルプレス', measureType: 'reps', weightMode: 'perSide', classifications: [{ kind: 'bodyRegion', label: '胸' }] },
   }],
   trainingItemSettingChanges: [{ id: 'change-1', trainingItemId: 'item-1', changedAt: '2026-09-24T09:00:00+09:00', isInitial: true, snapshot: { weight: 18, reps: 15, sets: 5 } }],
+  appliedProposalIds: [],
 }
 
 export const canonicalBackupFixture: BackupEnvelope = {

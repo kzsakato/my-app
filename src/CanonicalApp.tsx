@@ -15,6 +15,9 @@ import {
   updateTrainingItem,
   weekStart,
   exerciseHistory,
+  applyMenuProposal,
+  createTrainerHistory,
+  validateMenuProposal,
 } from "./canonical";
 import type {
   CanonicalAppData,
@@ -27,7 +30,20 @@ import type {
 } from "./canonical";
 import { validateCanonical } from "./canonical";
 
-type Page = "top" | "run" | "extra" | "settings" | "history";
+type Page =
+  | "top"
+  | "run"
+  | "extra"
+  | "settings"
+  | "history"
+  | "menuImport"
+  | "trainerHistoryExport";
+type SettingsTab =
+  | "profile"
+  | "exercise"
+  | "item"
+  | "menu"
+  | "settingHistory";
 const days = ["月", "火", "水", "木", "金", "土", "日"];
 const uid = () =>
   globalThis.crypto?.randomUUID?.() ??
@@ -125,6 +141,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   const [runEntryId, setRunEntryId] = useState<string>();
   const [extraItemId, setExtraItemId] = useState<string>();
   const [notice, setNotice] = useState("");
+  const [settingsTab, setSettingsTab] = useState<SettingsTab>("profile");
   const commit = async (next: CanonicalAppData) => {
     const checked = validateCanonical(next);
     if (checked.errors.length) {
@@ -157,7 +174,11 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
     if (await commit({ ...data, sessions: [...data.sessions, session] }))
       toTop();
   };
-  const header = { onSettings: () => setPage("settings"), onTop: toTop };
+  const openSettings = (tab: SettingsTab = "profile") => {
+    setSettingsTab(tab);
+    setPage("settings");
+  };
+  const header = { onSettings: () => openSettings(), onTop: toTop };
   if (page === "run" && runEntryId) {
     const entry = data.menuEntries.find((value) => value.id === runEntryId);
     const item =
@@ -208,9 +229,35 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
     );
   if (page === "history")
     return <HistoryPage data={data} onBack={toTop} {...header} />;
+  if (page === "menuImport")
+    return (
+      <MenuImportPage
+        data={data}
+        onBack={() => openSettings("menu")}
+        onApplied={(next) => {
+          setData(next);
+          setNotice("メニューを投入しました。");
+          openSettings("menu");
+        }}
+        {...header}
+      />
+    );
+  if (page === "trainerHistoryExport")
+    return (
+      <TrainerHistoryExportPage data={data} onBack={() => openSettings("settingHistory")} {...header} />
+    );
   if (page === "settings")
     return (
-      <SettingsPage data={data} commit={commit} onBack={toTop} {...header} />
+      <SettingsPage
+        data={data}
+        commit={commit}
+        tab={settingsTab}
+        onTab={setSettingsTab}
+        onMenuImport={() => setPage("menuImport")}
+        onTrainerHistoryExport={() => setPage("trainerHistoryExport")}
+        onBack={toTop}
+        {...header}
+      />
     );
   const entries = activeMenu
     ? data.menuEntries
@@ -283,7 +330,7 @@ function TopPage({
       selectedDays.includes(entry.recommendedDay),
   );
   return (
-    <Frame title="今週の実施メニュー" onTop={onTop}>
+    <Frame title="今週の実施メニュー" onSettings={onSettings} onTop={onTop}>
       {notice && <p className="week">{notice}</p>}
       <label>
         週メニュー
@@ -598,19 +645,24 @@ function HistoryPage({
 function SettingsPage({
   data,
   commit,
+  tab,
+  onTab,
+  onMenuImport,
+  onTrainerHistoryExport,
   onBack,
   onSettings,
   onTop,
 }: {
   data: CanonicalAppData;
   commit: (next: CanonicalAppData) => Promise<boolean>;
+  tab: SettingsTab;
+  onTab: (tab: SettingsTab) => void;
+  onMenuImport: () => void;
+  onTrainerHistoryExport: () => void;
   onBack: () => void;
   onSettings: () => void;
   onTop: () => void;
 }) {
-  const [tab, setTab] = useState<
-    "profile" | "exercise" | "item" | "menu" | "settingHistory"
-  >("profile");
   return (
     <Frame
       title="正規データの設定"
@@ -621,35 +673,45 @@ function SettingsPage({
       <div className="view-toggle">
         <button
           className={tab === "profile" ? "active" : ""}
-          onClick={() => setTab("profile")}
+          onClick={() => onTab("profile")}
         >
           プロフィール
         </button>
         <button
           className={tab === "exercise" ? "active" : ""}
-          onClick={() => setTab("exercise")}
+          onClick={() => onTab("exercise")}
         >
           種目
         </button>
         <button
           className={tab === "item" ? "active" : ""}
-          onClick={() => setTab("item")}
+          onClick={() => onTab("item")}
         >
           実施項目
         </button>
         <button
           className={tab === "menu" ? "active" : ""}
-          onClick={() => setTab("menu")}
+          onClick={() => onTab("menu")}
         >
           週メニュー
         </button>
         <button
           className={tab === "settingHistory" ? "active" : ""}
-          onClick={() => setTab("settingHistory")}
+          onClick={() => onTab("settingHistory")}
         >
           設定履歴
         </button>
       </div>
+      <section className="card">
+        <button className="save-setting" onClick={onMenuImport}>
+          メニュー投入
+        </button>
+        <p className="meta">JSONの提案から新しい週メニューを作成します。現在の週メニューは切り替えません。</p>
+        <button className="save-setting" onClick={onTrainerHistoryExport}>
+          トレーニング履歴出力
+        </button>
+        <p className="meta">メニュー調整・振り返り等に利用する実施履歴を出力します。アプリ復元用バックアップではありません。</p>
+      </section>
       {tab === "profile" && <ProfileEditor data={data} commit={commit} />}{" "}
       {tab === "exercise" && <ExerciseEditor data={data} commit={commit} />}{" "}
       {tab === "item" && <ItemEditor data={data} commit={commit} />}{" "}
@@ -1292,6 +1354,184 @@ function SettingHistory({
         })
       )}
     </section>
+  );
+}
+
+function formatIssues(rows: { path: string; message: string }[]) {
+  return (
+    <ul className="meta">
+      {rows.map((row) => (
+        <li key={`${row.path}:${row.message}`}>
+          {row.path}: {row.message}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function MenuImportPage({
+  data,
+  onBack,
+  onApplied,
+  onSettings,
+  onTop,
+}: {
+  data: CanonicalAppData;
+  onBack: () => void;
+  onApplied: (next: CanonicalAppData) => void;
+  onSettings: () => void;
+  onTop: () => void;
+}) {
+  const [checked, setChecked] = useState<ReturnType<typeof validateMenuProposal>>({
+    errors: [],
+    warnings: [],
+  });
+  const [acknowledged, setAcknowledged] = useState(false);
+  const [message, setMessage] = useState("");
+  const read = (file?: File) => {
+    if (!file) return;
+    setAcknowledged(false);
+    setMessage("");
+    const reader = new FileReader();
+    reader.onerror = () => {
+      setChecked({ errors: [{ path: "file", message: "ファイルを読み込めませんでした" }], warnings: [] });
+    };
+    reader.onload = () => {
+      try {
+        setChecked(validateMenuProposal(JSON.parse(String(reader.result)), data));
+      } catch (error) {
+        setChecked({ errors: [{ path: "JSON", message: `JSONを解析できません: ${String(error)}` }], warnings: [] });
+      }
+    };
+    reader.readAsText(file, "UTF-8");
+  };
+  const apply = async () => {
+    if (!checked.proposal || checked.errors.length || (checked.warnings.length && !acknowledged)) return;
+    if (!confirm("既存の週メニューを上書きせず、新しい週メニューを作成します。投入しますか？")) return;
+    const result = await applyMenuProposal(canonicalStorage, data, checked.proposal, uid);
+    if (!result.ok) {
+      setMessage(`投入に失敗しました。${result.errors.map((row) => `${row.path}: ${row.message}`).join(" / ")}`);
+      return;
+    }
+    onApplied(result.value);
+  };
+  const proposal = checked.proposal;
+  return (
+    <Frame title="メニュー投入" back={onBack} onSettings={onSettings} onTop={onTop}>
+      <section className="card">
+        <p className="meta">提案JSONを確認してから、新しい週メニューとして作成します。アプリ復元用バックアップは選択できません。</p>
+        <label>
+          提案ファイルを選択
+          <input type="file" accept="application/json,.json" onChange={(event) => read(event.target.files?.[0])} />
+        </label>
+      </section>
+      {checked.errors.length > 0 && (
+        <section className="card">
+          <h2>投入できません</h2>
+          {formatIssues(checked.errors)}
+        </section>
+      )}
+      {proposal && checked.errors.length === 0 && (
+        <section className="card">
+          <h2>内容確認</h2>
+          <p><b>{proposal.menu.name}</b>　{proposal.entries.length}件</p>
+          {proposal.menu.memo && <p className="meta">{proposal.menu.memo}</p>}
+          {proposal.entries
+            .slice()
+            .sort((left, right) => left.order - right.order)
+            .map((entry) => (
+              <p className="meta" key={`${entry.order}:${entry.trainingItemId}`}>
+                {entry.order + 1}. {data.trainingItems.find((item) => item.id === entry.trainingItemId)?.displayName ?? entry.trainingItemId}
+                {"　"}{entry.recommendedDay === undefined ? "推奨：任意" : `推奨：${days[entry.recommendedDay]}`}
+              </p>
+            ))}
+          {checked.warnings.length > 0 && (
+            <>
+              <h3>確認が必要な項目</h3>
+              {formatIssues(checked.warnings)}
+              <label>
+                <input type="checkbox" checked={acknowledged} onChange={(event) => setAcknowledged(event.target.checked)} />{" "}
+                内容を確認しました
+              </label>
+            </>
+          )}
+          <button className="primary" disabled={checked.warnings.length > 0 && !acknowledged} onClick={apply}>
+            新しい週メニューを作成
+          </button>
+        </section>
+      )}
+      {message && <p className="week">{message}</p>}
+    </Frame>
+  );
+}
+
+function downloadJson(filename: string, value: unknown) {
+  const blob = new Blob([JSON.stringify(value, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.click();
+  URL.revokeObjectURL(url);
+}
+
+function TrainerHistoryExportPage({
+  data,
+  onBack,
+  onSettings,
+  onTop,
+}: {
+  data: CanonicalAppData;
+  onBack: () => void;
+  onSettings: () => void;
+  onTop: () => void;
+}) {
+  const today = localDate();
+  const [fullHistory, setFullHistory] = useState(false);
+  const [fromDate, setFromDate] = useState(today);
+  const [toDate, setToDate] = useState(today);
+  const [message, setMessage] = useState("");
+  const preview = createTrainerHistory(data, {
+    fullHistory,
+    fromDate,
+    toDate,
+    generatedAt: new Date().toISOString(),
+  });
+  const exportHistory = () => {
+    if (!preview.ok) return;
+    if (preview.value.sessions.length === 0) {
+      setMessage("対象期間に履歴がありません。");
+      return;
+    }
+    try {
+      const suffix = fullHistory ? `full-${today}` : `${fromDate}_${toDate}`;
+      downloadJson(`training-check-trainer-history-${suffix}.json`, preview.value);
+      setMessage(`${preview.value.sessions.length}件の実施履歴を出力しました。`);
+    } catch (error) {
+      setMessage(`出力に失敗しました: ${String(error)}`);
+    }
+  };
+  return (
+    <Frame title="トレーニング履歴出力" back={onBack} onSettings={onSettings} onTop={onTop}>
+      <section className="card">
+        <p className="meta">メニュー調整・振り返り等に利用する実施履歴を出力します。アプリ復元用バックアップではありません。</p>
+        <label>
+          <input type="checkbox" checked={fullHistory} onChange={(event) => setFullHistory(event.target.checked)} /> 全履歴を出力する
+        </label>
+        {!fullHistory && (
+          <>
+            <label>開始日<input type="date" value={fromDate} onChange={(event) => setFromDate(event.target.value)} /></label>
+            <label>終了日<input type="date" value={toDate} onChange={(event) => setToDate(event.target.value)} /></label>
+            <p className="meta">開始日・終了日を含む期間で出力します。</p>
+          </>
+        )}
+        {!preview.ok ? formatIssues(preview.errors) : <p className="meta">対象Session: {preview.value.sessions.length}件</p>}
+        <button className="primary" disabled={!preview.ok || preview.value.sessions.length === 0} onClick={exportHistory}>
+          JSONを出力
+        </button>
+      </section>
+      {message && <p className="week">{message}</p>}
+    </Frame>
   );
 }
 

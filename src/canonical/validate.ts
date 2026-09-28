@@ -102,6 +102,17 @@ export function validateCanonical(input: unknown): ValidationResult {
   const sessions = arrayAt(input, 'sessions', errors)
   const changes = arrayAt(input, 'trainingItemSettingChanges', errors)
   ;[ [exercises, 'exercises'], [trainingItems, 'trainingItems'], [menus, 'menus'], [menuEntries, 'menuEntries'], [sessions, 'sessions'], [changes, 'trainingItemSettingChanges'] ].forEach(([rows, path]) => duplicateIds(rows as unknown[], path as string, errors))
+  if (input.appliedProposalIds !== undefined) {
+    if (!Array.isArray(input.appliedProposalIds)) add(errors, 'appliedProposalIds', '配列ではありません')
+    else {
+      const seen = new Set<string>()
+      input.appliedProposalIds.forEach((value, index) => {
+        if (!isId(value)) add(errors, `appliedProposalIds[${index}]`, '空でないID文字列が必要です')
+        else if (seen.has(value)) add(errors, `appliedProposalIds[${index}]`, 'proposalIdが重複しています')
+        else seen.add(value)
+      })
+    }
+  }
 
   if (!isRecord(input.profile) || !isNumber(input.profile.weight) || input.profile.weight <= 0) add(errors, 'profile.weight', '有限の正数が必要です')
   else {

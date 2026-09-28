@@ -18,6 +18,7 @@ export function createInitialCanonicalCandidate(profile: ProfileCandidate): Cano
     menuEntries: [],
     sessions: [],
     trainingItemSettingChanges: [],
+    appliedProposalIds: [],
   }
 }
 

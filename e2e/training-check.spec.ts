@@ -95,6 +95,29 @@ test('canonical-authoritative runtime completes an entry and preserves a canonic
   expect((await readCanonicalState(page)).sessions).toHaveLength(1)
 })
 
+test('canonical settings imports a verified MenuProposal without changing the active menu', async ({ page }) => {
+  await page.clock.install({ time: monday })
+  await seedCanonicalAndReload(page, canonicalData())
+  await page.getByRole('button', { name: '共通メニュー' }).click()
+  await page.getByRole('button', { name: '設定' }).click()
+  await expect(page.getByRole('heading', { name: '正規データの設定' })).toBeVisible()
+  await page.getByRole('button', { name: 'メニュー投入' }).click()
+  await page.getByLabel('提案ファイルを選択').setInputFiles({
+    name: 'proposal.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({
+      contractVersion: '1.0', proposalId: 'e2e-proposal-1', menu: { name: 'E2E投入メニュー' },
+      entries: [{ trainingItemId: 'canonical-item', recommendedDay: 1, order: 0 }],
+    })),
+  })
+  await expect(page.getByRole('heading', { name: '内容確認' })).toBeVisible()
+  page.on('dialog', dialog => dialog.accept())
+  await page.getByRole('button', { name: '新しい週メニューを作成' }).click()
+  await expect(page.getByRole('heading', { name: '正規データの設定' })).toBeVisible()
+  const stored = await readCanonicalState(page)
+  expect((stored.menus as Array<{ name: string }>).some(menu => menu.name === 'E2E投入メニュー')).toBe(true)
+  expect(stored.activeMenuId).toBe('canonical-menu')
+  expect(stored.appliedProposalIds).toEqual(['e2e-proposal-1'])
+})
+
 test('explicit cutover adopts only the confirmed Profile candidate and does not copy legacy master data', async ({ page }) => {
   await page.clock.install({ time: monday })
   const legacy = { ...seedData(0), profile: { ...seedData(0).profile, height: 170, age: 40, sex: 'male' } }

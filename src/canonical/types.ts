@@ -121,6 +121,8 @@ export type CanonicalAppData = {
   menuEntries: MenuEntry[]
   sessions: Session[]
   trainingItemSettingChanges: TrainingItemSettingChange[]
+  /** Ver1 MenuProposalで正常に適用済みとなった外部proposalId。 */
+  appliedProposalIds?: ID[]
 }
 
 export type BackupEnvelope = {
