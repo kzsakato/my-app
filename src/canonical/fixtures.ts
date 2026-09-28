@@ -2,6 +2,7 @@ import type { BackupEnvelope, CanonicalAppData } from './types'
 
 export const canonicalFixture: CanonicalAppData = {
   schemaVersion: 1,
+  weekStartsOn: 0,
   activeMenuId: 'menu-1',
   profile: { weight: 66 },
   exercises: [{

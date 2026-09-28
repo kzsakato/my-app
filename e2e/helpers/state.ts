@@ -74,3 +74,53 @@ export async function seedAndReload(page: Page, value: LegacyAppData): Promise<v
 export async function readStoredState(page: Page): Promise<LegacyAppData> {
   return openDatabase(page, 'read') as Promise<LegacyAppData>
 }
+
+export type CanonicalData = Record<string, unknown>
+
+async function canonicalStore(page: Page, operation: 'seed' | 'read', value?: CanonicalData): Promise<unknown> {
+  return page.evaluate(async ({ operation, value }) => {
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open('training-check', 7)
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+    const transaction = db.transaction(['canonical', 'cutover'], operation === 'seed' ? 'readwrite' : 'readonly')
+    const canonical = transaction.objectStore('canonical')
+    const cutover = transaction.objectStore('cutover')
+    if (operation === 'seed') {
+      canonical.put(value, 'app')
+      cutover.put({ authoritative: true, establishedAt: '2026-09-21T10:00:00+09:00' }, 'state')
+    }
+    const result = operation === 'read' ? await new Promise<unknown>((resolve, reject) => {
+      const request = canonical.get('app')
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    }) : value
+    await new Promise<void>((resolve, reject) => { transaction.oncomplete = () => resolve(); transaction.onerror = () => reject(transaction.error); transaction.onabort = () => reject(transaction.error) })
+    db.close()
+    return result
+  }, { operation, value })
+}
+
+export function canonicalData(): CanonicalData {
+  return {
+    schemaVersion: 1, weekStartsOn: 0, activeMenuId: 'canonical-menu', profile: { weight: 66 },
+    exercises: [{ id: 'canonical-exercise', lifecycle: 'active', name: '正規テストプレス', measureType: 'reps', usesWeight: true, weightMode: 'total', classifications: [{ kind: 'bodyRegion', label: '胸' }] }],
+    trainingItems: [{ id: 'canonical-item', lifecycle: 'active', exerciseId: 'canonical-exercise', displayName: '正規テストプレス', weight: 20, reps: 10, sets: 3 }],
+    menus: [{ id: 'canonical-menu', lifecycle: 'active', name: '正規E2Eメニュー' }],
+    menuEntries: [{ id: 'canonical-entry-a', lifecycle: 'active', menuId: 'canonical-menu', trainingItemId: 'canonical-item', recommendedDay: 0, order: 0 }, { id: 'canonical-entry-b', lifecycle: 'active', menuId: 'canonical-menu', trainingItemId: 'canonical-item', recommendedDay: 1, order: 1 }],
+    sessions: [],
+    trainingItemSettingChanges: [{ id: 'canonical-change', trainingItemId: 'canonical-item', changedAt: '2026-09-21T10:00:00+09:00', snapshot: { weight: 20, reps: 10, sets: 3 } }],
+  }
+}
+
+export async function seedCanonicalAndReload(page: Page, value: CanonicalData): Promise<void> {
+  await page.goto('/')
+  await page.getByRole('heading', { name: '今週の実施メニュー' }).waitFor()
+  await canonicalStore(page, 'seed', value)
+  await page.reload()
+}
+
+export async function readCanonicalState(page: Page): Promise<CanonicalData> {
+  return canonicalStore(page, 'read') as Promise<CanonicalData>
+}

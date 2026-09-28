@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-27（H-20260927-04: OIC-012 Production実装・自動回帰確認完了、Android実機確認待ち）
+最終更新: 2026-09-28（H-20260928-03: canonical Stage 3実装・自動回帰確認完了）
 
 ## 1. アプリの目的
 
@@ -30,6 +30,7 @@
 - canonical正式データのStage 2基盤を追加済み。専用IndexedDB store、切替marker、移行前legacy baseline、cutover／read-back／rollback、canonical backup Restore、起動時のcanonical authority分岐を実装した。通常の現行画面はlegacy v6のままで、cutoverを起動するUIおよびcanonicalデータを通常画面へ接続するUIは未実装。
 - Stage 1として、legacy v5/v6の非破壊previewと、現在のactive stateとは分離したRecovery Point保存・取得を追加済み。canonical storageへの切替・legacyの自動canonical化は未着手。
 - Playwright ChromiumのE0/E1 Trialを追加済み。Vitestはpure domain、Playwrightはbrowser UI・IndexedDB・日時・ファイル操作のE2Eとして分離している。
+- canonical Stage 3を実装済み。Data Managementの明示cutover、Profile候補の明示採用、canonical専用のTop／Menu／Run／追加実施／標準設定／Session履歴、canonical authority後の明示Recoveryを追加した。legacy master/menu/session/historyを自動変換しない。
 
 ### 未着手の機能
 
@@ -41,9 +42,9 @@
 
 ## 3. 現在の作業内容
 
-- 最後に取り組んだ課題: H-20260927-04のOIC-012画面高密度化Production実装。
-- 完了状況: 共通ヘッダー、二行の実施種目一覧、Exercise単位の14日実施状況、Run画面の省スペース配置を実装し、通常PowerShellでUnit 35件、build、Chromium E2E 4件の成功を確認した。HandoffはQA / TestへDONE返却済み。PrototypeはQA / OwnerのProduction確認まで保持する。
-- 現在の問題: Codexのブラウザ自動操作はローカル `file:///` URLをポリシーで開けないため、Prototypeの視覚確認はOwnerが当該HTMLを直接開いて行う必要がある。Codex環境では依存関係へアクセスできないため、Node／pnpmの回帰確認は通常PowerShellで行う必要がある。H-20260927-04のAndroid実機での見た目・タップ確認は未実施。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）は未検証。v5→v6移行、v6 backup restore、Session snapshotによる分析をAndroid実機で確認していない。
+- 最後に取り組んだ課題: H-20260928-03のcanonical Stage 3（canonical通常画面接続＋cutover起動UI）。
+- 完了状況: root `main` を `git fetch` / `git pull --ff-only` で最新化後、Data Managementから明示的に初期canonical candidateを作りcutoverできるようにした。candidateには明示確認済みProfileだけを採用し、legacyのmaster/menu/session/historyは移さない。authority後はcanonicalだけを保存・参照する通常画面（Top、Menu、Run、追加実施、標準設定、履歴）へ接続した。Unit 38件、PWA build、Chromium E2E 6件が成功。
+- 現在の問題: canonical Stage 3のAndroid実機でのcutover、通常トレーニング、Recovery画面は未確認。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）も未検証。canonicalのBackup/Restore完成、Analysis全面刷新、Trainer JSON投入、Setting Change Historyの追加Product変更は別work item。
 
 ## 4. 重要な設計上の決定
 
@@ -68,6 +69,9 @@
 | `src/canonical/` | canonical正式化予定のStage 0純粋domain基盤 | runtime未接続。types／validation／operations／識別fixture／Vitestテストを保持。 |
 | `src/canonical/legacy.ts` | Stage 1のlegacy再作成preview | legacy payloadを構造識別し、Profile候補と参照材料件数だけを非破壊で生成する。 |
 | `src/canonical/cutover.ts` | Stage 2のcanonical storage/cutover/Restore境界 | baseline保護、保存後read-back、authority marker、rollback、明示的Restore入力検証を実装済み。 |
+| `src/CanonicalApp.tsx` | Stage 3のcanonical通常画面とcutover／Recovery UI | canonical専用のTop、Menu、Run、追加実施、標準設定、Session履歴を実装。legacy AppDataは二重読書きしない。 |
+| `src/canonical/runtime.ts` | Stage 3の初期candidate、週境界、Session作成 | Profile候補だけを採用した空candidateを作り、legacy entityを自動変換しない。 |
+| `src/canonical/runtime.test.ts` | Stage 3 pure runtime test | candidate境界、週開始、Session snapshotを検証。 |
 | `src/canonical/cutover.test.ts` | Stage 2自動テスト | in-memory adapterで保存失敗、read-back不一致、runtime/restart失敗、rollback/recovery失敗を注入して検証する。 |
 | `vitest.config.ts` | Stage 0自動テスト設定 | Node環境で `src/**/*.test.ts` を実行する。 |
 | `playwright.config.ts` | Chromium E2E Trial設定 | ViteをE2E時だけ起動し、failure evidenceを保持する。 |
@@ -96,5 +100,5 @@
 3. v6バックアップを作成し、別端末またはテストデータで復元する。エラーは中止、警告は確認後だけ復元されることを確認する。
 4. 実施完了後、Sessionにsnapshotが残り、種目設定変更後も分析換算係数がSessionの値を使うことを確認する。
 5. Issue #16のUI先行改修もAndroidで確認し、QAへH-20260922-07の実装・テスト結果を返却する。
-6. Stage 3のcanonical通常画面接続・cutover起動UIは、Data Design・PMOの次段階HandoffとOwner GOなしに開始しない。着手時は `src/canonical/`、`src/data.ts`、`training-project/handoff/H-20260926-09.md` を確認する。
+6. Android実機でData Management→「正規データへの切替を準備」を確認する。明示確認後にProfileだけを採用した空のcanonical dataへ切替わり、legacyデータから種目・週メニュー・実績が自動移行されないことを確認する。切替後に種目／実施項目／週メニューを新規作成し、通常実施・追加実施・履歴表示を確認する。
 7. Playwright Trialを正式採用・拡張するかは別判断。現時点ではChromiumのみ。UIまたは現行v6 IndexedDB構造を変更する場合、`e2e/` のfixture・selectorを更新してから `pnpm test:e2e` を実行する。

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { readFile } from 'node:fs/promises'
-import { readStoredState, seedAndReload, seedData } from './helpers/state'
+import { canonicalData, readCanonicalState, readStoredState, seedAndReload, seedCanonicalAndReload, seedData } from './helpers/state'
 
 const monday = new Date('2026-09-21T10:00:00+09:00')
 
@@ -81,4 +81,37 @@ test('backup export can restore the original state through the visible import co
   await page.getByLabel('バックアップから復元').setInputFiles({ name: 'backup.json', mimeType: 'application/json', buffer: backup })
   await expect(page.getByRole('heading', { name: '設定' })).toBeVisible()
   await expect.poll(async () => (await readStoredState(page)).profile.weight).toBe(66)
+})
+
+test('canonical-authoritative runtime completes an entry and preserves a canonical-only session after reload', async ({ page }) => {
+  await page.clock.install({ time: monday })
+  await seedCanonicalAndReload(page, canonicalData())
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+  await page.getByRole('button', { name: /正規テストプレス/ }).first().click()
+  await page.getByRole('button', { name: '種目を完了' }).click()
+  await expect.poll(async () => ((await readCanonicalState(page)).sessions as unknown[]).length).toBe(1)
+  await page.reload()
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+  expect((await readCanonicalState(page)).sessions).toHaveLength(1)
+})
+
+test('explicit cutover adopts only the confirmed Profile candidate and does not copy legacy master data', async ({ page }) => {
+  await page.clock.install({ time: monday })
+  const legacy = seedData(0)
+  await seedAndReload(page, legacy)
+  await page.getByRole('button', { name: '共通メニュー' }).click()
+  await page.getByRole('button', { name: '設定' }).click()
+  await page.getByRole('button', { name: 'データ管理' }).click()
+  await page.getByRole('button', { name: '正規データへの切替を準備' }).click()
+  await page.getByLabel('表示したProfile候補を採用する').check()
+  await page.getByLabel('切替後は正規データが正本であり、旧データへ自動復帰しないことを確認した').check()
+  page.on('dialog', dialog => dialog.accept())
+  await page.getByRole('button', { name: '正規データへ切替' }).click()
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+  const canonical = await readCanonicalState(page)
+  expect(canonical.profile).toMatchObject({ weight: 66 })
+  expect(canonical.exercises).toEqual([])
+  expect(canonical.trainingItems).toEqual([])
+  expect(canonical.menus).toEqual([])
+  expect((await readStoredState(page)).exercises).toHaveLength(1)
 })
