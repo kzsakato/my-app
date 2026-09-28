@@ -12,6 +12,7 @@ test('common menu reaches settings and the bottom navigation is absent', async (
   await page.getByRole('button', { name: '共通メニュー' }).click()
   await page.getByRole('button', { name: '設定' }).click()
   await expect(page.getByRole('heading', { name: '設定' })).toBeVisible()
+  await expect(page.getByLabel('ビルド識別子')).toHaveText(/^Build \d{4}-\d{2}-\d{2} \/ (?:[0-9a-f]{8}|local)$/)
   await page.getByRole('button', { name: '共通メニュー' }).click()
   await page.getByRole('button', { name: '実施メニュー' }).click()
   await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()

@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-28（H-20260928-21: 配信版build identifier表示を追加・自動検証完了）
+最終更新: 2026-09-29（H-20260929-03: legacy設定へのbuild identifier表示を追加・自動検証完了）
 
 ## 1. アプリの目的
 
@@ -39,6 +39,7 @@
 - H-20260928-17として、Android MAN準備用の限定canonical Master bootstrapを追加した。明示確認後に承認済みのペクトラルフライ（マシン）、サイドレイズ、レッグレイズと、任意のフロントプランクを新規Exercise／TrainingItemとして投入する。legacyの復元・移行や週メニュー作成は行わず、全件validation・保存後read-backに成功した場合だけ完了する。成功画面でlegacy source IDから新canonical IDへの対応表を表示する。
 - H-20260928-20として、MAN用Master bootstrap成功時の構造化対応表から、既存H-07 MenuProposal contractのJSONを生成してUTF-8でダウンロードする限定helperを追加した。既存の「メニュー投入」画面で検証・Warning確認・新規Menu作成を行うため、bootstrap自体やactive Menuを変更しない。
 - H-20260928-21として、canonicalの「正規データの設定」画面末尾にbuild identifierを表示する。GitHub Pages buildではtrigger commitの先頭8桁SHAとbuild日をVite defineで埋め込み、local/devは`local`を表示する。
+- H-20260929-03として、legacy通常「設定」画面末尾にも同じbuild identifierを追加した。canonical／legacyで表示値や注入方式を分けず、どちらの保存状態でも配信版を確認できる。
 
 ### 未着手の機能
 
@@ -50,7 +51,7 @@
 
 ## 3. 現在の作業内容
 
-- 最後に取り組んだ課題: H-20260928-21（Android MAN前の配信版識別子表示）。
+- 最後に取り組んだ課題: H-20260929-03（legacy設定画面への配信版識別子表示）。
 - 完了状況: root `main` を `git fetch` / `git pull --ff-only` で最新化後、Data Managementから明示的に初期canonical candidateを作りcutoverできるようにした。candidateには明示確認済みProfileだけを採用し、legacyのmaster/menu/session/historyは移さない。authority後はcanonicalだけを保存・参照する通常画面（Top、Menu、Run、追加実施、標準設定、履歴）へ接続した。Profileの体重・身長・年齢・性別は採用前に全て表示し、切替前にlegacy source検証とimmutable baseline保存/read-backだけを実行するpreflightを追加した。Unit 39件、PWA build、Chromium E2E 6件が成功。
 - 現在の問題: canonical Stage 3、H-20260928-05、H-20260928-07、H-20260928-14のAndroid実機でのcutover、通常トレーニング、設定変更履歴、Recovery、JSON file download/upload、分析表示は未確認。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）も未検証。
 
@@ -109,14 +110,14 @@
 
 ## 6. 動作確認
 
-- 実行済み: 2026-09-28にH-20260928-21後の `pnpm test` が10 file・62件成功、`pnpm build` がPWA生成を含め成功、`pnpm test:e2e` がChromiumで10件成功。`VITE_BUILD_SHA=abcdef1234567890`を渡したbuild成果物には`Build 2026-09-28 / abcdef12`が埋め込まれることも確認した。
+- 実行済み: 2026-09-29にH-20260929-03後の `pnpm test` が10 file・62件成功、`pnpm build` がPWA生成を含め成功、`pnpm test:e2e` がChromiumで10件成功。E2Eではlegacy通常「設定」とcanonical「正規データの設定」の双方にbuild identifierが表示されることを確認した。`VITE_BUILD_SHA=abcdef1234567890`を渡したbuild成果物には`Build 2026-09-28 / abcdef12`が埋め込まれることも確認済み。
 - 確認できたこと: Stage 2のcandidate識別・validation、legacy baselineのv6完全検証／v5決定的移行検証、baseline保存、canonical保存/read-back、runtime/restart相当read、rollback、canonical Restoreのfailure injectionをVitestで確認した。構造識別できるだけの不正v6入力はbaselineへ保存されない。E2Eはv7 IndexedDBでも既存v6画面の実施保存・週境界・backup restoreを確認した。
 - 未確認: H-20260928-07のAndroid実機でのMenuProposal file選択・Warning確認・適用後の週メニュー確認、Trainer History file download。H-20260927-04のモバイル実機での共通メニュー・二行一覧・Run操作。Stage 2の実ブラウザ永続化固有リスク（cold boot、quota/storage failure、interrupted transaction、multi-tab）。Android実機でのv5移行（Recovery Pointを保存後にSession／SettingHistory除外）、v6 backup restore、Session snapshot分析。Issue #16のUI先行改修も実機確認が必要。
 - 既知の不具合: なし。OIC-009は当日Sessionの件数を分子にするため、同じItemを複数回完了した場合もその回数を数える。
 
 ## 7. 次にやるべきこと
 
-1. GitHub Pagesの最新deploy完了後、Android実機でcanonical「正規データの設定」末尾の`Build YYYY-MM-DD / <短縮SHA>`が最新main commit由来であることを確認する。その後、canonicalの「MAN用マスターを投入」成功画面から「MAN用メニューJSONを作成」を実行し、ダウンロードしたJSONを既存の「メニュー投入」で選択する。推奨曜日未指定Warningを確認後に新規Menuを作成し、active Menuが変わらないことを確認する。続けて有効／不正なMenuProposal JSON、Trainer Historyの期間・全履歴・0件表示・JSON downloadも確認し、結果をQA / Testへ渡す。
+1. GitHub Pagesの最新deploy完了後、Android実機でlegacy「設定」またはcanonical「正規データの設定」末尾の`Build YYYY-MM-DD / <短縮SHA>`が最新main commit由来であることを確認する。legacy/canonical UI差分とAndroid MAN対象の確定は別途必要であり、MANはそれまでHOLDする。その後、canonicalの「MAN用マスターを投入」成功画面から「MAN用メニューJSONを作成」を実行し、ダウンロードしたJSONを既存の「メニュー投入」で選択する。推奨曜日未指定Warningを確認後に新規Menuを作成し、active Menuが変わらないことを確認する。続けて有効／不正なMenuProposal JSON、Trainer Historyの期間・全履歴・0件表示・JSON downloadも確認し、結果をQA / Testへ渡す。
 2. Android実機でcanonical Topの複数曜日選択、Session実績表示、Runのseat入力、週メニュー追加確認、設定変更理由／履歴削除を確認する。結果をQA / Testへ渡す。
 2. GitHub ActionsのTest workflowの初回実行結果を確認する。失敗時はActionsログと `playwright-report` artifactを確認する。
 2. 初回v6公開後、Androidでv5移行画面を確認する。復旧JSONを保存後、移行により設定を保持し、Session／SettingHistoryが除外されることを確認する。
