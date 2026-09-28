@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-28（H-20260928-03: canonical Stage 3受入FIX・自動回帰確認完了）
+最終更新: 2026-09-28（H-20260928-05: Ver1 UI/OIC実装・自動回帰確認完了）
 
 ## 1. アプリの目的
 
@@ -31,6 +31,7 @@
 - Stage 1として、legacy v5/v6の非破壊previewと、現在のactive stateとは分離したRecovery Point保存・取得を追加済み。canonical storageへの切替・legacyの自動canonical化は未着手。
 - Playwright ChromiumのE0/E1 Trialを追加済み。Vitestはpure domain、Playwrightはbrowser UI・IndexedDB・日時・ファイル操作のE2Eとして分離している。
 - canonical Stage 3を実装済み。Data Managementの明示cutover、Profile候補の明示採用、canonical専用のTop／Menu／Run／追加実施／標準設定／Session履歴、canonical authority後の明示Recoveryを追加した。legacy master/menu/session/historyを自動変換しない。受入FIXとして、実際に採用する全Profile候補の開示と、authority化前のbaseline readiness preflightを追加した。
+- H-20260928-05のVer1 UI/OICをcanonical通常画面へ実装済み。複数曜日の一覧選択、実施済みSession実績表示、当回seat保存、週メニュー追加確認、設定変更理由、初回履歴保護と非初回履歴の個別削除を追加した。
 
 ### 未着手の機能
 
@@ -42,9 +43,9 @@
 
 ## 3. 現在の作業内容
 
-- 最後に取り組んだ課題: H-20260928-03のcanonical Stage 3（canonical通常画面接続＋cutover起動UI）。
+- 最後に取り組んだ課題: H-20260928-05のOwner確定Ver1 UI/OIC bundle。
 - 完了状況: root `main` を `git fetch` / `git pull --ff-only` で最新化後、Data Managementから明示的に初期canonical candidateを作りcutoverできるようにした。candidateには明示確認済みProfileだけを採用し、legacyのmaster/menu/session/historyは移さない。authority後はcanonicalだけを保存・参照する通常画面（Top、Menu、Run、追加実施、標準設定、履歴）へ接続した。Profileの体重・身長・年齢・性別は採用前に全て表示し、切替前にlegacy source検証とimmutable baseline保存/read-backだけを実行するpreflightを追加した。Unit 39件、PWA build、Chromium E2E 6件が成功。
-- 現在の問題: canonical Stage 3のAndroid実機でのcutover、通常トレーニング、Recovery画面は未確認。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）も未検証。canonicalのBackup/Restore完成、Analysis全面刷新、Trainer JSON投入、Setting Change Historyの追加Product変更は別work item。
+- 現在の問題: canonical Stage 3とH-20260928-05のAndroid実機でのcutover、通常トレーニング、設定変更履歴、Recovery画面は未確認。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）も未検証。canonicalのBackup/Restore完成、Analysis全面刷新、Trainer JSON投入は別work item。
 
 ## 4. 重要な設計上の決定
 
@@ -66,10 +67,10 @@
 | `src/history.ts` | Exercise単位の14日実施状況表示 | H-20260927-04で追加、通常／追加実施を統合表示。 |
 | `src/history.test.ts` | 14日実施状況のUnit test | 同一Exerciseの複数Item、通常／追加実施を対象に追加・成功。 |
 | `src/domain.ts` | 正式データ型、参照検証、Migration、backup／proposal境界 | H-20260922-07で追加。UIやIndexedDBに依存しない。 |
-| `src/canonical/` | canonical正式化予定のStage 0純粋domain基盤 | runtime未接続。types／validation／operations／識別fixture／Vitestテストを保持。 |
+| `src/canonical/` | canonical正式データの純粋domain基盤 | types／validation／operations／識別fixture／Vitestテストを保持。設定変更履歴の初回識別・個別削除を含む。 |
 | `src/canonical/legacy.ts` | Stage 1のlegacy再作成preview | legacy payloadを構造識別し、Profile候補と参照材料件数だけを非破壊で生成する。 |
 | `src/canonical/cutover.ts` | Stage 2のcanonical storage/cutover/Restore境界 | baseline保護、保存後read-back、authority marker、rollback、明示的Restore入力検証を実装済み。 |
-| `src/CanonicalApp.tsx` | Stage 3のcanonical通常画面とcutover／Recovery UI | canonical専用のTop、Menu、Run、追加実施、標準設定、Session履歴を実装。legacy AppDataは二重読書きしない。 |
+| `src/CanonicalApp.tsx` | Stage 3のcanonical通常画面とcutover／Recovery UI | canonical専用のTop、Menu、Run、追加実施、標準設定、Session履歴、設定変更履歴を実装。legacy AppDataは二重読書きしない。 |
 | `src/canonical/runtime.ts` | Stage 3の初期candidate、週境界、Session作成 | Profile候補だけを採用した空candidateを作り、legacy entityを自動変換しない。 |
 | `src/canonical/runtime.test.ts` | Stage 3 pure runtime test | candidate境界、週開始、Session snapshotを検証。 |
 | `playwright.config.ts` | Chromium E2E設定 | 共用IndexedDBを安全に検証するため、現行single-specのtest caseを直列実行する。 |
@@ -88,14 +89,14 @@
 
 ## 6. 動作確認
 
-- 実行済み: 2026-09-27に通常PowerShellで `pnpm test` が4 file・35件成功、`pnpm build` がPWA生成を含め成功、`pnpm test:e2e` がChromiumで4件成功。
+- 実行済み: 2026-09-28に `pnpm test` が5 file・41件成功、`pnpm build` がPWA生成を含め成功、`pnpm test:e2e` がChromiumで6件成功。
 - 確認できたこと: Stage 2のcandidate識別・validation、legacy baselineのv6完全検証／v5決定的移行検証、baseline保存、canonical保存/read-back、runtime/restart相当read、rollback、canonical Restoreのfailure injectionをVitestで確認した。構造識別できるだけの不正v6入力はbaselineへ保存されない。E2Eはv7 IndexedDBでも既存v6画面の実施保存・週境界・backup restoreを確認した。
 - 未確認: H-20260927-04のモバイル実機での共通メニュー・二行一覧・Run操作。Stage 2の実ブラウザ永続化固有リスク（cold boot、quota/storage failure、interrupted transaction、multi-tab）。Android実機でのv5移行（Recovery Pointを保存後にSession／SettingHistory除外）、v6 backup restore、Session snapshot分析。Issue #16のUI先行改修も実機確認が必要。
 - 既知の不具合: なし。OIC-009は当日Sessionの件数を分子にするため、同じItemを複数回完了した場合もその回数を数える。
 
 ## 7. 次にやるべきこと
 
-1. Android実機で共通メニュー、カテゴリ／推奨曜日の二行一覧、同一Exerciseの14日表示、Runの重量・回数・セット数操作を確認する。結果をQA / Testへ渡し、Prototype cleanup可否を判断する。
+1. Android実機でcanonical Topの複数曜日選択、Session実績表示、Runのseat入力、週メニュー追加確認、設定変更理由／履歴削除を確認する。結果をQA / Testへ渡す。
 2. GitHub ActionsのTest workflowの初回実行結果を確認する。失敗時はActionsログと `playwright-report` artifactを確認する。
 2. 初回v6公開後、Androidでv5移行画面を確認する。復旧JSONを保存後、移行により設定を保持し、Session／SettingHistoryが除外されることを確認する。
 3. v6バックアップを作成し、別端末またはテストデータで復元する。エラーは中止、警告は確認後だけ復元されることを確認する。

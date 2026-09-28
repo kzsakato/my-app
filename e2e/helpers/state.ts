@@ -110,7 +110,7 @@ export function canonicalData(): CanonicalData {
     menus: [{ id: 'canonical-menu', lifecycle: 'active', name: '正規E2Eメニュー' }],
     menuEntries: [{ id: 'canonical-entry-a', lifecycle: 'active', menuId: 'canonical-menu', trainingItemId: 'canonical-item', recommendedDay: 0, order: 0 }, { id: 'canonical-entry-b', lifecycle: 'active', menuId: 'canonical-menu', trainingItemId: 'canonical-item', recommendedDay: 1, order: 1 }],
     sessions: [],
-    trainingItemSettingChanges: [{ id: 'canonical-change', trainingItemId: 'canonical-item', changedAt: '2026-09-21T10:00:00+09:00', snapshot: { weight: 20, reps: 10, sets: 3 } }],
+    trainingItemSettingChanges: [{ id: 'canonical-change', trainingItemId: 'canonical-item', changedAt: '2026-09-21T10:00:00+09:00', isInitial: true, snapshot: { weight: 20, reps: 10, sets: 3 } }],
   }
 }
 

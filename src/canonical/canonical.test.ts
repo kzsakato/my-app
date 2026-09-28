@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { canonicalBackupFixture, canonicalFixture, legacyV5PayloadFixture, legacyV6BackupFixture, legacyV6PayloadFixture } from './fixtures'
 import { identifyInput } from './identify'
-import { addTrainingItem, createSessionSnapshot, updateTrainingItem } from './operations'
+import { addTrainingItem, createSessionSnapshot, deleteTrainingItemSettingChange, updateTrainingItem } from './operations'
 import { validateBackupEnvelope, validateCanonical } from './validate'
 
 const clone = <T>(value: T): T => structuredClone(value)
@@ -51,13 +51,30 @@ describe('core invariant: canonical operations', () => {
   it('writes the initial full setting snapshot at item creation', () => {
     const base = clone(canonicalFixture); base.trainingItems = []; base.trainingItemSettingChanges = []
     const result = addTrainingItem(base, canonicalFixture.trainingItems[0], { newId: () => 'change-new', now: () => '2026-09-24T10:00:00+09:00' })
-    expect(result.trainingItemSettingChanges).toEqual([{ id: 'change-new', trainingItemId: 'item-1', changedAt: '2026-09-24T10:00:00+09:00', snapshot: { weight: 18, reps: 15, seconds: undefined, sets: 5, seat: undefined, standardMemo: undefined } }])
+    expect(result.trainingItemSettingChanges).toEqual([{ id: 'change-new', trainingItemId: 'item-1', changedAt: '2026-09-24T10:00:00+09:00', isInitial: true, changeReason: undefined, snapshot: { weight: 18, reps: 15, seconds: undefined, sets: 5, seat: undefined, standardMemo: undefined } }])
   })
 
   it('keeps same-day material changes as separate full-snapshot records', () => {
-    const first = updateTrainingItem(canonicalFixture, { ...canonicalFixture.trainingItems[0], weight: 20 }, { newId: () => 'change-2', now: () => '2026-09-24T10:00:00+09:00' })
+    const first = updateTrainingItem(canonicalFixture, { ...canonicalFixture.trainingItems[0], weight: 20 }, { newId: () => 'change-2', now: () => '2026-09-24T10:00:00+09:00', changeReason: '体調に合わせた' })
     const second = updateTrainingItem(first, { ...first.trainingItems[0], weight: 22 }, { newId: () => 'change-3', now: () => '2026-09-24T11:00:00+09:00' })
     expect(second.trainingItemSettingChanges.map(value => value.id)).toEqual(['change-1', 'change-2', 'change-3'])
+    expect(second.trainingItemSettingChanges[1].changeReason).toBe('体調に合わせた')
+    expect(second.trainingItemSettingChanges[2].changeReason).toBeUndefined()
+  })
+
+  it('deletes only the selected non-initial setting change', () => {
+    const changed = updateTrainingItem(canonicalFixture, { ...canonicalFixture.trainingItems[0], weight: 20 }, { newId: () => 'change-2', now: () => '2026-09-24T10:00:00+09:00' })
+    const result = deleteTrainingItemSettingChange(changed, 'item-1', 'change-2')
+    expect(result.trainingItemSettingChanges.map(value => value.id)).toEqual(['change-1'])
+    expect(result.trainingItems).toEqual(changed.trainingItems)
+    expect(result.sessions).toEqual(changed.sessions)
+    expect(validateCanonical(result).errors).toEqual([])
+  })
+
+  it('rejects deletion of initial, absent, and wrong-item setting changes', () => {
+    expect(() => deleteTrainingItemSettingChange(canonicalFixture, 'item-1', 'change-1')).toThrow('Initial setting change')
+    expect(() => deleteTrainingItemSettingChange(canonicalFixture, 'item-1', 'missing')).toThrow('Setting change not found')
+    expect(() => deleteTrainingItemSettingChange(canonicalFixture, 'other-item', 'change-1')).toThrow('does not belong')
   })
 
   it('copies classifications into the Session snapshot instead of retaining Exercise references', () => {

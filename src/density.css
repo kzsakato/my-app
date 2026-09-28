@@ -38,4 +38,7 @@
 .run-meta{min-height:42px;margin:0;padding:11px 0;border-bottom:1px solid #e4e9e3;font-size:13px}
 .run-meta small{display:inline;margin-left:4px}
 .history-link{min-height:42px;margin-top:0;padding:0}
+.day-picker{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}
+.day-picker label{display:flex;align-items:center;gap:3px;margin:0;padding:6px 8px;border:1px solid #ccd5cc;border-radius:8px;font-size:13px}
+.day-picker input{width:16px;min-height:16px;margin:0;accent-color:#326a41}
 @media(max-width:360px){.app-header{grid-template-columns:58px minmax(0,1fr) 50px}.header-back{width:54px;font-size:12px}.item-density .item-history{letter-spacing:0}.run-slot{padding-right:12px}.run-slot+.run-slot{padding-left:12px}.run-weight{grid-template-columns:40px minmax(0,1fr)}}

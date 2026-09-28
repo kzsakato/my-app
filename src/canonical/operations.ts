@@ -20,25 +20,38 @@ const sameSnapshot = (left: TrainingItemSettingSnapshot, right: TrainingItemSett
   left.weight === right.weight && left.reps === right.reps && left.seconds === right.seconds &&
   left.sets === right.sets && left.seat === right.seat && left.standardMemo === right.standardMemo
 
-function createChange(item: TrainingItem, context: OperationContext): TrainingItemSettingChange {
-  return { id: context.newId(), trainingItemId: item.id, changedAt: context.now(), snapshot: toSettingSnapshot(item) }
+function createChange(item: TrainingItem, context: OperationContext, options: { isInitial: boolean; changeReason?: string }): TrainingItemSettingChange {
+  return {
+    id: context.newId(), trainingItemId: item.id, changedAt: context.now(), isInitial: options.isInitial,
+    changeReason: options.isInitial ? undefined : options.changeReason?.trim() || undefined,
+    snapshot: toSettingSnapshot(item),
+  }
 }
 
 /** New items always receive their initial, full standard-setting snapshot. */
 export function addTrainingItem(data: CanonicalAppData, item: TrainingItem, context: OperationContext): CanonicalAppData {
-  return { ...data, trainingItems: [...data.trainingItems, item], trainingItemSettingChanges: [...data.trainingItemSettingChanges, createChange(item, context)] }
+  return { ...data, trainingItems: [...data.trainingItems, item], trainingItemSettingChanges: [...data.trainingItemSettingChanges, createChange(item, context, { isInitial: true })] }
 }
 
 /** A record is appended only when the tracked standard-setting snapshot changes. */
-export function updateTrainingItem(data: CanonicalAppData, item: TrainingItem, context: OperationContext): CanonicalAppData {
+export function updateTrainingItem(data: CanonicalAppData, item: TrainingItem, context: OperationContext & { changeReason?: string }): CanonicalAppData {
   const previous = data.trainingItems.find(candidate => candidate.id === item.id)
   if (!previous) throw new Error(`TrainingItem not found: ${item.id}`)
   const changed = !sameSnapshot(toSettingSnapshot(previous), toSettingSnapshot(item))
   return {
     ...data,
     trainingItems: data.trainingItems.map(candidate => candidate.id === item.id ? item : candidate),
-    trainingItemSettingChanges: changed ? [...data.trainingItemSettingChanges, createChange(item, context)] : data.trainingItemSettingChanges,
+    trainingItemSettingChanges: changed ? [...data.trainingItemSettingChanges, createChange(item, context, { isInitial: false, changeReason: context.changeReason })] : data.trainingItemSettingChanges,
   }
+}
+
+/** Deletes exactly one non-initial setting-change event. It never mutates Item or Session facts. */
+export function deleteTrainingItemSettingChange(data: CanonicalAppData, trainingItemId: string, changeId: string): CanonicalAppData {
+  const change = data.trainingItemSettingChanges.find(value => value.id === changeId)
+  if (!change) throw new Error(`Setting change not found: ${changeId}`)
+  if (change.trainingItemId !== trainingItemId) throw new Error(`Setting change does not belong to TrainingItem: ${changeId}`)
+  if (change.isInitial) throw new Error(`Initial setting change cannot be deleted: ${changeId}`)
+  return { ...data, trainingItemSettingChanges: data.trainingItemSettingChanges.filter(value => value.id !== changeId) }
 }
 
 export function createSessionSnapshot(item: TrainingItem, exercise: Exercise): SessionSnapshot {

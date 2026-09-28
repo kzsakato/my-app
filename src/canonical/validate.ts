@@ -172,15 +172,22 @@ export function validateCanonical(input: unknown): ValidationResult {
   })
 
   const changeCountByItem = new Map<string, number>()
+  const initialCountByItem = new Map<string, number>()
   changes.forEach((row, index) => {
     const path = `trainingItemSettingChanges[${index}]`
     if (!isRecord(row) || !isId(row.id) || !isId(row.trainingItemId) || !isOffsetInstant(row.changedAt)) { add(errors, path, '必須フィールドが不正です'); return }
     const item = itemMap.get(row.trainingItemId)
     if (!item) add(errors, `${path}.trainingItemId`, '参照先TrainingItemがありません')
     else validateSettingSnapshot(row.snapshot, exerciseMap.get(item.exerciseId), `${path}.snapshot`, errors)
+    if (typeof row.isInitial !== 'boolean') add(errors, `${path}.isInitial`, 'booleanではありません')
+    else if (row.isInitial) initialCountByItem.set(row.trainingItemId, (initialCountByItem.get(row.trainingItemId) ?? 0) + 1)
+    if (row.changeReason !== undefined && typeof row.changeReason !== 'string') add(errors, `${path}.changeReason`, '文字列ではありません')
     changeCountByItem.set(row.trainingItemId, (changeCountByItem.get(row.trainingItemId) ?? 0) + 1)
   })
-  itemMap.forEach((_, id) => { if (!changeCountByItem.has(id)) add(errors, 'trainingItemSettingChanges', `TrainingItem ${id} の初回設定履歴がありません`) })
+  itemMap.forEach((_, id) => {
+    if (!changeCountByItem.has(id)) add(errors, 'trainingItemSettingChanges', `TrainingItem ${id} の初回設定履歴がありません`)
+    if ((initialCountByItem.get(id) ?? 0) !== 1) add(errors, 'trainingItemSettingChanges', `TrainingItem ${id} の初回設定履歴は1件必要です`)
+  })
 
   return { errors, warnings }
 }

@@ -102,6 +102,10 @@ export type TrainingItemSettingChange = {
   id: ID
   trainingItemId: ID
   changedAt: string
+  /** 作成時に生成される履歴起点。表示順ではなく意味で削除不可を識別する。 */
+  isInitial: boolean
+  /** 当該設定変更だけの任意の理由。現行設定やSessionへは継承しない。 */
+  changeReason?: string
   snapshot: TrainingItemSettingSnapshot
 }
 
