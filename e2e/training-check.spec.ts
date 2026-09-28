@@ -143,6 +143,21 @@ test('canonical settings opens snapshot-based analysis', async ({ page }) => {
   await expect(page.getByText('● 胸', { exact: true })).toBeVisible()
 })
 
+test('canonical MAN master bootstrap creates approved items and displays their new IDs', async ({ page }) => {
+  await page.clock.install({ time: monday })
+  await seedCanonicalAndReload(page, canonicalData())
+  await page.getByRole('button', { name: '共通メニュー' }).click()
+  await page.getByRole('button', { name: '設定' }).click()
+  await page.getByRole('button', { name: 'MAN用マスターを投入' }).click()
+  await expect(page.getByRole('heading', { name: 'MAN用マスター投入' })).toBeVisible()
+  page.on('dialog', dialog => dialog.accept())
+  await page.getByRole('button', { name: '承認済みMANマスターを投入' }).click()
+  await expect(page.getByText('seed-fly / seed-item-7', { exact: true })).toBeVisible()
+  const stored = await readCanonicalState(page)
+  expect((stored.exercises as Array<{ name: string }>).map(value => value.name)).toEqual(expect.arrayContaining(['ペクトラルフライ（マシン）', 'サイドレイズ', 'レッグレイズ']))
+  expect((stored.trainingItems as Array<{ displayName: string }>).map(value => value.displayName)).toEqual(expect.arrayContaining(['ペクトラルフライ（マシン）', 'サイドレイズ', 'レッグレイズ']))
+})
+
 test('explicit cutover adopts only the confirmed Profile candidate and does not copy legacy master data', async ({ page }) => {
   await page.clock.install({ time: monday })
   const legacy = { ...seedData(0), profile: { ...seedData(0).profile, height: 170, age: 40, sex: 'male' } }

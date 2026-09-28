@@ -16,6 +16,7 @@ import {
   weekStart,
   exerciseHistory,
   applyMenuProposal,
+  applyManMasterBootstrap,
   bodyRegionDerivedLoad,
   bodyRegionFrequency,
   createTrainerHistory,
@@ -23,9 +24,10 @@ import {
   exerciseFrequency,
   exerciseOptions,
   overallDerivedLoad,
+  MAN_MASTER_BOOTSTRAP_PACKAGE,
   validateMenuProposal,
 } from "./canonical";
-import type { AnalysisPeriod, AnalysisSeries } from "./canonical";
+import type { AnalysisPeriod, AnalysisSeries, ManMasterBootstrapMapping } from "./canonical";
 import type {
   CanonicalAppData,
   Exercise,
@@ -44,6 +46,7 @@ type Page =
   | "settings"
   | "history"
   | "analysis"
+  | "masterBootstrap"
   | "menuImport"
   | "trainerHistoryExport";
 type SettingsTab =
@@ -241,6 +244,18 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
     return <HistoryPage data={data} onBack={toTop} {...header} />;
   if (page === "analysis")
     return <AnalysisPage data={data} onBack={() => openSettings()} {...header} />;
+  if (page === "masterBootstrap")
+    return (
+      <MasterBootstrapPage
+        data={data}
+        onBack={() => openSettings("exercise")}
+        onApplied={(next) => {
+          setData(next);
+          setNotice("MAN用マスターを投入しました。");
+        }}
+        {...header}
+      />
+    );
   if (page === "menuImport")
     return (
       <MenuImportPage
@@ -269,6 +284,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
         onMenuImport={() => setPage("menuImport")}
         onTrainerHistoryExport={() => setPage("trainerHistoryExport")}
         onAnalysis={() => setPage("analysis")}
+        onMasterBootstrap={() => setPage("masterBootstrap")}
         onBack={toTop}
         {...header}
       />
@@ -791,6 +807,74 @@ function AnalysisPage({ data, onBack, onSettings, onTop }: { data: CanonicalAppD
   );
 }
 
+function MasterBootstrapPage({
+  data,
+  onBack,
+  onApplied,
+  onSettings,
+  onTop,
+}: {
+  data: CanonicalAppData;
+  onBack: () => void;
+  onApplied: (data: CanonicalAppData) => void;
+  onSettings: () => void;
+  onTop: () => void;
+}) {
+  const [includeFrontPlank, setIncludeFrontPlank] = useState(false);
+  const [mappings, setMappings] = useState<ManMasterBootstrapMapping[]>();
+  const [errors, setErrors] = useState<string[]>([]);
+  const selected = MAN_MASTER_BOOTSTRAP_PACKAGE.filter((value) => includeFrontPlank || value.sourceExerciseId !== "seed-front");
+  const apply = async () => {
+    if (!window.confirm("承認済みのMAN用Exerciseと実施項目を投入します。既存の同名マスターがある場合は投入されません。続けますか？")) return;
+    const result = await applyManMasterBootstrap(canonicalStorage, data, {
+      includeFrontPlank,
+      newId: uid,
+      now: () => new Date().toISOString(),
+    });
+    if (!result.ok) {
+      setErrors(result.errors.map((value) => `${value.path}: ${value.message}`));
+      return;
+    }
+    onApplied(result.value);
+    setMappings(result.mappings);
+    setErrors([]);
+  };
+  return (
+    <Frame title="MAN用マスター投入" back={onBack} onSettings={onSettings} onTop={onTop}>
+      {mappings ? (
+        <>
+          <p className="week">投入・canonical検証・保存後read-backが完了しました。下記のTrainingItem IDをMenuProposalで参照できます。</p>
+          {mappings.map((mapping) => (
+            <section className="card" key={mapping.sourceExerciseId}>
+              <b>{mapping.sourceExerciseId} / {mapping.sourceTrainingItemId}</b>
+              <p className="meta">Exercise ID: {mapping.exerciseId}</p>
+              <p className="meta">TrainingItem ID: {mapping.trainingItemId}</p>
+            </section>
+          ))}
+          <button className="primary" onClick={onBack}>設定へ戻る</button>
+        </>
+      ) : (
+        <>
+          <p className="week">Android MAN準備の限定経路です。復元・legacy移行・Menu作成は行いません。</p>
+          <section className="card">
+            {selected.map((entry) => (
+              <p className="meta" key={entry.sourceExerciseId}>
+                <b>{entry.exercise.name}</b>　{entry.exercise.measureType === "reps" ? `${entry.trainingItem.weight === undefined ? "自重" : `${entry.trainingItem.weight} kg`} × ${entry.trainingItem.reps} 回` : `${entry.trainingItem.seconds} 秒`} × {entry.trainingItem.sets} セット
+              </p>
+            ))}
+          </section>
+          <label className="check">
+            <input type="checkbox" checked={includeFrontPlank} onChange={(event) => setIncludeFrontPlank(event.target.checked)} />
+            時間型確認用にフロントプランクも投入する
+          </label>
+          {errors.map((error) => <p className="week danger" key={error}>{error}</p>)}
+          <button className="primary" onClick={apply}>承認済みMANマスターを投入</button>
+        </>
+      )}
+    </Frame>
+  );
+}
+
 function SettingsPage({
   data,
   commit,
@@ -799,6 +883,7 @@ function SettingsPage({
   onMenuImport,
   onTrainerHistoryExport,
   onAnalysis,
+  onMasterBootstrap,
   menuToInspectId,
   onBack,
   onSettings,
@@ -811,6 +896,7 @@ function SettingsPage({
   onMenuImport: () => void;
   onTrainerHistoryExport: () => void;
   onAnalysis: () => void;
+  onMasterBootstrap: () => void;
   menuToInspectId?: string;
   onBack: () => void;
   onSettings: () => void;
@@ -856,6 +942,10 @@ function SettingsPage({
         </button>
       </div>
       <section className="card">
+        <button className="save-setting" onClick={onMasterBootstrap}>
+          MAN用マスターを投入
+        </button>
+        <p className="meta">Android MAN用の承認済みExercise／実施項目だけを新規投入します。週メニューは作成しません。</p>
         <button className="save-setting" onClick={onAnalysis}>
           分析
         </button>
