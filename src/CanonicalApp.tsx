@@ -17,6 +17,7 @@ import {
   exerciseHistory,
   applyMenuProposal,
   applyManMasterBootstrap,
+  createAndroidManMenuProposal,
   bodyRegionDerivedLoad,
   bodyRegionFrequency,
   createTrainerHistory,
@@ -823,6 +824,7 @@ function MasterBootstrapPage({
   const [includeFrontPlank, setIncludeFrontPlank] = useState(false);
   const [mappings, setMappings] = useState<ManMasterBootstrapMapping[]>();
   const [errors, setErrors] = useState<string[]>([]);
+  const [proposalMessage, setProposalMessage] = useState("");
   const selected = MAN_MASTER_BOOTSTRAP_PACKAGE.filter((value) => includeFrontPlank || value.sourceExerciseId !== "seed-front");
   const apply = async () => {
     if (!window.confirm("承認済みのMAN用Exerciseと実施項目を投入します。既存の同名マスターがある場合は投入されません。続けますか？")) return;
@@ -838,6 +840,19 @@ function MasterBootstrapPage({
     onApplied(result.value);
     setMappings(result.mappings);
     setErrors([]);
+    setProposalMessage("");
+  };
+  const downloadProposal = () => {
+    if (!mappings) return;
+    const result = createAndroidManMenuProposal(data, mappings, { includeTime: includeFrontPlank, newId: uid });
+    if (!result.ok) {
+      setErrors(result.errors.map((value) => `${value.path}: ${value.message}`));
+      setProposalMessage("");
+      return;
+    }
+    downloadJson(`android-man-menu-proposal-${localDate()}.json`, result.proposal);
+    setErrors([]);
+    setProposalMessage(`Android MAN用のメニュー提案JSONを作成しました。既存の「メニュー投入」から選択してください。${result.warnings.length ? " 推奨曜日未指定の確認が表示されます。" : ""}`);
   };
   return (
     <Frame title="MAN用マスター投入" back={onBack} onSettings={onSettings} onTop={onTop}>
@@ -851,6 +866,9 @@ function MasterBootstrapPage({
               <p className="meta">TrainingItem ID: {mapping.trainingItemId}</p>
             </section>
           ))}
+          {errors.map((error) => <p className="week danger" key={error}>{error}</p>)}
+          <button className="primary" onClick={downloadProposal}>MAN用メニューJSONを作成</button>
+          {proposalMessage && <p className="week">{proposalMessage}</p>}
           <button className="primary" onClick={onBack}>設定へ戻る</button>
         </>
       ) : (
@@ -1735,7 +1753,7 @@ function MenuImportPage({
 }
 
 function downloadJson(filename: string, value: unknown) {
-  const blob = new Blob([JSON.stringify(value, null, 2)], { type: "application/json" });
+  const blob = new Blob([JSON.stringify(value, null, 2)], { type: "application/json;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
