@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-29（H-20260929-16: successful canonical cutover後のlegacy復帰導線をFact Check）
+最終更新: 2026-09-29（H-20260929-17: Android canonical MANのlegacy非変更隔離方法をFact Check）
 
 ## 1. アプリの目的
 
@@ -52,9 +52,10 @@
 
 ## 3. 現在の作業内容
 
-- 最後に取り組んだ課題: H-20260929-16（Android MAN explicit cutover後のlegacy復帰／authority切替の実装事実確認）。
+- 最後に取り組んだ課題: H-20260929-17（Owner通常legacy環境を変更しないcanonical Android MAN隔離方法の確認）。
 - 完了状況: root `main` を `git fetch` / `git pull --ff-only` で最新化後、Data Managementから明示的に初期canonical candidateを作りcutoverできるようにした。candidateには明示確認済みProfileだけを採用し、legacyのmaster/menu/session/historyは移さない。authority後はcanonicalだけを保存・参照する通常画面（Top、Menu、Run、追加実施、標準設定、履歴）へ接続した。Profileの体重・身長・年齢・性別は採用前に全て表示し、切替前にlegacy source検証とimmutable baseline保存/read-backだけを実行するpreflightを追加した。Unit 39件、PWA build、Chromium E2E 6件が成功。
 - 現在の問題: Android MANでlegacy通常導線を使用すると、canonical専用の複数曜日選択、Run seat入力、設定変更理由・削除、週メニュー追加確認は表示されない。これは未配信ではなくauthority/state分岐によるもの。successful canonical cutover後にlegacy `state/app`／protected baselineは消去されないが、通常UIからlegacy authorityへ戻す、baselineを復元する、legacy backupをimportする操作はない。canonical dataの異常時もlegacyへsilent fallbackせずcanonical Recoveryとなる。legacy通常利用へ戻す前提のMANでは、別の分離策または明示復帰設計が必要で、PMO／Owner判断が必要。canonical Stage 3、H-20260928-05、H-20260928-07、H-20260928-14のAndroid実機でのcutover、通常トレーニング、設定変更履歴、Recovery、JSON file download/upload、分析表示は未確認。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）も未検証。
+- H-20260929-17のFact Checkでは、Owner通常Chromeとは別のbrowser appを新規にMAN専用として用い、同じPages URLを通常tabで開く方式を推奨候補とした。appはIndexedDBのみを使いサーバー同期を行わず、Androidの別app sandboxによりChrome側のIndexedDB／authority markerへ書込み経路を持たない。MAN専用browserではPWA installやlegacy backup importを行わない。Android実機でclean storageとBuild identifierを最初に確認する必要がある。
 
 ## 4. 重要な設計上の決定
 
@@ -120,7 +121,7 @@
 
 ## 7. 次にやるべきこと
 
-1. PMO／OwnerがAndroid MANの環境を決定する。現行cutoverは、Profileだけ採用してcanonical authorityへ永続的に切替え、legacy UIへ戻す正式導線を持たない。legacy通常利用へ戻す必要がある場合は、explicit cutoverを同一通常環境で行わず別のMAN隔離策を選ぶか、明示的なlegacy復帰／authority切替を別設計・承認する必要がある。App Developmentはこの判断なしにdefault route、データ移行、authority切替を変更しない。
+1. PMO／OwnerがAndroid MANの環境を決定する。現行cutoverは、Profileだけ採用してcanonical authorityへ永続的に切替え、legacy UIへ戻す正式導線を持たない。推奨候補は、通常Chromeの既存PWAを変更せず、新規の別browser appの通常tabで同じPages URLを開き、そのbrowserだけでcutoverとMANを行う方式である。最初にsecondary browserがclean storageであることとBuild identifierを確認し、MAN後に通常Chromeのlegacy画面が不変であることを確認する。別browserを不要にする場合はuninstallする。App Developmentはこの判断なしにdefault route、データ移行、authority切替を変更しない。
 2. 最新のGitHub Pages deploy完了後、Android実機でlegacy「設定」またはcanonical「正規データの設定」末尾の`Build YYYY-MM-DD / <短縮SHA>`が最新main commit由来であることを確認する。canonical MANを実施する場合はData Management→「正規データへの切替を準備」を通り、canonicalの「MAN用マスターを投入」成功画面から「MAN用メニューJSONを作成」を実行する。推奨曜日未指定Warningを確認後に新規Menuを作成し、active Menuが変わらないことを確認する。
 3. Android実機でcanonical Topの複数曜日選択、Session実績表示、Runのseat入力、週メニュー追加確認、設定変更理由／履歴削除、およびRun重量5操作の横幅を確認する。結果をQA / Testへ渡す。
 2. GitHub ActionsのTest workflowの初回実行結果を確認する。失敗時はActionsログと `playwright-report` artifactを確認する。
