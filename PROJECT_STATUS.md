@@ -80,6 +80,11 @@
 - 実QABox質問票はlocal parserで有効だった。GitHub Contents API adapterに必須`User-Agent` headerがなく、GitHubのreject条件だったため`User-Agent: kikuzo-trial`を追加した。
 - 回帰testを追加し、`pnpm test` 7 PASS、`pnpm build` PASS。Worker Version `eba81c46-9129-441a-99cf-94e90d407e53`へ再deploy済み。Owner access code値は取得しないため、正しいcodeでの公開GET／回答書込みはTechnical Advisor / QAのE2E受入で確認する。
 
+## 2026-09-29: 喜久蔵 Trial E2E GET server-side修正
+
+- 一時secretで保護したserver-side diagnosticにより、`GITHUB_TOKEN` runtime binding、固定target `kzsakato/training-project` / `main` / `QABox/Q-20260929-01.md`、固定headersを確認し、GitHub Contents GETがHTTP 200かつ`contents=read`で成功することを実測した。PAT再発行・secret再入力は不要。
+- 実原因はCloudflare Workerでglobal `fetch`をclass instance receiverで呼んだことによる`Illegal invocation`。`globalThis.fetch`を正しく束縛するwrapperへ修正し、回帰testを追加した。一時diagnostic endpoint／secretは撤去済み。final Worker Version `b3f59709-6849-4f01-bd7d-1dffe3a707e6`、`pnpm test` 8 PASS、`pnpm build` PASS。
+
 ## 4. 重要な設計上の決定
 
 - 技術: TypeScript + React + Vite + vite-plugin-pwa + idb。Playストア用ネイティブアプリではない。
