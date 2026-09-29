@@ -346,6 +346,10 @@ function TopPage({
   const [selectedDays, setSelectedDays] = useState<RecommendedDay[]>([
     currentDay,
   ]);
+  const [topMode, setTopMode] = useState<"category" | "recommended">(
+    "category",
+  );
+  const [dayFilterOpen, setDayFilterOpen] = useState(false);
   const latestByEntry = new Map<string, Session>();
   data.sessions
     .filter((value) => value.date >= start && value.menuEntryId)
@@ -356,11 +360,70 @@ function TopPage({
         ? previous.filter((value) => value !== day)
         : [...previous, day],
     );
-  const visible = entries.filter(
+  const recommendedEntries = entries.filter(
     (entry) =>
       entry.recommendedDay !== undefined &&
       selectedDays.includes(entry.recommendedDay),
   );
+  const categoryGroups = useMemo(() => {
+    const groups = new Map<string, MenuEntry[]>();
+    entries.forEach((entry) => {
+      const item = data.trainingItems.find(
+        (value) => value.id === entry.trainingItemId && value.lifecycle === "active",
+      );
+      const exercise =
+        item &&
+        data.exercises.find(
+          (value) => value.id === item.exerciseId && value.lifecycle === "active",
+        );
+      if (!item || !exercise) return;
+      const bodyRegion =
+        exercise.classifications?.find((value) => value.kind === "bodyRegion")
+          ?.label.trim() || "未分類";
+      groups.set(bodyRegion, [...(groups.get(bodyRegion) ?? []), entry]);
+    });
+    return [...groups.entries()].sort(([left], [right]) => {
+      if (left === "未分類") return 1;
+      if (right === "未分類") return -1;
+      return left.localeCompare(right, "ja");
+    });
+  }, [data.exercises, data.trainingItems, entries]);
+  const renderEntry = (entry: MenuEntry) => {
+    const item = data.trainingItems.find(
+      (value) => value.id === entry.trainingItemId,
+    );
+    const exercise =
+      item && data.exercises.find((value) => value.id === item.exerciseId);
+    if (
+      !item ||
+      !exercise ||
+      item.lifecycle !== "active" ||
+      exercise.lifecycle !== "active"
+    )
+      return null;
+    const session = latestByEntry.get(entry.id);
+    return (
+      <button
+        className="row item item-density"
+        key={entry.id}
+        onClick={() => onRun(entry.id)}
+      >
+        <span>
+          <b>{item.displayName || exercise.name}</b>
+          <span className="item-detail-line">
+            <small>{`${exercise.classifications?.map((value) => value.label).join("・") || "未分類"}　${entry.recommendedDay === undefined ? "推奨：任意" : `推奨：${days[entry.recommendedDay]}`}`}</small>
+            <small className="item-history">{exerciseHistory(data.sessions, exercise.id)}</small>
+          </span>
+          <small>
+            {session
+              ? `今週実施済み　${sessionDetail(session)}`
+              : `${exercise.measureType === "reps" ? `${item.weight ?? 0} kg × ${item.reps ?? 0} 回` : `${item.seconds ?? 0} 秒`} × ${item.sets} セット`}
+          </small>
+        </span>
+        <span>{session ? "✓" : "›"}</span>
+      </button>
+    );
+  };
   return (
     <Frame title="今週の実施メニュー" onSettings={onSettings} onTop={onTop}>
       {notice && <p className="week">{notice}</p>}
@@ -397,54 +460,72 @@ function TopPage({
             {activeMenu.memo ||
               "推奨曜日は目安です。予定外の実施も記録できます。"}
           </p>
-          <h2>推奨曜日の実施項目</h2>
-          <div className="day-picker" aria-label="表示する推奨曜日">
-            {days.map((label, index) => (
-              <label key={label}>
-                <input
-                  type="checkbox"
-                  checked={selectedDays.includes(index as RecommendedDay)}
-                  onChange={() => toggleDay(index as RecommendedDay)}
-                />
-                {label}
-              </label>
-            ))}
+          <div className="view-toggle" aria-label="実施項目の表示方法">
+            <button
+              className={topMode === "category" ? "active" : ""}
+              onClick={() => setTopMode("category")}
+            >
+              カテゴリ表示
+            </button>
+            <button
+              className={topMode === "recommended" ? "active" : ""}
+              onClick={() => setTopMode("recommended")}
+            >
+              推奨曜日表示
+            </button>
           </div>
-          {visible.length === 0 ? (
-            <p className="week">選択した推奨曜日の項目はありません。</p>
+          {topMode === "category" ? (
+            <>
+              <h2>カテゴリ別の実施項目</h2>
+              {categoryGroups.length === 0 ? (
+                <p className="week">カテゴリ表示できる実施項目はありません。</p>
+              ) : (
+                categoryGroups.map(([bodyRegion, groupEntries]) => (
+                  <section className="category-group" key={bodyRegion}>
+                    <h3>{bodyRegion}</h3>
+                    {groupEntries.map(renderEntry)}
+                  </section>
+                ))
+              )}
+            </>
           ) : (
-            visible.map((entry) => {
-              const item = data.trainingItems.find(
-                (value) => value.id === entry.trainingItemId,
-              );
-              const exercise =
-                item &&
-                data.exercises.find((value) => value.id === item.exerciseId);
-              if (!item || !exercise || item.lifecycle !== "active")
-                return null;
-              const session = latestByEntry.get(entry.id);
-              return (
+            <>
+              <h2>推奨曜日の実施項目</h2>
+              <div className="weekday-dropdown">
                 <button
-                  className="row item item-density"
-                  key={entry.id}
-                  onClick={() => onRun(entry.id)}
+                  className="weekday-dropdown-trigger"
+                  aria-expanded={dayFilterOpen}
+                  aria-controls="recommended-day-options"
+                  onClick={() => setDayFilterOpen((value) => !value)}
                 >
-                  <span>
-                    <b>{item.displayName || exercise.name}</b>
-                    <span className="item-detail-line">
-                      <small>{`${exercise.classifications?.map((value) => value.label).join("・") || "未分類"}　${entry.recommendedDay === undefined ? "推奨：任意" : `推奨：${days[entry.recommendedDay]}`}`}</small>
-                      <small className="item-history">{exerciseHistory(data.sessions, exercise.id)}</small>
-                    </span>
-                    <small>
-                      {session
-                        ? `今週実施済み　${sessionDetail(session)}`
-                        : `${exercise.measureType === "reps" ? `${item.weight ?? 0} kg × ${item.reps ?? 0} 回` : `${item.seconds ?? 0} 秒`} × ${item.sets} セット`}
-                    </small>
-                  </span>
-                  <span>{session ? "✓" : "›"}</span>
+                  {`表示する推奨曜日: ${selectedDays.length ? selectedDays.map((day) => days[day]).join("・") : "なし"}`}
                 </button>
-              );
-            })
+                {dayFilterOpen && (
+                  <div
+                    className="weekday-dropdown-panel"
+                    id="recommended-day-options"
+                    role="group"
+                    aria-label="推奨曜日を複数選択"
+                  >
+                    {days.map((label, index) => (
+                      <label key={label}>
+                        <input
+                          type="checkbox"
+                          checked={selectedDays.includes(index as RecommendedDay)}
+                          onChange={() => toggleDay(index as RecommendedDay)}
+                        />
+                        {label}
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {recommendedEntries.length === 0 ? (
+                <p className="week">選択した推奨曜日の項目はありません。</p>
+              ) : (
+                recommendedEntries.map(renderEntry)
+              )}
+            </>
           )}
         </>
       )}

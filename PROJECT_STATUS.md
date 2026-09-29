@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-29（H-20260929-19: canonical設定・編集系pre-MAN sweep）
+最終更新: 2026-09-29（H-20260929-21: canonical pre-MAN限定FIX）
 
 ## 1. アプリの目的
 
@@ -41,6 +41,7 @@
 - H-20260928-21として、canonicalの「正規データの設定」画面末尾にbuild identifierを表示する。GitHub Pages buildではtrigger commitの先頭8桁SHAとbuild日をVite defineで埋め込み、local/devは`local`を表示する。
 - H-20260929-03として、legacy通常「設定」画面末尾にも同じbuild identifierを追加した。canonical／legacyで表示値や注入方式を分けず、どちらの保存状態でも配信版を確認できる。
 - H-20260929-12として、Android MANで確認されたcanonical UIの未表示を切り分けた。通常のlegacyデータ導線はlegacy UIを継続し、canonical UIはData Managementから明示cutoverし、canonical authority markerが有効な場合だけ起動する。cutoverはProfile候補だけを採用し、legacyの種目・実施項目・週メニュー・履歴を自動移行しない。Runの重量5操作はlegacy／canonical共通CSSで横幅全体へ配置するよう修正し、旧画面からの明示cutoverを経たcanonical UI操作をE2Eに追加した。
+- H-20260929-21として、canonical Topに`カテゴリ表示`／`推奨曜日表示`を追加した。カテゴリ表示は新しいCategory entityを持たず、active Menuのactive対象を既存Exerciseの`bodyRegion` classificationでgroup化し、未設定は`未分類`としてRunへ到達させる。推奨曜日filterは常時checkbox列から、当日初期値・同一画面内の選択保持を持つ開閉式multi-select dropdownへ変更した。MenuEntryの単一`recommendedDay`契約、schema、legacy migrationは変更していない。
 
 ### 未着手の機能
 
@@ -52,9 +53,9 @@
 
 ## 3. 現在の作業内容
 
-- 最後に取り組んだ課題: H-20260929-19（canonicalカテゴリ／推奨曜日UIのtraceと、設定・編集系pre-MAN sweep）。
+- 最後に取り組んだ課題: H-20260929-21（canonicalカテゴリprojection、曜日dropdown、pre-MAN実導線E2Eの限定FIX）。
 - 完了状況: root `main` を `git fetch` / `git pull --ff-only` で最新化後、Data Managementから明示的に初期canonical candidateを作りcutoverできるようにした。candidateには明示確認済みProfileだけを採用し、legacyのmaster/menu/session/historyは移さない。authority後はcanonicalだけを保存・参照する通常画面（Top、Menu、Run、追加実施、標準設定、履歴）へ接続した。Profileの体重・身長・年齢・性別は採用前に全て表示し、切替前にlegacy source検証とimmutable baseline保存/read-backだけを実行するpreflightを追加した。Unit 39件、PWA build、Chromium E2E 6件が成功。
-- 現在の問題: H-20260929-19のtraceでは、canonicalにlegacy Category entityを継承しないこと自体はdata contract上の設計だが、カテゴリ閲覧／絞込みprojectionの不在には明示的な廃止承認を確認できなかった。canonical Topの曜日常時checkbox列も、Owner要求の複数選択dropdownに対するUI driftである。最小FIXとしてbodyRegion labelによるカテゴリprojectionと、Top曜日filterのdropdown化を提案し、複合legacy Categoryを再導入せずに進められるかPMO判断待ち。週メニュー追加は可視cutover E2EでDesktop Chromium上成立しており、Owner Android MANの不成立は再現していない。Android native select／confirmの実機test gapとして残る。successful canonical cutover後にlegacy `state/app`／protected baselineは消去されないが、通常UIからlegacy authorityへ戻す、baselineを復元する、legacy backupをimportする操作はない。canonical dataの異常時もlegacyへsilent fallbackせずcanonical Recoveryとなる。
+- 現在の問題: canonicalカテゴリprojectionと曜日dropdownの限定FIXを実装済み。Desktop Chromiumの可視cutover E2Eでは、週メニュー追加の未選択disabled、confirm No／Yes、Top read-backまで成立した。一方、Owner Android/Braveの追加不反応は再現できず、mobile-touch／native select／native confirmに限定したコード原因も確認できない。Android QA-requiredとして、選択済みのMenu add、Yes/No、Top read-back、およびdropdown操作を実機で確認する必要がある。successful canonical cutover後にlegacy `state/app`／protected baselineは消去されないが、通常UIからlegacy authorityへ戻す、baselineを復元する、legacy backupをimportする操作はない。canonical dataの異常時もlegacyへsilent fallbackせずcanonical Recoveryとなる。
 - H-20260929-17のFact Checkでは、Owner通常Chromeとは別のbrowser appを新規にMAN専用として用い、同じPages URLを通常tabで開く方式を推奨候補とした。appはIndexedDBのみを使いサーバー同期を行わず、Androidの別app sandboxによりChrome側のIndexedDB／authority markerへ書込み経路を持たない。MAN専用browserではPWA installやlegacy backup importを行わない。Android実機でclean storageとBuild identifierを最初に確認する必要がある。
 
 ## 4. 重要な設計上の決定
@@ -122,7 +123,7 @@
 ## 7. 次にやるべきこと
 
 1. PMO／OwnerがAndroid MANの環境を決定する。現行cutoverは、Profileだけ採用してcanonical authorityへ永続的に切替え、legacy UIへ戻す正式導線を持たない。推奨候補は、通常Chromeの既存PWAを変更せず、新規の別browser appの通常tabで同じPages URLを開き、そのbrowserだけでcutoverとMANを行う方式である。最初にsecondary browserがclean storageであることとBuild identifierを確認し、MAN後に通常Chromeのlegacy画面が不変であることを確認する。別browserを不要にする場合はuninstallする。App Developmentはこの判断なしにdefault route、データ移行、authority切替を変更しない。
-2. PMOがH-20260929-19の限定FIX bundleを判断する。承認時は、canonical Topへ`bodyRegion` classificationを使うカテゴリprojectionを復旧し、推奨曜日filterを複数選択dropdownへ変更する。legacy Category entity／複合カテゴリmigration／Trainer変更は含めない。QA再gateではcutover後のMenu追加confirm、分類導線、dropdown複数選択、標準値→Run、設定履歴、active Menu切替を実導線で確認する。
+2. QA / TestがH-20260929-21のpre-MAN gateを実施する。canonical cutover後にMenu addの未選択disabled・選択後confirm Yes/No・Top read-back、カテゴリgroup（未分類を含む）→Run、曜日dropdownの複数選択／開閉、標準値→Run、設定履歴、active Menu切替／再読込を確認する。Androidではnative select／confirmとdropdownタップを実機確認する。
 2. 最新のGitHub Pages deploy完了後、Android実機でlegacy「設定」またはcanonical「正規データの設定」末尾の`Build YYYY-MM-DD / <短縮SHA>`が最新main commit由来であることを確認する。canonical MANを実施する場合はData Management→「正規データへの切替を準備」を通り、canonicalの「MAN用マスターを投入」成功画面から「MAN用メニューJSONを作成」を実行する。推奨曜日未指定Warningを確認後に新規Menuを作成し、active Menuが変わらないことを確認する。
 3. Android実機でcanonical Topの複数曜日選択、Session実績表示、Runのseat入力、週メニュー追加確認、設定変更理由／履歴削除、およびRun重量5操作の横幅を確認する。結果をQA / Testへ渡す。
 2. GitHub ActionsのTest workflowの初回実行結果を確認する。失敗時はActionsログと `playwright-report` artifactを確認する。

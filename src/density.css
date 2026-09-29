@@ -41,8 +41,12 @@
 .run-meta{min-height:42px;margin:0;padding:11px 0;border-bottom:1px solid #e4e9e3;font-size:13px}
 .run-meta small{display:inline;margin-left:4px}
 .history-link{min-height:42px;margin-top:0;padding:0}
-.day-picker{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px}
-.day-picker label{display:flex;align-items:center;gap:3px;margin:0;padding:6px 8px;border:1px solid #ccd5cc;border-radius:8px;font-size:13px}
-.day-picker input{width:16px;min-height:16px;margin:0;accent-color:#326a41}
+.weekday-dropdown{position:relative;margin:8px 0 12px}
+.weekday-dropdown-trigger{width:100%;min-height:42px;padding:9px;border:1px solid #b8cbbd;border-radius:9px;background:#f8fbf8;color:#285c37;text-align:left}
+.weekday-dropdown-trigger::after{content:"⌄";float:right;font-size:18px;line-height:.8}
+.weekday-dropdown-panel{position:absolute;z-index:2;top:calc(100% + 4px);left:0;right:0;display:flex;gap:6px;flex-wrap:wrap;padding:8px;border:1px solid #ccd5cc;border-radius:9px;background:#fff;box-shadow:0 8px 20px #183d1c22}
+.weekday-dropdown-panel label{display:flex;align-items:center;gap:3px;margin:0;padding:6px 8px;border:1px solid #ccd5cc;border-radius:8px;font-size:13px}
+.weekday-dropdown-panel input{width:16px;min-height:16px;margin:0;accent-color:#326a41}
+.category-group{margin:14px 0 20px}.category-group h3{margin:0;padding:8px 0;border-bottom:2px solid #b8cbbd;font-size:15px;color:#285c37}
 .view-toggle{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.view-toggle button{flex:1;min-height:38px;border:1px solid #b8cbbd;border-radius:9px;background:#f8fbf8;color:#285c37;font-size:13px}.view-toggle button.active{background:#326a41;color:#fff;border-color:#326a41}.analysis-toggle button{min-width:calc(50% - 3px)}.analysis-table .card{margin:8px 0}.analysis-table .meta{margin:6px 0;padding:0;border:0}
 @media(max-width:360px){.app-header{grid-template-columns:58px minmax(0,1fr) 50px}.header-back{width:54px;font-size:12px}.item-density .item-history{letter-spacing:0}.run-slot{padding-right:12px}.run-slot+.run-slot{padding-left:12px}.run-weight{grid-template-columns:40px minmax(0,1fr)}}
