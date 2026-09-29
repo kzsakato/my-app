@@ -1,6 +1,13 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-29（H-20260929-22: 喜久蔵Minimal Trial Phase 2 skeleton）
+最終更新: 2026-09-29（H-20260929-25: canonical種目・設定導線MAN blocker）
+
+## 2026-09-29: H-20260929-25 canonical種目・設定導線MAN blocker
+
+- canonical TopのMenuEntry選択は常にRunへ遷移する。Exercise editorへ遷移する実装分岐はなく、既存H-21/H-23 E2Eもこの経路を確認済み。
+- legacyにあった「保存して実施項目を設定」導線がcanonical Exercise editorから抜けていたUI driftを修正した。新規Exerciseを保存すると、選択済みの元種目・表示名を初期値にした実施項目設定へ遷移する。「種目だけ保存」も残す。実施項目を週メニューへ追加するとTopからRunへ到達する。
+- canonicalでは長い種目名の入力上限／validator上限はなく、UUID発行・IndexedDB保存を通じて保存、画面離脱／再読込後のread-backまでChromium E2Eで確認した。
+- `Exercise.classifications` の `bodyRegion` は現行canonicalで任意の非空文字列であり、許容ラベル集合が正規仕様にない。legacyの6部位selectをcanonicalで固定候補に復元するか、既存任意ラベルをどう扱うかはPMO／Data Design判断待ち。schemaやデータの変更は行っていない。
 
 ## 1. アプリの目的
 

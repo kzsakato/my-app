@@ -156,6 +156,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   const [notice, setNotice] = useState("");
   const [settingsTab, setSettingsTab] = useState<SettingsTab>("profile");
   const [menuToInspectId, setMenuToInspectId] = useState<string>();
+  const [itemPresetExerciseId, setItemPresetExerciseId] = useState<string>();
   const commit = async (next: CanonicalAppData) => {
     const checked = validateCanonical(next);
     if (checked.errors.length) {
@@ -281,7 +282,15 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
         data={data}
         commit={commit}
         tab={settingsTab}
-        onTab={setSettingsTab}
+        onTab={(next) => {
+          setSettingsTab(next);
+          if (next !== "item") setItemPresetExerciseId(undefined);
+        }}
+        itemPresetExerciseId={itemPresetExerciseId}
+        onConfigureExercise={(exerciseId) => {
+          setItemPresetExerciseId(exerciseId);
+          setSettingsTab("item");
+        }}
         menuToInspectId={menuToInspectId}
         onMenuImport={() => setPage("menuImport")}
         onTrainerHistoryExport={() => setPage("trainerHistoryExport")}
@@ -980,6 +989,8 @@ function SettingsPage({
   commit,
   tab,
   onTab,
+  itemPresetExerciseId,
+  onConfigureExercise,
   onMenuImport,
   onTrainerHistoryExport,
   onAnalysis,
@@ -993,6 +1004,8 @@ function SettingsPage({
   commit: (next: CanonicalAppData) => Promise<boolean>;
   tab: SettingsTab;
   onTab: (tab: SettingsTab) => void;
+  itemPresetExerciseId?: string;
+  onConfigureExercise: (exerciseId: string) => void;
   onMenuImport: () => void;
   onTrainerHistoryExport: () => void;
   onAnalysis: () => void;
@@ -1060,8 +1073,8 @@ function SettingsPage({
         <p className="meta">メニュー調整・振り返り等に利用する実施履歴を出力します。アプリ復元用バックアップではありません。</p>
       </section>
       {tab === "profile" && <ProfileEditor data={data} commit={commit} />}{" "}
-      {tab === "exercise" && <ExerciseEditor data={data} commit={commit} />}{" "}
-      {tab === "item" && <ItemEditor data={data} commit={commit} />}{" "}
+      {tab === "exercise" && <ExerciseEditor data={data} commit={commit} onConfigure={onConfigureExercise} />}{" "}
+      {tab === "item" && <ItemEditor key={itemPresetExerciseId ?? "item"} data={data} commit={commit} presetExerciseId={itemPresetExerciseId} />}{" "}
       {tab === "menu" && (
         <MenuEditor
           data={data}
@@ -1167,9 +1180,11 @@ function ProfileEditor({
 function ExerciseEditor({
   data,
   commit,
+  onConfigure,
 }: {
   data: CanonicalAppData;
   commit: (next: CanonicalAppData) => Promise<boolean>;
+  onConfigure: (exerciseId: string) => void;
 }) {
   const blank = (): Exercise => ({
     id: uid(),
@@ -1181,7 +1196,7 @@ function ExerciseEditor({
     classifications: [],
   });
   const [form, setForm] = useState<Exercise>(blank);
-  const save = async () => {
+  const save = async (configure = false) => {
     if (!form.name.trim()) return;
     const next = {
       ...form,
@@ -1191,15 +1206,18 @@ function ExerciseEditor({
         value.label.trim(),
       ),
     };
+    const exists = data.exercises.some((value) => value.id === next.id);
     if (
       await commit({
         ...data,
-        exercises: data.exercises.some((value) => value.id === next.id)
+        exercises: exists
           ? data.exercises.map((value) => (value.id === next.id ? next : value))
           : [...data.exercises, next],
       })
-    )
+    ) {
       setForm(blank());
+      if (configure && !exists) onConfigure(next.id);
+    }
   };
   return (
     <>
@@ -1271,11 +1289,20 @@ function ExerciseEditor({
             }
           />
         </label>
-        <button className="primary" disabled={!form.name.trim()} onClick={save}>
-          {data.exercises.some((value) => value.id === form.id)
-            ? "種目を更新"
-            : "種目を登録"}
-        </button>
+        {data.exercises.some((value) => value.id === form.id) ? (
+          <button className="primary" disabled={!form.name.trim()} onClick={() => save()}>
+            種目を更新
+          </button>
+        ) : (
+          <>
+            <button className="primary" disabled={!form.name.trim()} onClick={() => save(true)}>
+              保存して実施項目を設定
+            </button>
+            <button className="save-setting" disabled={!form.name.trim()} onClick={() => save()}>
+              種目だけ保存
+            </button>
+          </>
+        )}
       </section>
       {active(data.exercises).map((value) => (
         <button
@@ -1302,16 +1329,19 @@ function ExerciseEditor({
 function ItemEditor({
   data,
   commit,
+  presetExerciseId,
 }: {
   data: CanonicalAppData;
   commit: (next: CanonicalAppData) => Promise<boolean>;
+  presetExerciseId?: string;
 }) {
   const exercises = active(data.exercises);
+  const presetExercise = exercises.find((value) => value.id === presetExerciseId);
   const initial = (): TrainingItem => ({
     id: uid(),
     lifecycle: "active",
-    exerciseId: exercises[0]?.id ?? "",
-    displayName: "",
+    exerciseId: presetExercise?.id ?? exercises[0]?.id ?? "",
+    displayName: presetExercise?.name ?? "",
     weight: 0,
     reps: 1,
     sets: 1,

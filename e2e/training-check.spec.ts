@@ -290,6 +290,7 @@ test('visible canonical cutover route reaches menu confirmation, category projec
 })
 
 test('visible canonical settings route persists profile, exercise, item standards, history, and active menu', async ({ page }) => {
+  const longExerciseName = 'Android MANで保存して再読込できる長い種目名のE2E確認用ダンベルプレスバリエーション'
   await page.clock.install({ time: monday })
   await seedAndReload(page, seedData(0))
   await page.getByRole('button', { name: '共通メニュー' }).click()
@@ -305,13 +306,10 @@ test('visible canonical settings route persists profile, exercise, item standard
 
   await page.getByLabel('体重 (kg)').fill('67')
   await page.getByRole('button', { name: 'プロフィールを保存' }).click()
-  await page.getByRole('button', { name: '種目' }).click()
-  await page.getByLabel('種目名').fill('未分類E2E種目')
-  await page.getByRole('button', { name: '種目を登録' }).click()
-  await expect(page.getByRole('button', { name: /未分類E2E種目.*編集/ })).toBeVisible()
-
-  await page.getByRole('button', { name: '実施項目' }).click()
-  await page.getByLabel('元種目').selectOption({ label: '未分類E2E種目' })
+  await page.getByRole('button', { name: '種目', exact: true }).click()
+  await page.getByLabel('種目名').fill(longExerciseName)
+  await page.getByRole('button', { name: '保存して実施項目を設定' }).click()
+  await expect(page.getByLabel('元種目').locator('option:checked')).toHaveText(longExerciseName)
   await page.getByLabel('表示名').fill('未分類E2E項目')
   await page.getByLabel('標準重量 (kg)').fill('10')
   await page.getByLabel('標準回数').fill('8')
@@ -362,6 +360,8 @@ test('visible canonical settings route persists profile, exercise, item standard
   await page.getByRole('button', { name: /未分類E2E項目.*編集/ }).click()
   await expect(page.getByLabel('標準回数')).toHaveValue('9')
   await expect(page.getByLabel('シート位置')).toHaveValue('9')
+  await page.getByRole('button', { name: '種目', exact: true }).click()
+  await expect(page.getByRole('button', { name: new RegExp(`${longExerciseName}.*編集`) })).toBeVisible()
 })
 
 test('canonical settings records a change reason and asks before deleting a noninitial setting history row', async ({ page }) => {
