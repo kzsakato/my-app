@@ -108,6 +108,12 @@
 - `COMMENT: REQUIRED` は主回答textareaと `value` の必須条件として扱うよう修正した。`OPTIONAL`／`NONE`のCOMMENT主回答は任意とし、choice型の `COMMENT` は従来どおり別の補足textareaの有無・必須性を表す。
 - Chromiumで実UIを開き、Q3入力時に `value` のみをPOSTして成功すること、空欄時はUI表示とserver validationが`Q3 の回答が必要です。`となることを確認した。`pnpm test` 15 PASS、`pnpm build` PASS。Worker Version `d6c8b9b8-f958-4ddf-a8c9-11f6d7d5239b`へdeploy済み。
 
+## 2026-09-29: 喜久蔵 Trial Q-02のAnswers省略対応
+
+- 実ファイルQ-02を再現した結果、`## Questions`・Q1〜Q8・TYPE/TEXT/COMMENTは有効で、失敗原因はOPEN質問票末尾の`## Answers`セクションが未作成だったことだった。旧parserはQuestionsまたはAnswersのいずれかがない場合に同じ`Questions sectionがありません。`を返していた。
+- OPEN質問票では空の`## Answers`を省略可能とし、GETはファイル末尾までを設問領域として解析、最初の有効回答保存時に`STATUS: ANSWERED`と`## Answers`を追加するよう修正した。
+- 実Q-02相当fixture（8設問、長文日本語、全角記号、`<< < 値 > >>`を含む）でparser／Worker GET／回答block生成を回帰検証した。`pnpm test` 16 PASS、`pnpm build` PASS。Worker Version `d50ac91c-f16e-4eee-84e9-422bc4fae8c5`へdeploy済み。
+
 ## 4. 重要な設計上の決定
 
 - 技術: TypeScript + React + Vite + vite-plugin-pwa + idb。Playストア用ネイティブアプリではない。
