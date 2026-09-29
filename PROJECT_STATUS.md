@@ -90,6 +90,11 @@
 - Owner UIがURL query `q`欠落およびHTTP 401以外を一律に`質問票を取得できません。`と表示していたため、固定GET target、欠落ID、HTTP status、安全なresponse messageを表示するtrial diagnosticを追加した。GitHub GET/PUT failureも安全なHTTP status/messageへ区別した。
 - Worker Version `55c727c5-5a2f-4f08-a5dc-301c9c81da13`へdeploy済み。`pnpm test` 10 PASS、`pnpm build` PASS。正しいaccess codeでのOwner GET結果を待ち、実statusに基づき次を判断する。PAT再発行・secret再入力は要求しない。
 
+## 2026-09-29: 喜久蔵 Trial Owner UI GET root cause修正
+
+- Owner実経路の502を再現し、Cloudflare runtimeの`fetch(request, env, executionContext)`第3引数を、test injection用`GitHubContentsClient`として誤用していたことを確定した。本番ではexecutionContextに`getQuestionFile`がなく、GitHub API到達前に`TypeError`となっていた。
+- runtime entrypointとGitHub client factoryを分離し、修正後に通常GET endpointを実測HTTP 200（`Q-20260929-01`、3設問、revision）まで確認。一時diagnostic endpoint／secretは撤去済み。final Worker Version `dd5be5c5-77e3-4c3c-aacd-490fd8b6cc6c`、`pnpm test` 11 PASS、`pnpm build` PASS。
+
 ## 4. 重要な設計上の決定
 
 - 技術: TypeScript + React + Vite + vite-plugin-pwa + idb。Playストア用ネイティブアプリではない。
