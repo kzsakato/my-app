@@ -95,6 +95,13 @@
 - Owner実経路の502を再現し、Cloudflare runtimeの`fetch(request, env, executionContext)`第3引数を、test injection用`GitHubContentsClient`として誤用していたことを確定した。本番ではexecutionContextに`getQuestionFile`がなく、GitHub API到達前に`TypeError`となっていた。
 - runtime entrypointとGitHub client factoryを分離し、修正後に通常GET endpointを実測HTTP 200（`Q-20260929-01`、3設問、revision）まで確認。一時diagnostic endpoint／secretは撤去済み。final Worker Version `dd5be5c5-77e3-4c3c-aacd-490fd8b6cc6c`、`pnpm test` 11 PASS、`pnpm build` PASS。
 
+## 2026-09-29: 喜久蔵 Trial access header／文字列加工監査
+
+- UIのGETは `GET /api/questions/${encodeURIComponent(id)}` を発行し、literal header `x-kikuzo-trial-access` へパスワード入力欄の `accessCode.value` をそのまま設定する。trim・大小文字変換・置換・正規化は実装していない。`type=password`は表示を伏せるだけで値を加工しない。
+- Workerは同じheaderを`Headers.get()`で読み、`provided === env.TRIAL_ACCESS_SECRET`の完全一致だけを判定する。header名の大文字小文字はFetch仕様上区別されないが、値は完全一致であり、値の変換はしない。
+- runtime entrypoint経路でASCII英数secretを同じ値で渡すとHTTP 200、末尾に1文字を足すとHTTP 401になる回帰testを追加した。`pnpm test` 12 PASS、`pnpm build` PASS。
+- Ownerが受けたHTTP 502はaccess gate通過後にしか返らないため、その試行に限ればsecret/header不一致ではない。既存のCloudflare executionContext修正後、通常GETはHTTP 200を実測済み。secret再生成を根拠なく要求しない。
+
 ## 4. 重要な設計上の決定
 
 - 技術: TypeScript + React + Vite + vite-plugin-pwa + idb。Playストア用ネイティブアプリではない。
