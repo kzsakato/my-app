@@ -70,6 +70,11 @@
 - Ownerの`kzsakato-lab` subdomain登録後に再deployし、`https://kikuzo-trial.kzsakato-lab.workers.dev/`がHTTP 200でUIを返すことを確認した（Version ID: `08349b39-ee56-44bd-8ad3-ca3ddf1840e9`）。
 - 既存GitHub CLI OAuth tokenは広い`repo` scopeのためWorkerへ転用せず、`training-project`だけのContents read/write fine-grained PAT発行を待つ。実QABox read/writeとWorker secrets投入は未実施。
 
+## 2026-09-29: 喜久蔵 Trial deploy phase完了（実E2E前）
+
+- OwnerがTrial専用fine-grained PATと別access codeをWorker secretsとして投入済み。`wrangler secret list`で`GITHUB_TOKEN`と`TRIAL_ACCESS_SECRET`の存在だけを確認し、値は取得・表示・保存していない。
+- 公開Workerの不正access headerはHTTP 401で拒否された。実QABox質問票が未作成のため、正しいaccess codeによる表示・回答保存・GitHub Contents API実書込みは未実施。H-22はTechnical Advisorへ返却する。
+
 ## 4. 重要な設計上の決定
 
 - 技術: TypeScript + React + Vite + vite-plugin-pwa + idb。Playストア用ネイティブアプリではない。
