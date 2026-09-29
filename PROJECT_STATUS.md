@@ -85,6 +85,11 @@
 - 一時secretで保護したserver-side diagnosticにより、`GITHUB_TOKEN` runtime binding、固定target `kzsakato/training-project` / `main` / `QABox/Q-20260929-01.md`、固定headersを確認し、GitHub Contents GETがHTTP 200かつ`contents=read`で成功することを実測した。PAT再発行・secret再入力は不要。
 - 実原因はCloudflare Workerでglobal `fetch`をclass instance receiverで呼んだことによる`Illegal invocation`。`globalThis.fetch`を正しく束縛するwrapperへ修正し、回帰testを追加した。一時diagnostic endpoint／secretは撤去済み。final Worker Version `b3f59709-6849-4f01-bd7d-1dffe3a707e6`、`pnpm test` 8 PASS、`pnpm build` PASS。
 
+## 2026-09-29: 喜久蔵 Trial Owner UI GET診断
+
+- Owner UIがURL query `q`欠落およびHTTP 401以外を一律に`質問票を取得できません。`と表示していたため、固定GET target、欠落ID、HTTP status、安全なresponse messageを表示するtrial diagnosticを追加した。GitHub GET/PUT failureも安全なHTTP status/messageへ区別した。
+- Worker Version `55c727c5-5a2f-4f08-a5dc-301c9c81da13`へdeploy済み。`pnpm test` 10 PASS、`pnpm build` PASS。正しいaccess codeでのOwner GET結果を待ち、実statusに基づき次を判断する。PAT再発行・secret再入力は要求しない。
+
 ## 4. 重要な設計上の決定
 
 - 技術: TypeScript + React + Vite + vite-plugin-pwa + idb。Playストア用ネイティブアプリではない。
