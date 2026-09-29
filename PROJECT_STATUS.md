@@ -60,6 +60,11 @@
 - H-20260929-22 Phase 2 skeletonとして、private `kzsakato/kikuzo-trial` repoを作成し、Cloudflare Worker向けの質問取得／回答保存UIと固定GitHub QABox adapterを実装した。local mock test 6件とTypeScript checkは成功。Cloudflare deploy、Worker secret、実GitHub QABox writeは未実行であり、既存筋トレappやProject SoTのデータは変更していない。
 - H-20260929-17のFact Checkでは、Owner通常Chromeとは別のbrowser appを新規にMAN専用として用い、同じPages URLを通常tabで開く方式を推奨候補とした。appはIndexedDBのみを使いサーバー同期を行わず、Androidの別app sandboxによりChrome側のIndexedDB／authority markerへ書込み経路を持たない。MAN専用browserではPWA installやlegacy backup importを行わない。Android実機でclean storageとBuild identifierを最初に確認する必要がある。
 
+## 2026-09-29: 喜久蔵 Trial deploy phase
+
+- Cloudflare OAuth device authorization後、`kikuzo-trial` Workerのupload/deployは成功（Version ID: `cf9b4b54-2fb5-4ffd-9ec0-e17c6cd63544`）。
+- `workers.dev` subdomainが未登録のため、公開URLのHTTPS確認は未完了。`GITHUB_TOKEN`／`TRIAL_ACCESS_SECRET`は未投入で、実QABox read/writeも未実行。
+
 ## 4. 重要な設計上の決定
 
 - 技術: TypeScript + React + Vite + vite-plugin-pwa + idb。Playストア用ネイティブアプリではない。
