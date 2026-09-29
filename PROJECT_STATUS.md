@@ -1,6 +1,13 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-29（H-20260929-25: canonical種目・設定導線MAN blocker）
+最終更新: 2026-09-29（H-20260929-27: canonical bodyRegion選択UI限定FIX）
+
+## 2026-09-29: H-20260929-27 canonical bodyRegion選択UI限定FIX
+
+- canonical Exerciseの「部位（任意）」を、標準候補（胸、肩、腕、背中、体幹、下半身）、未設定、その他／カスタムの選択UIへ変更した。6候補は入力補助だけで、canonical schema/domainのclosed enumではない。
+- custom入力は任意の非空labelを保存できる。既存の候補外labelはedit時にcustomとして表示され、無断mappingなしで再保存できる。未設定はclassificationを持たず、Topの既存projectionでは`未分類`のままとなる。
+- schema、schemaVersion、Category、legacy migration、分析／Session validationは変更していない。H-25の種目保存→実施項目設定のpreset連結は維持した。
+- `pnpm test` 62件、`pnpm build`、Chromium `pnpm test:e2e` 14件が成功。
 
 ## 2026-09-29: H-20260929-25 canonical種目・設定導線MAN blocker
 

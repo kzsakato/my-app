@@ -289,6 +289,39 @@ test('visible canonical cutover route reaches menu confirmation, category projec
   await expect(weekdayTrigger).toHaveText(/月・火/)
 })
 
+test('canonical Exercise bodyRegion offers presets and preserves custom labels', async ({ page }) => {
+  await page.clock.install({ time: monday })
+  const data = canonicalData()
+  ;(data.exercises as Array<{ classifications: Array<{ kind: string; label: string }> }>)[0].classifications = [{ kind: 'bodyRegion', label: '前腕' }]
+  await seedCanonicalAndReload(page, data)
+  await page.getByRole('button', { name: '共通メニュー' }).click()
+  await page.getByRole('button', { name: '設定' }).click()
+  await page.getByRole('button', { name: '種目', exact: true }).click()
+
+  await page.getByRole('button', { name: /正規テストプレス.*編集/ }).click()
+  await expect(page.getByLabel('部位（任意）')).toHaveValue('custom')
+  await expect(page.getByLabel('カスタム部位')).toHaveValue('前腕')
+  await page.getByRole('button', { name: '種目を更新' }).click()
+  expect(((await readCanonicalState(page)).exercises as Array<{ classifications: Array<{ label: string }> }>)[0].classifications[0].label).toBe('前腕')
+
+  await page.getByLabel('種目名').fill('標準部位E2E種目')
+  await page.getByLabel('部位（任意）').selectOption('肩')
+  await page.getByRole('button', { name: '種目だけ保存' }).click()
+  await page.getByRole('button', { name: /標準部位E2E種目.*編集/ }).click()
+  await expect(page.getByLabel('部位（任意）')).toHaveValue('肩')
+  await page.getByLabel('部位（任意）').selectOption('unset')
+  await page.getByRole('button', { name: '種目を更新' }).click()
+  expect(((await readCanonicalState(page)).exercises as Array<{ name: string; classifications: unknown[] }>).find(value => value.name === '標準部位E2E種目')?.classifications).toEqual([])
+
+  await page.getByLabel('種目名').fill('カスタム部位E2E種目')
+  await page.getByLabel('部位（任意）').selectOption('custom')
+  await page.getByLabel('カスタム部位').fill('前腕')
+  await page.getByRole('button', { name: '種目だけ保存' }).click()
+  await page.getByRole('button', { name: /カスタム部位E2E種目.*編集/ }).click()
+  await expect(page.getByLabel('部位（任意）')).toHaveValue('custom')
+  await expect(page.getByLabel('カスタム部位')).toHaveValue('前腕')
+})
+
 test('visible canonical settings route persists profile, exercise, item standards, history, and active menu', async ({ page }) => {
   const longExerciseName = 'Android MANで保存して再読込できる長い種目名のE2E確認用ダンベルプレスバリエーション'
   await page.clock.install({ time: monday })

@@ -58,6 +58,8 @@ type SettingsTab =
   | "menu"
   | "settingHistory";
 const days = ["月", "火", "水", "木", "金", "土", "日"];
+const standardBodyRegions = ["胸", "肩", "腕", "背中", "体幹", "下半身"] as const;
+type BodyRegionChoice = "unset" | "custom" | (typeof standardBodyRegions)[number];
 const uid = () =>
   globalThis.crypto?.randomUUID?.() ??
   `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -1186,6 +1188,10 @@ function ExerciseEditor({
   commit: (next: CanonicalAppData) => Promise<boolean>;
   onConfigure: (exerciseId: string) => void;
 }) {
+  const bodyRegionOf = (exercise: Exercise) =>
+    exercise.classifications?.find((value) => value.kind === "bodyRegion")?.label ?? "";
+  const choiceFor = (label: string): BodyRegionChoice =>
+    !label ? "unset" : standardBodyRegions.includes(label as (typeof standardBodyRegions)[number]) ? label as (typeof standardBodyRegions)[number] : "custom";
   const blank = (): Exercise => ({
     id: uid(),
     lifecycle: "active",
@@ -1196,15 +1202,18 @@ function ExerciseEditor({
     classifications: [],
   });
   const [form, setForm] = useState<Exercise>(blank);
+  const [bodyRegionChoice, setBodyRegionChoice] = useState<BodyRegionChoice>("unset");
+  const [customBodyRegion, setCustomBodyRegion] = useState("");
   const save = async (configure = false) => {
     if (!form.name.trim()) return;
     const next = {
       ...form,
       name: form.name.trim(),
       weightMode: form.usesWeight ? (form.weightMode ?? "total") : undefined,
-      classifications: form.classifications?.filter((value) =>
-        value.label.trim(),
-      ),
+      classifications: form.classifications?.flatMap((value) => {
+        const label = value.label.trim();
+        return label ? [{ ...value, label }] : [];
+      }),
     };
     const exists = data.exercises.some((value) => value.id === next.id);
     if (
@@ -1216,6 +1225,8 @@ function ExerciseEditor({
       })
     ) {
       setForm(blank());
+      setBodyRegionChoice("unset");
+      setCustomBodyRegion("");
       if (configure && !exists) onConfigure(next.id);
     }
   };
@@ -1277,18 +1288,46 @@ function ExerciseEditor({
         )}
         <label>
           部位（任意）
-          <input
-            value={form.classifications?.[0]?.label ?? ""}
-            onChange={(event) =>
+          <select
+            value={bodyRegionChoice}
+            onChange={(event) => {
+              const choice = event.target.value as BodyRegionChoice;
+              setBodyRegionChoice(choice);
+              setCustomBodyRegion("");
               setForm({
                 ...form,
-                classifications: event.target.value
-                  ? [{ kind: "bodyRegion", label: event.target.value }]
-                  : [],
-              })
-            }
-          />
+                classifications:
+                  choice === "unset" || choice === "custom"
+                    ? []
+                    : [{ kind: "bodyRegion", label: choice }],
+              });
+            }}
+          >
+            <option value="unset">未設定</option>
+            {standardBodyRegions.map((value) => (
+              <option key={value} value={value}>{value}</option>
+            ))}
+            <option value="custom">その他／カスタム</option>
+          </select>
         </label>
+        {bodyRegionChoice === "custom" && (
+          <label>
+            カスタム部位
+            <input
+              value={customBodyRegion}
+              onChange={(event) => {
+                const label = event.target.value;
+                setCustomBodyRegion(label);
+                setForm({
+                  ...form,
+                  classifications: label.trim()
+                    ? [{ kind: "bodyRegion", label }]
+                    : [],
+                });
+              }}
+            />
+          </label>
+        )}
         {data.exercises.some((value) => value.id === form.id) ? (
           <button className="primary" disabled={!form.name.trim()} onClick={() => save()}>
             種目を更新
@@ -1308,7 +1347,13 @@ function ExerciseEditor({
         <button
           className="row"
           key={value.id}
-          onClick={() => setForm(clone(value))}
+          onClick={() => {
+            const next = clone(value);
+            const label = bodyRegionOf(next);
+            setForm(next);
+            setBodyRegionChoice(choiceFor(label));
+            setCustomBodyRegion(choiceFor(label) === "custom" ? label : "");
+          }}
         >
           <span>
             <b>{value.name}</b>
