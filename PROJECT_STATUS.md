@@ -102,6 +102,12 @@
 - runtime entrypoint経路でASCII英数secretを同じ値で渡すとHTTP 200、末尾に1文字を足すとHTTP 401になる回帰testを追加した。`pnpm test` 12 PASS、`pnpm build` PASS。
 - Ownerが受けたHTTP 502はaccess gate通過後にしか返らないため、その試行に限ればsecret/header不一致ではない。既存のCloudflare executionContext修正後、通常GETはHTTP 200を実測済み。secret再生成を根拠なく要求しない。
 
+## 2026-09-29: 喜久蔵 Trial COMMENT REQUIRED修正
+
+- `TYPE: COMMENT` は主回答を `answers[].value` に保存する自由記述型で、補足の `answers[].comment` は持たない。一方、旧server validationは `COMMENT: REQUIRED` を補足comment必須として扱っていたため、主入力済みでも送信をHTTP 400で拒否した。
+- `COMMENT: REQUIRED` は主回答textareaと `value` の必須条件として扱うよう修正した。`OPTIONAL`／`NONE`のCOMMENT主回答は任意とし、choice型の `COMMENT` は従来どおり別の補足textareaの有無・必須性を表す。
+- Chromiumで実UIを開き、Q3入力時に `value` のみをPOSTして成功すること、空欄時はUI表示とserver validationが`Q3 の回答が必要です。`となることを確認した。`pnpm test` 15 PASS、`pnpm build` PASS。Worker Version `d6c8b9b8-f958-4ddf-a8c9-11f6d7d5239b`へdeploy済み。
+
 ## 4. 重要な設計上の決定
 
 - 技術: TypeScript + React + Vite + vite-plugin-pwa + idb。Playストア用ネイティブアプリではない。
