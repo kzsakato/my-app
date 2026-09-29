@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-29（H-20260929-03: legacy設定へのbuild identifier表示を追加・自動検証完了）
+最終更新: 2026-09-29（H-20260929-12: Android MANのcanonical UI到達条件を切り分け、重量操作横幅と実導線E2Eを更新）
 
 ## 1. アプリの目的
 
@@ -40,6 +40,7 @@
 - H-20260928-20として、MAN用Master bootstrap成功時の構造化対応表から、既存H-07 MenuProposal contractのJSONを生成してUTF-8でダウンロードする限定helperを追加した。既存の「メニュー投入」画面で検証・Warning確認・新規Menu作成を行うため、bootstrap自体やactive Menuを変更しない。
 - H-20260928-21として、canonicalの「正規データの設定」画面末尾にbuild identifierを表示する。GitHub Pages buildではtrigger commitの先頭8桁SHAとbuild日をVite defineで埋め込み、local/devは`local`を表示する。
 - H-20260929-03として、legacy通常「設定」画面末尾にも同じbuild identifierを追加した。canonical／legacyで表示値や注入方式を分けず、どちらの保存状態でも配信版を確認できる。
+- H-20260929-12として、Android MANで確認されたcanonical UIの未表示を切り分けた。通常のlegacyデータ導線はlegacy UIを継続し、canonical UIはData Managementから明示cutoverし、canonical authority markerが有効な場合だけ起動する。cutoverはProfile候補だけを採用し、legacyの種目・実施項目・週メニュー・履歴を自動移行しない。Runの重量5操作はlegacy／canonical共通CSSで横幅全体へ配置するよう修正し、旧画面からの明示cutoverを経たcanonical UI操作をE2Eに追加した。
 
 ### 未着手の機能
 
@@ -51,9 +52,9 @@
 
 ## 3. 現在の作業内容
 
-- 最後に取り組んだ課題: H-20260929-03（legacy設定画面への配信版識別子表示）。
+- 最後に取り組んだ課題: H-20260929-12（Android MANのcanonical UI実導線切り分けと限定FIX）。
 - 完了状況: root `main` を `git fetch` / `git pull --ff-only` で最新化後、Data Managementから明示的に初期canonical candidateを作りcutoverできるようにした。candidateには明示確認済みProfileだけを採用し、legacyのmaster/menu/session/historyは移さない。authority後はcanonicalだけを保存・参照する通常画面（Top、Menu、Run、追加実施、標準設定、履歴）へ接続した。Profileの体重・身長・年齢・性別は採用前に全て表示し、切替前にlegacy source検証とimmutable baseline保存/read-backだけを実行するpreflightを追加した。Unit 39件、PWA build、Chromium E2E 6件が成功。
-- 現在の問題: canonical Stage 3、H-20260928-05、H-20260928-07、H-20260928-14のAndroid実機でのcutover、通常トレーニング、設定変更履歴、Recovery、JSON file download/upload、分析表示は未確認。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）も未検証。
+- 現在の問題: Android MANでlegacy通常導線を使用すると、canonical専用の複数曜日選択、Run seat入力、設定変更理由・削除、週メニュー追加確認は表示されない。これは未配信ではなくauthority/state分岐によるもの。legacyデータを保持したままcanonical UIを通常導線にするための移行・採用方針は本Handoffの限定FIX範囲外で、PMO／Owner判断が必要。canonical Stage 3、H-20260928-05、H-20260928-07、H-20260928-14のAndroid実機でのcutover、通常トレーニング、設定変更履歴、Recovery、JSON file download/upload、分析表示は未確認。Stage 2のブラウザ固有リスク（cold boot、容量不足、途中中断、複数タブ）も未検証。
 
 ## 4. 重要な設計上の決定
 
@@ -61,6 +62,7 @@
 - 保存: AppData schema version 6。JSON Exportはenvelope内のAppData全体、Restoreは検証と利用者確認後に端末内データ全体を置換する。
 - canonical Stage 2の保存は旧AppDataとは別のIndexedDB store（`canonical`、`cutover`、`baseline`）を使う。既存の`state/app`とStage 1の`recovery`は切替成功前後も削除・上書きしない。
 - canonical authority後の起動失敗はlegacyへ自動フォールバックせず、明示的復旧状態で停止する。canonical cutover前の失敗ではmarkerをlegacy-activeへ戻すよう試みる。
+- canonical UIを表示する条件はcanonical authority markerと検証済みcanonicalデータである。legacy AppDataが存在するだけではcanonical UIを表示しない。これは、legacyデータを自動変換・削除しないcutover設計と連動する。
 - MenuProposalの適用済み`proposalId`はcanonical data内の`appliedProposalIds`に記録する。Ver1では既存active TrainingItemだけを参照し、既存Menuの更新・Master作成／更新／削除を受け付けない。適用時のcanonical IDはアプリ側で新規発行する。
 - Trainer Historyはcanonical stateから純粋関数で生成するread-only projectionである。Sessionのsnapshotを現在Masterで補完せず、期間指定では両端を含む。設定変更は期間内のrecordと、必要なら開始日前の最新1件をbaselineとして含める。
 - 関係: Exercise → Item → MenuItem（週メニュー所属）。Categoryは表示／分析のまとまり。
@@ -103,6 +105,7 @@
 | `src/data.ts` | 初期データとIndexedDB adapter | legacy v6／v5読込に加え、DB v7のcanonical/cutover/baseline adapterとauthority起動分岐を実装済み。 |
 | `src/styles.css` | 既存のスマホ優先スタイル | 今回は変更なし。 |
 | `src/density.css` | UI先行改修用の追加スタイル | H-20260927-04の共通ヘッダー、一覧・Run高密度化スタイルを追加済み。 |
+| `e2e/training-check.spec.ts` | Chromiumの実導線E2E | H-20260929-12でlegacy Data Managementから明示cutoverし、canonicalの曜日選択・週メニュー追加確認・Run seat入力・設定変更理由／削除を確認するgateを追加。 |
 | `public/prototypes/oic-012-density-prototype.html` | OIC-012のOwner確認専用・独立HTML Prototype | 作成済み。Productionコードには未接続。Ownerレビュー中。 |
 | `src/main.tsx` | React起動とスタイル読込 | `density.css`を追加読込。 |
 | `PROJECT_STATUS.md` | 開発再開用の状態記録 | この内容に更新済み。 |
@@ -110,15 +113,16 @@
 
 ## 6. 動作確認
 
-- 実行済み: 2026-09-29にH-20260929-03後の `pnpm test` が10 file・62件成功、`pnpm build` がPWA生成を含め成功、`pnpm test:e2e` がChromiumで10件成功。E2Eではlegacy通常「設定」とcanonical「正規データの設定」の双方にbuild identifierが表示されることを確認した。`VITE_BUILD_SHA=abcdef1234567890`を渡したbuild成果物には`Build 2026-09-28 / abcdef12`が埋め込まれることも確認済み。
+- 実行済み: 2026-09-29にH-20260929-12後の `pnpm test` が10 file・62件成功、`pnpm build` がPWA生成を含め成功、`pnpm test:e2e` がChromiumで12件成功。E2Eではlegacy Data Managementからの明示cutover、canonicalの曜日multi-select、週メニュー追加confirm、Run seat保存、設定変更理由と非初回履歴の削除confirmを確認した。配信中bundle `assets/index-CtM4jXnu.js` にはcanonical UI文字列群が含まれ、`Build 2026-09-28 / db09f72d`を確認した。
 - 確認できたこと: Stage 2のcandidate識別・validation、legacy baselineのv6完全検証／v5決定的移行検証、baseline保存、canonical保存/read-back、runtime/restart相当read、rollback、canonical Restoreのfailure injectionをVitestで確認した。構造識別できるだけの不正v6入力はbaselineへ保存されない。E2Eはv7 IndexedDBでも既存v6画面の実施保存・週境界・backup restoreを確認した。
 - 未確認: H-20260928-07のAndroid実機でのMenuProposal file選択・Warning確認・適用後の週メニュー確認、Trainer History file download。H-20260927-04のモバイル実機での共通メニュー・二行一覧・Run操作。Stage 2の実ブラウザ永続化固有リスク（cold boot、quota/storage failure、interrupted transaction、multi-tab）。Android実機でのv5移行（Recovery Pointを保存後にSession／SettingHistory除外）、v6 backup restore、Session snapshot分析。Issue #16のUI先行改修も実機確認が必要。
 - 既知の不具合: なし。OIC-009は当日Sessionの件数を分子にするため、同じItemを複数回完了した場合もその回数を数える。
 
 ## 7. 次にやるべきこと
 
-1. GitHub Pagesの最新deploy完了後、Android実機でlegacy「設定」またはcanonical「正規データの設定」末尾の`Build YYYY-MM-DD / <短縮SHA>`が最新main commit由来であることを確認する。legacy/canonical UI差分とAndroid MAN対象の確定は別途必要であり、MANはそれまでHOLDする。その後、canonicalの「MAN用マスターを投入」成功画面から「MAN用メニューJSONを作成」を実行し、ダウンロードしたJSONを既存の「メニュー投入」で選択する。推奨曜日未指定Warningを確認後に新規Menuを作成し、active Menuが変わらないことを確認する。続けて有効／不正なMenuProposal JSON、Trainer Historyの期間・全履歴・0件表示・JSON downloadも確認し、結果をQA / Testへ渡す。
-2. Android実機でcanonical Topの複数曜日選択、Session実績表示、Runのseat入力、週メニュー追加確認、設定変更理由／履歴削除を確認する。結果をQA / Testへ渡す。
+1. PMO／OwnerがAndroid MANの対象導線を決定する。legacyデータを維持してcanonical UIを通常導線へ採用するには、既存cutoverの「Profileだけ採用、legacy entityは自動移行しない」という承認済み境界を変更するか、MANをexplicit cutover後の新規canonicalデータに限定するかの判断が必要。App Developmentはこの判断なしにdefault routeやデータ移行を変更しない。
+2. 最新のGitHub Pages deploy完了後、Android実機でlegacy「設定」またはcanonical「正規データの設定」末尾の`Build YYYY-MM-DD / <短縮SHA>`が最新main commit由来であることを確認する。canonical MANを実施する場合はData Management→「正規データへの切替を準備」を通り、canonicalの「MAN用マスターを投入」成功画面から「MAN用メニューJSONを作成」を実行する。推奨曜日未指定Warningを確認後に新規Menuを作成し、active Menuが変わらないことを確認する。
+3. Android実機でcanonical Topの複数曜日選択、Session実績表示、Runのseat入力、週メニュー追加確認、設定変更理由／履歴削除、およびRun重量5操作の横幅を確認する。結果をQA / Testへ渡す。
 2. GitHub ActionsのTest workflowの初回実行結果を確認する。失敗時はActionsログと `playwright-report` artifactを確認する。
 2. 初回v6公開後、Androidでv5移行画面を確認する。復旧JSONを保存後、移行により設定を保持し、Session／SettingHistoryが除外されることを確認する。
 3. v6バックアップを作成し、別端末またはテストデータで復元する。エラーは中止、警告は確認後だけ復元されることを確認する。
