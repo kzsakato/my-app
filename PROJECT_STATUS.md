@@ -1,6 +1,6 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-29（H-20260929-22: 喜久蔵Minimal Trial Phase 1）
+最終更新: 2026-09-29（H-20260929-22: 喜久蔵Minimal Trial Phase 2 skeleton）
 
 ## 1. アプリの目的
 
@@ -53,10 +53,11 @@
 
 ## 3. 現在の作業内容
 
-- 最後に取り組んだ課題: H-20260929-22（喜久蔵Minimal TrialのPhase 1配置・credential・deployment可否確認）。
+- 最後に取り組んだ課題: H-20260929-22（喜久蔵Minimal TrialのPhase 2 skeleton／local test）。
 - 完了状況: root `main` を `git fetch` / `git pull --ff-only` で最新化後、Data Managementから明示的に初期canonical candidateを作りcutoverできるようにした。candidateには明示確認済みProfileだけを採用し、legacyのmaster/menu/session/historyは移さない。authority後はcanonicalだけを保存・参照する通常画面（Top、Menu、Run、追加実施、標準設定、履歴）へ接続した。Profileの体重・身長・年齢・性別は採用前に全て表示し、切替前にlegacy source検証とimmutable baseline保存/read-backだけを実行するpreflightを追加した。Unit 39件、PWA build、Chromium E2E 6件が成功。
 - 現在の問題: canonicalカテゴリprojectionと曜日dropdownの限定FIXを実装済み。Desktop Chromiumの可視cutover E2Eでは、週メニュー追加の未選択disabled、confirm No／Yes、Top read-backまで成立した。一方、Owner Android/Braveの追加不反応は再現できず、mobile-touch／native select／native confirmに限定したコード原因も確認できない。Android QA-requiredとして、選択済みのMenu add、Yes/No、Top read-back、およびdropdown操作を実機で確認する必要がある。successful canonical cutover後にlegacy `state/app`／protected baselineは消去されないが、通常UIからlegacy authorityへ戻す、baselineを復元する、legacy backupをimportする操作はない。canonical dataの異常時もlegacyへsilent fallbackせずcanonical Recoveryとなる。
 - H-20260929-22では喜久蔵Minimal TrialのPhase 1を確認した。現行`my-app`は静的GitHub Pages PWAのみでserver-side GitHub write adapterを置けず、`training-project`にもQABox／deployment／secretはない。既存Ver1と分離する最小案は、別private `kikuzo-trial` repoとCloudflare Worker（static UI + same-origin API）である。GitHub Contents APIのTrial専用fine-grained PATとaccess secretをWorker secretへOwnerが直接投入する必要があるため、Phase 2のprototype実装／deployは未着手。
+- H-20260929-22 Phase 2 skeletonとして、private `kzsakato/kikuzo-trial` repoを作成し、Cloudflare Worker向けの質問取得／回答保存UIと固定GitHub QABox adapterを実装した。local mock test 6件とTypeScript checkは成功。Cloudflare deploy、Worker secret、実GitHub QABox writeは未実行であり、既存筋トレappやProject SoTのデータは変更していない。
 - H-20260929-17のFact Checkでは、Owner通常Chromeとは別のbrowser appを新規にMAN専用として用い、同じPages URLを通常tabで開く方式を推奨候補とした。appはIndexedDBのみを使いサーバー同期を行わず、Androidの別app sandboxによりChrome側のIndexedDB／authority markerへ書込み経路を持たない。MAN専用browserではPWA installやlegacy backup importを行わない。Android実機でclean storageとBuild identifierを最初に確認する必要がある。
 
 ## 4. 重要な設計上の決定
