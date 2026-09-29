@@ -75,6 +75,11 @@
 - OwnerがTrial専用fine-grained PATと別access codeをWorker secretsとして投入済み。`wrangler secret list`で`GITHUB_TOKEN`と`TRIAL_ACCESS_SECRET`の存在だけを確認し、値は取得・表示・保存していない。
 - 公開Workerの不正access headerはHTTP 401で拒否された。実QABox質問票が未作成のため、正しいaccess codeによる表示・回答保存・GitHub Contents API実書込みは未実施。H-22はTechnical Advisorへ返却する。
 
+## 2026-09-29: 喜久蔵 Trial Q-20260929-01 GET修正
+
+- 実QABox質問票はlocal parserで有効だった。GitHub Contents API adapterに必須`User-Agent` headerがなく、GitHubのreject条件だったため`User-Agent: kikuzo-trial`を追加した。
+- 回帰testを追加し、`pnpm test` 7 PASS、`pnpm build` PASS。Worker Version `eba81c46-9129-441a-99cf-94e90d407e53`へ再deploy済み。Owner access code値は取得しないため、正しいcodeでの公開GET／回答書込みはTechnical Advisor / QAのE2E受入で確認する。
+
 ## 4. 重要な設計上の決定
 
 - 技術: TypeScript + React + Vite + vite-plugin-pwa + idb。Playストア用ネイティブアプリではない。
