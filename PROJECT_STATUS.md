@@ -65,6 +65,11 @@
 - Cloudflare OAuth device authorization後、`kikuzo-trial` Workerのupload/deployは成功（Version ID: `cf9b4b54-2fb5-4ffd-9ec0-e17c6cd63544`）。
 - `workers.dev` subdomainが未登録のため、公開URLのHTTPS確認は未完了。`GITHUB_TOKEN`／`TRIAL_ACCESS_SECRET`は未投入で、実QABox read/writeも未実行。
 
+## 2026-09-29: 喜久蔵 Trial public Worker
+
+- Ownerの`kzsakato-lab` subdomain登録後に再deployし、`https://kikuzo-trial.kzsakato-lab.workers.dev/`がHTTP 200でUIを返すことを確認した（Version ID: `08349b39-ee56-44bd-8ad3-ca3ddf1840e9`）。
+- 既存GitHub CLI OAuth tokenは広い`repo` scopeのためWorkerへ転用せず、`training-project`だけのContents read/write fine-grained PAT発行を待つ。実QABox read/writeとWorker secrets投入は未実施。
+
 ## 4. 重要な設計上の決定
 
 - 技術: TypeScript + React + Vite + vite-plugin-pwa + idb。Playストア用ネイティブアプリではない。
