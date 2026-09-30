@@ -1,6 +1,18 @@
 # PROJECT_STATUS
 
-最終更新: 2026-09-29（H-20260929-27: canonical bodyRegion選択UI限定FIX）
+最終更新: 2026-09-30（H-20260930-12: release UI baseline grouped FIX）
+
+## 2026-09-30: H-20260930-12 grouped FIX
+
+- 基準: training-project H-08/10/11/12、更新済みDATA_SPEC §10.16 / APP_SPEC §4.13（Project `99e0072`）。現在のcanonical骨格を廃止承認の代用にせず、明示されたA–Eを復旧した。
+- A: Run標準メモ、対象項目の設定履歴、確認付き標準設定登録と独立した変更理由を復旧。MenuEntry単位の当週完了、完了済みの戻る、日付付き確認取消を追加。Session当回メモを標準メモ/変更理由へコピーしない。
+- B: 実施項目一覧→新規/編集→一覧の階層と戻る先を復旧。Exercise保存→preset設定を維持。計測方法と重量checkboxを関連づけ、候補外bodyRegionを変更せず再保存する。
+- C: 今日/今週のmembership完了件数、実施済み表示切替、今週負荷/全観測完了週平均/ACWRをcanonical factsから復旧。週境界とデータ不足は確定SoTに従う。分類/曜日モードと表示設定はRun往復で保持する。
+- D: MAN bootstrap/producerはViteの開発モードだけに限定。production buildでは入口とpage分岐を無効化し、MenuProposal consumer/Trainer history exportを維持。
+- E: Settingsデータ管理から全canonical Backup出力・非破壊検証preview・確認後full replace・read-back検証。旧形式/raw payload/不正入力は拒否。保存失敗/読戻し失敗を成功にせず、成否不明時は通常編集を止めて再読込または再復元へ誘導する。既存IndexedDB単一record保存を使用し、複数storeを跨ぐatomic rollbackを新設・保証したものではない。
+- 検証: unit 77件、build、Chromium回帰/実導線E2E 20件、production preview E2E 6件。テスト定義: `src/canonical/baseline.test.ts`, `src/canonical/backup.test.ts`, `e2e/grouped-baseline.spec.ts`。release試験: `pnpm build` 後 `pnpm exec playwright test --config playwright.release.config.ts`。CIにもrelease試験と成功時を含むreport保存を追加。
+- Warningの表示/明示確認gateは実装済み。現canonical validatorはWarningを生成するcaseを定義していないため、Warning gateの証明はunitでのvalidator結果注入による。既存validation policyを新規発明していない。
+- schema/domain entity/migration/legacy store変更なし。Android実機/Brave/PWAでの操作負荷・MAN受入は未検証。H28-MAN-01 STOP解除と次工程判断はPMO/QA/Ownerへ返す。
 
 ## 2026-09-29: H-20260929-27 canonical bodyRegion選択UI限定FIX
 

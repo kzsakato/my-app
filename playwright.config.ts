@@ -5,6 +5,7 @@ export default defineConfig({
   // All current browser cases intentionally exercise the same IndexedDB name.
   // Keep them serial so one case cannot replace another case's persisted state.
   fullyParallel: false,
+  workers: 1,
   forbidOnly: !!process.env.CI,
   retries: 0,
   reporter: [['list'], ['html', { open: 'never' }]],

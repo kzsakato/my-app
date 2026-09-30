@@ -275,6 +275,7 @@ test('visible canonical cutover route reaches menu confirmation, category projec
   await expect(page.getByLabel('シート位置')).toBeVisible()
   await page.getByLabel('シート位置').fill('3')
   await page.getByRole('button', { name: '種目を完了' }).click()
+  await page.getByLabel('実施済も表示').check()
   await expect(page.getByText(/今週実施済み.*シート: 3/)).toBeVisible()
   await page.getByRole('button', { name: '推奨曜日表示' }).click()
   const weekdayTrigger = page.getByRole('button', { name: /表示する推奨曜日: 月/ })
@@ -292,7 +293,7 @@ test('visible canonical cutover route reaches menu confirmation, category projec
 test('canonical Exercise bodyRegion offers presets and preserves custom labels', async ({ page }) => {
   await page.clock.install({ time: monday })
   const data = canonicalData()
-  ;(data.exercises as Array<{ classifications: Array<{ kind: string; label: string }> }>)[0].classifications = [{ kind: 'bodyRegion', label: '前腕' }]
+  ;(data.exercises as Array<{ classifications: Array<{ kind: string; label: string }> }>)[0].classifications = [{ kind: 'bodyRegion', label: ' 前腕（補助） ' }]
   await seedCanonicalAndReload(page, data)
   await page.getByRole('button', { name: '共通メニュー' }).click()
   await page.getByRole('button', { name: '設定' }).click()
@@ -300,9 +301,9 @@ test('canonical Exercise bodyRegion offers presets and preserves custom labels',
 
   await page.getByRole('button', { name: /正規テストプレス.*編集/ }).click()
   await expect(page.getByLabel('部位（任意）')).toHaveValue('custom')
-  await expect(page.getByLabel('カスタム部位')).toHaveValue('前腕')
+  await expect(page.getByLabel('カスタム部位')).toHaveValue(' 前腕（補助） ')
   await page.getByRole('button', { name: '種目を更新' }).click()
-  expect(((await readCanonicalState(page)).exercises as Array<{ classifications: Array<{ label: string }> }>)[0].classifications[0].label).toBe('前腕')
+  expect(((await readCanonicalState(page)).exercises as Array<{ classifications: Array<{ label: string }> }>)[0].classifications[0].label).toBe(' 前腕（補助） ')
 
   await page.getByLabel('種目名').fill('標準部位E2E種目')
   await page.getByLabel('部位（任意）').selectOption('肩')

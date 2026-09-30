@@ -3,3 +3,5 @@ dist/
 *.local
 playwright-report/
 test-results/
+playwright-report-release/
+test-results-release/
