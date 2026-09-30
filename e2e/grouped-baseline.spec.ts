@@ -56,6 +56,8 @@ test('H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/
     await page.getByLabel('推奨曜日').selectOption(day)
     page.once('dialog', dialog => dialog.accept())
     await page.getByRole('button', { name: '実施項目を追加' }).click()
+    await expect(page.getByRole('button', { name: /復旧ルートプレス.*外す/ })).toHaveCount(Number(day) + 1)
+    await expect(page.getByLabel('実施項目')).toHaveValue('')
   }
   await top(page)
   await expect(page.getByText('今週の実施総数')).toContainText('0/2')
