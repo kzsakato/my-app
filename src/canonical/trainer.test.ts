@@ -27,6 +27,8 @@ describe('Ver1 MenuProposal contract', () => {
     if (!result.ok) return
     expect(result.value.activeMenuId).toBe('menu-1')
     expect(result.value.menus.at(-1)?.id).toBe('app-1')
+    expect(result.value.menus.at(-1)?.name).toBe('提案メニュー (ByAI)')
+    expect(result.value.menus[0]).toEqual(data.menus[0])
     expect(result.value.menuEntries.at(-1)?.id).toBe('app-2')
     expect(result.value.appliedProposalIds).toEqual(['proposal-1'])
     expect(validateMenuProposal({ ...proposal, menu: { name: '変更後' } }, result.value).errors.map(value => value.path)).toContain('proposalId')

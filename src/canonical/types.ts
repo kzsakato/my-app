@@ -79,6 +79,8 @@ export type Session = {
   trainingItemId: ID
   menuEntryId?: ID
   date: string
+  performedAt: string
+  performedOrder: number
   weight?: number
   reps?: number
   seconds?: number

@@ -1,3 +1,4 @@
+import { compareInstants } from './instant'
 import { referenceTrainingLoad } from './analysis'
 import { localDate, weekStart } from './runtime'
 import type { CanonicalAppData, Session } from './types'
@@ -8,18 +9,26 @@ export function shiftLocalDate(date: string, days: number): string {
   return localDate(value)
 }
 
-/** Membership identity, not TrainingItem identity, determines planned completion. */
+/** The configured week bounds the actual date facts without changing membership. */
 export function currentWeekSessions(data: CanonicalAppData, today: string): Session[] {
   const start = weekStart(today, data.weekStartsOn)
   const end = shiftLocalDate(start, 7)
   return data.sessions.filter(session => session.date >= start && session.date < end)
 }
 
-/** Date-only ordering preserves source order for ties; it does not invent an instant. */
+export const sessionOrder = (a: Session, b: Session) => compareInstants(b.performedAt, a.performedAt) || b.performedOrder - a.performedOrder
+
+export function previousExerciseSession(data: CanonicalAppData, exerciseId: string): Session | undefined {
+  return data.sessions.filter(session => session.snapshot.exerciseId === exerciseId).sort(sessionOrder)[0]
+}
+
+/** Completed status is Exercise-scoped; facts retain their original membership. */
 export function latestRunSession(data: CanonicalAppData, today: string, itemId: string, entryId?: string): Session | undefined {
+  if (entryId && !data.menuEntries.some(entry => entry.id === entryId && entry.trainingItemId === itemId)) return undefined
+  const exerciseId = data.trainingItems.find(item => item.id === itemId)?.exerciseId
   return currentWeekSessions(data, today)
-    .filter(session => entryId ? session.menuEntryId === entryId : !session.menuEntryId && session.trainingItemId === itemId)
-    .sort((a, b) => b.date.localeCompare(a.date))[0]
+    .filter(session => entryId ? session.snapshot.exerciseId === exerciseId : !session.menuEntryId && session.trainingItemId === itemId)
+    .sort(sessionOrder)[0]
 }
 
 /** DATA_SPEC §10.16: all observed completed weeks, including intervening zero weeks. */

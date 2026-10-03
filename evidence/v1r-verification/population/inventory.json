@@ -1,0 +1,658 @@
+[
+  {
+    "id": "top",
+    "text": "今週の実施メニュー\n≡\n選択してください\n正規E2Eメニュー\n\n2026-09-28 〜 2026-10-04\n\n今日の実施総数\n1/0\n今週の実施総数\n2/2\nカテゴリ表示\n推奨曜日\n＋ 追加トレーニングを登録\n胸\n2項目\n2/2\nトレーニング負荷\n今週の総トレーニング負荷\n432 pt\n週の平均総トレーニング負荷\nデータ不足\nACWR（目安：0.8〜1.3）\nデータ不足",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "SELECT",
+        "text": "選択してください正規E2Eメニュー",
+        "label": "週メニュー"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "カテゴリ表示",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "推奨曜日",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "＋ 追加トレーニングを登録",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "胸2項目2/2",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "category",
+    "text": "‹ 戻る\n胸\n≡\n実施済も表示",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "run-completed",
+    "text": "‹ 戻る\n正規テストプレス\n≡\n\n週メニュー: 推奨 月\n\n今週実施済み（2026-10-03）\n\n当該実績\n\n2026-10-03　27 kg × 8 回 × 2 セット　シート: actual-seat\n\n重量\n<<\n<\n27.00 kg\n>\n>>\n回数\n−\n8 回\n＋\n実施セット数\n−\n2\n＋\nこの実施項目の設定履歴を見る　›\n\nメモ1：—\n\nシート位置\n今回メモ\n戻る\n変更理由（任意）\nこの設定を登録\n10/3の実行を取り消す",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "<<",
+        "label": "重量を1kg減らす"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "<",
+        "label": "重量を0.25kg減らす"
+      },
+      {
+        "tag": "BUTTON",
+        "text": ">",
+        "label": "重量を0.25kg増やす"
+      },
+      {
+        "tag": "BUTTON",
+        "text": ">>",
+        "label": "重量を1kg増やす"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "−",
+        "label": "回数を減らす"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "＋",
+        "label": "回数を増やす"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "−",
+        "label": "セット数を減らす"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "＋",
+        "label": "セット数を増やす"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "この実施項目の設定履歴を見る　›",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "TEXTAREA",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "戻る",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "この設定を登録",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "10/3の実行を取り消す",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "history-from-run",
+    "text": "‹ 戻る\n設定履歴\n≡\n\n正規テストプレス\n\n2026-09-21\n20kg　10回　3セット\nシート位置：—\n初回設定（削除できません）",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      }
+    ]
+  },
+  {
+    "id": "プロフィール",
+    "text": "体重（kg）\n実行時の体重を履歴へ保存し、参考負荷の計算に使います。\n身長（cm）\n年齢\n性別\n週開始曜日\n月\n火\n水\n木\n金\n土\n日\n保存",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "SELECT",
+        "text": "月火水木金土日",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "保存",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "種目",
+    "text": "カテゴリ：すべて\n胸\n非表示データを表示\n正規テストプレス\n胸　回数型　合計×1\n›\n＋ 種目を登録",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "SELECT",
+        "text": "カテゴリ：すべて胸",
+        "label": "カテゴリ"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "正規テストプレス胸　回数型　合計×1›",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "＋ 種目を登録",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "種目-edit",
+    "text": "種目名\n部位\n選択してください\n胸\n肩\n腕\n背中\n体幹\n下半身\nその他 / カスタム\n計測方法\n回数型\n時間型\n重量を記録する\n重量の扱い\n合計重量（×1）\n片側重量・左右実施（×2）\n自重換算係数（%）\n総トレーニング負荷（参考）のみで使います。\n保存\nこの種目を非表示にする",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "SELECT",
+        "text": "選択してください胸肩腕背中体幹下半身その他 / カスタム",
+        "label": null
+      },
+      {
+        "tag": "SELECT",
+        "text": "回数型時間型",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "SELECT",
+        "text": "合計重量（×1）片側重量・左右実施（×2）",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "保存",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "この種目を非表示にする",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "実施項目",
+    "text": "カテゴリ：すべて\n胸\n非表示データを表示\n正規テストプレス\n胸\n›\n＋ 実施項目を登録",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "SELECT",
+        "text": "カテゴリ：すべて胸",
+        "label": "カテゴリ"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "正規テストプレス胸›",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "＋ 実施項目を登録",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "実施項目-edit",
+    "text": "表示名\n同じ名称でも登録できます。\n元にする種目\n正規テストプレス\n重量（kg）\n回数\nセット数\nシートのピン位置\nメモ1（長期用）\n変更理由（任意）\n保存\nこの実施項目を非表示にする",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "SELECT",
+        "text": "正規テストプレス",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "TEXTAREA",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "保存",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "この実施項目を非表示にする",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "週メニュー",
+    "text": "非表示データを表示\n正規E2Eメニュー（使用中）\n2項目\n›\n＋ 週メニューを登録",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "正規E2Eメニュー（使用中）2項目›",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "＋ 週メニューを登録",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "週メニュー-edit",
+    "text": "週メニュー名\nメモ\n実施項目と推奨曜日\n推奨曜日順に表示\n胸：正規テストプレス\n20kg × 10回 × 3セット\n任意\n月\n火\n水\n木\n金\n土\n日\n外す\n胸：正規テストプレス\n20kg × 10回 × 3セット\n任意\n月\n火\n水\n木\n金\n土\n日\n外す\n実施項目を追加\n胸\n正規テストプレス\n20kg × 10回 × 3セット\n追加\n保存\n使用中の週メニューは非表示にできません",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "TEXTAREA",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "SELECT",
+        "text": "任意月火水木金土日",
+        "label": "推奨曜日"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "外す",
+        "label": null
+      },
+      {
+        "tag": "SELECT",
+        "text": "任意月火水木金土日",
+        "label": "推奨曜日"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "外す",
+        "label": null
+      },
+      {
+        "tag": "SELECT",
+        "text": "胸",
+        "label": "追加候補のカテゴリ"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "追加",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "保存",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "使用中の週メニューは非表示にできません",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "設定履歴",
+    "text": "カテゴリ\n選択してください\n胸\n実施項目\n選択してください\n正規テストプレス",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "SELECT",
+        "text": "選択してください胸",
+        "label": null
+      },
+      {
+        "tag": "SELECT",
+        "text": "選択してください正規テストプレス",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "分析",
+    "text": "集計\n実施総重量\n総トレーニング負荷（参考）\n期間\n週\n月\n四半期\n半年\n年\n表示\n全体\nカテゴリ別\nカテゴリ詳細\n432 kg\n216\n0\n7/13\n7/20\n7/27\n8/3\n8/10\n8/17\n8/24\n8/31\n9/7\n9/14\n9/21\n今週（途中）\n● 全体",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "SELECT",
+        "text": "実施総重量総トレーニング負荷（参考）",
+        "label": null
+      },
+      {
+        "tag": "SELECT",
+        "text": "週月四半期半年年",
+        "label": null
+      },
+      {
+        "tag": "SELECT",
+        "text": "全体カテゴリ別カテゴリ詳細",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "データ管理",
+    "text": "‹ 戻る\nデータ管理\n≡\n正規データのバックアップ\n\nプロフィール・種目・実施項目・メニュー・実施履歴・設定履歴を含む全データを保存します。\n\nバックアップを作成\nバックアップから復元\n\n復元すると全データを置き換えます。メニュー提案・履歴出力・旧形式のJSONは復元できません。\n\n正規バックアップを選択",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "バックアップを作成",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "トレーナー連携",
+    "text": "‹ 戻る\nトレーナー連携\n≡\nメニュー提案を取り込む\n\n提案JSONを確認してから、新しい週メニューとして作成します。アプリ復元用バックアップは選択できません。\n\n提案ファイルを選択\nトレーニング履歴を出力\n\nメニュー調整・振り返り等に利用する実施履歴を出力します。アプリ復元用バックアップではありません。\n\n開始日\n終了日\n\n開始日・終了日を含む期間で出力します。\n\n対象Session: 1件\n\nJSONを出力",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "INPUT",
+        "text": "",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "JSONを出力",
+        "label": null
+      }
+    ]
+  },
+  {
+    "id": "extra-list",
+    "text": "‹ 戻る\n追加トレーニング\n≡\n\n追加分は実施総数に含めます。週メニューへの登録は変更しません。\n\nカテゴリ：すべて\n胸\n胸：正規テストプレス\n20 kg × 10 回 × 3 セット\n›",
+    "controls": [
+      {
+        "tag": "BUTTON",
+        "text": "‹ 戻る",
+        "label": null
+      },
+      {
+        "tag": "BUTTON",
+        "text": "≡",
+        "label": "共通メニュー"
+      },
+      {
+        "tag": "SELECT",
+        "text": "カテゴリ：すべて胸",
+        "label": "カテゴリ"
+      },
+      {
+        "tag": "BUTTON",
+        "text": "胸：正規テストプレス20 kg × 10 回 × 3 セット›",
+        "label": null
+      }
+    ]
+  }
+]

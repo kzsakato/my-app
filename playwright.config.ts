@@ -2,14 +2,16 @@ import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './e2e',
+  testIgnore: ['v1r-baseline.spec.ts', 'v1r-visual.spec.ts'],
   // All current browser cases intentionally exercise the same IndexedDB name.
   // Keep them serial so one case cannot replace another case's persisted state.
   fullyParallel: false,
   workers: 1,
   forbidOnly: !!process.env.CI,
   retries: 0,
-  reporter: [['list'], ['html', { open: 'never' }]],
+  reporter: [['list'], ['html', { open: 'never' }], ['json', { outputFile: 'test-results/results.json' }]],
   use: {
+    locale: 'ja-JP', timezoneId: 'Asia/Tokyo',
     baseURL: 'http://127.0.0.1:4173',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',

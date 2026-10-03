@@ -3,7 +3,7 @@ import { canonicalFixture } from './fixtures'
 import { currentWeekSessions, latestRunSession, weeklyLoadSummary } from './baseline'
 import type { CanonicalAppData, Session } from './types'
 
-const session = (date: string, load: number): Session => ({ ...structuredClone(canonicalFixture.sessions[0]), id: date, date, weight: load, reps: 1, sets: 1, snapshot: { ...canonicalFixture.sessions[0].snapshot, weightMode: 'total' } })
+const session = (date: string, load: number): Session => ({ ...structuredClone(canonicalFixture.sessions[0]), id: date, date, performedAt: `${date}T09:00:00+09:00`, performedOrder: 0, weight: load, reps: 1, sets: 1, snapshot: { ...canonicalFixture.sessions[0].snapshot, weightMode: 'total' } })
 const data = (sessions: Session[]): CanonicalAppData => ({ ...structuredClone(canonicalFixture), sessions })
 
 describe('H-12/H-13 canonical baseline projections', () => {
@@ -35,16 +35,16 @@ describe('H-12/H-13 canonical baseline projections', () => {
     expect(weeklyLoadSummary(value, '2026-09-30')).toMatchObject({ current: 300, average: undefined })
     expect(weeklyLoadSummary(value, '2026-10-04')).toMatchObject({ current: 0, average: 300 })
   })
-  it('separates membership and extra completion and excludes both adjacent weeks', () => {
+  it('R-001: Exercise completion includes Extra while preserving membership facts and week limits', () => {
     const value = data([session('2026-09-27', 10), session('2026-09-28', 20), { ...session('2026-09-29', 30), menuEntryId: undefined }, session('2026-10-05', 40)])
     expect(currentWeekSessions(value, '2026-09-30')).toHaveLength(2)
-    expect(latestRunSession(value, '2026-09-30', 'item-1', 'entry-1')?.date).toBe('2026-09-28')
+    expect(latestRunSession(value, '2026-09-30', 'item-1', 'entry-1')?.date).toBe('2026-09-29')
     expect(latestRunSession(value, '2026-09-30', 'item-1', 'different-entry')).toBeUndefined()
     expect(latestRunSession(value, '2026-09-30', 'item-1')?.date).toBe('2026-09-29')
   })
-  it('preserves date-only tie order for cancellation', () => {
+  it('R-006: same instant uses performedOrder, independent of array order', () => {
     const first = session('2026-09-28', 10)
-    const second = { ...first, id: 'second' }
-    expect(latestRunSession(data([first, second]), '2026-09-30', 'item-1', 'entry-1')?.id).toBe(first.id)
+    const second = { ...first, id: 'second', performedOrder: 1 }
+    expect(latestRunSession(data([second, first]), '2026-09-30', 'item-1', 'entry-1')?.id).toBe(second.id)
   })
 })

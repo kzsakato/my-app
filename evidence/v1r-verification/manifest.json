@@ -1,0 +1,85 @@
+{
+  "generatedAt": "2026-10-03T14:49:52.746239+00:00",
+  "appStartingHead": "d4e5c09b1dd3119d58a3d8e6c4fc74e907e4a288",
+  "baselineSource": "add343ae60a5a38e72426a90861da5501eef5bac",
+  "trainingProjectAuthorityHead": "2f29ece3ce4c45e83eef47860dc3e20a6d28dfc2",
+  "browser": "153.0.8010.12",
+  "platform": "Windows",
+  "locale": "ja-JP",
+  "timezone": "Asia/Tokyo",
+  "vrtViewport": {
+    "width": 1020,
+    "height": 967
+  },
+  "deviceScaleFactor": 1,
+  "results": {
+    "unit": {
+      "passed": 116,
+      "failed": 0
+    },
+    "development": {
+      "startTime": "2026-10-03T14:47:57.017Z",
+      "duration": 75167.309,
+      "expected": 35,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "release": {
+      "startTime": "2026-10-03T14:39:24.473Z",
+      "duration": 46185.066,
+      "expected": 28,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "visual": {
+      "startTime": "2026-10-03T14:41:46.392Z",
+      "duration": 4315.303,
+      "expected": 2,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "sourceSha256": {
+    ".gitignore": "5a4a81a8114efce34adaaf89801bfb05c4b6477f308da9b10d995a810d8b4fc0",
+    "e2e/grouped-baseline.spec.ts": "f0adcf2e624e3d819d97669fbeb75e583394de9e33bf2768694d4312745c30fe",
+    "e2e/training-check.spec.ts": "32d6b5fd7687371056d66937289d06318587ebb60f7d4650d4d6429fa01630d2",
+    "e2e/v1r-acceptance.spec.ts": "6546caed56fd6930509cb8d347bb0c44ce31e733088008eaaa8f36a42c8e6a3a",
+    "e2e/v1r-visual.spec.ts": "3d09905ac45201cf31b4a984e69fee41f25deba5f8c2cc62060dee0081b4cc20",
+    "e2e/v1r-visual.spec.ts-snapshots/exerciseEdit-release-win32.png": "fbfd5fe72b3c4ab25c8577f6fd401ccae643b7634f99fd4ad65a50f10e11f2ff",
+    "e2e/v1r-visual.spec.ts-snapshots/menuEdit-release-win32.png": "4431640ae96a0c691071046b025e3a9f932d7f3544c2254e9b5cb76f98dcb64c",
+    "playwright.config.ts": "4f92c9f71eec9477746972b11d70783ec4aa483417654aefda8e1a7060625771",
+    "playwright.release.config.ts": "e458ec3a67699a5c24e8e79425ec7374d78fb990b3d4d492cf7cf5a078310a43",
+    "playwright.v1r-visual.config.ts": "8fb12eb84fdb2daa2342f101b971a9bfbfa93a4483ea2e8d40b3a1fb89732397",
+    "src/CanonicalApp.tsx": "227efc170a93d0f7dcd1259cecdb5f1cc8f46625769f1f6ce0840ae1b5da8d57",
+    "src/canonical/analysis.test.ts": "afd630cb532fb21f0fadd8ab2da04226a8d044b90e8cfa63afc26769705c11ed",
+    "src/canonical/analysis.ts": "b5f2190d02f5b49a81cf76ba816b5e614c9435a57d302776325ec9176825fe50",
+    "src/canonical/baseline.test.ts": "af6e60e386144fc84f1d522020ace15a940816d3734bc6d57d76d22b09aee9c8",
+    "src/canonical/baseline.ts": "970b303eac2facde3ca5c28cc9939dd60dc5008043a099cd7403e8b2890eb50a",
+    "src/canonical/fixtures.ts": "c1906609a3b7e89bd635858294f54c2443eab640949bb8e30ad15a14f652a1f6",
+    "src/canonical/history.test.ts": "536b2965ed474634d9ed71818f8e209869ea03d13bbb935d8ecc50cbefc4e808",
+    "src/canonical/history.ts": "104fa21e89ec369b06a8242df6ffcf308f69368dcdaa3f7ac5043b7e1245e8bf",
+    "src/canonical/instant.ts": "532a4b46a82181ed5c43f12445c3ebce7b7ee3c45b34973e768ad9c21fa40ec5",
+    "src/canonical/runtime.test.ts": "57c6ac30707d7d683ef296ab3fe19361903ead64867b23a4aa642068e32fdb25",
+    "src/canonical/runtime.ts": "3401022a3e4680297e4014a4811f87633c49708197d5b01815235af0e981935e",
+    "src/canonical/trainer.test.ts": "8cca36190e625d9aa5dd7b5848abde4f74889205097a3c10ca65709242dbb1d7",
+    "src/canonical/trainer.ts": "df4b6e55e927193081d7ea76fe3c8f77396d185ce0c4fe3d002dbfaed2d4b9e0",
+    "src/canonical/types.ts": "0714d65bddfd0338495958d0512993036a2bc59e983a496eb78a2b978e069ffa",
+    "src/canonical/v1r-calendar.test.ts": "7ac786a0ab2901401191430f097a31d9656c4608c3fbfb1a5cbd5887a0607e8c",
+    "src/canonical/v1r-ordering.test.ts": "7c5fdb20ad173852b4f57852277b6a327c7e57c229372183ba0878a2ba732c19",
+    "src/canonical/validate.ts": "2d70a74aab08aceab1205a45f02f7e84dc519449e600c0567099e095fc673873",
+    "src/density.css": "f7d64513f9e6745e783ef1907432d7cded2af23644acb5bc1e4e3c50f6871795"
+  },
+  "distSha256": {
+    "dist/index.html": "4e901f79eba04add65dec4f775bdce0c9f349d737a0e54aea8364b7535f95379",
+    "dist/manifest.webmanifest": "125b20ad76486349c25f02b46f473c0ec7a885c9f6e7514f37eaab98266f7031",
+    "dist/registerSW.js": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7",
+    "dist/sw.js": "c84ab5fc67d21eb6098733d2875cffb3cffe665bf673f1f7186b2d350d4852a1",
+    "dist/workbox-9c191d2f.js": "04b086f1b2f4215ee4b659a7bc9c76162894abdb43fa876247bc7c0bd6fd1c37",
+    "dist/assets/index-BmX5eK3N.js": "6d9fed5483d14030cbb73a29ce1518cb376cbf943c4ac85ec82740bc03a20c78",
+    "dist/assets/index-DUgrbLyg.css": "eaf24f7ac025451923a623806be94150d6c5fbf3d024b88a75b99320c47c4ce6",
+    "dist/prototypes/oic-012-density-prototype.html": "6732ad15481c821fe1abf83d27d87356b1a488dec91feefc31155c59d9305f8c"
+  }
+}

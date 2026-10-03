@@ -40,6 +40,8 @@ export function createCanonicalSession(args: {
   item: TrainingItem
   exercise: Exercise
   date: string
+  performedAt: string
+  performedOrder: number
   weight?: number
   reps?: number
   seconds?: number
@@ -49,12 +51,14 @@ export function createCanonicalSession(args: {
   memo?: string
   menuEntryId?: string
 }): Session {
-  const { id, item, exercise, date, weight, reps, seconds, sets, bodyWeight, seat, memo, menuEntryId } = args
+  const { id, item, exercise, date, performedAt, performedOrder, weight, reps, seconds, sets, bodyWeight, seat, memo, menuEntryId } = args
   return {
     id,
     trainingItemId: item.id,
     menuEntryId,
     date,
+    performedAt,
+    performedOrder,
     weight,
     reps,
     seconds,

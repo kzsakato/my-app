@@ -22,7 +22,7 @@ describe('Stage 3 canonical runtime boundary', () => {
   it('persists actual values and a copied snapshot for normal and extra execution', () => {
     const item = canonicalFixture.trainingItems[0]
     const exercise = canonicalFixture.exercises[0]
-    const session = createCanonicalSession({ id: 'session-new', item, exercise, date: '2026-09-28', weight: 20, reps: 12, sets: 4, bodyWeight: 66, menuEntryId: 'entry-1' })
+    const session = createCanonicalSession({ id: 'session-new', item, exercise, date: '2026-09-28', performedAt: '2026-09-28T00:00:00Z', performedOrder: 0, weight: 20, reps: 12, sets: 4, bodyWeight: 66, menuEntryId: 'entry-1' })
     expect(session).toMatchObject({ trainingItemId: item.id, menuEntryId: 'entry-1', weight: 20, reps: 12, sets: 4 })
     expect(session.snapshot).toEqual(expect.objectContaining({ exerciseId: exercise.id, trainingItemDisplayName: item.displayName }))
   })

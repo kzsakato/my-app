@@ -1,0 +1,556 @@
+{
+  "success": true,
+  "passed": 116,
+  "failed": 0,
+  "total": 116,
+  "files": [
+    {
+      "file": "history.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "exerciseHistory 軽TrainingItemの通常メニュー実施を同じExerciseの実施として表示する",
+          "status": "passed"
+        },
+        {
+          "name": "exerciseHistory 重TrainingItemの通常メニュー実施を同じExerciseの実施として表示する",
+          "status": "passed"
+        },
+        {
+          "name": "exerciseHistory 軽TrainingItemの追加トレーニング実施を同じExerciseの実施として表示する",
+          "status": "passed"
+        },
+        {
+          "name": "exerciseHistory 重TrainingItemの追加トレーニング実施を同じExerciseの実施として表示する",
+          "status": "passed"
+        },
+        {
+          "name": "exerciseHistory 別Exerciseの実施は含めない",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "analysis.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "canonical analysis uses the formal unrounded Session snapshot load formula",
+          "status": "passed"
+        },
+        {
+          "name": "canonical analysis uses configured week boundaries and calendar period starts",
+          "status": "passed"
+        },
+        {
+          "name": "canonical analysis aggregates snapshot facts even after current Master is archived or changed",
+          "status": "passed"
+        },
+        {
+          "name": "canonical analysis aggregates exercise actual facts and frequency without MenuEntry dependence",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "backup.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "canonical full backup/restore exports all AppData without mutation and replaces instead of merging, then reads back",
+          "status": "passed"
+        },
+        {
+          "name": "canonical full backup/restore rejects malformed/raw/legacy/unsupported input without writes",
+          "status": "passed"
+        },
+        {
+          "name": "canonical full backup/restore rejects malformed/raw/legacy/unsupported input without writes",
+          "status": "passed"
+        },
+        {
+          "name": "canonical full backup/restore rejects malformed/raw/legacy/unsupported input without writes",
+          "status": "passed"
+        },
+        {
+          "name": "canonical full backup/restore rejects malformed/raw/legacy/unsupported input without writes",
+          "status": "passed"
+        },
+        {
+          "name": "canonical full backup/restore revalidates duplicate IDs, bad references and domains at apply, leaving storage intact",
+          "status": "passed"
+        },
+        {
+          "name": "canonical full backup/restore preserves and explicitly gates warnings (injected because current validator defines no warning cases)",
+          "status": "passed"
+        },
+        {
+          "name": "canonical full backup/restore reports persistence failure and read-back mismatch/failure without changing authority",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "baseline.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "H-12/H-13 canonical baseline projections uses all completed observed weeks with interior zero weeks and excludes the partial week",
+          "status": "passed"
+        },
+        {
+          "name": "H-12/H-13 canonical baseline projections does not pad pre-recording weeks or current-only/empty history",
+          "status": "passed"
+        },
+        {
+          "name": "H-12/H-13 canonical baseline projections distinguishes unavailable zero denominator from valid zero numerator",
+          "status": "passed"
+        },
+        {
+          "name": "H-12/H-13 canonical baseline projections includes history beyond the 12 chart buckets without changing snapshots",
+          "status": "passed"
+        },
+        {
+          "name": "H-12/H-13 canonical baseline projections re-buckets for the configured week boundary and rolls over without mutating Sessions",
+          "status": "passed"
+        },
+        {
+          "name": "H-12/H-13 canonical baseline projections R-001: Exercise completion includes Extra while preserving membership facts and week limits",
+          "status": "passed"
+        },
+        {
+          "name": "H-12/H-13 canonical baseline projections R-006: same instant uses performedOrder, independent of array order",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "canonical.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "core invariant: payload identification identifies { version: 5, exercises: [], categories: [], items: [], menus: [], menuItems: [], sessions: [], settingHistories: [], profile: {}, activeMenuId: '' } without unwrapping it",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: payload identification identifies { version: 6, exercises: [], categories: [], items: [], menus: [], menuItems: [], sessions: [], settingHistories: [], profile: {}, activeMenuId: '' } without unwrapping it",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: payload identification identifies { format: 'training-check-backup', schemaVersion: 1, createdAt: '2026-09-24T00:00:00.000Z', payload: { version: 6, exercises: [], categories: [], items: [], menus: [], menuItems: [], sessions: [], settingHistories: [], profile: {}, activeMenuId: '' } } without unwrapping it",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: payload identification identifies { schemaVersion: 1, weekStartsOn: +0, activeMenuId: 'menu-1', profile: { weight: 66 }, exercises: [ { id: 'exercise-1', lifecycle: 'active', name: 'ダンベルプレス', measureType: 'reps', usesWeight: true, weightMode: 'perSide', classifications: [ { kind: 'bodyRegion', label: '胸' } ] } ], trainingItems: [ { id: 'item-1', lifecycle: 'active', exerciseId: 'exercise-1', displayName: 'ダンベルプレス', weight: 18, reps: 15, sets: 5 } ], menus: [ { id: 'menu-1', lifecycle: 'active', name: '通常メニュー' } ], menuEntries: [ { id: 'entry-1', lifecycle: 'active', menuId: 'menu-1', trainingItemId: 'item-1', recommendedDay: 1, order: +0 } ], sessions: [ { id: 'session-1', trainingItemId: 'item-1', menuEntryId: 'entry-1', date: '2026-09-24', performedAt: '2026-09-24T09:00:00+09:00', performedOrder: +0, weight: 18, reps: 15, sets: 5, bodyWeight: 66, snapshot: { exerciseId: 'exercise-1', exerciseName: 'ダンベルプレス', trainingItemDisplayName: 'ダンベルプレス', measureType: 'reps', weightMode: 'perSide', classifications: [ { kind: 'bodyRegion', label: '胸' } ] } } ], trainingItemSettingChanges: [ { id: 'change-1', trainingItemId: 'item-1', changedAt: '2026-09-24T09:00:00+09:00', isInitial: true, snapshot: { weight: 18, reps: 15, sets: 5 } } ], appliedProposalIds: [] } without unwrapping it",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: payload identification identifies { format: 'training-check-backup', schemaVersion: 1, createdAt: '2026-09-24T09:00:00+09:00', payload: { schemaVersion: 1, weekStartsOn: +0, activeMenuId: 'menu-1', profile: { weight: 66 }, exercises: [ { id: 'exercise-1', lifecycle: 'active', name: 'ダンベルプレス', measureType: 'reps', usesWeight: true, weightMode: 'perSide', classifications: [ { kind: 'bodyRegion', label: '胸' } ] } ], trainingItems: [ { id: 'item-1', lifecycle: 'active', exerciseId: 'exercise-1', displayName: 'ダンベルプレス', weight: 18, reps: 15, sets: 5 } ], menus: [ { id: 'menu-1', lifecycle: 'active', name: '通常メニュー' } ], menuEntries: [ { id: 'entry-1', lifecycle: 'active', menuId: 'menu-1', trainingItemId: 'item-1', recommendedDay: 1, order: +0 } ], sessions: [ { id: 'session-1', trainingItemId: 'item-1', menuEntryId: 'entry-1', date: '2026-09-24', performedAt: '2026-09-24T09:00:00+09:00', performedOrder: +0, weight: 18, reps: 15, sets: 5, bodyWeight: 66, snapshot: { exerciseId: 'exercise-1', exerciseName: 'ダンベルプレス', trainingItemDisplayName: 'ダンベルプレス', measureType: 'reps', weightMode: 'perSide', classifications: [ { kind: 'bodyRegion', label: '胸' } ] } } ], trainingItemSettingChanges: [ { id: 'change-1', trainingItemId: 'item-1', changedAt: '2026-09-24T09:00:00+09:00', isInitial: true, snapshot: { weight: 18, reps: 15, sets: 5 } } ], appliedProposalIds: [] } } without unwrapping it",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: canonical validation accepts a complete canonical fixture and its backup envelope",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: canonical validation requires an active menu when activeMenuId is set",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: canonical validation requires snapshots to retain the measurement discriminator and copied classification meaning",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: canonical validation rejects a time field on a reps item",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: canonical validation requires an initial setting history record for every TrainingItem",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: canonical operations writes the initial full setting snapshot at item creation",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: canonical operations keeps same-day material changes as separate full-snapshot records",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: canonical operations deletes only the selected non-initial setting change",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: canonical operations rejects deletion of initial, absent, and wrong-item setting changes",
+          "status": "passed"
+        },
+        {
+          "name": "core invariant: canonical operations copies classifications into the Session snapshot instead of retaining Exercise references",
+          "status": "passed"
+        },
+        {
+          "name": "provisional policy boundary does not encode numeric plausibility thresholds as canonical errors",
+          "status": "passed"
+        },
+        {
+          "name": "provisional policy boundary does not decide cutover storage, rollback, or runtime import behavior",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "cutover.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "Stage 2 cutover safety persists immutable baseline, verifies canonical, adopts it, and supports restart load",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 2 cutover safety does not replace an existing baseline",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 2 cutover safety rejects candidate validation before writing baseline",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 2 cutover safety rejects structurally identifiable but invalid legacy data before baseline persistence",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 2 cutover safety keeps legacy active when baseline or canonical persist fails",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 2 cutover safety preflights candidate and protected baseline without adopting canonical authority",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 2 cutover safety rolls back on persist read-back mismatch, runtime load failure, and restart-equivalent load failure",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 2 cutover safety reports rollback write failure instead of hiding it",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 2 cutover safety never silently falls back to legacy after authoritative startup failure",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 2 cutover safety reports recovery write and read-back failures",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 2 cutover safety parses only a valid canonical backup envelope for restoration",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "history.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "canonical exerciseHistory uses the session snapshot exercise ID and preserves Monday boundaries",
+          "status": "passed"
+        },
+        {
+          "name": "canonical exerciseHistory does not count a session from another snapshot exercise",
+          "status": "passed"
+        },
+        {
+          "name": "OIC-001/015 uses configured weekday 0 over the 14-day window",
+          "status": "passed"
+        },
+        {
+          "name": "OIC-001/015 uses configured weekday 1 over the 14-day window",
+          "status": "passed"
+        },
+        {
+          "name": "OIC-001/015 uses configured weekday 2 over the 14-day window",
+          "status": "passed"
+        },
+        {
+          "name": "OIC-001/015 uses configured weekday 3 over the 14-day window",
+          "status": "passed"
+        },
+        {
+          "name": "OIC-001/015 uses configured weekday 4 over the 14-day window",
+          "status": "passed"
+        },
+        {
+          "name": "OIC-001/015 uses configured weekday 5 over the 14-day window",
+          "status": "passed"
+        },
+        {
+          "name": "OIC-001/015 uses configured weekday 6 over the 14-day window",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "legacy.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "Stage 1 core boundary: legacy recreation preview creates only same-meaning Profile fields and reference counts for v5",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 1 core boundary: legacy recreation preview reads legacy envelopes as legacy source material without canonical unwrapping",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 1 core boundary: legacy recreation preview does not make recreation candidates for canonical input",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 1 core boundary: legacy recreation preview does not make recreation candidates for canonical input",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 1 core boundary: legacy recreation preview does not infer a Profile candidate when legacy weight is invalid",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "manMenuProposal.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "Android MAN MenuProposal producer uses only fresh canonical TrainingItem IDs in the required H-07 proposal order",
+          "status": "passed"
+        },
+        {
+          "name": "Android MAN MenuProposal producer adds the optional time entry only when requested",
+          "status": "passed"
+        },
+        {
+          "name": "Android MAN MenuProposal producer rejects missing or archived mapped TrainingItems before a proposal is emitted",
+          "status": "passed"
+        },
+        {
+          "name": "Android MAN MenuProposal producer can be applied through the existing H-07 candidate without changing the active menu",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "masterBootstrap.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "Android MAN Master bootstrap creates fresh IDs, approved mappings, and initial setting histories",
+          "status": "passed"
+        },
+        {
+          "name": "Android MAN Master bootstrap removes weightMode and weight from the no-external-weight approved records",
+          "status": "passed"
+        },
+        {
+          "name": "Android MAN Master bootstrap blocks collisions and repeat insertion without merging or overwriting",
+          "status": "passed"
+        },
+        {
+          "name": "Android MAN Master bootstrap validates, persists, and read-backs all package records before success",
+          "status": "passed"
+        },
+        {
+          "name": "Android MAN Master bootstrap does not report persistence failure as success and attempts to retain the original dataset",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "runtime.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "Stage 3 canonical runtime boundary creates an explicit empty candidate and copies only the allowed Profile fields",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 3 canonical runtime boundary uses the configured week boundary without modifying session facts",
+          "status": "passed"
+        },
+        {
+          "name": "Stage 3 canonical runtime boundary persists actual values and a copied snapshot for normal and extra execution",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "trainer.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "Ver1 MenuProposal contract accepts an active TrainingItem proposal and applies app-issued IDs without changing activeMenuId",
+          "status": "passed"
+        },
+        {
+          "name": "Ver1 MenuProposal contract rejects archived or missing references, duplicate order, unsupported versions, and unsupported master fields",
+          "status": "passed"
+        },
+        {
+          "name": "Ver1 MenuProposal contract emits non-blocking warnings for legal duplicated items, no recommendation, and same Menu names",
+          "status": "passed"
+        },
+        {
+          "name": "Ver1 MenuProposal contract rolls back candidate data when read-back verification fails",
+          "status": "passed"
+        },
+        {
+          "name": "Ver1 Trainer History projection uses an inclusive explicit range and adds one prior baseline setting change",
+          "status": "passed"
+        },
+        {
+          "name": "Ver1 Trainer History projection supports full history, retains archived contextual items, and rejects invalid ranges",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "v1r-calendar.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "2026-06-30 month bucket is 2026-06-01 independent of week setting",
+          "status": "passed"
+        },
+        {
+          "name": "2026-07-01 month bucket is 2026-07-01 independent of week setting",
+          "status": "passed"
+        },
+        {
+          "name": "2026-06-30 quarter bucket is 2026-04-01 independent of week setting",
+          "status": "passed"
+        },
+        {
+          "name": "2026-07-01 quarter bucket is 2026-07-01 independent of week setting",
+          "status": "passed"
+        },
+        {
+          "name": "2026-06-30 half bucket is 2026-01-01 independent of week setting",
+          "status": "passed"
+        },
+        {
+          "name": "2026-07-01 half bucket is 2026-07-01 independent of week setting",
+          "status": "passed"
+        },
+        {
+          "name": "2026-12-31 year bucket is 2026-01-01 independent of week setting",
+          "status": "passed"
+        },
+        {
+          "name": "2027-01-01 year bucket is 2027-01-01 independent of week setting",
+          "status": "passed"
+        },
+        {
+          "name": "week setting 0 starts 2026-09-28 on Oct3",
+          "status": "passed"
+        },
+        {
+          "name": "week setting 1 starts 2026-09-29 on Oct3",
+          "status": "passed"
+        },
+        {
+          "name": "week setting 2 starts 2026-09-30 on Oct3",
+          "status": "passed"
+        },
+        {
+          "name": "week setting 3 starts 2026-10-01 on Oct3",
+          "status": "passed"
+        },
+        {
+          "name": "week setting 4 starts 2026-10-02 on Oct3",
+          "status": "passed"
+        },
+        {
+          "name": "week setting 5 starts 2026-10-03 on Oct3",
+          "status": "passed"
+        },
+        {
+          "name": "week setting 6 starts 2026-09-27 on Oct3",
+          "status": "passed"
+        },
+        {
+          "name": "half-year keeps 12 baseline chart buckets and rollover at July/year",
+          "status": "passed"
+        },
+        {
+          "name": "previous actual uses exact fractions across offset representations and shuffled arrays",
+          "status": "passed"
+        }
+      ]
+    },
+    {
+      "file": "v1r-ordering.test.ts",
+      "status": "passed",
+      "assertions": [
+        {
+          "name": "V1R ordering compatibility boundary rejects missing {\"fields\":[\"performedAt\"]} at startup and Restore without repair or writes",
+          "status": "passed"
+        },
+        {
+          "name": "V1R ordering compatibility boundary rejects missing {\"fields\":[\"performedOrder\"]} at startup and Restore without repair or writes",
+          "status": "passed"
+        },
+        {
+          "name": "V1R ordering compatibility boundary rejects missing {\"fields\":[\"performedAt\",\"performedOrder\"]} at startup and Restore without repair or writes",
+          "status": "passed"
+        },
+        {
+          "name": "V1R ordering compatibility boundary rejects invalid or offsetless instant 2026-10-03",
+          "status": "passed"
+        },
+        {
+          "name": "V1R ordering compatibility boundary rejects invalid or offsetless instant 2026-10-03T12:00:00",
+          "status": "passed"
+        },
+        {
+          "name": "V1R ordering compatibility boundary rejects invalid or offsetless instant invalid",
+          "status": "passed"
+        },
+        {
+          "name": "V1R ordering compatibility boundary rejects invalid or offsetless instant 2026-02-30T00:00:00Z",
+          "status": "passed"
+        },
+        {
+          "name": "V1R ordering compatibility boundary rejects non-negative integer violation -1",
+          "status": "passed"
+        },
+        {
+          "name": "V1R ordering compatibility boundary rejects non-negative integer violation 0.5",
+          "status": "passed"
+        },
+        {
+          "name": "V1R ordering compatibility boundary rejects non-negative integer violation Infinity",
+          "status": "passed"
+        },
+        {
+          "name": "V1R ordering compatibility boundary rejects non-negative integer violation NaN",
+          "status": "passed"
+        },
+        {
+          "name": "V1R ordering compatibility boundary rejects duplicate instants with alternate offsets while allowing distinct order",
+          "status": "passed"
+        },
+        {
+          "name": "V1R ordering compatibility boundary preserves ID/date/exact pair through export/Restore/retry/read-back/reload",
+          "status": "passed"
+        },
+        {
+          "name": "V1R ordering compatibility boundary identifies v5/v6 separately from unsupported old canonical",
+          "status": "passed"
+        },
+        {
+          "name": "RFC3339 fractional instants retain precision and equivalent offset uniqueness",
+          "status": "passed"
+        }
+      ]
+    }
+  ]
+}
