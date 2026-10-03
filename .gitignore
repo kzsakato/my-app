@@ -5,3 +5,6 @@ playwright-report/
 test-results/
 playwright-report-release/
 test-results-release/
+
+playwright-report-v1r-visual/
+test-results-v1r-visual/

@@ -1,12 +1,11 @@
+import { compareInstants } from "./canonical/instant";
 import { useMemo, useRef, useState } from "react";
-import { currentWeekSessions, latestRunSession, shiftLocalDate, weeklyLoadSummary } from "./canonical/baseline";
+import { currentWeekSessions, latestRunSession, previousExerciseSession, sessionOrder, shiftLocalDate, weeklyLoadSummary } from "./canonical/baseline";
 import { applyCanonicalRestore, createCanonicalBackup, previewCanonicalRestore, type BackupPreview } from "./canonical/backup";
 import { canonicalStorage } from "./data";
 import { buildIdentifier } from "./buildInfo";
 import {
   addTrainingItem,
-  appendMenuEntry,
-  archiveMenuEntry,
   createCanonicalSession,
   createInitialCanonicalCandidate,
   cutoverCanonical,
@@ -21,13 +20,10 @@ import {
   applyMenuProposal,
   applyManMasterBootstrap,
   createAndroidManMenuProposal,
-  bodyRegionDerivedLoad,
-  bodyRegionFrequency,
   createTrainerHistory,
-  exerciseActuals,
-  exerciseFrequency,
-  exerciseOptions,
-  overallDerivedLoad,
+  referenceTrainingLoad,
+  analysisBucketStart,
+  analysisBucketStarts,
   MAN_MASTER_BOOTSTRAP_PACKAGE,
   validateMenuProposal,
 } from "./canonical";
@@ -45,9 +41,11 @@ import { validateCanonical } from "./canonical";
 
 type Page =
   | "top"
+  | "cat"
   | "run"
   | "extra"
   | "settings"
+  | "trainer"
   | "history"
   | "analysis"
   | "masterBootstrap"
@@ -60,6 +58,7 @@ type SettingsTab =
   | "item"
   | "menu"
   | "settingHistory";
+type ListPreferences = Record<"exercise" | "item", { filter: string; hidden: boolean }>;
 type TopPreferences = { mode: "category" | "recommended"; days: RecommendedDay[]; showCompleted: boolean };
 const days = ["月", "火", "水", "木", "金", "土", "日"];
 const standardBodyRegions = ["胸", "肩", "腕", "背中", "体幹", "下半身"] as const;
@@ -103,6 +102,7 @@ function Header({
         <button
           className="header-menu-button"
           aria-label="共通メニュー"
+          aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
         >
           ≡
@@ -139,33 +139,43 @@ function Frame({
   back,
   onSettings,
   onTop,
+  outerHeader = false,
+  className = "",
 }: {
+  outerHeader?: boolean;
+  className?: string;
   title: string;
   children: React.ReactNode;
   back?: () => void;
   onSettings?: () => void;
   onTop: () => void;
 }) {
-  return (
-    <main className="app">
-      <Header title={title} back={back} onSettings={onSettings} onTop={onTop} />
-      {children}
-    </main>
-  );
+  const header = <Header title={title} back={back} onSettings={onSettings} onTop={onTop} />;
+  return outerHeader ? <div className="page-frame">{header}<main className={`app ${className}`}>{children}</main></div> : <main className={`app ${className}`}>{header}{children}</main>;
+}
+
+function SectionFrame({ embedded, ...props }: React.ComponentProps<typeof Frame> & { embedded?: boolean }) {
+  return embedded ? <>{props.children}</> : <Frame {...props} />;
 }
 
 export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   const [data, setData] = useState(initial);
   const [page, setPage] = useState<Page>("top");
   const [runEntryId, setRunEntryId] = useState<string>();
+  const [selectedRegion, setSelectedRegion] = useState<string>();
   const [extraItemId, setExtraItemId] = useState<string>();
+  const [viewSessionId, setViewSessionId] = useState<string>();
   const [notice, setNotice] = useState("");
+  const [needsRecovery, setNeedsRecovery] = useState(false);
+  const [listPreferences, setListPreferences] = useState<ListPreferences>({ exercise: { filter: "", hidden: false }, item: { filter: "", hidden: false } });
   const [topPreferences, setTopPreferences] = useState<TopPreferences>({ mode: "category", days: [dayOf(localDate())], showCompleted: false });
   const [itemEditId, setItemEditId] = useState<string | null>();
   const [settingsTab, setSettingsTab] = useState<SettingsTab>("profile");
   const [menuToInspectId, setMenuToInspectId] = useState<string>();
   const [itemPresetExerciseId, setItemPresetExerciseId] = useState<string>();
+  const writeBusy = useRef(false);
   const commit = async (next: CanonicalAppData) => {
+    if (writeBusy.current || needsRecovery) return false;
     const checked = validateCanonical(next);
     if (checked.errors.length) {
       setNotice(
@@ -173,20 +183,29 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
       );
       return false;
     }
+    writeBusy.current = true;
+    let persisted = false;
     try {
       await canonicalStorage.writeCanonical(next);
+      persisted = true;
+      const readBack = await canonicalStorage.readCanonical();
+      if (JSON.stringify(readBack) !== JSON.stringify(next)) throw new Error("保存後の読み戻しが一致しません");
       setData(next);
-      setNotice("保存しました。");
+      setNotice("");
       return true;
     } catch (error) {
       setNotice(`保存に失敗しました: ${String(error)}`);
+      if (persisted) setNeedsRecovery(true);
       return false;
-    }
+    } finally { writeBusy.current = false; }
   };
   const toTop = () => {
+    if (writeBusy.current) return;
     setPage("top");
+    setSelectedRegion(undefined);
     setRunEntryId(undefined);
     setExtraItemId(undefined);
+    setViewSessionId(undefined);
   };
   const exerciseFor = (item: TrainingItem) =>
     data.exercises.find((value) => value.id === item.exerciseId);
@@ -194,15 +213,20 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
     (value) => value.id === data.activeMenuId && value.lifecycle === "active",
   );
   const finish = async (session: ReturnType<typeof createCanonicalSession>) => {
-    if (await commit({ ...data, sessions: [...data.sessions, session] })) { toTop(); return true; }
+    if (await commit({ ...data, sessions: [...data.sessions.filter(row => row.id !== session.id), session] })) { if (selectedRegion && runEntryId) setPage("cat"); else toTop(); return true; }
     return false;
   };
   const openSettings = (tab: SettingsTab = "profile", menuId?: string) => {
+    if (writeBusy.current) return;
     setSettingsTab(tab);
-    if (menuId !== undefined) setMenuToInspectId(menuId);
+    setMenuToInspectId(menuId);
     setPage("settings");
   };
   const header = { onSettings: () => openSettings(), onTop: toTop };
+  if (needsRecovery) return <Frame title="保存状態の確認" onTop={() => {}}>
+    <p role="alert">保存の成功を確認できません。保存状態を再読込するまで通常編集へ戻れません。</p><p role="status">{notice}</p>
+    <button className="primary" onClick={() => location.reload()}>保存状態を再読込</button>
+  </Frame>;
   if (page === "run" && runEntryId) {
     const entry = data.menuEntries.find((value) => value.id === runEntryId);
     const item =
@@ -216,7 +240,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
           entry={entry}
           item={item}
           exercise={exercise}
-          onBack={toTop}
+          onBack={() => selectedRegion ? setPage("cat") : toTop()}
           onComplete={finish}
           commit={commit}
           {...header}
@@ -237,7 +261,8 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
           data={data}
           item={item}
           exercise={exercise}
-          onBack={() => setExtraItemId(undefined)}
+          completedSession={data.sessions.find(session => session.id === viewSessionId)}
+          onBack={toTop}
           onComplete={finish}
           commit={commit}
           {...header}
@@ -257,6 +282,14 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
     return <HistoryPage data={data} onBack={toTop} {...header} />;
   if (page === "analysis")
     return <AnalysisPage data={data} onBack={() => openSettings()} {...header} />;
+  if (page === "trainer") return (
+    <Frame title="トレーナー連携" back={() => openSettings()} {...header}>
+      <h2>メニュー提案を取り込む</h2>
+      <MenuImportPage embedded onPending={value => { writeBusy.current = value; }} onUncertain={() => { setNotice("メニュー投入後の保存状態を確認できません。"); setNeedsRecovery(true); }} data={data} onBack={() => openSettings()} onApplied={next => setData(next)} onInspectMenu={id => openSettings("menu", id)} {...header} />
+      <h2>トレーニング履歴を出力</h2>
+      <TrainerHistoryExportPage embedded data={data} onBack={() => openSettings()} {...header} />
+    </Frame>
+  );
   if (page === "masterBootstrap" && import.meta.env.DEV)
     return (
       <MasterBootstrapPage
@@ -291,6 +324,9 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   if (page === "settings")
     return (
       <SettingsPage
+        notice={notice}
+        listPreferences={listPreferences}
+        onListPreferences={setListPreferences}
         data={data}
         commit={commit}
         tab={settingsTab}
@@ -310,8 +346,8 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
           setSettingsTab("item");
         }}
         menuToInspectId={menuToInspectId}
-        onMenuImport={() => setPage("menuImport")}
-        onTrainerHistoryExport={() => setPage("trainerHistoryExport")}
+        onMenuImport={() => setPage("trainer")}
+        onTrainerHistoryExport={() => setPage("trainer")}
         onAnalysis={() => setPage("analysis")}
         onMasterBootstrap={() => setPage("masterBootstrap")}
         onBack={toTop}
@@ -322,12 +358,13 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
     ? data.menuEntries
         .filter(
           (value) =>
-            value.menuId === activeMenu.id && value.lifecycle === "active",
+            value.menuId === activeMenu.id && value.lifecycle === "active" && data.trainingItems.some(item => item.id === value.trainingItemId && item.lifecycle === "active" && data.exercises.some(exercise => exercise.id === item.exerciseId && exercise.lifecycle === "active")),
         )
         .sort((a, b) => a.order - b.order)
     : [];
   return (
     <TopPage
+      key={page === "cat" ? selectedRegion : "top"}
       data={data}
       activeMenu={activeMenu}
       entries={entries}
@@ -339,6 +376,9 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
         setRunEntryId(id);
         setPage("run");
       }}
+      region={page === "cat" ? selectedRegion : undefined}
+      onCategory={region => { setSelectedRegion(region); setPage("cat"); }}
+      onActual={session => { setViewSessionId(session.id); setExtraItemId(session.trainingItemId); setPage("extra"); }}
       onExtra={() => setPage("extra")}
       onHistory={() => setPage("history")}
       {...header}
@@ -347,6 +387,9 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
 }
 
 function TopPage({
+  region,
+  onCategory,
+  onActual,
   data,
   preferences,
   onPreferences,
@@ -360,6 +403,9 @@ function TopPage({
   onSettings,
   onTop,
 }: {
+  region?: string;
+  onCategory: (region: string) => void;
+  onActual: (session: Session) => void;
   data: CanonicalAppData;
   activeMenu?: Menu;
   entries: MenuEntry[];
@@ -378,13 +424,20 @@ function TopPage({
   const start = weekStart(today, data.weekStartsOn);
   const selectedDays = preferences.days;
   const topMode = preferences.mode;
+  const [categoryShowCompleted, setCategoryShowCompleted] = useState(false);
+  const showCompleted = region ? categoryShowCompleted : preferences.showCompleted;
   const [dayFilterOpen, setDayFilterOpen] = useState(false);
   const latestByEntry = new Map<string, Session>();
-  currentWeekSessions(data, today).sort((a, b) => a.date.localeCompare(b.date)).forEach(session => {
-    if (session.menuEntryId) latestByEntry.set(session.menuEntryId, session);
+  const weekSessions = currentWeekSessions(data, today).sort(sessionOrder);
+  entries.forEach(entry => {
+    const exerciseId = data.trainingItems.find(item => item.id === entry.trainingItemId)?.exerciseId;
+    const session = weekSessions.find(row => row.snapshot.exerciseId === exerciseId);
+    if (session) latestByEntry.set(entry.id, session);
   });
   const todayEntries = entries.filter(entry => entry.recommendedDay === currentDay);
   const completedCount = (rows: MenuEntry[]) => rows.filter(entry => latestByEntry.has(entry.id)).length;
+  const distinctCount = (rows: MenuEntry[]) => new Set(rows.map(entry => data.trainingItems.find(item => item.id === entry.trainingItemId)?.exerciseId)).size;
+  const todayCompleted = new Set(data.sessions.filter(session => session.date === today).map(session => session.snapshot.exerciseId)).size;
   const load = weeklyLoadSummary(data, today);
   const toggleDay = (day: RecommendedDay) => onPreferences({ ...preferences, days: selectedDays.includes(day) ? selectedDays.filter(value => value !== day) : [...selectedDays, day] });
   const recommendedEntries = entries.filter(
@@ -406,12 +459,10 @@ function TopPage({
       if (!item || !exercise) return;
       const bodyRegion =
         exercise.classifications?.find((value) => value.kind === "bodyRegion")
-          ?.label.trim() || "未分類";
+          ?.label.trim() || "";
       groups.set(bodyRegion, [...(groups.get(bodyRegion) ?? []), entry]);
     });
     return [...groups.entries()].sort(([left], [right]) => {
-      if (left === "未分類") return 1;
-      if (right === "未分類") return -1;
       return left.localeCompare(right, "ja");
     });
   }, [data.exercises, data.trainingItems, entries]);
@@ -429,7 +480,7 @@ function TopPage({
     )
       return null;
     const session = latestByEntry.get(entry.id);
-    if (session && !preferences.showCompleted) return null;
+    if (session && !showCompleted) return null;
     return (
       <button
         className="row item item-density"
@@ -439,25 +490,22 @@ function TopPage({
         <span>
           <b>{item.displayName || exercise.name}</b>
           <span className="item-detail-line">
-            <small>{`${exercise.classifications?.map((value) => value.label).join("・") || "未分類"}　${entry.recommendedDay === undefined ? "推奨：任意" : `推奨：${days[entry.recommendedDay]}`}`}</small>
-            <small className="item-history">{exerciseHistory(data.sessions, exercise.id)}</small>
+            <small>{`${exercise.classifications?.map((value) => value.label).join("・") || ""}　${entry.recommendedDay === undefined ? "推奨：任意" : `推奨：${days[entry.recommendedDay]}`}`}</small>
+            <small className="item-history">{exerciseHistory(data.sessions, exercise.id, new Date(), data.weekStartsOn)}</small>
           </span>
-          <small>
-            {session
-              ? `今週実施済み　${sessionDetail(session)}`
-              : `${exercise.measureType === "reps" ? `${item.weight ?? 0} kg × ${item.reps ?? 0} 回` : `${item.seconds ?? 0} 秒`} × ${item.sets} セット`}
-          </small>
         </span>
-        <span>{session ? "✓" : "›"}</span>
+        <span className={session ? "ok" : ""}>{session ? "✓ 実施済" : "未実施"}</span>
       </button>
     );
   };
   return (
-    <Frame title="今週の実施メニュー" onSettings={onSettings} onTop={onTop}>
+    <Frame title={region ?? "今週の実施メニュー"} back={region ? onTop : undefined} onSettings={onSettings} onTop={onTop}>
+      {region ? <>
+        <label className="check"><input type="checkbox" checked={categoryShowCompleted} onChange={event => setCategoryShowCompleted(event.target.checked)} />実施済も表示</label>
+        {(categoryGroups.find(([name]) => name === region)?.[1] ?? []).map(renderEntry)}
+      </> : <>
       {notice && <p className="week">{notice}</p>}
-      <label>
-        週メニュー
-        <select
+      <select aria-label="週メニュー"
           value={activeMenu?.id ?? ""}
           onChange={async (event) =>
             await commit({
@@ -473,7 +521,6 @@ function TopPage({
             </option>
           ))}
         </select>
-      </label>
       {!activeMenu && (
         <section className="card">
           <p>有効な週メニューがありません。</p>
@@ -484,17 +531,12 @@ function TopPage({
       )}
       {activeMenu && (
         <>
-          <p className="week">
-            {activeMenu.memo ||
-              "推奨曜日は目安です。予定外の実施も記録できます。"}
-          </p>
           <p className="week">{start} 〜 {shiftLocalDate(start, 6)}</p>
           <div className="totals">
-            <span>今日の実施総数 {completedCount(todayEntries)}/{todayEntries.length}</span>
-            <span>今週の実施総数 {completedCount(entries)}/{entries.length}</span>
+            <span>今日の実施総数<b>{todayCompleted}/{distinctCount(todayEntries)}</b></span>
+            <span>今週の実施総数<b>{completedCount(entries)}/{entries.length}</b></span>
           </div>
-          <label className="check"><input type="checkbox" checked={preferences.showCompleted} onChange={event => onPreferences({ ...preferences, showCompleted: event.target.checked })} />実施済も表示</label>
-          <div className="view-toggle" aria-label="実施項目の表示方法">
+          <div className="top-switch" aria-label="実施項目の表示方法">
             <button
               className={topMode === "category" ? "active" : ""}
               onClick={() => onPreferences({ ...preferences, mode: "category" })}
@@ -505,27 +547,24 @@ function TopPage({
               className={topMode === "recommended" ? "active" : ""}
               onClick={() => onPreferences({ ...preferences, mode: "recommended" })}
             >
-              推奨曜日表示
+              推奨曜日
             </button>
           </div>
+          <button className="extra-button" onClick={onExtra}>＋ 追加トレーニングを登録</button>
           {topMode === "category" ? (
             <>
-              <h2>カテゴリ別の実施項目</h2>
               {categoryGroups.length === 0 ? (
                 <p className="week">カテゴリ表示できる実施項目はありません。</p>
               ) : (
                 categoryGroups.map(([bodyRegion, groupEntries]) => (
-                  <section className="category-group" key={bodyRegion}>
-                    <h3>{bodyRegion}</h3>
-                    <p className="week">{completedCount(groupEntries)}/{groupEntries.length} 実施済み</p>
-                    {groupEntries.map(renderEntry)}
-                  </section>
+                  <button className="row" key={bodyRegion} onClick={() => onCategory(bodyRegion)}><span><b>{bodyRegion}</b><small>{groupEntries.length}項目</small></span><span>{completedCount(groupEntries)}/{groupEntries.length}</span></button>
                 ))
               )}
             </>
           ) : (
             <>
-              <h2>推奨曜日の実施項目</h2>
+              <h2 className="recommended-title">推奨曜日の実施項目</h2>
+              <label className="check"><input type="checkbox" checked={preferences.showCompleted} onChange={event => onPreferences({ ...preferences, showCompleted: event.target.checked })} />実施済も表示</label>
               <div className="weekday-dropdown">
                 <button
                   className="weekday-dropdown-trigger"
@@ -560,28 +599,25 @@ function TopPage({
               ) : (
                 recommendedEntries.map(renderEntry)
               )}
+              {preferences.showCompleted && weekSessions.filter(session => selectedDays.includes(dayOf(session.date)) && (!session.menuEntryId || !recommendedEntries.some(entry => latestByEntry.get(entry.id)?.id === session.id))).map(session => <button className="row item item-density" key={session.id} onClick={() => onActual(session)}><span><b>{session.snapshot.trainingItemDisplayName}</b><span className="item-detail-line"><small>{session.menuEntryId ? "実施記録" : "追加実施"}　{session.date}</small><small className="item-history">{exerciseHistory(data.sessions, session.snapshot.exerciseId, new Date(), data.weekStartsOn)}</small></span></span><span>✓ 実施済</span></button>)}
             </>
           )}
         </>
       )}
       <section className="load-summary" aria-label="トレーニング負荷">
-        <h2>トレーニング負荷（参考）</h2>
+        <h2>トレーニング負荷</h2>
         <div><span>今週の総トレーニング負荷</span><b>{Math.round(load.current).toLocaleString()} pt</b></div>
-        <div><span>完了週の平均負荷</span><b>{load.average === undefined ? "データ不足" : `${Math.round(load.average).toLocaleString()} pt`}</b></div>
-        <div><span>ACWR（参考）</span><b>{load.acwr === undefined ? "データ不足" : load.acwr.toFixed(2)}</b></div>
-        <details className="meta"><summary>集計の見方</summary><p>平均は最初の記録週から直前週まで（{load.completedWeeks}完了週）。期間内の記録なし週は0、今週は平均に含めません。ACWRは直前週とその前4週の平均の比です。記録された負荷の参考値であり、安全性やトレーニング可否の判定ではありません。</p></details>
+        <div><span>週の平均総トレーニング負荷</span><b>{load.average === undefined ? "データ不足" : `${Math.round(load.average).toLocaleString()} pt`}</b></div>
+        <div><span>ACWR（目安：0.8〜1.3）</span><b>{load.acwr === undefined ? "データ不足" : load.acwr.toFixed(2)}</b></div>
+
       </section>
-      <button className="primary" onClick={onExtra}>
-        ＋ 追加トレーニング
-      </button>
-      <button className="save-setting" onClick={onHistory}>
-        実施履歴を見る
-      </button>
+      </>}
     </Frame>
   );
 }
 
 function RunPage({
+  completedSession,
   data,
   commit,
   entry,
@@ -590,7 +626,9 @@ function RunPage({
   onBack,
   onComplete,
   onTop,
+  onSettings,
 }: {
+  completedSession?: Session;
   data: CanonicalAppData;
   commit: (next: CanonicalAppData) => Promise<boolean>;
   entry?: MenuEntry;
@@ -599,20 +637,23 @@ function RunPage({
   onBack: () => void;
   onComplete: (session: ReturnType<typeof createCanonicalSession>) => Promise<boolean>;
   onTop: () => void;
+  onSettings: () => void;
 }) {
-  const [weight, setWeight] = useState(item.weight ?? 0);
-  const [reps, setReps] = useState(item.reps ?? 0);
-  const [seconds, setSeconds] = useState(item.seconds ?? 0);
-  const [sets, setSets] = useState(item.sets);
-  const [seat, setSeat] = useState(item.seat ?? "");
-  const [memo, setMemo] = useState("");
+  const latest = completedSession ?? latestRunSession(data, localDate(), item.id, entry?.id);
+  const done = !!completedSession || (!!entry && !!latest);
+  const [weight, setWeight] = useState(done ? latest!.weight ?? 0 : item.weight ?? 0);
+  const [reps, setReps] = useState(done ? latest!.reps ?? 0 : item.reps ?? 0);
+  const [seconds, setSeconds] = useState(done ? latest!.seconds ?? 0 : item.seconds ?? 0);
+  const [sets, setSets] = useState(done ? latest!.sets : item.sets);
+  const [seat, setSeat] = useState(done ? latest!.seat ?? "" : item.seat ?? "");
+  const [memo, setMemo] = useState(done ? latest!.memo ?? "" : "");
   const [changeReason, setChangeReason] = useState("");
   const [historyOpen, setHistoryOpen] = useState(false);
   const [message, setMessage] = useState("");
   const busy = useRef(false);
   const [pending, setPending] = useState(false);
-  const latest = latestRunSession(data, localDate(), item.id, entry?.id);
-  const done = !!entry && !!latest;
+  const previous = done ? latest : previousExerciseSession(data, exercise.id);
+  const pendingSession = useRef<Session | undefined>(undefined);
   const runAction = async (action: () => Promise<void>) => {
     if (busy.current) return;
     busy.current = true; setPending(true); setMessage("");
@@ -646,12 +687,17 @@ function RunPage({
       alert("回数または時間、セット数は1以上で入力してください。");
       return;
     }
-    const saved = await onComplete(
-      createCanonicalSession({
+    if (!pendingSession.current) {
+      const now = new Date();
+      const performedAt = now.toISOString();
+      const performedOrder = data.sessions.reduce((order, session) => compareInstants(session.performedAt, performedAt) === 0 ? Math.max(order, session.performedOrder + 1) : order, 0);
+      pendingSession.current = createCanonicalSession({
         id: uid(),
         item,
         exercise,
-        date: localDate(),
+        date: localDate(now),
+        performedAt,
+        performedOrder,
         weight: exercise.usesWeight ? weight : undefined,
         reps: exercise.measureType === "reps" ? reps : undefined,
         seconds: exercise.measureType === "time" ? seconds : undefined,
@@ -660,25 +706,29 @@ function RunPage({
         seat: seat || undefined,
         memo: memo || undefined,
         menuEntryId: entry?.id,
-      }),
-    );
+      });
+    }
+    pendingSession.current = { ...pendingSession.current, weight: exercise.usesWeight ? weight : undefined, reps: exercise.measureType === "reps" ? reps : undefined, seconds: exercise.measureType === "time" ? seconds : undefined, sets, seat: seat || undefined, memo: memo || undefined };
+    const saved = await onComplete(pendingSession.current);
     if (!saved) setMessage("実施記録を保存できませんでした。入力値と保存状態を確認してください。");
   });
   if (historyOpen) return (
-    <Frame title={`${item.displayName}の設定履歴`} back={() => setHistoryOpen(false)} onTop={onTop}>
+    <Frame title="設定履歴" back={() => setHistoryOpen(false)} onTop={onTop} onSettings={onSettings}>
       <SettingHistory data={data} commit={commit} itemId={item.id} />
     </Frame>
   );
   return (
-    <Frame title={item.displayName} back={pending ? undefined : onBack} onTop={pending ? () => {} : onTop}>
+    <Frame title={item.displayName} back={pending ? undefined : onBack} onTop={pending ? () => {} : onTop} onSettings={onSettings}>
       <p className="week">
         {entry
           ? `週メニュー: ${entry.recommendedDay === undefined ? "任意" : `推奨 ${days[entry.recommendedDay]}`}`
           : "追加トレーニング"}
       </p>
-      <section className="card"><h2>標準メモ</h2><p>{item.standardMemo || "標準メモはありません。"}</p></section>
-      <button className="save-setting" disabled={pending} onClick={() => setHistoryOpen(true)}>この実施項目の設定履歴を見る</button>
       {done && <p className="week">今週実施済み（{latest!.date}）</p>}
+      <section className="card" aria-label={done ? "当該実績" : "前回実績"}>
+        <h2>{done ? "当該実績" : "前回実績"}</h2>
+        <p>{previous ? `${previous.date}　${sessionDetail(previous)}` : "実施記録はありません。"}</p>
+      </section>
       {message && <p role="status">{message}</p>}
       {exercise.usesWeight && (
         <section className="run-weight">
@@ -712,44 +762,23 @@ function RunPage({
           </div>
         </section>
       )}
-      {exercise.measureType === "reps" ? (
-        <label>
-          回数
-          <input
-            type="number"
-            min="1"
-            value={reps}
-            onChange={(event) => setReps(Number(event.target.value))}
-          />
-        </label>
-      ) : (
-        <label>
-          時間 (秒)
-          <input
-            type="number"
-            min="1"
-            step="10"
-            value={seconds}
-            onChange={(event) => setSeconds(Number(event.target.value))}
-          />
-        </label>
-      )}
-      <label>
-        実施セット数
-        <input
-          type="number"
-          min="1"
-          value={sets}
-          onChange={(event) => setSets(Number(event.target.value))}
-        />
-      </label>
+      <div className="run-slot-grid">
+        <section className="run-slot"><span>{exercise.measureType === "reps" ? "回数" : "時間（秒）"}</span><div>
+          <button aria-label={exercise.measureType === "reps" ? "回数を減らす" : "時間を減らす"} onClick={() => exercise.measureType === "reps" ? setReps(value => Math.max(1, value - 1)) : setSeconds(value => Math.max(10, value - 10))}>−</button>
+          <b>{exercise.measureType === "reps" ? `${reps} 回` : `${seconds} 秒`}</b>
+          <button aria-label={exercise.measureType === "reps" ? "回数を増やす" : "時間を増やす"} onClick={() => exercise.measureType === "reps" ? setReps(value => value + 1) : setSeconds(value => value + 10)}>＋</button>
+        </div></section>
+        <section className="run-slot"><span>実施セット数</span><div><button aria-label="セット数を減らす" onClick={() => setSets(value => Math.max(1, value - 1))}>−</button><b>{sets}</b><button aria-label="セット数を増やす" onClick={() => setSets(value => value + 1)}>＋</button></div></section>
+      </div>
+      <button className="history-link" disabled={pending} onClick={() => setHistoryOpen(true)}>この実施項目の設定履歴を見る　›</button>
+      <p className="run-meta">メモ1：<span>{item.standardMemo || "—"}</span></p>
       <label>
         シート位置
         <input value={seat} onChange={(event) => setSeat(event.target.value)} />
       </label>
       <label>
         今回メモ
-        <input value={memo} onChange={(event) => setMemo(event.target.value)} />
+        <textarea value={memo} onChange={(event) => setMemo(event.target.value)} />
       </label>
       <button className="primary" disabled={pending} onClick={complete}>
         {done ? "戻る" : "種目を完了"}
@@ -761,50 +790,21 @@ function RunPage({
   );
 }
 
-function ExtraPage({
-  data,
-  onBack,
-  onChoose,
-  onSettings,
-  onTop,
-}: {
-  data: CanonicalAppData;
-  onBack: () => void;
-  onChoose: (id: string) => void;
-  onSettings: () => void;
-  onTop: () => void;
-}) {
-  return (
-    <Frame
-      title="追加トレーニング"
-      back={onBack}
-      onSettings={onSettings}
-      onTop={onTop}
-    >
-      <p className="week">週メニュー外の実施として保存します。</p>
-      {active(data.trainingItems).map((item) => {
-        const exercise = data.exercises.find(
-          (value) => value.id === item.exerciseId,
-        );
-        return (
-          exercise && (
-            <button
-              className="row"
-              key={item.id}
-              onClick={() => onChoose(item.id)}
-            >
-              <span>
-                <b>{item.displayName}</b>
-                <small>{exercise.name}</small>
-              </span>
-              <span>›</span>
-            </button>
-          )
-        );
-      })}
-    </Frame>
-  );
+function ExtraPage({ data, onBack, onChoose, onSettings, onTop }: { data: CanonicalAppData; onBack: () => void; onChoose: (id: string) => void; onSettings: () => void; onTop: () => void }) {
+  const [filter, setFilter] = useState("");
+  const region = (exercise: Exercise) => exercise.classifications?.find(value => value.kind === "bodyRegion")?.label ?? "";
+  const regions = [...new Set(active(data.exercises).map(region))];
+  return <Frame className="list-density-trial" title="追加トレーニング" back={onBack} onSettings={onSettings} onTop={onTop}>
+    <p className="week">追加分は実施総数に含めます。週メニューへの登録は変更しません。</p>
+    <select aria-label="カテゴリ" value={filter} onChange={event => setFilter(event.target.value)}><option value="">カテゴリ：すべて</option>{regions.map(value => <option key={value}>{value}</option>)}</select>
+    {active(data.trainingItems).map(item => {
+      const exercise = active(data.exercises).find(value => value.id === item.exerciseId);
+      if (!exercise || (filter && region(exercise) !== filter)) return null;
+      return <button className="row" key={item.id} onClick={() => onChoose(item.id)}><span><b>{region(exercise)}：{item.displayName}</b><small>{exercise.measureType === "reps" ? `${exercise.usesWeight ? `${item.weight ?? 0} kg × ` : ""}${item.reps ?? 0} 回` : `${item.seconds ?? 0} 秒`} × {item.sets} セット</small></span><span>›</span></button>;
+    })}
+  </Frame>;
 }
+
 function HistoryPage({
   data,
   onBack,
@@ -857,25 +857,25 @@ const analysisLabel = (start: string, period: AnalysisPeriod) => {
 function AnalysisChart({ series, labels, unit }: { series: AnalysisSeries[]; labels: string[]; unit: string }) {
   const max = Math.max(1, ...series.flatMap((value) => value.values));
   const width = 640;
-  const height = 280;
-  const left = 56;
+  const height = 300;
+  const left = 54;
   const top = 22;
-  const right = 12;
-  const bottom = 48;
+  const right = 10;
+  const bottom = 55;
   const innerWidth = width - left - right;
   const innerHeight = height - top - bottom;
   const point = (value: number, index: number) => `${left + (innerWidth / Math.max(1, labels.length - 1)) * index},${top + innerHeight - (value / max) * innerHeight}`;
   return (
     <section className="chart" aria-label="分析グラフ">
-      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="トレーニング負荷推移グラフ">
+      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="トレーニング推移グラフ">
         {[0, 0.5, 1].map((ratio) => (
           <line key={ratio} x1={left} x2={width - right} y1={top + innerHeight * ratio} y2={top + innerHeight * ratio} className="grid" />
         ))}
         <text x="2" y={top + 5}>{formatLoad(max)} {unit}</text>
         <text x="2" y={top + innerHeight / 2 + 5}>{formatLoad(max / 2)}</text>
-        <text x="26" y={top + innerHeight}>0</text>
+        <text x="25" y={top + innerHeight}>0</text>
         {labels.map((label, index) => (
-          <text key={`${label}-${index}`} className="axis" x={left + (innerWidth / Math.max(1, labels.length - 1)) * index} y={height - 15} textAnchor="middle">{label}</text>
+          <text key={`${label}-${index}`} className="axis" x={left + (innerWidth / Math.max(1, labels.length - 1)) * index} y={height - 16} textAnchor="middle">{label}</text>
         ))}
         {series.map((value, index) => (
           <polyline key={value.id} points={value.values.map(point).join(" ")} fill="none" stroke={analysisColors[index % analysisColors.length]} strokeWidth="3" />
@@ -889,88 +889,43 @@ function AnalysisChart({ series, labels, unit }: { series: AnalysisSeries[]; lab
 }
 
 function AnalysisPage({ data, onBack, onSettings, onTop }: { data: CanonicalAppData; onBack: () => void; onSettings: () => void; onTop: () => void }) {
-  const [period, setPeriod] = useState<AnalysisPeriod>("week");
-  const [view, setView] = useState<"overall" | "bodyRegion" | "exercise" | "frequency">("overall");
-  const [frequencyKind, setFrequencyKind] = useState<"exercise" | "bodyRegion">("exercise");
-  const options = useMemo(() => exerciseOptions(data), [data]);
-  const [exerciseId, setExerciseId] = useState("");
-  const selectedExerciseId = options.some((value) => value.id === exerciseId) ? exerciseId : (options[0]?.id ?? "");
-  const now = localDate();
-  const overall = useMemo(() => overallDerivedLoad(data, period, now), [data, period, now]);
-  const byBodyRegion = useMemo(() => bodyRegionDerivedLoad(data, period, now), [data, period, now]);
-  const actual = useMemo(() => selectedExerciseId ? exerciseActuals(data, selectedExerciseId, period, now) : undefined, [data, selectedExerciseId, period, now]);
-  const rows = useMemo(() => frequencyKind === "exercise" ? exerciseFrequency(data, period, now) : bodyRegionFrequency(data, period, now), [data, frequencyKind, period, now]);
-  const labels = overall.bucketStarts.map((value) => analysisLabel(value, period));
-  const selectedExercise = options.find((value) => value.id === selectedExerciseId);
-  const actualWeight = actual ? actual.maxWeight.map((value) => value ?? 0) : [];
-  return (
-    <Frame title="分析" back={onBack} onSettings={onSettings} onTop={onTop}>
-      <label>
-        期間
-        <select value={period} onChange={(event) => setPeriod(event.target.value as AnalysisPeriod)}>
-          {analysisPeriods.map((value) => <option key={value.value} value={value.value}>{value.label}</option>)}
-        </select>
-      </label>
-      <div className="view-toggle analysis-toggle" aria-label="分析表示">
-        <button className={view === "overall" ? "active" : ""} onClick={() => setView("overall")}>全体負荷</button>
-        <button className={view === "bodyRegion" ? "active" : ""} onClick={() => setView("bodyRegion")}>部位別負荷</button>
-        <button className={view === "exercise" ? "active" : ""} onClick={() => setView("exercise")}>種目実績</button>
-        <button className={view === "frequency" ? "active" : ""} onClick={() => setView("frequency")}>実施頻度</button>
-      </div>
-      {data.sessions.length === 0 ? (
-        <p className="week">この期間に表示できる実施記録はありません。</p>
-      ) : view === "overall" ? (
-        <>
-          <p className="week">自重寄与を含む参考負荷です。保存済み実績とsnapshotから再集計します。</p>
-          <AnalysisChart series={[{ id: "overall", name: "全体", values: overall.values }]} labels={labels} unit="負荷" />
-        </>
-      ) : view === "bodyRegion" ? (
-        <>
-          <p className="week">部位は実行時のsnapshot分類です。未分類は現在の設定で補完しません。</p>
-          {byBodyRegion.series.length ? <AnalysisChart series={byBodyRegion.series} labels={byBodyRegion.bucketStarts.map((value) => analysisLabel(value, period))} unit="負荷" /> : <p className="week">この期間に部位別の実績はありません。</p>}
-        </>
-      ) : view === "exercise" ? (
-        <>
-          <label>
-            種目
-            <select value={selectedExerciseId} onChange={(event) => setExerciseId(event.target.value)}>
-              {options.map((value) => <option key={value.id} value={value.id}>{value.name}</option>)}
-            </select>
-          </label>
-          {!actual || !selectedExercise ? <p className="week">実施記録のある種目を選択してください。</p> : <>
-            <p className="week">{selectedExercise.name} の期間ごとの最大重量と、合計回数・セット数です。</p>
-            <AnalysisChart series={[{ id: "weight", name: "最大重量 (kg)", values: actualWeight }]} labels={actual.bucketStarts.map((value) => analysisLabel(value, period))} unit="kg" />
-            <div className="analysis-table" aria-label="種目実績一覧">
-              {actual.bucketStarts.map((start, index) => (
-                <section className="card" key={start}>
-                  <b>{analysisLabel(start, period)}</b>
-                  <p className="meta">最大重量: {actual.maxWeight[index] === undefined ? "—" : `${actual.maxWeight[index]} kg`}　実施: {actual.sessions[index]} 回</p>
-                  <p className="meta">合計回数: {actual.reps[index]} 回　合計時間: {actual.seconds[index]} 秒　合計セット: {actual.sets[index]}</p>
-                </section>
-              ))}
-            </div>
-          </>}
-        </>
-      ) : (
-        <>
-          <label>
-            集計対象
-            <select value={frequencyKind} onChange={(event) => setFrequencyKind(event.target.value as "exercise" | "bodyRegion")}>
-              <option value="exercise">種目別</option>
-              <option value="bodyRegion">部位別</option>
-            </select>
-          </label>
-          {rows.length === 0 ? <p className="week">この期間に実施記録はありません。</p> : <div className="analysis-table" aria-label="実施頻度一覧">
-            {rows.map((row) => <section className="card" key={row.id}>
-              <b>{row.name}</b>
-              <p className="meta">実施: {row.sessions} 回　セット: {row.sets}</p>
-              <p className="meta">回数: {row.reps} 回　時間: {row.seconds} 秒</p>
-            </section>)}
-          </div>}
-        </>
-      )}
-    </Frame>
-  );
+  const [metric, setMetric] = useState<"weight" | "load">("weight");
+  const [period, setPeriod] = useState<"week" | "month" | "quarter" | "half" | "year">("week");
+  const [view, setView] = useState<"all" | "category" | "detail">("all");
+  const [region, setRegion] = useState("");
+  const [detail, setDetail] = useState<"body" | "exercise">("body");
+  const periodStart = (date: Date) => analysisBucketStart(localDate(date), period, data.weekStartsOn);
+  const starts = analysisBucketStarts({ nowDate: localDate(), period, weekStartsOn: data.weekStartsOn });
+  const regions = [...new Set(data.sessions.flatMap(session => session.snapshot.classifications?.filter(value => value.kind === "bodyRegion").map(value => value.label) ?? []))];
+  const selectedRegion = regions.includes(region) ? region : regions[0] ?? "";
+  const seriesMap = new Map<string, AnalysisSeries>();
+  const seriesFor = (id: string, name: string) => {
+    if (!seriesMap.has(id)) seriesMap.set(id, { id, name, values: starts.map(() => 0) });
+    return seriesMap.get(id)!;
+  };
+  if (view === "all") seriesFor("all", "全体");
+  for (const session of data.sessions) {
+    const bucket = starts.indexOf(periodStart(new Date(`${session.date}T12:00:00`)));
+    if (bucket < 0) continue;
+    const classification = session.snapshot.classifications?.find(value => value.kind === "bodyRegion")?.label;
+    if (view === "detail" && classification !== selectedRegion) continue;
+    const id = view === "all" ? "all" : view === "category" || detail === "body" ? classification ?? "unclassified-snapshot" : session.snapshot.exerciseId;
+    const name = view === "all" ? "全体" : view === "category" || detail === "body" ? classification ?? "記録時の部位情報なし" : session.snapshot.exerciseName;
+    const value = metric === "load" ? referenceTrainingLoad(session) : session.snapshot.measureType === "reps" ? (session.weight ?? 0) * (session.snapshot.weightMode === "perSide" ? 2 : 1) * (session.reps ?? 0) * session.sets : 0;
+    seriesFor(id, name).values[bucket] += value;
+  }
+  const labels = starts.map((start, index) => {
+    if (index === 11) return period === "week" ? "今週（途中）" : period === "month" ? "今月（途中）" : "今期（途中）";
+    const date = new Date(`${start}T12:00:00`), year = date.getFullYear(), month = date.getMonth() + 1;
+    return period === "week" ? `${month}/${date.getDate()}` : period === "month" ? `${year}/${month}` : period === "quarter" ? `${year} Q${Math.ceil(month / 3)}` : period === "half" ? `${year} ${month <= 6 ? "上" : "下"}` : `${year}`;
+  });
+  return <Frame outerHeader title="分析" back={onBack} onSettings={onSettings} onTop={onTop}>
+    <label>集計<select value={metric} onChange={event => setMetric(event.target.value as typeof metric)}><option value="weight">実施総重量</option><option value="load">総トレーニング負荷（参考）</option></select></label>
+    <label>期間<select value={period} onChange={event => setPeriod(event.target.value as typeof period)}><option value="week">週</option><option value="month">月</option><option value="quarter">四半期</option><option value="half">半年</option><option value="year">年</option></select></label>
+    <label>表示<select value={view} onChange={event => setView(event.target.value as typeof view)}><option value="all">全体</option><option value="category">カテゴリ別</option><option value="detail">カテゴリ詳細</option></select></label>
+    {view === "detail" && <><label>カテゴリ<select value={selectedRegion} onChange={event => setRegion(event.target.value)}>{regions.map(value => <option key={value}>{value}</option>)}</select></label><label>内訳<select value={detail} onChange={event => setDetail(event.target.value as typeof detail)}><option value="body">部位別</option><option value="exercise">種目別</option></select></label></>}
+    <AnalysisChart series={[...seriesMap.values()]} labels={labels} unit={metric === "weight" ? "kg" : "pt"} />
+  </Frame>;
 }
 
 function MasterBootstrapPage({
@@ -1058,23 +1013,110 @@ function MasterBootstrapPage({
   );
 }
 
-function SettingsPage({
-  data,
-  itemEditId, onEditItem, onItemList, onBackup,
-  commit,
-  tab,
-  onTab,
-  itemPresetExerciseId,
-  onConfigureExercise,
-  onMenuImport,
-  onTrainerHistoryExport,
-  onAnalysis,
-  onMasterBootstrap,
-  menuToInspectId,
-  onBack,
-  onSettings,
-  onTop,
-}: {
+function SettingsPage(props: SettingsPageProps) {
+  const { data, commit, onTop, onBackup, onMenuImport, onAnalysis } = props;
+  const [route, setRoute] = useState<SettingsTab | undefined>(props.menuToInspectId ? "menu" : undefined);
+  const [edit, setEdit] = useState<string | null | undefined>(props.menuToInspectId);
+  const [preset, setPreset] = useState<string>();
+  const [menuHidden, setMenuHidden] = useState(false);
+  const listKey = route === "item" ? "item" : "exercise";
+  const filter = props.listPreferences[listKey].filter;
+  const hidden = route === "menu" ? menuHidden : props.listPreferences[listKey].hidden;
+  const setFilter = (filter: string) => props.onListPreferences({ ...props.listPreferences, [listKey]: { ...props.listPreferences[listKey], filter } });
+  const setHidden = (hidden: boolean) => route === "menu" ? setMenuHidden(hidden) : props.onListPreferences({ ...props.listPreferences, [listKey]: { ...props.listPreferences[listKey], hidden } });
+  const [historyItem, setHistoryItem] = useState("");
+  const [historyRegion, setHistoryRegion] = useState("");
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const region = (exerciseId: string) => data.exercises.find(value => value.id === exerciseId)?.classifications?.find(value => value.kind === "bodyRegion")?.label ?? "";
+  const regions = [...new Set(data.exercises.map(value => region(value.id)).filter(Boolean))];
+  const root = () => { setRoute(undefined); setEdit(undefined); setHistoryOpen(false); };
+  const list = () => { setEdit(undefined); setPreset(undefined); if (route === "menu") setMenuHidden(false); };
+  const labels = { profile: "プロフィール", exercise: "種目", item: "実施項目", menu: "週メニュー", settingHistory: "設定履歴" };
+  const title = !route ? "設定" : edit !== undefined ? `${labels[route]}を${edit === null ? "登録" : "編集"}` : labels[route];
+  const navigate = (next: SettingsTab) => { setRoute(next); setEdit(undefined); if (next === "menu") setMenuHidden(false); if (next === "settingHistory") { setHistoryItem(""); setHistoryRegion(""); setHistoryOpen(false); } };
+  const row = (name: string, sub: string, action: () => void) => <button className="row" key={name} onClick={action}><span><b>{name}</b><small>{sub}</small></span><span>›</span></button>;
+  const archiveExercise = async (value: Exercise) => { if (value.lifecycle === "active" && !confirm("この種目を非表示にしますか？")) return; if (await commit({ ...data, exercises: data.exercises.map(candidate => candidate.id === value.id ? { ...candidate, lifecycle: value.lifecycle === "active" ? "archived" : "active" } : candidate) })) list(); };
+  const archiveItem = async (value: TrainingItem) => { if (value.lifecycle === "active" && !confirm("この実施項目を非表示にしますか？")) return; if (await commit({ ...data, trainingItems: data.trainingItems.map(candidate => candidate.id === value.id ? { ...candidate, lifecycle: value.lifecycle === "active" ? "archived" : "active" } : candidate) })) list(); };
+  return <Frame outerHeader={!!route && !historyOpen} title={title} back={!route ? undefined : historyOpen ? () => setHistoryOpen(false) : edit !== undefined ? list : root} onSettings={root} onTop={onTop}>
+    {props.notice && <p role="alert">{props.notice}</p>}
+    {!route ? <>
+      {import.meta.env.DEV && <button className="save-setting" onClick={props.onMasterBootstrap}>MAN用マスターを投入</button>}
+      {row("プロフィール", "体重・身長・年齢・性別", () => navigate("profile"))}
+      {row("種目", "種目名・部位・回数／時間・重量の扱い", () => navigate("exercise"))}
+      {row("実施項目", "重量・回数／時間・セット数などの標準設定", () => navigate("item"))}
+      {row("週メニュー", "実施項目と推奨曜日の組み合わせ", () => navigate("menu"))}
+      {row("分析", "トレーニング負荷の推移", onAnalysis)}
+      {row("設定履歴", "実施項目ごとの過去設定", () => navigate("settingHistory"))}
+      {row("データ管理", "バックアップ作成・復元", onBackup)}
+      {row("トレーナー連携", "メニュー提案の取り込み・履歴の出力", onMenuImport)}
+      <p className="meta" aria-label="ビルド識別子">{buildIdentifier}</p>
+    </> : route === "profile" ? <ProfileEditor data={data} commit={commit} onSaved={root} /> : route === "settingHistory" ? historyOpen ? <SettingHistory data={data} commit={commit} itemId={historyItem} /> : <>
+      <label>カテゴリ<select value={historyRegion} onChange={event => { setHistoryRegion(event.target.value); setHistoryItem(""); }}><option value="">選択してください</option>{regions.map(value => <option key={value}>{value}</option>)}</select></label>
+      <label>実施項目<select value={historyItem} onChange={event => setHistoryItem(event.target.value)}><option value="">選択してください</option>{active(data.trainingItems).filter(value => !historyRegion || region(value.exerciseId) === historyRegion).map(value => <option key={value.id} value={value.id}>{value.displayName}</option>)}</select></label>
+      {historyItem && <button className="primary" onClick={() => setHistoryOpen(true)}>設定履歴を見る</button>}
+    </> : route === "menu" ? edit !== undefined ? <MenuEditor key={edit ?? "new"} data={data} commit={commit} menuId={edit} onSaved={list} /> : <>
+      <label className="check"><input type="checkbox" checked={hidden} onChange={event => setHidden(event.target.checked)} />非表示データを表示</label>
+      {data.menus.filter(value => hidden ? value.lifecycle === "archived" : value.lifecycle === "active").map(value => row(`${value.name}${value.id === data.activeMenuId ? "（使用中）" : ""}`, `${data.menuEntries.filter(entry => entry.menuId === value.id && entry.lifecycle === "active").length}項目`, () => setEdit(value.id)))}
+      <button className="primary" onClick={() => setEdit(null)}>＋ 週メニューを登録</button>
+    </> : edit !== undefined ? route === "exercise" ? <>
+      <ExerciseEditor key={edit ?? "new"} initialExercise={data.exercises.find(value => value.id === edit)} onSaved={list} data={data} commit={commit} onConfigure={id => { setPreset(id); setRoute("item"); setEdit(null); }} />
+      {edit && <button className="archive" onClick={() => archiveExercise(data.exercises.find(value => value.id === edit)!)}>{data.exercises.find(value => value.id === edit)?.lifecycle === "active" ? "この種目を非表示にする" : "再表示する"}</button>}
+    </> : <>
+      <ItemEditor key={`${edit}:${preset}`} data={data} commit={commit} itemId={edit} presetExerciseId={preset} onSaved={list} />
+      {edit && <button className="archive" onClick={() => archiveItem(data.trainingItems.find(value => value.id === edit)!)}>{data.trainingItems.find(value => value.id === edit)?.lifecycle === "active" ? "この実施項目を非表示にする" : "再表示する"}</button>}
+    </> : <>
+      <select aria-label="カテゴリ" value={filter} onChange={event => setFilter(event.target.value)}><option value="">カテゴリ：すべて</option>{regions.map(value => <option key={value}>{value}</option>)}</select>
+      <label className="check"><input type="checkbox" checked={hidden} onChange={event => setHidden(event.target.checked)} />非表示データを表示</label>
+      {route === "exercise" ? data.exercises.filter(value => (hidden ? value.lifecycle === "archived" : value.lifecycle === "active") && (!filter || region(value.id) === filter)).map(value => row(value.name, `${region(value.id)}　${value.measureType === "reps" ? "回数型" : "時間型"}${value.usesWeight ? value.weightMode === "perSide" ? "　片側×2" : "　合計×1" : ""}`, () => setEdit(value.id))) : data.trainingItems.filter(value => (hidden ? value.lifecycle === "archived" : value.lifecycle === "active") && (!filter || region(value.exerciseId) === filter)).map(value => row(value.displayName, region(value.exerciseId), () => setEdit(value.id)))}
+      <button className="primary" onClick={() => setEdit(null)}>＋ {labels[route]}を登録</button>
+    </>}
+  </Frame>;
+}
+
+function MenuEditor({ data, commit, menuId, onSaved }: { data: CanonicalAppData; commit: (next: CanonicalAppData) => Promise<boolean>; menuId: string | null; onSaved: () => void }) {
+  const [menu, setMenu] = useState<Menu>(() => clone(data.menus.find(value => value.id === menuId) ?? { id: uid(), lifecycle: "active", name: "" }));
+  const [entries, setEntries] = useState(() => clone(data.menuEntries.filter(entry => entry.menuId === menuId)));
+  const [filter, setFilter] = useState(() => data.exercises.find(value => value.lifecycle === "active")?.classifications?.find(value => value.kind === "bodyRegion")?.label ?? "");
+  const [byDay, setByDay] = useState(false);
+  const regions = [...new Set(data.exercises.flatMap(value => value.classifications?.filter(c => c.kind === "bodyRegion").map(c => c.label) ?? []))];
+  const activeEntries = entries.filter(entry => entry.lifecycle === "active").sort((a, b) => byDay ? (a.recommendedDay ?? 7) - (b.recommendedDay ?? 7) || a.order - b.order : a.order - b.order);
+  const save = async () => {
+    if (!menu.name.trim()) return;
+    const next = { ...data, menus: data.menus.some(value => value.id === menu.id) ? data.menus.map(value => value.id === menu.id ? { ...menu, name: menu.name.trim() } : value) : [...data.menus, { ...menu, name: menu.name.trim() }], menuEntries: [...data.menuEntries.filter(entry => entry.menuId !== menu.id), ...entries] };
+    if (await commit(next)) onSaved();
+  };
+  const regionOf = (item: TrainingItem) => data.exercises.find(value => value.id === item.exerciseId)?.classifications?.find(value => value.kind === "bodyRegion")?.label ?? "";
+  const describe = (item: TrainingItem) => {
+    const exercise = data.exercises.find(value => value.id === item.exerciseId)!;
+    return exercise.measureType === "time" ? `${item.seconds ?? 0}秒 × ${item.sets}セット` : `${exercise.usesWeight ? `${item.weight ?? 0}kg × ` : ""}${item.reps ?? 0}回 × ${item.sets}セット`;
+  };
+  const archive = async () => {
+    if (menu.lifecycle === "active" && !confirm("この週メニューを非表示にしますか？")) return;
+    if (await commit({ ...data, menus: data.menus.map(value => value.id === menu.id ? { ...value, lifecycle: value.lifecycle === "active" ? "archived" : "active" } : value) })) onSaved();
+  };
+  return <>
+    <label>週メニュー名<input value={menu.name} onChange={event => setMenu({ ...menu, name: event.target.value })} /></label>
+    <label>メモ<textarea value={menu.memo ?? ""} onChange={event => setMenu({ ...menu, memo: event.target.value || undefined })} /></label>
+    <h2>実施項目と推奨曜日</h2>
+    <label className="check"><input type="checkbox" checked={byDay} onChange={event => setByDay(event.target.checked)} />推奨曜日順に表示</label>
+    {activeEntries.map(entry => {
+      const item = data.trainingItems.find(item => item.id === entry.trainingItemId)!;
+      return <div className="row static compact" key={entry.id}><span><b>{regionOf(item)}：{item.displayName}</b><small>{describe(item)}</small></span>
+        <select className="day-select" aria-label="推奨曜日" value={entry.recommendedDay ?? ""} onChange={event => setEntries(entries.map(value => value.id === entry.id ? { ...value, recommendedDay: event.target.value === "" ? undefined : Number(event.target.value) as RecommendedDay } : value))}><option value="">任意</option>{days.map((day, index) => <option key={day} value={index}>{day}</option>)}</select>
+        <button className="small danger" onClick={() => { if (confirm("この実施項目を週メニューから外しますか？")) setEntries(entries.map(value => value.id === entry.id ? { ...value, lifecycle: "archived" } : value)); }}>外す</button></div>;
+    })}
+    <h2>実施項目を追加</h2>
+    <select aria-label="追加候補のカテゴリ" value={filter} onChange={event => setFilter(event.target.value)}>{regions.map(value => <option key={value}>{value}</option>)}</select>
+    {active(data.trainingItems).filter(item => data.exercises.some(exercise => exercise.id === item.exerciseId && exercise.lifecycle === "active" && (!filter || exercise.classifications?.some(c => c.kind === "bodyRegion" && c.label === filter)))).map(item => <div className="row static" key={item.id}><span><b>{item.displayName}</b><small>{describe(item)}</small></span><button className="small" onClick={() => { if (confirm(`「${item.displayName}」を週メニューに追加しますか？`)) setEntries([...entries, { id: uid(), lifecycle: "active", menuId: menu.id, trainingItemId: item.id, order: Math.max(-1, ...entries.filter(entry => entry.lifecycle === "active").map(entry => entry.order)) + 1 }]); }}>追加</button></div>)}
+    <button className="primary" disabled={!menu.name.trim()} onClick={save}>保存</button>
+    {menuId && <button className={menu.lifecycle === "active" ? "archive" : "primary"} disabled={menu.id === data.activeMenuId} onClick={archive}>{menu.lifecycle === "archived" ? "再表示する" : menu.id === data.activeMenuId ? "使用中の週メニューは非表示にできません" : "この週メニューを非表示にする"}</button>}
+  </>;
+}
+
+type SettingsPageProps = {
+  listPreferences: ListPreferences;
+  onListPreferences: (preferences: ListPreferences) => void;
+  notice?: string;
   data: CanonicalAppData;
   itemEditId?: string | null;
   onEditItem: (id: string | null) => void;
@@ -1093,112 +1135,35 @@ function SettingsPage({
   onBack: () => void;
   onSettings: () => void;
   onTop: () => void;
-}) {
-  return (
-    <Frame
-      title="正規データの設定"
-      back={tab === "item" && itemEditId !== undefined ? onItemList : onBack}
-      onSettings={onSettings}
-      onTop={onTop}
-    >
-      <div className="view-toggle">
-        <button
-          className={tab === "profile" ? "active" : ""}
-          onClick={() => onTab("profile")}
-        >
-          プロフィール
-        </button>
-        <button
-          className={tab === "exercise" ? "active" : ""}
-          onClick={() => onTab("exercise")}
-        >
-          種目
-        </button>
-        <button
-          className={tab === "item" ? "active" : ""}
-          onClick={() => onTab("item")}
-        >
-          実施項目
-        </button>
-        <button
-          className={tab === "menu" ? "active" : ""}
-          onClick={() => onTab("menu")}
-        >
-          週メニュー
-        </button>
-        <button
-          className={tab === "settingHistory" ? "active" : ""}
-          onClick={() => onTab("settingHistory")}
-        >
-          設定履歴
-        </button>
-      </div>
-      {tab === "item" && (itemEditId !== undefined ? <ItemEditor key={`${itemEditId}:${itemPresetExerciseId ?? ""}`} data={data} commit={commit} presetExerciseId={itemPresetExerciseId} itemId={itemEditId} onSaved={onItemList} /> :
-        <section className="card"><h2>設定済み実施項目</h2>
-          <button className="primary" onClick={() => onEditItem(null)}>実施項目を新規登録</button>
-          {active(data.trainingItems).length === 0 && <p>設定済みの実施項目はありません。</p>}
-          {active(data.trainingItems).map(item => <button className="row" key={item.id} onClick={() => onEditItem(item.id)}><span><b>{item.displayName}</b><small>{data.exercises.find(exercise => exercise.id === item.exerciseId)?.name}</small></span><span>編集</span></button>)}
-        </section>)}{" "}
-      <section className="card">
-        {import.meta.env.DEV && <>
-        <button className="save-setting" onClick={onMasterBootstrap}>
-          MAN用マスターを投入
-        </button>
-        <p className="meta">Android MAN用の承認済みExercise／実施項目だけを新規投入します。週メニューは作成しません。</p>
-        </>}
-        <button className="save-setting" onClick={onBackup}>データ管理</button>
-        <button className="save-setting" onClick={onAnalysis}>
-          分析
-        </button>
-        <p className="meta">実施記録の負荷推移・実績・頻度を確認します。</p>
-        <button className="save-setting" onClick={onMenuImport}>
-          メニュー投入
-        </button>
-        <p className="meta">JSONの提案から新しい週メニューを作成します。現在の週メニューは切り替えません。</p>
-        <button className="save-setting" onClick={onTrainerHistoryExport}>
-          トレーニング履歴出力
-        </button>
-        <p className="meta">メニュー調整・振り返り等に利用する実施履歴を出力します。アプリ復元用バックアップではありません。</p>
-      </section>
-      {tab === "profile" && <ProfileEditor data={data} commit={commit} />}{" "}
-      {tab === "exercise" && <ExerciseEditor data={data} commit={commit} onConfigure={onConfigureExercise} />}{" "}
-      {tab === "menu" && (
-        <MenuEditor
-          data={data}
-          commit={commit}
-          initialMenuId={menuToInspectId}
-        />
-      )}{" "}
-      {tab === "settingHistory" && (
-        <SettingHistory data={data} commit={commit} />
-      )}
-      <p className="meta" aria-label="ビルド識別子">{buildIdentifier}</p>
-    </Frame>
-  );
-}
+};
+
 function ProfileEditor({
   data,
   commit,
+  onSaved,
 }: {
   data: CanonicalAppData;
   commit: (next: CanonicalAppData) => Promise<boolean>;
+  onSaved?: () => void;
 }) {
   const [profile, setProfile] = useState(data.profile);
   return (
-    <section className="card">
+    <>
       <label>
-        体重 (kg)
+        体重（kg）
         <input
           type="number"
           min="0.1"
+          step="0.1"
           value={profile.weight}
           onChange={(event) =>
             setProfile({ ...profile, weight: Number(event.target.value) })
           }
         />
+        <small>実行時の体重を履歴へ保存し、参考負荷の計算に使います。</small>
       </label>
       <label>
-        身長 (cm)
+        身長（cm）
         <input
           type="number"
           min="0"
@@ -1244,12 +1209,7 @@ function ProfileEditor({
         週開始曜日
         <select
           value={data.weekStartsOn}
-          onChange={(event) =>
-            commit({
-              ...data,
-              weekStartsOn: Number(event.target.value) as RecommendedDay,
-            })
-          }
+          onChange={(event) => { if (confirm("週の開始曜日を変更すると、過去を含む週集計・分析・実施状況の区切りが変わります。実施記録自体は変更しません。変更しますか？")) void commit({ ...data, weekStartsOn: Number(event.target.value) as RecommendedDay }); }}
         >
           {days.map((day, index) => (
             <option key={day} value={index}>
@@ -1258,20 +1218,24 @@ function ProfileEditor({
           ))}
         </select>
       </label>
-      <button className="primary" onClick={() => commit({ ...data, profile })}>
-        プロフィールを保存
+      <button className="primary" onClick={async () => { if (await commit({ ...data, profile })) onSaved?.(); }}>
+        保存
       </button>
-    </section>
+    </>
   );
 }
 function ExerciseEditor({
   data,
   commit,
   onConfigure,
+  initialExercise,
+  onSaved,
 }: {
   data: CanonicalAppData;
   commit: (next: CanonicalAppData) => Promise<boolean>;
   onConfigure: (exerciseId: string) => void;
+  initialExercise?: Exercise;
+  onSaved?: () => void;
 }) {
   const bodyRegionOf = (exercise: Exercise) =>
     exercise.classifications?.find((value) => value.kind === "bodyRegion")?.label ?? "";
@@ -1286,11 +1250,12 @@ function ExerciseEditor({
     weightMode: "total",
     classifications: [],
   });
-  const [form, setForm] = useState<Exercise>(blank);
-  const [bodyRegionChoice, setBodyRegionChoice] = useState<BodyRegionChoice>("unset");
-  const [customBodyRegion, setCustomBodyRegion] = useState("");
+  const [form, setForm] = useState<Exercise>(() => initialExercise ? clone(initialExercise) : blank());
+  const initialLabel = initialExercise ? bodyRegionOf(initialExercise) : "";
+  const [bodyRegionChoice, setBodyRegionChoice] = useState<BodyRegionChoice>(choiceFor(initialLabel));
+  const [customBodyRegion, setCustomBodyRegion] = useState(choiceFor(initialLabel) === "custom" ? initialLabel : "");
   const save = async (configure = false) => {
-    if (!form.name.trim()) return;
+    if (!form.name.trim() || !bodyRegionOf(form).trim()) return;
     const next = {
       ...form,
       name: form.name.trim(),
@@ -1310,11 +1275,12 @@ function ExerciseEditor({
       setBodyRegionChoice("unset");
       setCustomBodyRegion("");
       if (configure && !exists) onConfigure(next.id);
+      else onSaved?.();
     }
   };
   return (
     <>
-      <section className="card">
+      <>
         <label>
           種目名
           <input
@@ -1322,7 +1288,49 @@ function ExerciseEditor({
             onChange={(event) => setForm({ ...form, name: event.target.value })}
           />
         </label>
-        <fieldset className="measurement-settings"><legend>計測設定</legend>
+
+        <label>
+          部位
+          <select
+            value={bodyRegionChoice}
+            onChange={(event) => {
+              const choice = event.target.value as BodyRegionChoice;
+              setBodyRegionChoice(choice);
+              setCustomBodyRegion("");
+              setForm({
+                ...form,
+                classifications:
+                  choice === "unset" || choice === "custom"
+                    ? []
+                    : [{ kind: "bodyRegion", label: choice }],
+              });
+            }}
+          >
+            <option value="unset" disabled>選択してください</option>
+            {standardBodyRegions.map((value) => (
+              <option key={value} value={value}>{value}</option>
+            ))}
+            <option value="custom">その他 / カスタム</option>
+          </select>
+        </label>
+        {bodyRegionChoice === "custom" && (
+          <label>
+            カスタム部位
+            <input
+              value={customBodyRegion}
+              onChange={(event) => {
+                const label = event.target.value;
+                setCustomBodyRegion(label);
+                setForm({
+                  ...form,
+                  classifications: label.trim()
+                    ? [{ kind: "bodyRegion", label }]
+                    : [],
+                });
+              }}
+            />
+          </label>
+        )}
         <label>
           計測方法
           <select
@@ -1365,69 +1373,29 @@ function ExerciseEditor({
               }
             >
               <option value="total">合計重量（×1）</option>
-              <option value="perSide">片側重量（×2）</option>
+              <option value="perSide">片側重量・左右実施（×2）</option>
             </select>
           </label>
         )}
-        </fieldset>
-        <label>
-          部位（任意）
-          <select
-            value={bodyRegionChoice}
-            onChange={(event) => {
-              const choice = event.target.value as BodyRegionChoice;
-              setBodyRegionChoice(choice);
-              setCustomBodyRegion("");
-              setForm({
-                ...form,
-                classifications:
-                  choice === "unset" || choice === "custom"
-                    ? []
-                    : [{ kind: "bodyRegion", label: choice }],
-              });
-            }}
-          >
-            <option value="unset">未設定</option>
-            {standardBodyRegions.map((value) => (
-              <option key={value} value={value}>{value}</option>
-            ))}
-            <option value="custom">その他／カスタム</option>
-          </select>
-        </label>
-        {bodyRegionChoice === "custom" && (
-          <label>
-            カスタム部位
-            <input
-              value={customBodyRegion}
-              onChange={(event) => {
-                const label = event.target.value;
-                setCustomBodyRegion(label);
-                setForm({
-                  ...form,
-                  classifications: label.trim()
-                    ? [{ kind: "bodyRegion", label }]
-                    : [],
-                });
-              }}
-            />
-          </label>
-        )}
+
+        {form.measureType === "reps" && <label>自重換算係数（%）<input type="number" min="0" value={form.selfWeightRatio ?? 0} onChange={event => setForm({ ...form, selfWeightRatio: Number(event.target.value) })} /><small>総トレーニング負荷（参考）のみで使います。</small></label>}
+        {form.measureType === "time" && <label>秒間負荷係数（%）<input type="number" min="0" value={form.secondsLoadRatio ?? 0} onChange={event => setForm({ ...form, secondsLoadRatio: Number(event.target.value) })} /><small>体重 × 係数 × 秒数で参考負荷に換算します。</small></label>}
         {data.exercises.some((value) => value.id === form.id) ? (
-          <button className="primary" disabled={!form.name.trim()} onClick={() => save()}>
-            種目を更新
+          <button className="primary" disabled={!form.name.trim() || !bodyRegionOf(form).trim()} onClick={() => save()}>
+            保存
           </button>
         ) : (
           <>
-            <button className="primary" disabled={!form.name.trim()} onClick={() => save(true)}>
+            <button className="primary" disabled={!form.name.trim() || !bodyRegionOf(form).trim()} onClick={() => save(true)}>
               保存して実施項目を設定
             </button>
-            <button className="save-setting" disabled={!form.name.trim()} onClick={() => save()}>
+            <button className="save-setting" disabled={!form.name.trim() || !bodyRegionOf(form).trim()} onClick={() => save()}>
               種目だけ保存
             </button>
           </>
         )}
-      </section>
-      {active(data.exercises).map((value) => (
+      </>
+      {!onSaved && active(data.exercises).map((value) => (
         <button
           className="row"
           key={value.id}
@@ -1474,8 +1442,8 @@ function ItemEditor({
     exerciseId: presetExercise?.id ?? exercises[0]?.id ?? "",
     displayName: presetExercise?.name ?? "",
     weight: 0,
-    reps: 1,
-    sets: 1,
+    reps: 0,
+    sets: 3,
   });
   const [form, setForm] = useState<TrainingItem>(() => clone(data.trainingItems.find(item => item.id === itemId) ?? initial()));
   const [changeReason, setChangeReason] = useState("");
@@ -1490,7 +1458,7 @@ function ItemEditor({
       reps: selected.measureType === "reps" ? (form.reps ?? 1) : undefined,
       seconds:
         selected.measureType === "time" ? (form.seconds ?? 1) : undefined,
-      sets: form.sets || 1,
+      sets: form.sets,
     };
     const next = exists
       ? updateTrainingItem(data, normalized, {
@@ -1508,13 +1476,24 @@ function ItemEditor({
   };
   return (
     <>
-      <h2>{exists ? "実施項目の編集" : "実施項目の登録"}</h2>
+
       {exercises.length === 0 ? (
         <p className="week">先に種目を登録してください。</p>
       ) : (
-        <section className="card">
+        <>
           <label>
-            元種目
+            表示名
+            <input
+              placeholder={selected?.name || "種目を選択"}
+              value={form.displayName}
+              onChange={(event) =>
+                setForm({ ...form, displayName: event.target.value })
+              }
+            />
+            <small>同じ名称でも登録できます。</small>
+          </label>
+          <label>
+            元にする種目
             <select
               value={form.exerciseId}
               onChange={(event) => {
@@ -1544,18 +1523,9 @@ function ItemEditor({
               ))}
             </select>
           </label>
-          <label>
-            表示名
-            <input
-              value={form.displayName}
-              onChange={(event) =>
-                setForm({ ...form, displayName: event.target.value })
-              }
-            />
-          </label>
           {selected?.usesWeight && (
             <label>
-              標準重量 (kg)
+              重量（kg）
               <input
                 type="number"
                 step="0.25"
@@ -1569,7 +1539,7 @@ function ItemEditor({
           )}
           {selected?.measureType === "reps" ? (
             <label>
-              標準回数
+              回数
               <input
                 type="number"
                 min="1"
@@ -1581,7 +1551,7 @@ function ItemEditor({
             </label>
           ) : (
             <label>
-              標準時間 (秒)
+              時間（秒）
               <input
                 type="number"
                 min="1"
@@ -1593,7 +1563,7 @@ function ItemEditor({
             </label>
           )}
           <label>
-            標準セット数
+            セット数
             <input
               type="number"
               min="1"
@@ -1604,7 +1574,7 @@ function ItemEditor({
             />
           </label>
           <label>
-            シート位置
+            シートのピン位置
             <input
               value={form.seat ?? ""}
               onChange={(event) =>
@@ -1613,8 +1583,8 @@ function ItemEditor({
             />
           </label>
           <label>
-            標準メモ
-            <input
+            メモ1（長期用）
+            <textarea
               value={form.standardMemo ?? ""}
               onChange={(event) =>
                 setForm({
@@ -1633,227 +1603,30 @@ function ItemEditor({
               />
             </label>
           )}
-          <button className="primary" onClick={save}>
-            {exists ? "実施項目を更新" : "実施項目を登録"}
+          <button className="primary" disabled={!selected || !form.displayName.trim()} onClick={save}>
+            保存
           </button>
-        </section>
+        </>
       )}
     </>
   );
 }
-function MenuEditor({
-  data,
-  commit,
-  initialMenuId,
-}: {
-  data: CanonicalAppData;
-  commit: (next: CanonicalAppData) => Promise<boolean>;
-  initialMenuId?: string;
-}) {
-  const [menuId, setMenuId] = useState(
-    initialMenuId ?? data.activeMenuId ?? active(data.menus)[0]?.id ?? "",
-  );
-  const [name, setName] = useState("");
-  const [itemId, setItemId] = useState("");
-  const [day, setDay] = useState<string>("");
-  const menu = data.menus.find(
-    (value) => value.id === menuId && value.lifecycle === "active",
-  );
-  const create = async () => {
-    if (!name.trim()) return;
-    const value: Menu = { id: uid(), lifecycle: "active", name: name.trim() };
-    if (
-      await commit({
-        ...data,
-        menus: [...data.menus, value],
-        activeMenuId: data.activeMenuId ?? value.id,
-      })
-    ) {
-      setMenuId(value.id);
-      setName("");
-    }
-  };
-  const add = async () => {
-    if (!menu || !itemId) return;
-    const item = data.trainingItems.find((value) => value.id === itemId);
-    if (
-      !item ||
-      !confirm(`「${item.displayName}」を週メニューに追加しますか？`)
-    )
-      return;
-    const next = appendMenuEntry(
-      data,
-      {
-        lifecycle: "active",
-        menuId: menu.id,
-        trainingItemId: itemId,
-        recommendedDay:
-          day === "" ? undefined : (Number(day) as RecommendedDay),
-      },
-      { newId: uid, now: () => new Date().toISOString() },
-    );
-    if (await commit(next)) {
-      setItemId("");
-      setDay("");
-    }
-  };
-  return (
-    <>
-      <section className="card">
-        <label>
-          週メニュー
-          <select
-            value={menuId}
-            onChange={(event) => setMenuId(event.target.value)}
-          >
-            <option value="">選択してください</option>
-            {active(data.menus).map((value) => (
-              <option key={value.id} value={value.id}>
-                {value.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          新しい週メニュー名
-          <input
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </label>
-        <button className="primary" disabled={!name.trim()} onClick={create}>
-          週メニューを登録
-        </button>
-      </section>
-      {menu && (
-        <section className="card">
-          <h2>{menu.name}</h2>
-          <label>
-            実施項目
-            <select
-              value={itemId}
-              onChange={(event) => setItemId(event.target.value)}
-            >
-              <option value="">選択してください</option>
-              {active(data.trainingItems).map((value) => (
-                <option key={value.id} value={value.id}>
-                  {value.displayName}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            推奨曜日
-            <select
-              value={day}
-              onChange={(event) => setDay(event.target.value)}
-            >
-              <option value="">任意</option>
-              {days.map((value, index) => (
-                <option key={value} value={index}>
-                  {value}
-                </option>
-              ))}
-            </select>
-          </label>
-          <button className="primary" disabled={!itemId} onClick={add}>
-            実施項目を追加
-          </button>
-          {data.menuEntries
-            .filter(
-              (value) =>
-                value.menuId === menu.id && value.lifecycle === "active",
-            )
-            .sort((a, b) => a.order - b.order)
-            .map((entry) => {
-              const item = data.trainingItems.find(
-                (value) => value.id === entry.trainingItemId,
-              );
-              return (
-                <button
-                  className="row"
-                  key={entry.id}
-                  onClick={() => commit(archiveMenuEntry(data, entry.id))}
-                >
-                  <span>
-                    <b>{item?.displayName ?? "参照不明"}</b>
-                    <small>
-                      {entry.recommendedDay === undefined
-                        ? "任意"
-                        : `推奨：${days[entry.recommendedDay]}`}
-                    </small>
-                  </span>
-                  <span>外す</span>
-                </button>
-              );
-            })}
-        </section>
-      )}
-    </>
-  );
-}
-function SettingHistory({
-  data,
-  commit,
-  itemId,
-}: {
-  data: CanonicalAppData;
-  itemId?: string;
-  commit: (next: CanonicalAppData) => Promise<boolean>;
-}) {
-  const rows = [...data.trainingItemSettingChanges].filter(change => !itemId || change.trainingItemId === itemId).sort((a, b) =>
-    b.changedAt.localeCompare(a.changedAt),
-  );
-  const remove = async (id: string, itemId: string) => {
+function SettingHistory({ data, commit, itemId }: { data: CanonicalAppData; commit: (next: CanonicalAppData) => Promise<boolean>; itemId?: string }) {
+  const rows = [...data.trainingItemSettingChanges].filter(change => !itemId || change.trainingItemId === itemId).sort((a, b) => compareInstants(b.changedAt, a.changedAt));
+  const remove = async (id: string, trainingItemId: string) => {
     if (!confirm("この設定変更履歴を削除しますか？")) return;
-    try {
-      await commit(deleteTrainingItemSettingChange(data, itemId, id));
-    } catch (error) {
-      alert(`削除できません: ${String(error)}`);
-    }
+    await commit(deleteTrainingItemSettingChange(data, trainingItemId, id));
   };
-  return (
-    <section className="card">
-      <h2>設定変更履歴</h2>
-      {rows.length === 0 ? (
-        <p className="week">設定変更履歴はまだありません。</p>
-      ) : (
-        rows.map((change) => {
-          const item = data.trainingItems.find(
-            (value) => value.id === change.trainingItemId,
-          );
-          const measure =
-            change.snapshot.reps === undefined
-              ? `${change.snapshot.seconds ?? 0} 秒`
-              : `${change.snapshot.weight ?? 0} kg × ${change.snapshot.reps} 回`;
-          return (
-            <section className="meta" key={change.id}>
-              <b>
-                {item?.displayName ?? "参照不明"}　{change.changedAt}
-              </b>
-              <p>
-                {measure} × {change.snapshot.sets} セット
-                {change.snapshot.seat
-                  ? `　シート: ${change.snapshot.seat}`
-                  : ""}
-              </p>
-              {change.changeReason && <p>変更理由: {change.changeReason}</p>}
-              {change.isInitial ? (
-                <small>初回設定（削除できません）</small>
-              ) : (
-                <button
-                  className="small danger"
-                  onClick={() => remove(change.id, change.trainingItemId)}
-                >
-                  削除
-                </button>
-              )}
-            </section>
-          );
-        })
-      )}
-    </section>
-  );
+  return <>
+    <p className="week">{data.trainingItems.find(item => item.id === itemId)?.displayName}</p>
+    {rows.length === 0 ? <p className="week">まだ設定変更はありません。</p> : rows.map(change => <div className="row static" key={change.id}><span>
+      <b>{localDate(new Date(change.changedAt))}</b>
+      <small>{change.snapshot.weight !== undefined ? `${change.snapshot.weight}kg　` : ""}{change.snapshot.reps !== undefined ? `${change.snapshot.reps}回　` : ""}{change.snapshot.seconds !== undefined ? `${change.snapshot.seconds}秒　` : ""}{change.snapshot.sets}セット</small>
+      <small>シート位置：{change.snapshot.seat || "—"}</small>
+      {change.changeReason && <small>変更理由: {change.changeReason}</small>}
+      {change.isInitial && <small>初回設定（削除できません）</small>}
+    </span>{!change.isInitial && <button className="small danger" onClick={() => remove(change.id, change.trainingItemId)}>削除</button>}</div>)}
+  </>;
 }
 
 function formatIssues(rows: { path: string; message: string }[]) {
@@ -1869,13 +1642,19 @@ function formatIssues(rows: { path: string; message: string }[]) {
 }
 
 function MenuImportPage({
+  embedded = false,
   data,
   onBack,
   onApplied,
+  onUncertain,
+  onPending,
   onInspectMenu,
   onSettings,
   onTop,
 }: {
+  onPending?: (pending: boolean) => void;
+  onUncertain?: () => void;
+  embedded?: boolean;
   data: CanonicalAppData;
   onBack: () => void;
   onApplied: (next: CanonicalAppData) => void;
@@ -1890,15 +1669,23 @@ function MenuImportPage({
   const [acknowledged, setAcknowledged] = useState(false);
   const [message, setMessage] = useState("");
   const [applied, setApplied] = useState<{ id: string; name: string }>();
+  const busy = useRef(false);
+  const [pending, setPending] = useState(false);
+  const fileGeneration = useRef(0);
   const read = (file?: File) => {
     if (!file) return;
+    const generation = ++fileGeneration.current;
+    setApplied(undefined);
+    setChecked({ errors: [], warnings: [] });
     setAcknowledged(false);
     setMessage("");
     const reader = new FileReader();
     reader.onerror = () => {
+      if (generation !== fileGeneration.current) return;
       setChecked({ errors: [{ path: "file", message: "ファイルを読み込めませんでした" }], warnings: [] });
     };
     reader.onload = () => {
+      if (generation !== fileGeneration.current) return;
       try {
         setChecked(validateMenuProposal(JSON.parse(String(reader.result)), data));
       } catch (error) {
@@ -1908,10 +1695,13 @@ function MenuImportPage({
     reader.readAsText(file, "UTF-8");
   };
   const apply = async () => {
-    if (applied || !checked.proposal || checked.errors.length || (checked.warnings.length && !acknowledged)) return;
+    if (busy.current || applied || !checked.proposal || checked.errors.length || (checked.warnings.length && !acknowledged)) return;
     if (!confirm("既存の週メニューを上書きせず、新しい週メニューを作成します。投入しますか？")) return;
+    busy.current = true; setPending(true); onPending?.(true);
     const result = await applyMenuProposal(canonicalStorage, data, checked.proposal, uid);
+    busy.current = false; setPending(false); onPending?.(false);
     if (!result.ok) {
+      if (result.recoveryRequired) onUncertain?.();
       setMessage(`投入に失敗しました。${result.errors.map((row) => `${row.path}: ${row.message}`).join(" / ")}`);
       return;
     }
@@ -1919,13 +1709,14 @@ function MenuImportPage({
     setApplied({ id: result.menu.id, name: result.menu.name });
   };
   const proposal = checked.proposal;
+  const Wrapper = SectionFrame;
   return (
-    <Frame title="メニュー投入" back={onBack} onSettings={onSettings} onTop={onTop}>
+    <Wrapper embedded={embedded} title="メニュー投入" back={onBack} onSettings={onSettings} onTop={onTop}>
       <section className="card">
         <p className="meta">提案JSONを確認してから、新しい週メニューとして作成します。アプリ復元用バックアップは選択できません。</p>
         <label>
           提案ファイルを選択
-          <input type="file" accept="application/json,.json" onChange={(event) => read(event.target.files?.[0])} />
+          <input disabled={pending} type="file" accept="application/json,.json" onChange={(event) => read(event.target.files?.[0])} />
         </label>
       </section>
       {checked.errors.length > 0 && (
@@ -1937,7 +1728,7 @@ function MenuImportPage({
       {proposal && checked.errors.length === 0 && !applied && (
         <section className="card">
           <h2>内容確認</h2>
-          <p><b>{proposal.menu.name}</b>　{proposal.entries.length}件</p>
+          <p><b>{proposal.menu.name} (ByAI)</b>　{proposal.entries.length}件</p>
           {proposal.menu.memo && <p className="meta">{proposal.menu.memo}</p>}
           {proposal.entries
             .slice()
@@ -1958,7 +1749,7 @@ function MenuImportPage({
               </label>
             </>
           )}
-          <button className="primary" disabled={checked.warnings.length > 0 && !acknowledged} onClick={apply}>
+          <button className="primary" disabled={pending || (checked.warnings.length > 0 && !acknowledged)} onClick={apply}>
             新しい週メニューを作成
           </button>
         </section>
@@ -1974,7 +1765,7 @@ function MenuImportPage({
         </section>
       )}
       {message && <p className="week">{message}</p>}
-    </Frame>
+    </Wrapper>
   );
 }
 
@@ -2068,18 +1859,20 @@ function downloadJson(filename: string, value: unknown) {
 }
 
 function TrainerHistoryExportPage({
+  embedded = false,
   data,
   onBack,
   onSettings,
   onTop,
 }: {
+  embedded?: boolean;
   data: CanonicalAppData;
   onBack: () => void;
   onSettings: () => void;
   onTop: () => void;
 }) {
   const today = localDate();
-  const [fullHistory, setFullHistory] = useState(false);
+  const fullHistory = false;
   const [fromDate, setFromDate] = useState(today);
   const [toDate, setToDate] = useState(today);
   const [message, setMessage] = useState("");
@@ -2103,13 +1896,11 @@ function TrainerHistoryExportPage({
       setMessage(`出力に失敗しました: ${String(error)}`);
     }
   };
+  const Wrapper = SectionFrame;
   return (
-    <Frame title="トレーニング履歴出力" back={onBack} onSettings={onSettings} onTop={onTop}>
+    <Wrapper embedded={embedded} title="トレーニング履歴出力" back={onBack} onSettings={onSettings} onTop={onTop}>
       <section className="card">
         <p className="meta">メニュー調整・振り返り等に利用する実施履歴を出力します。アプリ復元用バックアップではありません。</p>
-        <label>
-          <input type="checkbox" checked={fullHistory} onChange={(event) => setFullHistory(event.target.checked)} /> 全履歴を出力する
-        </label>
         {!fullHistory && (
           <>
             <label>開始日<input type="date" value={fromDate} onChange={(event) => setFromDate(event.target.value)} /></label>
@@ -2117,13 +1908,13 @@ function TrainerHistoryExportPage({
             <p className="meta">開始日・終了日を含む期間で出力します。</p>
           </>
         )}
-        {!preview.ok ? formatIssues(preview.errors) : <p className="meta">対象Session: {preview.value.sessions.length}件</p>}
+        {!preview.ok ? formatIssues(preview.errors) : <p className="meta">{preview.value.sessions.length === 0 ? "対象期間に履歴がありません。0件" : `対象Session: ${preview.value.sessions.length}件`}</p>}
         <button className="primary" disabled={!preview.ok || preview.value.sessions.length === 0} onClick={exportHistory}>
           JSONを出力
         </button>
       </section>
       {message && <p className="week">{message}</p>}
-    </Frame>
+    </Wrapper>
   );
 }
 

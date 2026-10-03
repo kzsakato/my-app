@@ -19,6 +19,7 @@ function session(overrides: Partial<Session>): Session {
     id: 'session-x',
     trainingItemId: 'item-archived',
     date: '2026-09-21',
+    performedAt: `${overrides.date ?? '2026-09-21'}T09:00:00+09:00`, performedOrder: 0,
     weight: 10,
     reps: 3,
     sets: 2,
@@ -95,7 +96,7 @@ describe('canonical analysis', () => {
     data.sessions = [
       session({ id: 'a', date: '2026-09-21', weight: 10, reps: 3, sets: 2 }),
       session({ id: 'b', date: '2026-09-22', weight: 12, reps: 4, sets: 3, menuEntryId: undefined }),
-      session({ id: 'time', date: '2026-09-22', seconds: 30, reps: undefined, sets: 2, snapshot: { ...session({}).snapshot, exerciseId: 'time', exerciseName: 'プランク', measureType: 'time', secondsLoadRatio: 10, classifications: [{ kind: 'bodyRegion', label: '体幹' }] } }),
+      session({ id: 'time', date: '2026-09-22', performedOrder: 1, seconds: 30, reps: undefined, sets: 2, snapshot: { ...session({}).snapshot, exerciseId: 'time', exerciseName: 'プランク', measureType: 'time', secondsLoadRatio: 10, classifications: [{ kind: 'bodyRegion', label: '体幹' }] } }),
     ]
     const actual = exerciseActuals(data, 'exercise-archived', 'week', '2026-09-25', 1)
     expect(actual).toMatchObject({ maxWeight: [12], reps: [18], seconds: [0], sets: [5], sessions: [2] })

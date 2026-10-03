@@ -1,3 +1,4 @@
+import { instantKey } from './instant'
 import type {
   CanonicalAppData, ClassificationMeaning, Exercise, SessionSnapshot,
   TrainingItem, TrainingItemSettingSnapshot, ValidationIssue, ValidationResult,
@@ -12,8 +13,12 @@ const isNonNegative = (value: unknown): value is number => isNumber(value) && va
 const isPositiveInteger = (value: unknown): value is number => typeof value === 'number' && Number.isInteger(value) && value > 0
 const isLifecycle = (value: unknown): value is 'active' | 'archived' => value === 'active' || value === 'archived'
 const isMeasureType = (value: unknown): value is 'reps' | 'time' => value === 'reps' || value === 'time'
-const isOffsetInstant = (value: unknown): value is string =>
-  typeof value === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(value) && !Number.isNaN(Date.parse(value))
+const isOffsetInstant = (value: unknown): value is string => {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(value)) return false
+  const date = value.slice(0, 10)
+  const hours = Number(value.slice(11, 13)), minutes = Number(value.slice(14, 16)), seconds = Number(value.slice(17, 19))
+  return isLocalDate(date) && hours < 24 && minutes < 60 && seconds < 60 && Number.isFinite(Date.parse(value))
+}
 const isLocalDate = (value: unknown): value is string => {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
   const [year, month, day] = value.split('-').map(Number)
@@ -171,9 +176,17 @@ export function validateCanonical(input: unknown): ValidationResult {
     entryMap.set(row.id, row)
   })
 
+  const performedKeys = new Set<string>()
   sessions.forEach((row, index) => {
     const path = `sessions[${index}]`
     if (!isRecord(row) || !isId(row.id) || !isId(row.trainingItemId) || !itemMap.has(row.trainingItemId) || !isLocalDate(row.date)) { add(errors, path, '必須フィールドまたは参照が不正です'); return }
+    if (!isOffsetInstant(row.performedAt)) add(errors, `${path}.performedAt`, '実施instantが欠損または不正です。推測による旧履歴移行は行いません')
+    if (!Number.isInteger(row.performedOrder) || Number(row.performedOrder) < 0) add(errors, `${path}.performedOrder`, '実施順には非負整数が必要です')
+    if (isOffsetInstant(row.performedAt) && Number.isInteger(row.performedOrder)) {
+      const key = `${instantKey(row.performedAt)}:${row.performedOrder}`
+      if (performedKeys.has(key)) add(errors, path, '実施instant/順序が重複しています')
+      performedKeys.add(key)
+    }
     if (row.menuEntryId !== undefined && (!isId(row.menuEntryId) || !entryMap.has(row.menuEntryId))) add(errors, `${path}.menuEntryId`, '参照先MenuEntryがありません')
     const snapshot = row.snapshot
     if (validateSnapshot(snapshot, `${path}.snapshot`, errors)) validateMeasurement(row, snapshot.measureType, path, errors)

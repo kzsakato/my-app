@@ -1,0 +1,41 @@
+{
+  "stats": {
+    "startTime": "2026-10-03T14:41:46.392Z",
+    "duration": 4315.303,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "tests": [
+    {
+      "file": "v1r-visual.spec.ts",
+      "line": 7,
+      "title": "selected VRT preserves baseline Exercise edit with an existing bodyRegion preset",
+      "project": "release",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 1163,
+          "errors": []
+        }
+      ]
+    },
+    {
+      "file": "v1r-visual.spec.ts",
+      "line": 21,
+      "title": "selected VRT preserves baseline Menu edit with confirmation changes outside the static view",
+      "project": "release",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 847,
+          "errors": []
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

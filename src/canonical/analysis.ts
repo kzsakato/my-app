@@ -1,7 +1,7 @@
 import { localDate, weekStart } from './runtime'
 import type { CanonicalAppData, RecommendedDay, Session } from './types'
 
-export type AnalysisPeriod = 'week' | 'month' | 'quarter' | 'year'
+export type AnalysisPeriod = 'week' | 'month' | 'quarter' | 'half' | 'year'
 
 export type AnalysisSeries = {
   id: string
@@ -55,6 +55,7 @@ export function analysisBucketStart(date: string, period: AnalysisPeriod, weekSt
   const value = atLocalMidnight(date)
   if (period === 'month') return `${value.getFullYear()}-${pad(value.getMonth() + 1)}-01`
   if (period === 'quarter') return `${value.getFullYear()}-${pad(Math.floor(value.getMonth() / 3) * 3 + 1)}-01`
+  if (period === 'half') return `${value.getFullYear()}-${value.getMonth() < 6 ? '01' : '07'}-01`
   return `${value.getFullYear()}-01-01`
 }
 
@@ -63,6 +64,7 @@ function shiftBucket(start: string, period: AnalysisPeriod, offset: number): str
   if (period === 'week') value.setDate(value.getDate() + offset * 7)
   if (period === 'month') value.setMonth(value.getMonth() + offset)
   if (period === 'quarter') value.setMonth(value.getMonth() + offset * 3)
+  if (period === 'half') value.setMonth(value.getMonth() + offset * 6)
   if (period === 'year') value.setFullYear(value.getFullYear() + offset)
   return dateKey(value)
 }
