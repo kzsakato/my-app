@@ -1,0 +1,10 @@
+{
+  "worker": "my-app-staging-v1r",
+  "version": "df682b17-34d7-4fdb-b3ba-903d2fbb941e",
+  "product": "687716d17cebbacae63d91452e6bc01b335c70c5",
+  "origin": "https://my-app-staging-v1r.kzsakato-lab.workers.dev",
+  "run": "H-20261004-11-owner-01",
+  "expires": "2026-10-05T14:49:11.680Z",
+  "initializerSHA256": "6d7a5b6ab48d95bd3692a677d71bdc64c317516909824bbd44aea657945e0c6a",
+  "cacheControl": "no-store, max-age=0"
+}

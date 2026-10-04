@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+const dir=new URL('./',import.meta.url);
+const run=process.argv[2];
+const hours=Number(process.argv[3]);
+if(!run || !Number.isFinite(hours) || hours<=0 || hours>24)throw Error('Usage: issue-run.mjs run-id hours(0..24)');
+const token=crypto.randomBytes(32).toString('hex');
+const expires=new Date(Date.now()+hours*3600000).toISOString();
+const config=JSON.parse(fs.readFileSync(new URL('wrangler.json',dir),'utf8'));
+config.vars={PREP_RUN:run,PREP_EXPIRES:expires,PREP_TOKEN_HASH:crypto.createHash('sha256').update(token).digest('hex')};
+fs.writeFileSync(new URL('run.local.json',dir),JSON.stringify(config,null,2));
+fs.writeFileSync(new URL('capability.local.json',dir),JSON.stringify({run,expires,token,url:`https://${config.name}.kzsakato-lab.workers.dev/__staging/prepare.html#${token}`},null,2));
+console.log(JSON.stringify({run,expires}));

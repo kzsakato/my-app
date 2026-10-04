@@ -1,0 +1,19 @@
+{
+  "result": "PASS",
+  "run": "H-20261004-11-owner-01",
+  "expires": "2026-10-05T14:49:11.680Z",
+  "origin": "https://my-app-staging-v1r.kzsakato-lab.workers.dev",
+  "checks": [
+    "old-automation-capability-403",
+    "owner-gate-valid",
+    "all-eight-production-hashes",
+    "manifest-same-origin",
+    "concurrent-tab-STOP",
+    "first-tab-PREPARED",
+    "duplicate-PREPARED",
+    "preparation-no-SW",
+    "ordinary-canonical-Build-Trainer-no-Category",
+    "week-start-Monday"
+  ],
+  "ownerDeviceTested": false
+}

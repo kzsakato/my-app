@@ -1,0 +1,5 @@
+{
+  "result": "PASS",
+  "proof": "already-loaded initializer rechecks real revoked server before first mutation",
+  "receipt": null
+}

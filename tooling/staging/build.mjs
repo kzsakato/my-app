@@ -1,0 +1,14 @@
+import { build } from 'vite';
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+const dir=path.dirname(new URL(import.meta.url).pathname.replace(/^\/(\w:)/,'$1'));
+const root=path.resolve(dir,'../..');
+const accepted='687716d17cebbacae63d91452e6bc01b335c70c5';
+execFileSync('git',['diff','--exit-code',accepted,'--','src','package.json','pnpm-lock.yaml','vite.config.ts'],{cwd:root});
+await build({configFile:false,publicDir:false,build:{outDir:path.join(dir,'.generated'),emptyOutDir:true,minify:true,lib:{entry:path.join(dir,'client.ts'),name:'StagingPrepare',formats:['iife'],fileName:()=> 'initializer.txt'}}});
+const hashes={};
+for(const name of fs.readdirSync(path.join(root,'dist'),{recursive:true}).filter(n=>fs.statSync(path.join(root,'dist',n)).isFile())) hashes[name.replaceAll('\\','/')]=crypto.createHash('sha256').update(fs.readFileSync(path.join(root,'dist',name))).digest('hex');
+if(hashes['assets/index-BT0AoisN.js']!=='bea4713c77b4d6bad57298958f6127408a720378c330909187db8dbbfbedc8f7')throw Error('Accepted production dist mismatch');
+fs.writeFileSync(path.join(dir,'.generated/provenance.json'),JSON.stringify({accepted,hashes},null,2));
