@@ -15,6 +15,115 @@ async function injectWriteFailure(page: Page) {
   await page.evaluate(() => { const put = IDBObjectStore.prototype.put; IDBObjectStore.prototype.put = function (...args) { if (this.name === 'canonical') { IDBObjectStore.prototype.put = put; throw new Error('injected persistence failure') } return put.apply(this, args) } })
 }
 
+// H-20261004-03: independent fixed-date oracle; do not call product history helpers.
+const focusedDates = ['2026-09-20', '2026-09-21', '2026-09-22', '2026-09-23', '2026-09-24', '2026-09-25', '2026-09-26', '2026-09-27', '2026-09-28', '2026-09-29', '2026-09-30', '2026-10-01', '2026-10-02', '2026-10-03']
+async function assertFocusedMarkers(page: Page, completedDates: string[]) {
+  const expected = Object.fromEntries(focusedDates.map(date => [date, completedDates.includes(date) ? '●' : '○']))
+  await expect.poll(async () => {
+    const markers = (await page.locator('.item-history').first().innerText()).replaceAll('｜', '')
+    expect(markers).toHaveLength(14)
+    return Object.fromEntries(focusedDates.map((date, index) => [date, markers[index]]))
+  }, { message: 'H-03: each fixed calendar date must have its own expected 14-day marker' }).toEqual(expected)
+}
+async function focusedActuals(page: Page) {
+  await page.getByRole('button', { name: '推奨曜日', exact: true }).click()
+  await page.getByLabel('実施済も表示').check()
+  await page.getByRole('button', { name: /表示する推奨曜日:/ }).click()
+  for (const day of ['月', '火', '水', '木', '金', '土', '日']) await page.getByRole('checkbox', { name: day, exact: true }).check()
+  await page.getByRole('button', { name: /表示する推奨曜日:/ }).click()
+}
+
+for (const scenario of [
+  { name: '1 same-day multiple Sessions retain marker until last cancellation', targets: [session('same-day-first', '2026-10-02', 0), session('same-day-last', '2026-10-02', 1)] },
+  { name: '2 single Session cancellation clears its date marker', targets: [session('single-target', '2026-10-02')] },
+  { name: '3 past-first consecutive cancellations change only the target date', targets: [session('Monday-target', '2026-09-28'), session('Wednesday-target', '2026-09-30'), session('Friday-target', '2026-10-02')] },
+]) {
+  test(`H-03 focused ${scenario.name}`, async ({ page }, info) => {
+    await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
+    const untouched = session('non-target-outside-window', '2026-09-10')
+    const targets = scenario.targets.map(value => ({ ...value, snapshot: { ...value.snapshot, trainingItemDisplayName: `取消対象-${value.id}` } }))
+    const data = { ...canonicalData(), sessions: [untouched, ...targets] }
+    await seedCanonicalAndReload(page, data)
+    const legacy = await readStoredState(page)
+    await focusedActuals(page)
+    let remaining = [...data.sessions]
+    await assertFocusedMarkers(page, scenario.targets.map(value => value.date))
+    const stages: unknown[] = [{ remaining, markers: await page.locator('.item-history').first().innerText() }]
+    for (const target of targets) {
+      // Actual rows carry their own Session identity; cancel oldest dates first.
+      await page.locator('.item-density').filter({ hasText: `追加実施　${target.date}` }).filter({ hasText: target.snapshot.trainingItemDisplayName }).click()
+      await expect(page.getByRole('region', { name: '当該実績' })).toContainText(target.date)
+      page.once('dialog', dialog => dialog.accept())
+      await page.getByRole('button', { name: `${Number(target.date.slice(5, 7))}/${Number(target.date.slice(8))}の実行を取り消す` }).click()
+      remaining = remaining.filter(value => value.id !== target.id)
+      const expected = { ...data, sessions: remaining }
+      await expect.poll(() => readCanonicalState(page)).toEqual(expected)
+      await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+      await assertFocusedMarkers(page, remaining.map(value => value.date))
+      expect(await readStoredState(page)).toEqual(legacy)
+      stages.push({ cancelledId: target.id, remaining: await readCanonicalState(page), markers: await page.locator('.item-history').first().innerText() })
+      await page.reload()
+      expect(await readCanonicalState(page)).toEqual(expected)
+      await focusedActuals(page)
+      await assertFocusedMarkers(page, remaining.map(value => value.date))
+    }
+    await info.attach('H-03-marker-cancellation-stages', { body: JSON.stringify(stages, null, 2), contentType: 'application/json' })
+  })
+}
+
+test('H-03 focused 4/5 UI Extra completion becomes next Run previous actual and visible completed Exercise', async ({ page }, info) => {
+  await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
+  const previous = session('previous-before-extra', '2026-09-26', 0, 27)
+  const data = { ...canonicalData(), sessions: [previous] }
+  await seedCanonicalAndReload(page, data)
+  const legacy = await readStoredState(page)
+  await page.getByRole('button', { name: /^胸 / }).click()
+  await assertFocusedMarkers(page, ['2026-09-26'])
+  await top(page)
+  await page.getByRole('button', { name: '＋ 追加トレーニングを登録' }).click()
+  await page.getByRole('button', { name: /正規テストプレス/ }).click()
+  await expect(page.getByRole('region', { name: '前回実績' })).toContainText('27 kg × 8 回')
+  await page.getByRole('button', { name: '重量を1kg増やす' }).click()
+  await page.getByRole('button', { name: '回数を増やす' }).click()
+  await page.getByLabel('シート位置').fill('H03-extra-seat')
+  await page.getByRole('button', { name: '種目を完了' }).click()
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+  const saved = await readCanonicalState(page)
+  const added = saved.sessions as ReturnType<typeof session>[]
+  expect(added).toHaveLength(2)
+  expect(added[0]).toEqual(previous)
+  expect(added[1]).toMatchObject({ id: expect.any(String), date: '2026-10-03', performedAt: instant.toISOString(), performedOrder: 0, weight: 21, reps: 11, sets: 3, seat: 'H03-extra-seat' })
+  expect(added[1].id).not.toBe(previous.id)
+  expect((added[1] as typeof added[number] & { menuEntryId?: string }).menuEntryId).toBeUndefined()
+  expect({ ...saved, sessions: data.sessions }).toEqual(data)
+  await page.getByRole('button', { name: '推奨曜日', exact: true }).click()
+  const actualRow = page.locator('.item-density').filter({ hasText: '追加実施　2026-10-03' })
+  await expect(actualRow).toHaveCount(0)
+  await page.getByLabel('実施済も表示').check()
+  await expect(actualRow).toHaveCount(1)
+  await expect(actualRow).toContainText('正規テストプレス')
+  await assertFocusedMarkers(page, ['2026-09-26', '2026-10-03'])
+  await page.getByRole('button', { name: 'カテゴリ表示', exact: true }).click()
+  await page.getByRole('button', { name: /^胸 / }).click()
+  await expect(page.getByRole('button', { name: /^正規テストプレス / })).toHaveCount(0)
+  await page.getByLabel('実施済も表示').check()
+  await expect(page.getByRole('button', { name: /^正規テストプレス / })).toHaveCount(2)
+  await assertFocusedMarkers(page, ['2026-09-26', '2026-10-03'])
+  await top(page)
+  await page.getByRole('button', { name: '＋ 追加トレーニングを登録' }).click()
+  await page.getByRole('button', { name: /正規テストプレス/ }).click()
+  const previousPanel = page.getByRole('region', { name: '前回実績' })
+  await expect(previousPanel).toContainText('2026-10-03')
+  await expect(previousPanel).toContainText('21 kg × 11 回 × 3 セット')
+  await expect(previousPanel).toContainText('H03-extra-seat')
+  await expect(previousPanel).not.toContainText('27 kg')
+  expect(await readCanonicalState(page)).toEqual(saved)
+  expect(await readStoredState(page)).toEqual(legacy)
+  await page.reload()
+  expect(await readCanonicalState(page)).toEqual(saved)
+  await info.attach('H-03-extra-created-session', { body: JSON.stringify({ before: data, after: saved }, null, 2), contentType: 'application/json' })
+})
+
 test('OIC-003/006/007: previous actual order, Session-only seat, controls, persist failure/retry/reload preserve identity', async ({ page }) => {
   await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
   const data = canonicalData(); data.sessions = [session('z-older', '2026-09-26', 0, 99), session('a-later', '2026-09-26', 1, 27)]
