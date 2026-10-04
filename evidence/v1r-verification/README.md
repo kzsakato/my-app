@@ -1,5 +1,7 @@
 # H-20261003-08 current-run implementation / verification return
 
+後続のQA-C01/C02補正と再検証は [H-11 correction](H-11-correction.md) を参照。本書以下はH-08返却時点の履歴であり、補正後の最新判定ではない。
+
 RESULT: **FAIL — current run complete; PMO-deferred correction C01 remains.** Automated checks below passed on the submitted tree. This is not overall V1R acceptance, QA approval, deployment approval or Owner MAN readiness.
 
 ## Authority and baseline

@@ -164,7 +164,8 @@ test('canonical MAN bootstrap downloads an H-07 MenuProposal that imports withou
   await page.getByRole('button', { name: '新しい週メニューを作成' }).click()
   await expect(page.getByRole('heading', { name: 'メニューを作成しました' })).toBeVisible()
   const stored = await readCanonicalState(page)
-  const createdMenu = (stored.menus as Array<{ id: string; name: string }>).find(menu => menu.name === 'Android MAN確認メニュー (ByAI)')
+  // QA-C01: importer preserves the upstream helper's name, without appending a marker.
+  const createdMenu = (stored.menus as Array<{ id: string; name: string }>).find(menu => menu.name === proposal.menu.name)
   expect(createdMenu).toBeDefined()
   expect(stored.activeMenuId).toBe('canonical-menu')
   expect((stored.menuEntries as Array<{ menuId: string; trainingItemId: string; order: number }>)

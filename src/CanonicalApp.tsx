@@ -1728,7 +1728,7 @@ function MenuImportPage({
       {proposal && checked.errors.length === 0 && !applied && (
         <section className="card">
           <h2>内容確認</h2>
-          <p><b>{proposal.menu.name} (ByAI)</b>　{proposal.entries.length}件</p>
+          <p><b>{proposal.menu.name}</b>　{proposal.entries.length}件</p>
           {proposal.menu.memo && <p className="meta">{proposal.menu.memo}</p>}
           {proposal.entries
             .slice()

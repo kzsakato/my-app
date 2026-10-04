@@ -11,9 +11,9 @@ const proposal = {
 } as const
 
 describe('Ver1 MenuProposal contract', () => {
-  it('accepts an active TrainingItem proposal and applies app-issued IDs without changing activeMenuId', async () => {
+  it.each(['提案メニュー', '提案メニュー (ByAI)'])('QA-C01 preserves upstream name %s with app-issued IDs without changing existing Menus', async (name) => {
     const data = clone(canonicalFixture)
-    const checked = validateMenuProposal(proposal, data)
+    const checked = validateMenuProposal({ ...proposal, menu: { ...proposal.menu, name } }, data)
     expect(checked.errors).toEqual([])
     expect(checked.proposal).toBeDefined()
     let stored = data
@@ -27,11 +27,22 @@ describe('Ver1 MenuProposal contract', () => {
     if (!result.ok) return
     expect(result.value.activeMenuId).toBe('menu-1')
     expect(result.value.menus.at(-1)?.id).toBe('app-1')
-    expect(result.value.menus.at(-1)?.name).toBe('提案メニュー (ByAI)')
+    expect(checked.proposal!.menu.name).toBe(name)
+    expect(result.value.menus.at(-1)?.name).toBe(name)
+    expect(stored).toEqual(result.value)
     expect(result.value.menus[0]).toEqual(data.menus[0])
     expect(result.value.menuEntries.at(-1)?.id).toBe('app-2')
     expect(result.value.appliedProposalIds).toEqual(['proposal-1'])
     expect(validateMenuProposal({ ...proposal, menu: { name: '変更後' } }, result.value).errors.map(value => value.path)).toContain('proposalId')
+  })
+
+  it('QA-C01 warns only for the exact validated proposal name, without guessing a suffix', () => {
+    const data = clone(canonicalFixture)
+    data.menus[0].name = '提案メニュー (ByAI)'
+    expect(validateMenuProposal(proposal, data).warnings).toEqual([])
+    expect(validateMenuProposal({ ...proposal, menu: { name: data.menus[0].name } }, data).warnings).toEqual([{ path: 'menu.name', message: '同名の既存Menuがあります' }])
+    data.menus[0].name = proposal.menu.name
+    expect(validateMenuProposal(proposal, data).warnings).toEqual([{ path: 'menu.name', message: '同名の既存Menuがあります' }])
   })
 
   it('rejects archived or missing references, duplicate order, unsupported versions, and unsupported master fields', () => {

@@ -93,7 +93,7 @@ export function validateMenuProposal(input: unknown, data: CanonicalAppData): Pr
   else {
     if (!menuName) errors.push(issue('menu.name', '空でない文字列が必要です'))
     if (menuInput.memo !== undefined && typeof menuInput.memo !== 'string') errors.push(issue('menu.memo', '文字列ではありません'))
-    if (menuName && data.menus.some(menu => menu.name === menuName || menu.name === `${menuName} (ByAI)`)) warnings.push(issue('menu.name', '同名の既存Menuがあります'))
+    if (menuName && data.menus.some(menu => menu.name === menuName)) warnings.push(issue('menu.name', '同名の既存Menuがあります'))
   }
   if (!Array.isArray(input.entries)) errors.push(issue('entries', '配列が必要です'))
   const validEntries: MenuProposalEntry[] = []
@@ -130,7 +130,7 @@ export function validateMenuProposal(input: unknown, data: CanonicalAppData): Pr
 /** Creates a candidate only. It does not persist or change the active Menu. */
 export function createMenuProposalCandidate(data: CanonicalAppData, proposal: MenuProposal, newId: () => string): { data: CanonicalAppData; menu: Menu } {
   if ((data.appliedProposalIds ?? []).includes(proposal.proposalId)) throw new Error('proposalId is already applied')
-  const menu: Menu = { id: newId(), lifecycle: 'active', name: `${proposal.menu.name} (ByAI)`, ...(proposal.menu.memo ? { memo: proposal.menu.memo } : {}) }
+  const menu: Menu = { id: newId(), lifecycle: 'active', name: proposal.menu.name, ...(proposal.menu.memo ? { memo: proposal.menu.memo } : {}) }
   const entries: MenuEntry[] = proposal.entries.map(entry => ({ id: newId(), lifecycle: 'active', menuId: menu.id, trainingItemId: entry.trainingItemId, order: entry.order, ...(entry.recommendedDay === undefined ? {} : { recommendedDay: entry.recommendedDay }) }))
   return { menu, data: { ...data, menus: [...data.menus, menu], menuEntries: [...data.menuEntries, ...entries], appliedProposalIds: [...(data.appliedProposalIds ?? []), proposal.proposalId] } }
 }

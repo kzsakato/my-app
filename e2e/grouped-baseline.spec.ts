@@ -104,9 +104,18 @@ test('H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/
   expect((await readCanonicalState(page)).sessions).toHaveLength(1)
   page.once('dialog', dialog => dialog.accept())
   await page.getByRole('button', { name: '9/21の実行を取り消す' }).click()
+  // QA-C02: accepted confirmation starts async persistence; it is not completion.
+  const cancelled = { ...stored, sessions: [] }
+  await expect.poll(() => readCanonicalState(page)).toEqual(cancelled)
+  await expect(page.getByRole('button', { name: '9/21の実行を取り消す' })).toHaveCount(0)
+  await expect(page.getByRole('heading', { name: '肩', exact: true })).toBeVisible()
+  await top(page)
+  await expect(page.getByText('今週の実施総数')).toContainText('0/2')
+  await expect(page.getByText('今日の実施総数')).toContainText('0/1')
   await page.reload()
   await expect(page.getByText('今週の実施総数')).toContainText('0/2')
   const reloaded = await readCanonicalState(page)
+  expect(reloaded).toEqual(cancelled)
   expect(reloaded.sessions).toHaveLength(0)
   expect(reloaded.trainingItems).toEqual(stored.trainingItems)
   expect(reloaded.trainingItemSettingChanges).toEqual(stored.trainingItemSettingChanges)

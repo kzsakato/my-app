@@ -132,7 +132,8 @@ test('OIC-013: item-scoped history deletion cancel, exact selected delete and re
   await page.reload(); expect(await readCanonicalState(page)).toEqual(after)
 })
 
-test('D-01/02: parse/error/preview/cancel, ByAI apply idempotence, inclusive export and explicit empty range', async ({ page }) => {
+for (const proposalName of ['Owner確認候補', 'Owner確認候補 (ByAI)']) {
+test(`QA-C01 D-01/02: exact upstream name ${proposalName}, preview/cancel/failure/idempotence/read-back/export`, async ({ page }) => {
   await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant); await seedCanonicalAndReload(page, { ...canonicalData(), sessions: [session('export-one', '2026-10-03')] })
   const before = await readCanonicalState(page)
   await open(page, 'トレーナー連携')
@@ -140,9 +141,9 @@ test('D-01/02: parse/error/preview/cancel, ByAI apply idempotence, inclusive exp
   await file.setInputFiles({ name: 'invalid.json', mimeType: 'application/json', buffer: Buffer.from('{') })
   await expect(page.getByRole('heading', { name: '投入できません' })).toBeVisible()
   await expect(page.getByRole('button', { name: '新しい週メニューを作成' })).toHaveCount(0)
-  const proposal = { contractVersion: '1.0', proposalId: 'v1r-one', menu: { name: 'Owner確認候補' }, entries: [{ trainingItemId: 'canonical-item', recommendedDay: 5, order: 0 }] }
+  const proposal = { contractVersion: '1.0', proposalId: 'v1r-one', menu: { name: proposalName }, entries: [{ trainingItemId: 'canonical-item', recommendedDay: 5, order: 0 }] }
   const upload = () => file.setInputFiles({ name: 'proposal.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(proposal)) })
-  await upload(); await expect(page.getByText('Owner確認候補 (ByAI)', { exact: true })).toBeVisible()
+  await upload(); await expect(page.getByText(proposalName, { exact: true })).toBeVisible()
   page.once('dialog', d => d.dismiss()); await page.getByRole('button', { name: '新しい週メニューを作成' }).click()
   expect(await readCanonicalState(page)).toEqual(before)
   await injectWriteFailure(page)
@@ -152,7 +153,8 @@ test('D-01/02: parse/error/preview/cancel, ByAI apply idempotence, inclusive exp
   page.once('dialog', d => d.accept()); await page.getByRole('button', { name: '新しい週メニューを作成' }).dblclick()
   await expect(page.getByRole('heading', { name: 'メニューを作成しました' })).toBeVisible()
   const applied = await readCanonicalState(page)
-  expect((applied.menus as { name: string }[]).map(value => value.name)).toEqual(['正規E2Eメニュー', 'Owner確認候補 (ByAI)'])
+  expect((applied.menus as { name: string }[]).map(value => value.name)).toEqual(['正規E2Eメニュー', proposalName])
+  expect((applied.menus as unknown[]).slice(0, -1)).toEqual(before.menus)
   expect(applied.activeMenuId).toBe(before.activeMenuId); expect(applied.trainingItems).toEqual(before.trainingItems); expect(applied.sessions).toEqual(before.sessions)
   await upload(); await expect(page.getByRole('heading', { name: '投入できません' })).toBeVisible()
   expect(await readCanonicalState(page)).toEqual(applied)
@@ -162,7 +164,75 @@ test('D-01/02: parse/error/preview/cancel, ByAI apply idempotence, inclusive exp
   expect(payload.format).toBeUndefined(); expect(await readCanonicalState(page)).toEqual(applied)
   await page.getByLabel('開始日').fill('2026-10-04'); await page.getByLabel('終了日').fill('2026-10-04')
   await expect(page.getByText('対象期間に履歴がありません。0件')).toBeVisible(); await expect(page.getByRole('button', { name: 'JSONを出力' })).toBeDisabled()
+  await page.reload(); expect(await readCanonicalState(page)).toEqual(applied)
 })
+}
+
+for (const failure of ['none', 'write', 'read-back'] as const) {
+  test(`QA-C02 cancellation completion/non-target/reload with ${failure} failure`, async ({ page }, info) => {
+    await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
+    const other = session('non-target-previous-week', '2026-09-20')
+    const target = session('cancel-target', '2026-10-03')
+    const data = { ...canonicalData(), sessions: [other, target] }
+    await seedCanonicalAndReload(page, data)
+    const legacy = await readStoredState(page)
+    await expect(page.getByText('今週の実施総数')).toContainText('2/2')
+    await page.getByRole('button', { name: /^胸 / }).click()
+    await page.getByLabel('実施済も表示').check()
+    await page.getByRole('button', { name: /^正規テストプレス / }).first().click()
+    await page.evaluate(mode => {
+      const probe = { writes: 0, reads: 0 }
+      Object.assign(window, { cancellationProbe: probe })
+      const put = IDBObjectStore.prototype.put
+      const get = IDBObjectStore.prototype.get
+      IDBObjectStore.prototype.put = function (...args) {
+        if (this.name === 'canonical') {
+          probe.writes++
+          if (mode === 'write') { IDBObjectStore.prototype.put = put; throw new Error('QA-C02 injected write failure') }
+        }
+        return put.apply(this, args)
+      }
+      IDBObjectStore.prototype.get = function (...args) {
+        if (this.name === 'canonical') {
+          probe.reads++
+          if (mode === 'read-back' && probe.writes > 0) { IDBObjectStore.prototype.get = get; throw new Error('QA-C02 injected read-back failure') }
+        }
+        return get.apply(this, args)
+      }
+    }, failure)
+    const cancel = page.getByRole('button', { name: '10/3の実行を取り消す' })
+    page.once('dialog', d => d.dismiss()); await cancel.click()
+    expect(await readCanonicalState(page)).toEqual(data)
+    const probe = () => page.evaluate(() => (window as unknown as { cancellationProbe: { writes: number; reads: number } }).cancellationProbe)
+    expect((await probe()).writes).toBe(0)
+    await expect(cancel).toBeVisible()
+    page.once('dialog', d => d.accept()); await cancel.click()
+    const cancelled = { ...data, sessions: [other] }
+    if (failure === 'write') {
+      await expect(page.getByRole('status')).toContainText('実行を取り消せませんでした')
+      await expect(cancel).toBeVisible()
+      expect(await readCanonicalState(page)).toEqual(data)
+    } else if (failure === 'read-back') {
+      await expect(page.getByRole('alert')).toContainText('保存の成功を確認できません')
+      await expect(page.getByRole('heading', { name: '保存状態の確認' })).toBeVisible()
+      expect(await readCanonicalState(page)).toEqual(cancelled)
+    } else {
+      await expect.poll(() => readCanonicalState(page)).toEqual(cancelled)
+      await expect(page.getByRole('heading', { name: '胸', exact: true })).toBeVisible()
+      await expect(cancel).toHaveCount(0)
+      await top(page)
+      await expect(page.getByText('今週の実施総数')).toContainText('0/2')
+      await expect(page.getByText('今日の実施総数')).toContainText('0/0')
+    }
+    if (failure !== 'none') await expect(page.getByText('今週の実施総数')).toHaveCount(0)
+    await info.attach('cancellation-boundary', { body: JSON.stringify({ failure, probe: await probe(), before: data, after: await readCanonicalState(page) }, null, 2), contentType: 'application/json' })
+    expect(await readStoredState(page)).toEqual(legacy)
+    await page.reload()
+    await expect(page.getByText('今週の実施総数')).toContainText(failure === 'write' ? '2/2' : '0/2')
+    expect(await readCanonicalState(page)).toEqual(failure === 'write' ? data : cancelled)
+    expect(await readStoredState(page)).toEqual(legacy)
+  })
+}
 
 test('D-03/OIC-016: baseline settings/list/edit/custom required label and hide/show preserve IDs', async ({ page }) => {
   const data = canonicalData(); (data.exercises as Record<string, unknown>[])[0].classifications = [{ kind: 'bodyRegion', label: '前腕（補助）' }]
