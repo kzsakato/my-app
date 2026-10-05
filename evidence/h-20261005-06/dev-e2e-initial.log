@@ -1,0 +1,106 @@
+[WebServer] (node:29068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 49 tests using 1 worker
+
+(node:26768) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › e2e\grouped-baseline.spec.ts:18:1 › H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/history/standard/complete/cancel/reload (5.2s)
+  ok  2 [chromium] › e2e\grouped-baseline.spec.ts:129:1 › H12 canonical backup preview, invalid non-destructive restore, full replacement/read-back/reload (4.2s)
+  ok  3 [chromium] › e2e\grouped-baseline.spec.ts:180:1 › H12 restore read-back failure blocks stale editing and never declares success or falls back (1.8s)
+  ok  4 [chromium] › e2e\grouped-baseline.spec.ts:208:1 › H12 Settings retains Trainer interfaces and hides MAN helpers in release (1.4s)
+  ok  5 [chromium] › e2e\grouped-baseline.spec.ts:222:1 › H13 Top displays 260 average and 2.50 ACWR from canonical snapshots, not current Master (1.7s)
+  ok  6 [chromium] › e2e\grouped-baseline.spec.ts:244:1 › H12 Run history is item-scoped and completed status resets at the configured week boundary (1.8s)
+  ok  7 [chromium] › e2e\training-check.spec.ts:7:1 › common menu reaches settings and the bottom navigation is absent (1.3s)
+  ok  8 [chromium] › e2e\training-check.spec.ts:21:1 › seeded menu item can be completed, persisted, and retained after reload (1.8s)
+  ok  9 [chromium] › e2e\training-check.spec.ts:51:1 › fixed date changes recommended display and resets the weekly completion state (1.6s)
+  ok 10 [chromium] › e2e\training-check.spec.ts:70:1 › backup export can restore the original state through the visible import control (2.6s)
+  ok 11 [chromium] › e2e\training-check.spec.ts:97:1 › explicit cutover adopts only the confirmed Profile candidate and does not copy legacy master data (1.6s)
+  ok 12 [chromium] › e2e\training-check.spec.ts:126:1 › canonical MAN master bootstrap creates approved items and displays their new IDs (1.3s)
+  ok 13 [chromium] › e2e\training-check.spec.ts:141:1 › canonical MAN bootstrap downloads an H-07 MenuProposal that imports without changing the active menu (1.5s)
+  ok 14 [chromium] › e2e\v1r-acceptance.spec.ts:41:3 › H-03 focused 1 same-day multiple Sessions retain marker until last cancellation (3.2s)
+  ok 15 [chromium] › e2e\v1r-acceptance.spec.ts:41:3 › H-03 focused 2 single Session cancellation clears its date marker (2.3s)
+  ok 16 [chromium] › e2e\v1r-acceptance.spec.ts:41:3 › H-03 focused 3 past-first consecutive cancellations change only the target date (4.2s)
+  ok 17 [chromium] › e2e\v1r-acceptance.spec.ts:74:1 › H-03 focused 4/5 + H06 A5: UI Extra completion has own actual and visible completed Exercise (2.3s)
+  ok 18 [chromium] › e2e\v1r-acceptance.spec.ts:134:1 › OIC-003/006/007 + H06 A5: Session-only seat, controls, persist failure/retry/reload preserve identity (1.7s)
+  ok 19 [chromium] › e2e\v1r-acceptance.spec.ts:170:1 › OIC-006: same Clock completions allocate distinct order and shuffled offset-equivalent actuals select correctly (1.4s)
+  x  20 [chromium] › e2e\v1r-acceptance.spec.ts:186:1 › OIC-008/009/010/012: temporary weekday filter, distinct today including Extra, actual-date visibility, two-line execution lists (6.8s)
+(node:25092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 21 [chromium] › e2e\v1r-acceptance.spec.ts:210:1 › OIC-002: Menu add/remove confirmations and unsaved back have zero canonical writes (2.3s)
+  ok 22 [chromium] › e2e\v1r-acceptance.spec.ts:231:1 › OIC-013: item-scoped history deletion cancel, exact selected delete and reload never reconstruct initial/current/Session (1.8s)
+  ok 23 [chromium] › e2e\v1r-acceptance.spec.ts:252:1 › QA-C01 D-01/02: exact upstream name Owner確認候補, preview/cancel/failure/idempotence/read-back/export (2.6s)
+  ok 24 [chromium] › e2e\v1r-acceptance.spec.ts:252:1 › QA-C01 D-01/02: exact upstream name Owner確認候補 (ByAI), preview/cancel/failure/idempotence/read-back/export (1.9s)
+  ok 25 [chromium] › e2e\v1r-acceptance.spec.ts:288:3 › QA-C02 cancellation completion/non-target/reload with none failure (1.6s)
+  ok 26 [chromium] › e2e\v1r-acceptance.spec.ts:288:3 › QA-C02 cancellation completion/non-target/reload with write failure (1.5s)
+  ok 27 [chromium] › e2e\v1r-acceptance.spec.ts:288:3 › QA-C02 cancellation completion/non-target/reload with read-back failure (1.5s)
+  ok 28 [chromium] › e2e\v1r-acceptance.spec.ts:353:1 › D-03/OIC-016: baseline settings/list/edit/custom required label and hide/show preserve IDs (2.0s)
+  ok 29 [chromium] › e2e\v1r-acceptance.spec.ts:380:1 › OIC-011 / PRESERVE: full screen population back/menu, Profile and Analysis original controls including half-year (5.4s)
+  ok 30 [chromium] › e2e\v1r-acceptance.spec.ts:400:3 › Clock local midnight/week/month/year boundary 2026-10-04T23:59:59+09:00 (1.2s)
+  ok 31 [chromium] › e2e\v1r-acceptance.spec.ts:400:3 › Clock local midnight/week/month/year boundary 2026-10-05T00:00:00+09:00 (1.4s)
+  ok 32 [chromium] › e2e\v1r-acceptance.spec.ts:400:3 › Clock local midnight/week/month/year boundary 2026-12-31T23:59:59+09:00 (1.2s)
+  ok 33 [chromium] › e2e\v1r-acceptance.spec.ts:400:3 › Clock local midnight/week/month/year boundary 2027-01-01T00:00:00+09:00 (1.4s)
+  ok 34 [chromium] › e2e\v1r-acceptance.spec.ts:400:3 › Clock local midnight/week/month/year boundary 2026-10-31T23:59:59+09:00 (1.5s)
+  ok 35 [chromium] › e2e\v1r-acceptance.spec.ts:400:3 › Clock local midnight/week/month/year boundary 2026-11-01T00:00:00+09:00 (1.2s)
+  ok 36 [chromium] › e2e\v1r-acceptance.spec.ts:411:1 › OIC-015: all seven week starts warn/cancel, persist exact setting without rewriting historical facts (1.7s)
+  ok 37 [chromium] › e2e\v1r-acceptance.spec.ts:423:1 › canonical write read-back failure prevents stale editing; reload preserves original logical Session pair (1.2s)
+  ok 38 [chromium] › e2e\v1r-acceptance.spec.ts:433:1 › H-09 startup/Restore reject unsupported old canonical without repair, Session drop or legacy fallback (1.5s)
+  ok 39 [chromium] › e2e\v1r-acceptance.spec.ts:451:1 › PRESERVE Profile all fields and standard-setting failure/retry create exactly one event (2.1s)
+  ok 40 [chromium] › e2e\v1r-acceptance.spec.ts:467:1 › D-01 Warning requires acknowledgment and rollback uncertainty blocks edits until reload (1.3s)
+  ok 41 [chromium] › e2e\v1r-acceptance.spec.ts:493:1 › OIC-015 Analysis weekly rebuckets and month/quarter/half/year remain unchanged after week-setting change (3.0s)
+  ok 42 [chromium] › e2e\v1r-acceptance.spec.ts:505:1 › PRESERVE time Exercise → Item setup → Run slots → Extra completion and load snapshot (1.9s)
+  ok 43 [chromium] › e2e\v1r-acceptance.spec.ts:519:1 › PRESERVE list filter/hidden state, Item hide/show, Menu active guard/confirmation and unsaved cancel (2.4s)
+  ok 44 [chromium] › e2e\v1r-final-correction.spec.ts:44:3 › H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-two-entries (4.8s)
+  ok 45 [chromium] › e2e\v1r-final-correction.spec.ts:44:3 › H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-same-entry (4.5s)
+  ok 46 [chromium] › e2e\v1r-final-correction.spec.ts:44:3 › H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: two-items-same-exercise (4.7s)
+  ok 47 [chromium] › e2e\v1r-final-correction.spec.ts:118:3 › H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=0) (2.2s)
+  ok 48 [chromium] › e2e\v1r-final-correction.spec.ts:118:3 › H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=6) (2.1s)
+  ok 49 [chromium] › e2e\v1r-final-correction.spec.ts:150:1 › H06 A6/A7/A8 zero defaults, canonical save blocking and form-local error lifecycle (2.9s)
+
+
+  1) [chromium] › e2e\v1r-acceptance.spec.ts:186:1 › OIC-008/009/010/012: temporary weekday filter, distinct today including Extra, actual-date visibility, two-line execution lists 
+
+    Error: expect(locator).toHaveCount(expected) failed
+
+    Locator:  locator('.item-density')
+    Expected: 0
+    Received: 2
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveCount" locator('.item-density') with timeout 5000ms
+      - waiting for locator('.item-density')
+        14 × locator resolved to 2 elements
+           - unexpected value "2"
+
+
+      200 |   await page.getByRole('checkbox', { name: '月', exact: true }).check()
+      201 |   await page.getByRole('checkbox', { name: '土', exact: true }).uncheck()
+    > 202 |   await expect(rows).toHaveCount(0)
+          |                      ^
+      203 |   await expect(page.getByText('今日の実施総数')).toContainText('1/1')
+      204 |   expect(await readCanonicalState(page)).toEqual(data)
+      205 |   await page.reload()
+        at C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\v1r-correction\e2e\v1r-acceptance.spec.ts:202:22
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\v1r-acceptance-OIC-008-009-3d46a-ty-two-line-execution-lists-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\v1r-acceptance-OIC-008-009-3d46a-ty-two-line-execution-lists-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\v1r-acceptance-OIC-008-009-3d46a-ty-two-line-execution-lists-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\v1r-acceptance-OIC-008-009-3d46a-ty-two-line-execution-lists-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\v1r-acceptance-OIC-008-009-3d46a-ty-two-line-execution-lists-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › e2e\v1r-acceptance.spec.ts:186:1 › OIC-008/009/010/012: temporary weekday filter, distinct today including Extra, actual-date visibility, two-line execution lists 
+  48 passed (2.0m)

@@ -1,0 +1,1511 @@
+[
+  {
+    "case": "H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-two-entries",
+    "stages": [
+      {
+        "created": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "canonical-menu",
+          "profile": {
+            "weight": 66
+          },
+          "exercises": [
+            {
+              "id": "canonical-exercise",
+              "lifecycle": "active",
+              "name": "正規テストプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "canonical-item",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "正規テストプレス",
+              "weight": 20,
+              "reps": 10,
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "canonical-menu",
+              "lifecycle": "active",
+              "name": "正規E2Eメニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "canonical-entry-a",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 0
+            },
+            {
+              "id": "canonical-entry-b",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 1
+            }
+          ],
+          "sessions": [
+            {
+              "id": "normal-B",
+              "trainingItemId": "canonical-item",
+              "menuEntryId": "canonical-entry-b",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 1,
+              "weight": 42,
+              "reps": 8,
+              "sets": 2,
+              "bodyWeight": 66,
+              "seat": "seat-normal-B",
+              "memo": "memo-normal-B",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "normal-A",
+              "trainingItemId": "canonical-item",
+              "menuEntryId": "canonical-entry-a",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 0,
+              "weight": 31,
+              "reps": 7,
+              "sets": 1,
+              "bodyWeight": 66,
+              "seat": "seat-normal-A",
+              "memo": "memo-normal-A",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "022dedf5-7c42-4e0a-83c9-ad08b0cb3d8c",
+              "trainingItemId": "canonical-item",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 2,
+              "weight": 21,
+              "reps": 10,
+              "sets": 3,
+              "bodyWeight": 66,
+              "seat": "seat-C",
+              "memo": "memo-C",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            }
+          ],
+          "trainingItemSettingChanges": [
+            {
+              "id": "canonical-change",
+              "trainingItemId": "canonical-item",
+              "changedAt": "2026-09-21T10:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 10,
+                "sets": 3
+              }
+            }
+          ]
+        }
+      },
+      {
+        "cancelledId": "normal-B",
+        "canonical": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "canonical-menu",
+          "profile": {
+            "weight": 66
+          },
+          "exercises": [
+            {
+              "id": "canonical-exercise",
+              "lifecycle": "active",
+              "name": "正規テストプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "canonical-item",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "正規テストプレス",
+              "weight": 20,
+              "reps": 10,
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "canonical-menu",
+              "lifecycle": "active",
+              "name": "正規E2Eメニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "canonical-entry-a",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 0
+            },
+            {
+              "id": "canonical-entry-b",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 1
+            }
+          ],
+          "sessions": [
+            {
+              "id": "normal-A",
+              "trainingItemId": "canonical-item",
+              "menuEntryId": "canonical-entry-a",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 0,
+              "weight": 31,
+              "reps": 7,
+              "sets": 1,
+              "bodyWeight": 66,
+              "seat": "seat-normal-A",
+              "memo": "memo-normal-A",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "022dedf5-7c42-4e0a-83c9-ad08b0cb3d8c",
+              "trainingItemId": "canonical-item",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 2,
+              "weight": 21,
+              "reps": 10,
+              "sets": 3,
+              "bodyWeight": 66,
+              "seat": "seat-C",
+              "memo": "memo-C",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            }
+          ],
+          "trainingItemSettingChanges": [
+            {
+              "id": "canonical-change",
+              "trainingItemId": "canonical-item",
+              "changedAt": "2026-09-21T10:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 10,
+                "sets": 3
+              }
+            }
+          ]
+        },
+        "markers": [
+          "○｜○○○○○○○｜○○○○○●",
+          "○｜○○○○○○○｜○○○○○●",
+          "○｜○○○○○○○｜○○○○○●"
+        ]
+      },
+      {
+        "cancelledId": "normal-A",
+        "canonical": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "canonical-menu",
+          "profile": {
+            "weight": 66
+          },
+          "exercises": [
+            {
+              "id": "canonical-exercise",
+              "lifecycle": "active",
+              "name": "正規テストプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "canonical-item",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "正規テストプレス",
+              "weight": 20,
+              "reps": 10,
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "canonical-menu",
+              "lifecycle": "active",
+              "name": "正規E2Eメニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "canonical-entry-a",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 0
+            },
+            {
+              "id": "canonical-entry-b",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 1
+            }
+          ],
+          "sessions": [
+            {
+              "id": "022dedf5-7c42-4e0a-83c9-ad08b0cb3d8c",
+              "trainingItemId": "canonical-item",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 2,
+              "weight": 21,
+              "reps": 10,
+              "sets": 3,
+              "bodyWeight": 66,
+              "seat": "seat-C",
+              "memo": "memo-C",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            }
+          ],
+          "trainingItemSettingChanges": [
+            {
+              "id": "canonical-change",
+              "trainingItemId": "canonical-item",
+              "changedAt": "2026-09-21T10:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 10,
+                "sets": 3
+              }
+            }
+          ]
+        },
+        "markers": [
+          "○｜○○○○○○○｜○○○○○●",
+          "○｜○○○○○○○｜○○○○○●",
+          "○｜○○○○○○○｜○○○○○●"
+        ]
+      },
+      {
+        "cancelledId": "022dedf5-7c42-4e0a-83c9-ad08b0cb3d8c",
+        "canonical": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "canonical-menu",
+          "profile": {
+            "weight": 66
+          },
+          "exercises": [
+            {
+              "id": "canonical-exercise",
+              "lifecycle": "active",
+              "name": "正規テストプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "canonical-item",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "正規テストプレス",
+              "weight": 20,
+              "reps": 10,
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "canonical-menu",
+              "lifecycle": "active",
+              "name": "正規E2Eメニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "canonical-entry-a",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 0
+            },
+            {
+              "id": "canonical-entry-b",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 1
+            }
+          ],
+          "sessions": [],
+          "trainingItemSettingChanges": [
+            {
+              "id": "canonical-change",
+              "trainingItemId": "canonical-item",
+              "changedAt": "2026-09-21T10:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 10,
+                "sets": 3
+              }
+            }
+          ]
+        },
+        "markers": [
+          "○｜○○○○○○○｜○○○○○○",
+          "○｜○○○○○○○｜○○○○○○"
+        ]
+      }
+    ]
+  },
+  {
+    "case": "H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-same-entry",
+    "stages": [
+      {
+        "created": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "canonical-menu",
+          "profile": {
+            "weight": 66
+          },
+          "exercises": [
+            {
+              "id": "canonical-exercise",
+              "lifecycle": "active",
+              "name": "正規テストプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "canonical-item",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "正規テストプレス",
+              "weight": 20,
+              "reps": 10,
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "canonical-menu",
+              "lifecycle": "active",
+              "name": "正規E2Eメニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "canonical-entry-a",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 0
+            }
+          ],
+          "sessions": [
+            {
+              "id": "normal-B",
+              "trainingItemId": "canonical-item",
+              "menuEntryId": "canonical-entry-a",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 1,
+              "weight": 42,
+              "reps": 8,
+              "sets": 2,
+              "bodyWeight": 66,
+              "seat": "seat-normal-B",
+              "memo": "memo-normal-B",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "normal-A",
+              "trainingItemId": "canonical-item",
+              "menuEntryId": "canonical-entry-a",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 0,
+              "weight": 31,
+              "reps": 7,
+              "sets": 1,
+              "bodyWeight": 66,
+              "seat": "seat-normal-A",
+              "memo": "memo-normal-A",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "4908ae99-e5ae-4518-9f1c-e092acc19164",
+              "trainingItemId": "canonical-item",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 2,
+              "weight": 21,
+              "reps": 10,
+              "sets": 3,
+              "bodyWeight": 66,
+              "seat": "seat-C",
+              "memo": "memo-C",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            }
+          ],
+          "trainingItemSettingChanges": [
+            {
+              "id": "canonical-change",
+              "trainingItemId": "canonical-item",
+              "changedAt": "2026-09-21T10:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 10,
+                "sets": 3
+              }
+            }
+          ]
+        }
+      },
+      {
+        "cancelledId": "normal-B",
+        "canonical": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "canonical-menu",
+          "profile": {
+            "weight": 66
+          },
+          "exercises": [
+            {
+              "id": "canonical-exercise",
+              "lifecycle": "active",
+              "name": "正規テストプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "canonical-item",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "正規テストプレス",
+              "weight": 20,
+              "reps": 10,
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "canonical-menu",
+              "lifecycle": "active",
+              "name": "正規E2Eメニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "canonical-entry-a",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 0
+            }
+          ],
+          "sessions": [
+            {
+              "id": "normal-A",
+              "trainingItemId": "canonical-item",
+              "menuEntryId": "canonical-entry-a",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 0,
+              "weight": 31,
+              "reps": 7,
+              "sets": 1,
+              "bodyWeight": 66,
+              "seat": "seat-normal-A",
+              "memo": "memo-normal-A",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "4908ae99-e5ae-4518-9f1c-e092acc19164",
+              "trainingItemId": "canonical-item",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 2,
+              "weight": 21,
+              "reps": 10,
+              "sets": 3,
+              "bodyWeight": 66,
+              "seat": "seat-C",
+              "memo": "memo-C",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            }
+          ],
+          "trainingItemSettingChanges": [
+            {
+              "id": "canonical-change",
+              "trainingItemId": "canonical-item",
+              "changedAt": "2026-09-21T10:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 10,
+                "sets": 3
+              }
+            }
+          ]
+        },
+        "markers": [
+          "○｜○○○○○○○｜○○○○○●",
+          "○｜○○○○○○○｜○○○○○●"
+        ]
+      },
+      {
+        "cancelledId": "normal-A",
+        "canonical": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "canonical-menu",
+          "profile": {
+            "weight": 66
+          },
+          "exercises": [
+            {
+              "id": "canonical-exercise",
+              "lifecycle": "active",
+              "name": "正規テストプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "canonical-item",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "正規テストプレス",
+              "weight": 20,
+              "reps": 10,
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "canonical-menu",
+              "lifecycle": "active",
+              "name": "正規E2Eメニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "canonical-entry-a",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 0
+            }
+          ],
+          "sessions": [
+            {
+              "id": "4908ae99-e5ae-4518-9f1c-e092acc19164",
+              "trainingItemId": "canonical-item",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 2,
+              "weight": 21,
+              "reps": 10,
+              "sets": 3,
+              "bodyWeight": 66,
+              "seat": "seat-C",
+              "memo": "memo-C",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            }
+          ],
+          "trainingItemSettingChanges": [
+            {
+              "id": "canonical-change",
+              "trainingItemId": "canonical-item",
+              "changedAt": "2026-09-21T10:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 10,
+                "sets": 3
+              }
+            }
+          ]
+        },
+        "markers": [
+          "○｜○○○○○○○｜○○○○○●",
+          "○｜○○○○○○○｜○○○○○●"
+        ]
+      },
+      {
+        "cancelledId": "4908ae99-e5ae-4518-9f1c-e092acc19164",
+        "canonical": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "canonical-menu",
+          "profile": {
+            "weight": 66
+          },
+          "exercises": [
+            {
+              "id": "canonical-exercise",
+              "lifecycle": "active",
+              "name": "正規テストプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "canonical-item",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "正規テストプレス",
+              "weight": 20,
+              "reps": 10,
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "canonical-menu",
+              "lifecycle": "active",
+              "name": "正規E2Eメニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "canonical-entry-a",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 0
+            }
+          ],
+          "sessions": [],
+          "trainingItemSettingChanges": [
+            {
+              "id": "canonical-change",
+              "trainingItemId": "canonical-item",
+              "changedAt": "2026-09-21T10:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 10,
+                "sets": 3
+              }
+            }
+          ]
+        },
+        "markers": [
+          "○｜○○○○○○○｜○○○○○○"
+        ]
+      }
+    ]
+  },
+  {
+    "case": "H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: two-items-same-exercise",
+    "stages": [
+      {
+        "created": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "canonical-menu",
+          "profile": {
+            "weight": 66
+          },
+          "exercises": [
+            {
+              "id": "canonical-exercise",
+              "lifecycle": "active",
+              "name": "正規テストプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "canonical-item",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "正規テストプレス",
+              "weight": 20,
+              "reps": 10,
+              "sets": 3
+            },
+            {
+              "id": "item-b",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "別設定プレス",
+              "weight": 20,
+              "reps": 15,
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "canonical-menu",
+              "lifecycle": "active",
+              "name": "正規E2Eメニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "canonical-entry-a",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 0
+            },
+            {
+              "id": "canonical-entry-b",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "item-b",
+              "recommendedDay": 5,
+              "order": 1
+            }
+          ],
+          "sessions": [
+            {
+              "id": "normal-B",
+              "trainingItemId": "item-b",
+              "menuEntryId": "canonical-entry-b",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 1,
+              "weight": 42,
+              "reps": 8,
+              "sets": 2,
+              "bodyWeight": 66,
+              "seat": "seat-normal-B",
+              "memo": "memo-normal-B",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "別設定プレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "normal-A",
+              "trainingItemId": "canonical-item",
+              "menuEntryId": "canonical-entry-a",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 0,
+              "weight": 31,
+              "reps": 7,
+              "sets": 1,
+              "bodyWeight": 66,
+              "seat": "seat-normal-A",
+              "memo": "memo-normal-A",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "e0377e06-fe36-49f9-bf98-2d01952a9acf",
+              "trainingItemId": "canonical-item",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 2,
+              "weight": 21,
+              "reps": 10,
+              "sets": 3,
+              "bodyWeight": 66,
+              "seat": "seat-C",
+              "memo": "memo-C",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            }
+          ],
+          "trainingItemSettingChanges": [
+            {
+              "id": "canonical-change",
+              "trainingItemId": "canonical-item",
+              "changedAt": "2026-09-21T10:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 10,
+                "sets": 3
+              }
+            },
+            {
+              "id": "change-b",
+              "trainingItemId": "item-b",
+              "changedAt": "2026-10-01T00:00:00Z",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 15,
+                "sets": 3
+              }
+            }
+          ]
+        }
+      },
+      {
+        "cancelledId": "normal-B",
+        "canonical": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "canonical-menu",
+          "profile": {
+            "weight": 66
+          },
+          "exercises": [
+            {
+              "id": "canonical-exercise",
+              "lifecycle": "active",
+              "name": "正規テストプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "canonical-item",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "正規テストプレス",
+              "weight": 20,
+              "reps": 10,
+              "sets": 3
+            },
+            {
+              "id": "item-b",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "別設定プレス",
+              "weight": 20,
+              "reps": 15,
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "canonical-menu",
+              "lifecycle": "active",
+              "name": "正規E2Eメニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "canonical-entry-a",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 0
+            },
+            {
+              "id": "canonical-entry-b",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "item-b",
+              "recommendedDay": 5,
+              "order": 1
+            }
+          ],
+          "sessions": [
+            {
+              "id": "normal-A",
+              "trainingItemId": "canonical-item",
+              "menuEntryId": "canonical-entry-a",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 0,
+              "weight": 31,
+              "reps": 7,
+              "sets": 1,
+              "bodyWeight": 66,
+              "seat": "seat-normal-A",
+              "memo": "memo-normal-A",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "e0377e06-fe36-49f9-bf98-2d01952a9acf",
+              "trainingItemId": "canonical-item",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 2,
+              "weight": 21,
+              "reps": 10,
+              "sets": 3,
+              "bodyWeight": 66,
+              "seat": "seat-C",
+              "memo": "memo-C",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            }
+          ],
+          "trainingItemSettingChanges": [
+            {
+              "id": "canonical-change",
+              "trainingItemId": "canonical-item",
+              "changedAt": "2026-09-21T10:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 10,
+                "sets": 3
+              }
+            },
+            {
+              "id": "change-b",
+              "trainingItemId": "item-b",
+              "changedAt": "2026-10-01T00:00:00Z",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 15,
+                "sets": 3
+              }
+            }
+          ]
+        },
+        "markers": [
+          "○｜○○○○○○○｜○○○○○●",
+          "○｜○○○○○○○｜○○○○○●",
+          "○｜○○○○○○○｜○○○○○●"
+        ]
+      },
+      {
+        "cancelledId": "normal-A",
+        "canonical": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "canonical-menu",
+          "profile": {
+            "weight": 66
+          },
+          "exercises": [
+            {
+              "id": "canonical-exercise",
+              "lifecycle": "active",
+              "name": "正規テストプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "canonical-item",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "正規テストプレス",
+              "weight": 20,
+              "reps": 10,
+              "sets": 3
+            },
+            {
+              "id": "item-b",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "別設定プレス",
+              "weight": 20,
+              "reps": 15,
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "canonical-menu",
+              "lifecycle": "active",
+              "name": "正規E2Eメニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "canonical-entry-a",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 0
+            },
+            {
+              "id": "canonical-entry-b",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "item-b",
+              "recommendedDay": 5,
+              "order": 1
+            }
+          ],
+          "sessions": [
+            {
+              "id": "e0377e06-fe36-49f9-bf98-2d01952a9acf",
+              "trainingItemId": "canonical-item",
+              "date": "2026-10-03",
+              "performedAt": "2026-10-03T03:00:00.000Z",
+              "performedOrder": 2,
+              "weight": 21,
+              "reps": 10,
+              "sets": 3,
+              "bodyWeight": 66,
+              "seat": "seat-C",
+              "memo": "memo-C",
+              "snapshot": {
+                "exerciseId": "canonical-exercise",
+                "exerciseName": "正規テストプレス",
+                "trainingItemDisplayName": "正規テストプレス",
+                "measureType": "reps",
+                "weightMode": "total",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "胸"
+                  }
+                ]
+              }
+            }
+          ],
+          "trainingItemSettingChanges": [
+            {
+              "id": "canonical-change",
+              "trainingItemId": "canonical-item",
+              "changedAt": "2026-09-21T10:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 10,
+                "sets": 3
+              }
+            },
+            {
+              "id": "change-b",
+              "trainingItemId": "item-b",
+              "changedAt": "2026-10-01T00:00:00Z",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 15,
+                "sets": 3
+              }
+            }
+          ]
+        },
+        "markers": [
+          "○｜○○○○○○○｜○○○○○●",
+          "○｜○○○○○○○｜○○○○○●",
+          "○｜○○○○○○○｜○○○○○●"
+        ]
+      },
+      {
+        "cancelledId": "e0377e06-fe36-49f9-bf98-2d01952a9acf",
+        "canonical": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "canonical-menu",
+          "profile": {
+            "weight": 66
+          },
+          "exercises": [
+            {
+              "id": "canonical-exercise",
+              "lifecycle": "active",
+              "name": "正規テストプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "canonical-item",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "正規テストプレス",
+              "weight": 20,
+              "reps": 10,
+              "sets": 3
+            },
+            {
+              "id": "item-b",
+              "lifecycle": "active",
+              "exerciseId": "canonical-exercise",
+              "displayName": "別設定プレス",
+              "weight": 20,
+              "reps": 15,
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "canonical-menu",
+              "lifecycle": "active",
+              "name": "正規E2Eメニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "canonical-entry-a",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "canonical-item",
+              "recommendedDay": 5,
+              "order": 0
+            },
+            {
+              "id": "canonical-entry-b",
+              "lifecycle": "active",
+              "menuId": "canonical-menu",
+              "trainingItemId": "item-b",
+              "recommendedDay": 5,
+              "order": 1
+            }
+          ],
+          "sessions": [],
+          "trainingItemSettingChanges": [
+            {
+              "id": "canonical-change",
+              "trainingItemId": "canonical-item",
+              "changedAt": "2026-09-21T10:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 10,
+                "sets": 3
+              }
+            },
+            {
+              "id": "change-b",
+              "trainingItemId": "item-b",
+              "changedAt": "2026-10-01T00:00:00Z",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 20,
+                "reps": 15,
+                "sets": 3
+              }
+            }
+          ]
+        },
+        "markers": [
+          "○｜○○○○○○○｜○○○○○○",
+          "○｜○○○○○○○｜○○○○○○"
+        ]
+      }
+    ]
+  }
+]

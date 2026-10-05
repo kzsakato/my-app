@@ -1,0 +1,558 @@
+{
+  "stats": {
+    "startTime": "2026-10-05T11:31:44.052Z",
+    "duration": 123209.57699999999,
+    "expected": 42,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "cases": [
+    {
+      "file": "grouped-baseline.spec.ts",
+      "line": 18,
+      "title": "H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/history/standard/complete/cancel/reload",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 8195
+        }
+      ]
+    },
+    {
+      "file": "grouped-baseline.spec.ts",
+      "line": 129,
+      "title": "H12 canonical backup preview, invalid non-destructive restore, full replacement/read-back/reload",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 5570
+        }
+      ]
+    },
+    {
+      "file": "grouped-baseline.spec.ts",
+      "line": 180,
+      "title": "H12 restore read-back failure blocks stale editing and never declares success or falls back",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2530
+        }
+      ]
+    },
+    {
+      "file": "grouped-baseline.spec.ts",
+      "line": 208,
+      "title": "H12 Settings retains Trainer interfaces and hides MAN helpers in release",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1565
+        }
+      ]
+    },
+    {
+      "file": "grouped-baseline.spec.ts",
+      "line": 222,
+      "title": "H13 Top displays 260 average and 2.50 ACWR from canonical snapshots, not current Master",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2068
+        }
+      ]
+    },
+    {
+      "file": "grouped-baseline.spec.ts",
+      "line": 244,
+      "title": "H12 Run history is item-scoped and completed status resets at the configured week boundary",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2459
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 41,
+      "title": "H-03 focused 1 same-day multiple Sessions retain marker until last cancellation",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 5736
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 41,
+      "title": "H-03 focused 2 single Session cancellation clears its date marker",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 3872
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 41,
+      "title": "H-03 focused 3 past-first consecutive cancellations change only the target date",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 6490
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 74,
+      "title": "H-03 focused 4/5 + H06 A5: UI Extra completion has own actual and visible completed Exercise",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2909
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 134,
+      "title": "OIC-003/006/007 + H06 A5: Session-only seat, controls, persist failure/retry/reload preserve identity",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2198
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 170,
+      "title": "OIC-006: same Clock completions allocate distinct order and shuffled offset-equivalent actuals select correctly",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1533
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 186,
+      "title": "OIC-008/009/010/012: temporary weekday filter, distinct today including Extra, actual-date visibility, two-line execution lists",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2408
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 216,
+      "title": "OIC-002: Menu add/remove confirmations and unsaved back have zero canonical writes",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 3072
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 237,
+      "title": "OIC-013: item-scoped history deletion cancel, exact selected delete and reload never reconstruct initial/current/Session",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2241
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 258,
+      "title": "QA-C01 D-01/02: exact upstream name Owner確認候補, preview/cancel/failure/idempotence/read-back/export",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2755
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 258,
+      "title": "QA-C01 D-01/02: exact upstream name Owner確認候補 (ByAI), preview/cancel/failure/idempotence/read-back/export",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2517
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 294,
+      "title": "QA-C02 cancellation completion/non-target/reload with none failure",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2582
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 294,
+      "title": "QA-C02 cancellation completion/non-target/reload with write failure",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2092
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 294,
+      "title": "QA-C02 cancellation completion/non-target/reload with read-back failure",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1950
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 359,
+      "title": "D-03/OIC-016: baseline settings/list/edit/custom required label and hide/show preserve IDs",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2980
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 386,
+      "title": "OIC-011 / PRESERVE: full screen population back/menu, Profile and Analysis original controls including half-year",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 7743
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 406,
+      "title": "Clock local midnight/week/month/year boundary 2026-10-04T23:59:59+09:00",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1214
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 406,
+      "title": "Clock local midnight/week/month/year boundary 2026-10-05T00:00:00+09:00",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1113
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 406,
+      "title": "Clock local midnight/week/month/year boundary 2026-12-31T23:59:59+09:00",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1401
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 406,
+      "title": "Clock local midnight/week/month/year boundary 2027-01-01T00:00:00+09:00",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1179
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 406,
+      "title": "Clock local midnight/week/month/year boundary 2026-10-31T23:59:59+09:00",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1021
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 406,
+      "title": "Clock local midnight/week/month/year boundary 2026-11-01T00:00:00+09:00",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1269
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 417,
+      "title": "OIC-015: all seven week starts warn/cancel, persist exact setting without rewriting historical facts",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1928
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 429,
+      "title": "canonical write read-back failure prevents stale editing; reload preserves original logical Session pair",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1171
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 439,
+      "title": "H-09 startup/Restore reject unsupported old canonical without repair, Session drop or legacy fallback",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1513
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 457,
+      "title": "PRESERVE Profile all fields and standard-setting failure/retry create exactly one event",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2236
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 473,
+      "title": "D-01 Warning requires acknowledgment and rollback uncertainty blocks edits until reload",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1654
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 499,
+      "title": "OIC-015 Analysis weekly rebuckets and month/quarter/half/year remain unchanged after week-setting change",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 4142
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 511,
+      "title": "PRESERVE time Exercise → Item setup → Run slots → Extra completion and load snapshot",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2382
+        }
+      ]
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "line": 525,
+      "title": "PRESERVE list filter/hidden state, Item hide/show, Menu active guard/confirmation and unsaved cancel",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2293
+        }
+      ]
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "line": 44,
+      "title": "H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-two-entries",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 3760
+        }
+      ]
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "line": 44,
+      "title": "H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-same-entry",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 3735
+        }
+      ]
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "line": 44,
+      "title": "H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: two-items-same-exercise",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 3890
+        }
+      ]
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "line": 118,
+      "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=0)",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1683
+        }
+      ]
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "line": 118,
+      "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=6)",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 1796
+        }
+      ]
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "line": 150,
+      "title": "H06 A6/A7/A8 zero defaults, canonical save blocking and form-local error lifecycle",
+      "status": "expected",
+      "results": [
+        {
+          "status": "passed",
+          "retry": 0,
+          "durationMs": 2305
+        }
+      ]
+    }
+  ]
+}
