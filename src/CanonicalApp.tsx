@@ -1,6 +1,8 @@
 import { compareInstants } from "./canonical/instant";
 import { useMemo, useRef, useState } from "react";
-import { currentWeekSessions, latestRunSession, previousExerciseSession, sessionOrder, shiftLocalDate, weeklyLoadSummary } from "./canonical/baseline";
+import { currentWeekSessions, sessionOrder, shiftLocalDate, weeklyLoadSummary } from "./canonical/baseline";
+import { cancelSession } from "./canonical/cancelSession";
+import { itemValidationMessages } from "./itemValidation";
 import { applyCanonicalRestore, createCanonicalBackup, previewCanonicalRestore, type BackupPreview } from "./canonical/backup";
 import { canonicalStorage } from "./data";
 import { buildIdentifier } from "./buildInfo";
@@ -236,6 +238,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
     if (entry && item && exercise)
       return (
         <RunPage
+          key={`entry:${entry.id}`}
           data={data}
           entry={entry}
           item={item}
@@ -253,16 +256,20 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
     );
   }
   if (page === "extra" && extraItemId) {
+    const selectedSession = data.sessions.find(session => session.id === viewSessionId);
+    if (viewSessionId && !selectedSession) return <Frame title="実施記録がありません" back={toTop} {...header}><p>選択した実施記録は取り消されています。</p></Frame>;
     const item = data.trainingItems.find((value) => value.id === extraItemId);
     const exercise = item && exerciseFor(item);
     if (item && exercise)
       return (
         <RunPage
+          key={viewSessionId ? `session:${viewSessionId}` : `extra:${item.id}`}
           data={data}
+          entry={selectedSession?.menuEntryId ? data.menuEntries.find(entry => entry.id === selectedSession.menuEntryId) : undefined}
           item={item}
           exercise={exercise}
-          completedSession={data.sessions.find(session => session.id === viewSessionId)}
-          onBack={toTop}
+          completedSession={selectedSession}
+          onBack={() => selectedSession && selectedRegion ? setPage("cat") : toTop()}
           onComplete={finish}
           commit={commit}
           {...header}
@@ -422,7 +429,7 @@ function TopPage({
   const today = localDate();
   const currentDay = dayOf(today);
   const start = weekStart(today, data.weekStartsOn);
-  const selectedDays = preferences.days;
+  const selectedDays = [...preferences.days].sort((left, right) => left - right);
   const topMode = preferences.mode;
   const [categoryShowCompleted, setCategoryShowCompleted] = useState(false);
   const showCompleted = region ? categoryShowCompleted : preferences.showCompleted;
@@ -431,7 +438,10 @@ function TopPage({
   const weekSessions = currentWeekSessions(data, today).sort(sessionOrder);
   entries.forEach(entry => {
     const exerciseId = data.trainingItems.find(item => item.id === entry.trainingItemId)?.exerciseId;
-    const session = weekSessions.find(row => row.snapshot.exerciseId === exerciseId);
+    // Completion is Exercise-scoped, but a row binds its actual's ID here.
+    // Prefer its own membership before the Exercise completion representative.
+    const session = weekSessions.find(row => row.menuEntryId === entry.id && row.snapshot.exerciseId === exerciseId)
+      ?? weekSessions.find(row => row.snapshot.exerciseId === exerciseId);
     if (session) latestByEntry.set(entry.id, session);
   });
   const todayEntries = entries.filter(entry => entry.recommendedDay === currentDay);
@@ -485,7 +495,8 @@ function TopPage({
       <button
         className="row item item-density"
         key={entry.id}
-        onClick={() => onRun(entry.id)}
+        data-session-id={session?.id}
+        onClick={() => session ? onActual(session) : onRun(entry.id)}
       >
         <span>
           <b>{item.displayName || exercise.name}</b>
@@ -599,7 +610,7 @@ function TopPage({
               ) : (
                 recommendedEntries.map(renderEntry)
               )}
-              {preferences.showCompleted && weekSessions.filter(session => selectedDays.includes(dayOf(session.date)) && (!session.menuEntryId || !recommendedEntries.some(entry => latestByEntry.get(entry.id)?.id === session.id))).map(session => <button className="row item item-density" key={session.id} onClick={() => onActual(session)}><span><b>{session.snapshot.trainingItemDisplayName}</b><span className="item-detail-line"><small>{session.menuEntryId ? "実施記録" : "追加実施"}　{session.date}</small><small className="item-history">{exerciseHistory(data.sessions, session.snapshot.exerciseId, new Date(), data.weekStartsOn)}</small></span></span><span>✓ 実施済</span></button>)}
+              {preferences.showCompleted && weekSessions.filter(session => !session.menuEntryId || !recommendedEntries.some(entry => latestByEntry.get(entry.id)?.id === session.id)).map(session => <button className="row item item-density" data-session-id={session.id} key={session.id} onClick={() => onActual(session)}><span><b>{session.snapshot.trainingItemDisplayName}</b><span className="item-detail-line"><small>{session.menuEntryId ? "実施記録" : "追加実施"}　{session.date}</small><small className="item-history">{exerciseHistory(data.sessions, session.snapshot.exerciseId, new Date(), data.weekStartsOn)}</small></span></span><span>✓ 実施済</span></button>)}
             </>
           )}
         </>
@@ -639,20 +650,18 @@ function RunPage({
   onTop: () => void;
   onSettings: () => void;
 }) {
-  const latest = completedSession ?? latestRunSession(data, localDate(), item.id, entry?.id);
-  const done = !!completedSession || (!!entry && !!latest);
+  const latest = completedSession;
+  const done = !!completedSession;
   const [weight, setWeight] = useState(done ? latest!.weight ?? 0 : item.weight ?? 0);
   const [reps, setReps] = useState(done ? latest!.reps ?? 0 : item.reps ?? 0);
   const [seconds, setSeconds] = useState(done ? latest!.seconds ?? 0 : item.seconds ?? 0);
   const [sets, setSets] = useState(done ? latest!.sets : item.sets);
   const [seat, setSeat] = useState(done ? latest!.seat ?? "" : item.seat ?? "");
   const [memo, setMemo] = useState(done ? latest!.memo ?? "" : "");
-  const [changeReason, setChangeReason] = useState("");
   const [historyOpen, setHistoryOpen] = useState(false);
   const [message, setMessage] = useState("");
   const busy = useRef(false);
   const [pending, setPending] = useState(false);
-  const previous = done ? latest : previousExerciseSession(data, exercise.id);
   const pendingSession = useRef<Session | undefined>(undefined);
   const runAction = async (action: () => Promise<void>) => {
     if (busy.current) return;
@@ -663,13 +672,13 @@ function RunPage({
   const saveStandard = () => runAction(async () => {
     if (!confirm("この設定を標準設定として登録しますか？当回メモは標準設定へ保存しません。")) return;
     const updated = { ...item, weight: exercise.usesWeight ? weight : undefined, reps: exercise.measureType === "reps" ? reps : undefined, seconds: exercise.measureType === "time" ? seconds : undefined, sets, seat: seat || undefined };
-    if (await commit(updateTrainingItem(data, updated, { newId: uid, now: () => new Date().toISOString(), changeReason }))) {
-      setChangeReason(""); setMessage("標準設定を保存しました。");
+    if (await commit(updateTrainingItem(data, updated, { newId: uid, now: () => new Date().toISOString() }))) {
+      setMessage("標準設定を保存しました。");
     } else setMessage("標準設定を保存できません。入力値を確認してください。");
   });
   const cancel = () => runAction(async () => {
     if (!latest || !confirm(`${latest.date}の実行を取り消しますか？`)) return;
-    if (await commit({ ...data, sessions: data.sessions.filter(session => session.id !== latest.id) })) onBack();
+    if (await commit(cancelSession(data, latest.id))) onBack();
     else setMessage("実行を取り消せませんでした。");
   });
   const adjustWeight = (delta: number) =>
@@ -725,10 +734,10 @@ function RunPage({
           : "追加トレーニング"}
       </p>
       {done && <p className="week">今週実施済み（{latest!.date}）</p>}
-      <section className="card" aria-label={done ? "当該実績" : "前回実績"}>
-        <h2>{done ? "当該実績" : "前回実績"}</h2>
-        <p>{previous ? `${previous.date}　${sessionDetail(previous)}` : "実施記録はありません。"}</p>
-      </section>
+      {latest && <section className="card" aria-label="当該実績">
+        <h2>当該実績</h2>
+        <p>{`${latest.date}　${sessionDetail(latest)}`}</p>
+      </section>}
       {message && <p role="status">{message}</p>}
       {exercise.usesWeight && (
         <section className="run-weight">
@@ -783,7 +792,6 @@ function RunPage({
       <button className="primary" disabled={pending} onClick={complete}>
         {done ? "戻る" : "種目を完了"}
       </button>
-      <label>変更理由（任意）<input value={changeReason} onChange={event => setChangeReason(event.target.value)} /></label>
       <button className="save-setting" disabled={pending} onClick={saveStandard}>この設定を登録</button>
       {latest && <button className="save-setting danger" disabled={pending} onClick={cancel}>{Number(latest.date.slice(5, 7))}/{Number(latest.date.slice(8))}の実行を取り消す</button>}
     </Frame>
@@ -1443,9 +1451,12 @@ function ItemEditor({
     displayName: presetExercise?.name ?? "",
     weight: 0,
     reps: 0,
-    sets: 3,
+    seconds: 0,
+    sets: 0,
   });
-  const [form, setForm] = useState<TrainingItem>(() => clone(data.trainingItems.find(item => item.id === itemId) ?? initial()));
+  const [form, setFormState] = useState<TrainingItem>(() => clone(data.trainingItems.find(item => item.id === itemId) ?? initial()));
+  const [errors, setErrors] = useState<string[]>([]);
+  const setForm = (next: TrainingItem) => { setFormState(next); setErrors([]); };
   const [changeReason, setChangeReason] = useState("");
   const selected = exercises.find((value) => value.id === form.exerciseId);
   const exists = data.trainingItems.some((value) => value.id === form.id);
@@ -1455,9 +1466,9 @@ function ItemEditor({
       ...form,
       displayName: form.displayName.trim(),
       weight: selected.usesWeight ? (form.weight ?? 0) : undefined,
-      reps: selected.measureType === "reps" ? (form.reps ?? 1) : undefined,
+      reps: selected.measureType === "reps" ? (form.reps ?? 0) : undefined,
       seconds:
-        selected.measureType === "time" ? (form.seconds ?? 1) : undefined,
+        selected.measureType === "time" ? (form.seconds ?? 0) : undefined,
       sets: form.sets,
     };
     const next = exists
@@ -1470,6 +1481,12 @@ function ItemEditor({
           newId: uid,
           now: () => new Date().toISOString(),
         });
+    const validation = validateCanonical(next);
+    if (validation.errors.length) {
+      setErrors(itemValidationMessages(validation.errors));
+      return;
+    }
+    setErrors([]);
     if (await commit(next)) {
       onSaved();
     }
@@ -1481,6 +1498,7 @@ function ItemEditor({
         <p className="week">先に種目を登録してください。</p>
       ) : (
         <>
+          {errors.length > 0 && <div role="alert">{errors.map(error => <p key={error}>{error}</p>)}</div>}
           <label>
             表示名
             <input
@@ -1506,11 +1524,11 @@ function ItemEditor({
                   displayName: form.displayName || exercise?.name || "",
                   reps:
                     exercise?.measureType === "reps"
-                      ? (form.reps ?? 1)
+                      ? (form.reps ?? 0)
                       : undefined,
                   seconds:
                     exercise?.measureType === "time"
-                      ? (form.seconds ?? 1)
+                      ? (form.seconds ?? 0)
                       : undefined,
                   weight: exercise?.usesWeight ? (form.weight ?? 0) : undefined,
                 });
@@ -1543,7 +1561,7 @@ function ItemEditor({
               <input
                 type="number"
                 min="1"
-                value={form.reps ?? 1}
+                value={form.reps ?? 0}
                 onChange={(event) =>
                   setForm({ ...form, reps: Number(event.target.value) })
                 }
@@ -1555,7 +1573,7 @@ function ItemEditor({
               <input
                 type="number"
                 min="1"
-                value={form.seconds ?? 1}
+                value={form.seconds ?? 0}
                 onChange={(event) =>
                   setForm({ ...form, seconds: Number(event.target.value) })
                 }

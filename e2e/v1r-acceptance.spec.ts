@@ -71,7 +71,7 @@ for (const scenario of [
   })
 }
 
-test('H-03 focused 4/5 UI Extra completion becomes next Run previous actual and visible completed Exercise', async ({ page }, info) => {
+test('H-03 focused 4/5 + H06 A5: UI Extra completion has own actual and visible completed Exercise', async ({ page }, info) => {
   await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
   const previous = session('previous-before-extra', '2026-09-26', 0, 27)
   const data = { ...canonicalData(), sessions: [previous] }
@@ -82,7 +82,7 @@ test('H-03 focused 4/5 UI Extra completion becomes next Run previous actual and 
   await top(page)
   await page.getByRole('button', { name: '＋ 追加トレーニングを登録' }).click()
   await page.getByRole('button', { name: /正規テストプレス/ }).click()
-  await expect(page.getByRole('region', { name: '前回実績' })).toContainText('27 kg × 8 回')
+  await expect(page.getByRole('region', { name: '前回実績' })).toHaveCount(0)
   await page.getByRole('button', { name: '重量を1kg増やす' }).click()
   await page.getByRole('button', { name: '回数を増やす' }).click()
   await page.getByLabel('シート位置').fill('H03-extra-seat')
@@ -112,11 +112,18 @@ test('H-03 focused 4/5 UI Extra completion becomes next Run previous actual and 
   await top(page)
   await page.getByRole('button', { name: '＋ 追加トレーニングを登録' }).click()
   await page.getByRole('button', { name: /正規テストプレス/ }).click()
-  const previousPanel = page.getByRole('region', { name: '前回実績' })
-  await expect(previousPanel).toContainText('2026-10-03')
-  await expect(previousPanel).toContainText('21 kg × 11 回 × 3 セット')
-  await expect(previousPanel).toContainText('H03-extra-seat')
-  await expect(previousPanel).not.toContainText('27 kg')
+  // H06 A5 supersedes the incomplete-Run panel, not the Session/order contract.
+  await expect(page.getByRole('region', { name: '前回実績' })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: /の実行を取り消す/ })).toHaveCount(0)
+  await top(page)
+  await page.getByRole('button', { name: '推奨曜日', exact: true }).click()
+  await page.getByLabel('実施済も表示').check()
+  await actualRow.click()
+  const actualPanel = page.getByRole('region', { name: '当該実績' })
+  await expect(actualPanel).toContainText('2026-10-03')
+  await expect(actualPanel).toContainText('21 kg × 11 回 × 3 セット')
+  await expect(actualPanel).toContainText('H03-extra-seat')
+  await expect(actualPanel).not.toContainText('27 kg')
   expect(await readCanonicalState(page)).toEqual(saved)
   expect(await readStoredState(page)).toEqual(legacy)
   await page.reload()
@@ -124,13 +131,13 @@ test('H-03 focused 4/5 UI Extra completion becomes next Run previous actual and 
   await info.attach('H-03-extra-created-session', { body: JSON.stringify({ before: data, after: saved }, null, 2), contentType: 'application/json' })
 })
 
-test('OIC-003/006/007: previous actual order, Session-only seat, controls, persist failure/retry/reload preserve identity', async ({ page }) => {
+test('OIC-003/006/007 + H06 A5: Session-only seat, controls, persist failure/retry/reload preserve identity', async ({ page }) => {
   await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
   const data = canonicalData(); data.sessions = [session('z-older', '2026-09-26', 0, 99), session('a-later', '2026-09-26', 1, 27)]
   await seedCanonicalAndReload(page, data)
   const legacy = await readStoredState(page)
   await run(page)
-  await expect(page.getByRole('region', { name: '前回実績' })).toContainText('27 kg × 8 回')
+  await expect(page.getByRole('region', { name: '前回実績' })).toHaveCount(0)
   await page.getByRole('button', { name: '重量を1kg減らす' }).click()
   await expect(page.getByText('19.00 kg', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: '重量を0.25kg減らす' }).click()
@@ -167,7 +174,7 @@ test('OIC-006: same Clock completions allocate distinct order and shuffled offse
   for (let i = 0; i < 2; i++) {
     await page.getByRole('button', { name: '＋ 追加トレーニングを登録' }).click()
     await page.getByRole('button', { name: /正規テストプレス/ }).click()
-    if (i === 0) await expect(page.getByRole('region', { name: '前回実績' })).toContainText('28 kg')
+    if (i === 0) await expect(page.getByRole('region', { name: '前回実績' })).toHaveCount(0)
     await page.getByRole('button', { name: '種目を完了' }).dblclick()
   }
   const added = (await readCanonicalState(page)).sessions as ReturnType<typeof session>[]
@@ -192,6 +199,12 @@ test('OIC-008/009/010/012: temporary weekday filter, distinct today including Ex
   await page.getByRole('button', { name: /表示する推奨曜日:/ }).click()
   await page.getByRole('checkbox', { name: '月', exact: true }).check()
   await page.getByRole('checkbox', { name: '土', exact: true }).uncheck()
+  // H06 A3 supersedes OIC-010's actual-date filter: both completed Extras
+  // remain discoverable while their day is unselected; OFF restores filtering.
+  await expect(rows).toHaveCount(2)
+  await expect(rows.first()).toContainText('追加実施　2026-10-03')
+  await expect(rows.last()).toContainText('追加実施　2026-10-03')
+  await page.getByLabel('実施済も表示').uncheck()
   await expect(rows).toHaveCount(0)
   await expect(page.getByText('今日の実施総数')).toContainText('1/1')
   expect(await readCanonicalState(page)).toEqual(data)
@@ -503,7 +516,7 @@ test('PRESERVE time Exercise → Item setup → Run slots → Extra completion a
   await page.getByLabel('時間（秒）').fill('30'); await page.getByLabel('セット数', { exact: true }).fill('3'); await page.getByRole('button', { name: '保存', exact: true }).click()
   const before = await readCanonicalState(page)
   await top(page); await page.getByRole('button', { name: '＋ 追加トレーニングを登録' }).click(); await page.getByRole('button', { name: /時間型プランク/ }).click()
-  await expect(page.locator('.weight-controls')).toHaveCount(0); await expect(page.getByRole('region', { name: '前回実績' })).toContainText('実施記録はありません')
+  await expect(page.locator('.weight-controls')).toHaveCount(0); await expect(page.getByRole('region', { name: '前回実績' })).toHaveCount(0)
   await page.getByRole('button', { name: '時間を増やす' }).click(); await page.getByRole('button', { name: 'セット数を増やす' }).click(); await page.getByRole('button', { name: '種目を完了' }).click()
   const after = await readCanonicalState(page); expect((after.sessions as Record<string, unknown>[])[0]).toMatchObject({ seconds: 40, sets: 4, bodyWeight: 66, snapshot: { measureType: 'time', secondsLoadRatio: 10 } }); expect(after.trainingItems).toEqual(before.trainingItems)
   await expect(page.getByText('1,056 pt', { exact: true })).toBeVisible(); await page.reload(); expect(await readCanonicalState(page)).toEqual(after)

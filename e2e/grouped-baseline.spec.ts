@@ -67,7 +67,8 @@ test('H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/
   await expect(page.getByText('肩を下げる', { exact: true })).toBeVisible()
   await page.getByLabel('今回メモ').fill('当回だけの記録')
   await page.getByRole('button', { name: '回数を増やす' }).click({ clickCount: 2 })
-  await page.getByLabel('変更理由（任意）').fill('標準回数を増やす')
+  // H-20261005-06 A1 explicitly removes Run's reason input; explicit standard save remains.
+  await expect(page.getByLabel('変更理由（任意）')).toHaveCount(0)
   page.once('dialog', dialog => dialog.dismiss())
   await page.getByRole('button', { name: 'この設定を登録' }).click()
   expect((await readCanonicalState(page)).trainingItemSettingChanges).toHaveLength(1)
@@ -75,7 +76,11 @@ test('H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/
   await page.getByRole('button', { name: 'この設定を登録' }).click()
   await expect(page.getByText('標準設定を保存しました。', { exact: true })).toBeVisible()
   await page.getByRole('button', { name: /この実施項目の設定履歴を見る/ }).click()
-  await expect(page.getByText('変更理由: 標準回数を増やす')).toBeVisible()
+  expect((await readCanonicalState(page)).trainingItemSettingChanges).toEqual([
+    expect.objectContaining({ isInitial: true }),
+    expect.objectContaining({ snapshot: expect.objectContaining({ reps: 12 }) }),
+  ])
+  expect(((await readCanonicalState(page)).trainingItemSettingChanges as Record<string, unknown>[]).every(row => row.changeReason === undefined)).toBe(true)
   await expect(page.getByText('当回だけの記録')).toHaveCount(0)
   await page.getByRole('button', { name: '‹ 戻る' }).click()
   await expect(page.getByLabel('今回メモ')).toHaveValue('当回だけの記録')
