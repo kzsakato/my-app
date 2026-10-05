@@ -1,6 +1,6 @@
 # V1R Staging preparation (H-20261004-11)
 
-This tooling serves a fixed production artifact at `my-app-staging-v1r` and a separate, gated preparation action. It does not change Product source, register a preparation Service Worker, add an account system, or modify Production Pages/Kikuzo. Product candidate: `687716d17cebbacae63d91452e6bc01b335c70c5`, Build `2026-10-04 / 687716d1`.
+This tooling serves a fixed production artifact at the release-neutral `my-app-staging` and a separate, gated preparation action. It does not change Product source, register a preparation Service Worker, add an account system, or modify Production Pages/Kikuzo. Product candidate: `687716d17cebbacae63d91452e6bc01b335c70c5`, Build `2026-10-04 / 687716d1`. The earlier `my-app-staging-v1r` is retained with its capability closed for investigation; its browser storage is not reset or migrated. Historical evidence files identify their original origin and are not proof for this new origin.
 
 ## Prepare and test
 
@@ -19,7 +19,7 @@ Generated bundles, local run configuration/capability, and browser profiles are 
 
 ## Capability boundary
 
-The preparation link contains a 256-bit run bearer in its fragment. The shell sends it only in same-origin Authorization headers, clears the fragment, and displays only PREPARED or STOP. The Worker checks its SHA-256 hash, run ID, expiry, and Origin on every API/bundle request. Hash/run/expiry live in server-side deployment bindings; the reusable source contains no bearer. All preparation responses are `no-store`; the tool cannot register a Service Worker under its CSP.
+The preparation link contains a 256-bit run bearer in its fragment. The shell sends it only in same-origin Authorization headers, clears the fragment, and displays PREPARED or STOP, with a non-sensitive run/attempt ID on success. The ID is derived from the local completed receipt, not a server assertion about a device. Record the reported device/browser together with this ID; a bare PREPARED cannot establish which browser partition ran the tool. The Worker checks its SHA-256 hash, run ID, expiry, and Origin on every API/bundle request. Hash/run/expiry live in server-side deployment bindings; the reusable source contains no bearer. All preparation responses are `no-store`; the tool cannot register a Service Worker under its CSP.
 
 Before every canonical persistence operation, the loaded client checks the live server gate again. Ordinary Product assets and navigation never request the preparation tool. The preparation page does not link to Product until the operator has closed the run. Once the Product SW controls the origin, its unmodified navigation fallback can show the Product shell for a preparation navigation; this cannot reactivate the revoked API or mutation tool. Initial preparation must therefore precede ordinary Product navigation on this new Staging origin.
 
@@ -38,6 +38,6 @@ node tooling/staging/verify.mjs revoked
 
 The latter uses the saved automation capability and same persistent automation profile. It proves both old-token 403 responses and unchanged ordinary Product data/runtime across browser restart. For an already-loaded-client check, run `verify-live-revocation.mjs` while the automation capability is open; after it reports held, deploy the closed config, then create `.generated/release-revocation-check`. No Owner storage is involved.
 
-Only after automated checks, issue a **different** Owner run (at most 24 hours), deploy `run.local.json`, and hand the single preparation link to Owner Android Brave. Return **OWNER PREP READY**, never MAN READY. Preserve the Owner capability locally for immediate revocation checks after the report; no shell/storage work is assigned to Owner.
+Only after automated checks, issue a **different** Owner run (at most 24 hours), deploy `run.local.json`, and hand the single preparation link to Owner Android Brave. Do not execute fixture preparation with that Owner capability in PC/automation browsers; check its server gate without mutation only. The automated preparation scripts reject owner-named runs. Return **OWNER PREP READY**, never MAN READY. Preserve the Owner capability locally for immediate revocation checks after the report; no shell/storage work is assigned to Owner.
 
 On Owner PREPARED: immediately deploy the closed config, prove the current token cannot fetch initializer/authorize, verify ordinary production artifact/SW hashes, and ask Owner to open ordinary Staging in the same Brave partition. Owner must confirm canonical discriminators before QA/PMO accepts MAN READY. On STOP/expiry: do not guess-merge, reuse automation state, or ask Owner to diagnose. Classify and route the bounded test-environment recovery. Production release/merge is outside this tooling.

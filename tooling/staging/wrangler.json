@@ -1,5 +1,5 @@
 {
-  "name": "my-app-staging-v1r",
+  "name": "my-app-staging",
   "main": "worker.ts",
   "compatibility_date": "2026-10-04",
   "workers_dev": true,

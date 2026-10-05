@@ -3,6 +3,7 @@ import crypto from 'node:crypto';
 import { chromium } from '@playwright/test';
 const read=name=>JSON.parse(fs.readFileSync(new URL(name,import.meta.url)));
 const cap=read('./capability.local.json'),old=read('./automation-capability.local.json');
+if(cap.run.includes('owner')) throw Error('Owner preparation capability must not initialize an automation partition');
 const origin=new URL(cap.url).origin;
 const assert=(v,m)=>{if(!v)throw Error(m)};
 const auth=token=>fetch(origin+'/__staging/authorize',{method:'POST',headers:{Origin:origin,Authorization:`Bearer ${token}`}});

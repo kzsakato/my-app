@@ -7,6 +7,7 @@ const cap=JSON.parse(fs.readFileSync(path.join(dir,'capability.local.json'),'utf
 const origin=new URL(cap.url).origin;
 const assert=(v,m)=>{if(!v)throw Error(m)};
 const phase=process.argv[2]??'prepare';
+if(phase==='prepare' && cap.run.includes('owner')) throw Error('Owner preparation capability must not initialize an automation partition');
 const evidence={phase,origin,run:cap.run,checks:[]};
 const record=(name)=>evidence.checks.push(name);
 const canonical=page=>page.evaluate(async()=>{

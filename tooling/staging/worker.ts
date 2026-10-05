@@ -10,7 +10,7 @@ export async function permitted(request: Request, env: Env, now = Date.now()) {
   const hash = [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token)))].map(n => n.toString(16).padStart(2, '0')).join('')
   return hash === env.PREP_TOKEN_HASH
 }
-const shell = `<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Staging preparation</title><body><p id="status" role="status"></p><script>
+const shell = `<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Staging preparation</title><body><p id="status" role="status"></p><p id="attempt"></p><script>
 (async()=>{const stop=()=>document.getElementById('status').textContent='STOP';try{
 const token=location.hash.slice(1);if(!token){stop();return}
 const r=await fetch('/__staging/initializer',{method:'POST',cache:'no-store',headers:{Authorization:'Bearer '+token}});

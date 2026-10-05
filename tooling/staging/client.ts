@@ -27,6 +27,10 @@ async function run() {
       },
     })
     status.textContent = result.status
+    if (result.status === 'PREPARED') {
+      const receipt = JSON.parse(localStorage.getItem('v1r-staging-receipt') ?? 'null')
+      document.getElementById('attempt')!.textContent = `${receipt.run} / ${receipt.ids[0].slice(0, 8)}`
+    }
   })
 }
 run().catch(() => { status.textContent = 'STOP' })

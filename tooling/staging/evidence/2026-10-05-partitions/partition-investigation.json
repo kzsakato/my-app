@@ -1,0 +1,28 @@
+{
+  "result": "PASS",
+  "origin": "https://my-app-staging.kzsakato-lab.workers.dev",
+  "preparedAutomationPartition": {
+    "build": "Build 2026-10-04 / 687716d1",
+    "category": false,
+    "trainer": true,
+    "authority": {
+      "authoritative": true,
+      "establishedAt": "2026-10-05T00:38:07.082Z"
+    },
+    "canonicalPresent": true,
+    "receiptRun": "H-20261005-staging-auto-02",
+    "receiptAt": "2026-10-05T00:38:07.082Z"
+  },
+  "freshMobileEmulationPartition": {
+    "build": "Build 2026-10-04 / 687716d1",
+    "category": true,
+    "trainer": false,
+    "authority": null,
+    "canonicalPresent": false,
+    "receiptRun": null,
+    "receiptAt": null
+  },
+  "oldCapabilityStatus": 403,
+  "ownerAndroidInspected": false,
+  "interpretation": "Same accepted bundle, different local authority; revocation does not remove prepared data. This reproduces the symptom but does not identify the actual Owner device used for the earlier report."
+}
