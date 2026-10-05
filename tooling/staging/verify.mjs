@@ -49,7 +49,7 @@ try{
  await page.getByRole('button',{name:'共通メニュー'}).click();await page.getByRole('button',{name:'設定',exact:true}).click();
  const body=await page.locator('body').innerText();
  assert(body.includes('トレーナー連携')&&!body.includes('カテゴリ'),'canonical settings');
- assert(body.includes('Build 2026-10-04 / 687716d1'),'Build');
+ assert(body.includes('Build 2026-10-05 / d34b3927'),'Build');
  evidence.settings=body;
  await page.getByRole('button',{name:/プロフィール/}).click();
  assert(await page.getByLabel('週開始曜日').inputValue()==='0','Monday control');

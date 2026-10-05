@@ -1,6 +1,6 @@
 # V1R Staging preparation (H-20261004-11)
 
-This tooling serves a fixed production artifact at the release-neutral `my-app-staging` and a separate, gated preparation action. It does not change Product source, register a preparation Service Worker, add an account system, or modify Production Pages/Kikuzo. Product candidate: `687716d17cebbacae63d91452e6bc01b335c70c5`, Build `2026-10-04 / 687716d1`. The earlier `my-app-staging-v1r` is retained with its capability closed for investigation; its browser storage is not reset or migrated. Historical evidence files identify their original origin and are not proof for this new origin.
+This tooling serves a fixed production artifact at the release-neutral `my-app-staging` and a separate, gated preparation action. It does not change Product source, register a preparation Service Worker, add an account system, or modify Production Pages/Kikuzo. Product candidate: `d34b3927d63c66e60d68f1350d040725402a70b3`, Build `2026-10-05 / d34b3927`. The earlier `my-app-staging-v1r` is retained with its capability closed for investigation; its browser storage is not reset or migrated. Historical evidence files identify their original origin and are not proof for this new origin.
 
 ## Prepare and test
 

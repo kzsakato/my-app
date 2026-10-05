@@ -25,7 +25,7 @@ try{
  await a.goto(cap.url);await a.getByText('PREPARED',{exact:true}).waitFor();
  assert((await context.serviceWorkers()).length===0,'prep SW');
  await a.goto(origin+'/',{waitUntil:'networkidle'});await a.getByRole('button',{name:'共通メニュー'}).click();await a.getByRole('button',{name:'設定',exact:true}).click();
- const settings=await a.locator('body').innerText();assert(settings.includes('トレーナー連携')&&!settings.includes('カテゴリ')&&settings.includes('Build 2026-10-04 / 687716d1'),'canonical runtime');
+ const settings=await a.locator('body').innerText();assert(settings.includes('トレーナー連携')&&!settings.includes('カテゴリ')&&settings.includes('Build 2026-10-05 / d34b3927'),'canonical runtime');
  await a.getByRole('button',{name:/プロフィール/}).click();assert(await a.getByLabel('週開始曜日').inputValue()==='0','Monday');
  const result={result:'PASS',run:cap.run,expires:cap.expires,origin,checks:['old-automation-capability-403','owner-gate-valid','all-eight-production-hashes','manifest-same-origin','concurrent-tab-STOP','first-tab-PREPARED','duplicate-PREPARED','preparation-no-SW','ordinary-canonical-Build-Trainer-no-Category','week-start-Monday'],ownerDeviceTested:false};
  fs.writeFileSync(new URL('./.generated/owner-run-evidence.json',import.meta.url),JSON.stringify(result,null,2));console.log(JSON.stringify(result));
