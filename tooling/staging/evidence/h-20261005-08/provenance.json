@@ -1,0 +1,13 @@
+{
+  "accepted": "d34b3927d63c66e60d68f1350d040725402a70b3",
+  "hashes": {
+    "index.html": "20dd0182cef1c643084acbc081d1c6607491dc6a0b1f0cd2925d463c92fbaf5a",
+    "manifest.webmanifest": "125b20ad76486349c25f02b46f473c0ec7a885c9f6e7514f37eaab98266f7031",
+    "registerSW.js": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7",
+    "sw.js": "0a68222b8bf2d5e0c7b52a6b91d92e0c96bbcd294ee1d798deca752d08500a64",
+    "workbox-9c191d2f.js": "04b086f1b2f4215ee4b659a7bc9c76162894abdb43fa876247bc7c0bd6fd1c37",
+    "assets/index-bGRkr4ft.js": "930af87a99bb49d7fc0d069c2ae6fae2ca68bdc43b0ff6705d9550b7e12fc0a5",
+    "assets/index-DUgrbLyg.css": "eaf24f7ac025451923a623806be94150d6c5fbf3d024b88a75b99320c47c4ce6",
+    "prototypes/oic-012-density-prototype.html": "6732ad15481c821fe1abf83d27d87356b1a488dec91feefc31155c59d9305f8c"
+  }
+}
