@@ -1,0 +1,22 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+const root=process.cwd(), dir=path.join(root,'tooling/staging'), generated=path.join(dir,'.generated');
+const manifest=JSON.parse(fs.readFileSync(path.join(root,'evidence/h-20261006-09/build-manifest.json')));
+execFileSync('git',['diff','--exit-code',manifest.productCommit,'--','src','package.json','pnpm-lock.yaml','vite.config.ts']);
+const hash=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+for(const file of manifest.files)if(hash(fs.readFileSync(path.join(root,'dist',file.path)))!==file.sha256)throw Error('Accepted dist mismatch: '+file.path);
+const output=path.join(generated,'recovery-dist');fs.mkdirSync(output,{recursive:true});
+for(const file of manifest.files){const target=path.join(output,file.path);fs.mkdirSync(path.dirname(target),{recursive:true});fs.copyFileSync(path.join(root,'dist',file.path),target);}
+const swPath=path.join(output,'sw.js');const original=fs.readFileSync(swPath,'utf8');
+const needle='new e.NavigationRoute(e.createHandlerBoundToURL("index.html"))';
+if(original.split(needle).length!==2)throw Error('Accepted SW pattern changed');
+const replacement='new e.NavigationRoute(e.createHandlerBoundToURL("index.html"),{denylist:[/^\\/__staging\\/prepare\\.html$/]})';
+fs.writeFileSync(swPath,original.replace(needle,replacement));
+const config=JSON.parse(fs.readFileSync(path.join(dir,'wrangler.json')));config.main='../worker.ts';config.assets.directory='./recovery-dist';
+fs.writeFileSync(path.join(generated,'recovery-wrangler.json'),JSON.stringify(config,null,2));
+const files=manifest.files.map(file=>({...file,bytes:fs.statSync(path.join(output,file.path)).size,sha256:hash(fs.readFileSync(path.join(output,file.path)))}));
+if(files.filter((file,i)=>file.sha256!==manifest.files[i].sha256).map(file=>file.path).join()!=='sw.js')throw Error('Unexpected artifact change');
+fs.writeFileSync(path.join(generated,'recovery-manifest.json'),JSON.stringify({kind:'temporary H14 prepare delivery shim; not accepted Product artifact',product:manifest.productCommit,excludedPath:'/__staging/prepare.html',files},null,2));
+console.log('Temporary recovery delivery artifact built; only sw.js differs. Accepted dist preserved.');

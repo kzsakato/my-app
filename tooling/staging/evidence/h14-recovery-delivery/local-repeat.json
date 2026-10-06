@@ -1,0 +1,24 @@
+{
+  "result": "PASS",
+  "mode": "local",
+  "at": "2026-10-06T13:18:43.566Z",
+  "ownerPartitionInspected": false,
+  "checks": [
+    "persistent-old-accepted-SW-controls-and-intercepts-prepare",
+    "ordinary-update-activates-exact-prepare-exclusion-product-data-unchanged",
+    "exact-path-only-and-same-origin-POST-bearer-purpose-boundary",
+    "bounded-recovery-PREPARED-baseline-exact-legacy-unchanged-no-import",
+    "duplicate-zero-write",
+    "revoke-before-restore-old-token-inert-no-writes",
+    "accepted-SW-restored-no-temporary-shell-canonical-reload-process-restart"
+  ],
+  "deployments": [],
+  "updateCycles": 1,
+  "ordinaryLegacyIdenticalAutosaves": 1,
+  "restoreCycles": 1,
+  "beforeStorageSHA256": "78260bfe8046883e14958b9ed49977b2bd056e09a378d0492eaa214e6b5df831",
+  "preparedStorageSHA256": "904def77bf7a8a6522f78782512fe4e2dcc4704a8c96bf11b6d3420bba6ea45e",
+  "legacyJsonSHA256": "816ea9f70303f403982315abdcebb4d38912c8eac3a58e7daba0ee3982be498e",
+  "acceptedProduct": "118ff493838fa35aa0a80e88532d8731e4005c38",
+  "temporarySW": "cad249a44caf1789425f92a24f6aa0129ea9443d15ed06d409798b315afdc33b"
+}

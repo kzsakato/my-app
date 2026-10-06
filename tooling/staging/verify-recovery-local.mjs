@@ -14,16 +14,7 @@ const token = crypto.randomBytes(32).toString('hex');
 const vars = { PREP_RUN: 'H14-local-automation', PREP_PURPOSE: 'h14-recovery', PREP_EXPIRES: new Date(Date.now() + 3600000).toISOString(), PREP_TOKEN_HASH: hash(token) };
 const evidence = { result: 'RUNNING', environment: 'local workerd / Chromium isolated automation partitions', checks: [] };
 const record = name => { evidence.checks.push(name); console.log(name); };
-const legacy = {
-  version: 6, activeMenuId: 'legacy-menu', profile: { weight: 91, height: 181, analysisStartDate: '2001-01-01' },
-  exercises: [{ id: 'legacy-exercise', name: 'legacy-only exercise', bodyPart: '胸', measureType: 'reps', usesWeight: true }],
-  categories: [{ id: 'legacy-category', name: 'legacy-only category', bodyParts: ['胸'], exerciseIds: ['legacy-exercise'] }],
-  items: [{ id: 'legacy-item', name: 'legacy-only item', categoryId: 'legacy-category', exerciseId: 'legacy-exercise', sets: 9 }],
-  menus: [{ id: 'legacy-menu', name: 'legacy-only menu' }],
-  menuItems: [{ id: 'legacy-entry', menuId: 'legacy-menu', itemId: 'legacy-item', recommendedDay: 3 }],
-  sessions: [{ id: 'legacy-session', itemId: 'legacy-item', date: '2026-10-01', sets: 7, snapshot: { exerciseId: 'legacy-exercise', exerciseName: 'historical legacy', trainingItemDisplayName: 'historical item', measureType: 'reps' } }],
-  settingHistories: [{ id: 'legacy-history', itemId: 'legacy-item', date: '2026-10-01', sets: 8 }],
-};
+import { legacy } from './recovery-fixture.mjs';
 let worker, context, browser;
 const start = async (bindings, port = 0) => unstable_dev(path.join(dir, 'worker.ts'), {
   config: path.join(dir, 'wrangler.json'), local: true, ip: '127.0.0.1', port,

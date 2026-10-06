@@ -35,6 +35,8 @@ Recovery preserves the full legacy payload in the existing immutable baseline us
 
 `issue-run.mjs` accepts an optional fourth argument `h14-recovery` after run ID and duration. Issuing/deploying an Owner run requires the H-14 routing checkpoint; the automated implementation check does not issue one. In particular, the existing accepted Product SW intercepts `/__staging/prepare.html` navigation on already controlled partitions. H-14's former diagnostic-page exception does not authorize a preparation-page exception. Do not send the current preparation link to Owner as a proven recovery delivery path, reset storage, or change Product SW to work around this boundary.
 
+The later H-14 Technical recovery prepare page SW delivery review authorizes an exact prepare-path exclusion in a **temporary Staging artifact only**, followed by capability revocation and accepted SW restoration. Use [RECOVERY_DELIVERY.md](RECOVERY_DELIVERY.md) for that separately verified lifecycle and distinct Owner run. The Product source and accepted artifact remain unchanged.
+
 Reproduce local recovery automation after the build and unit/type checks above:
 
 ```powershell

@@ -1,0 +1,14 @@
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+const dir = new URL('./', import.meta.url);
+const [run, duration] = process.argv.slice(2), hours = Number(duration);
+if (!run || !Number.isFinite(hours) || hours <= 0 || hours > 24) throw Error('Usage: issue-recovery-run.mjs distinct-run-id hours(0..24)');
+const capabilityFile = new URL('recovery-capability.local.json', dir);
+if (fs.existsSync(capabilityFile) && Date.parse(JSON.parse(fs.readFileSync(capabilityFile)).expires) > Date.now()) throw Error('An unexpired recovery capability is already saved; retain it for revocation verification');
+const token = crypto.randomBytes(32).toString('hex'), expires = new Date(Date.now() + hours * 3600000).toISOString();
+const config = JSON.parse(fs.readFileSync(new URL('.generated/recovery-wrangler.json', dir)));
+config.main = 'worker.ts'; config.assets.directory = '.generated/recovery-dist';
+config.vars = { PREP_RUN: run, PREP_PURPOSE: 'h14-recovery', PREP_EXPIRES: expires, PREP_TOKEN_HASH: crypto.createHash('sha256').update(token).digest('hex') };
+fs.writeFileSync(new URL('recovery-run.local.json', dir), JSON.stringify(config, null, 2));
+fs.writeFileSync(capabilityFile, JSON.stringify({ run, purpose: 'h14-recovery', expires, token, url: `https://${config.name}.kzsakato-lab.workers.dev/__staging/prepare.html#${token}` }, null, 2));
+console.log(JSON.stringify({ run, purpose: 'h14-recovery', expires }));

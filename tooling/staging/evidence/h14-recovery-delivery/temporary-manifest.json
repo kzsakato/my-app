@@ -1,0 +1,47 @@
+{
+  "kind": "temporary H14 prepare delivery shim; not accepted Product artifact",
+  "product": "118ff493838fa35aa0a80e88532d8731e4005c38",
+  "excludedPath": "/__staging/prepare.html",
+  "files": [
+    {
+      "path": "assets/index-ddSmqDMp.js",
+      "sha256": "648426d684a96d70f1c3993073a4f29ca7e081a0ef68bcb9cc5576a420f209ff",
+      "bytes": 341675
+    },
+    {
+      "path": "assets/index-DUgrbLyg.css",
+      "sha256": "eaf24f7ac025451923a623806be94150d6c5fbf3d024b88a75b99320c47c4ce6",
+      "bytes": 9562
+    },
+    {
+      "path": "index.html",
+      "sha256": "0cdb2525933b5c927895fd7b4823a84510308ede17fc3e4d49aae9f135253013",
+      "bytes": 549
+    },
+    {
+      "path": "manifest.webmanifest",
+      "sha256": "125b20ad76486349c25f02b46f473c0ec7a885c9f6e7514f37eaab98266f7031",
+      "bytes": 193
+    },
+    {
+      "path": "prototypes/oic-012-density-prototype.html",
+      "sha256": "6732ad15481c821fe1abf83d27d87356b1a488dec91feefc31155c59d9305f8c",
+      "bytes": 13847
+    },
+    {
+      "path": "registerSW.js",
+      "sha256": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7",
+      "bytes": 136
+    },
+    {
+      "path": "sw.js",
+      "sha256": "cad249a44caf1789425f92a24f6aa0129ea9443d15ed06d409798b315afdc33b",
+      "bytes": 1232
+    },
+    {
+      "path": "workbox-9c191d2f.js",
+      "sha256": "04b086f1b2f4215ee4b659a7bc9c76162894abdb43fa876247bc7c0bd6fd1c37",
+      "bytes": 15112
+    }
+  ]
+}

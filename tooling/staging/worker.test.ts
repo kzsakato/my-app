@@ -29,4 +29,5 @@ it('server alone fixes purpose; unknown purposes fail closed', async () => {
   expect(await response.json()).toEqual({ run: 'test', purpose: purpose ?? 'fresh' })
  }
  expect((await worker.fetch(request(), { ...current, PREP_PURPOSE: 'guess' })).status).toBe(403)
+ expect(await permitted(request(), { ...current, PREP_PURPOSE: 'h14-recovery' }, Date.parse(current.PREP_EXPIRES))).toBe(false)
 })
