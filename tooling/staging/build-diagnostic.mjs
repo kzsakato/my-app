@@ -1,0 +1,27 @@
+import { build } from 'vite';
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+const root=process.cwd(), dir=path.join(root,'tooling/staging'), generated=path.join(dir,'.generated');
+const manifest=JSON.parse(fs.readFileSync(path.join(root,'evidence/h-20261006-09/build-manifest.json')));
+execFileSync('git',['diff','--exit-code',manifest.productCommit,'--','src','package.json','pnpm-lock.yaml','vite.config.ts']);
+const hash=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
+for(const file of manifest.files)if(hash(fs.readFileSync(path.join(root,'dist',file.path)))!==file.sha256)throw Error('Accepted dist mismatch: '+file.path);
+const output=path.join(generated,'diagnostic-dist');fs.mkdirSync(output,{recursive:true});
+for(const file of manifest.files){const target=path.join(output,file.path);fs.mkdirSync(path.dirname(target),{recursive:true});fs.copyFileSync(path.join(root,'dist',file.path),target);}
+const swPath=path.join(output,'sw.js');const original=fs.readFileSync(swPath,'utf8');
+const needle='new e.NavigationRoute(e.createHandlerBoundToURL("index.html"))';
+if(original.split(needle).length!==2)throw Error('Accepted SW pattern changed');
+const replacement='new e.NavigationRoute(e.createHandlerBoundToURL("index.html"),{denylist:[/^\\/__staging\\/diagnose\\.html$/]})';
+fs.writeFileSync(swPath,original.replace(needle,replacement));
+const built=await build({configFile:false,publicDir:false,build:{write:false,minify:true,lib:{entry:path.join(dir,'diagnostic-client.ts'),name:'ReadOnlyDiagnostic',formats:['iife']}}});
+const code=built[0].output.find(item=>item.type==='chunk').code.replaceAll('</script','<\\/script');
+const html='<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Staging read-only診断</title><style>body{font:16px sans-serif;margin:20px}pre{white-space:pre-wrap;overflow-wrap:anywhere;user-select:all}</style><h1>Staging read-only診断</h1><p>保存内容は変更しません。結果の全文を選択してコピーし、このチャットへ貼り付けてください。</p><p id="status">読取中</p><pre id="result"></pre><script>'+code+'</script></html>';
+fs.writeFileSync(path.join(generated,'diagnostic.txt'),html);
+const config=JSON.parse(fs.readFileSync(path.join(dir,'wrangler.json')));config.main='../diagnostic-worker.ts';config.assets.directory='./diagnostic-dist';
+fs.writeFileSync(path.join(generated,'diagnostic-wrangler.json'),JSON.stringify(config,null,2));
+const files=manifest.files.map(file=>({...file,sha256:hash(fs.readFileSync(path.join(output,file.path)))}));
+if(files.filter((file,i)=>file.sha256!==manifest.files[i].sha256).map(file=>file.path).join()!=='sw.js')throw Error('Unexpected artifact change');
+fs.writeFileSync(path.join(generated,'diagnostic-manifest.json'),JSON.stringify({kind:'temporary diagnostic Staging, not H10 accepted artifact',product:manifest.productCommit,excludedPath:'/__staging/diagnose.html',diagnosticSHA256:hash(html),files},null,2));
+console.log('Temporary diagnostic artifact built; only sw.js differs. Accepted dist preserved.');

@@ -1,5 +1,5 @@
 {
   "extends": "../../tsconfig.json",
-  "include": ["client.ts", "prepare.ts", "worker.ts", "text.d.ts"],
+  "include": ["client.ts", "diagnostic-client.ts", "diagnostic-worker.ts", "prepare.ts", "worker.ts", "text.d.ts"],
   "exclude": []
 }
