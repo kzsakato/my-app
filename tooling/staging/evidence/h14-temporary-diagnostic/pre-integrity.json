@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-06T06:38:46.700Z",
+  "product": "118ff493838fa35aa0a80e88532d8731e4005c38",
+  "identifier": "Build 2026-10-06 / 118ff493",
+  "allAcceptedProductFiles": 8,
+  "initializerSHA256": "02bc088861ea0add5cb9705e75af6e93e9b97094dde73e81ab5f334690e137d1",
+  "production": {
+    "origin": "https://kzsakato.github.io/my-app/",
+    "hashes": {
+      "": "07961a57b8f6a207173a0ca28dde09df68c8e470cb98e56ea5547140dab4d205",
+      "sw.js": "e9027aa23ed2ca367186299c127ed8c2e6d29c4888d5aa3340fe9b470b45791b",
+      "./assets/index-C2rg8_QF.js": "b2e45fbe298b48b97046e457ddd39439426a84e33622f749315e767b8fce8ca2",
+      "./assets/index-W_6Xb-YC.css": "b576fdd67e7e236e3a9f448b6e3ae2ca490e59fbd241b3b24906eaf46a140f25",
+      "./manifest.webmanifest": "125b20ad76486349c25f02b46f473c0ec7a885c9f6e7514f37eaab98266f7031",
+      "./registerSW.js": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7"
+    },
+    "main": "d4e5c09b1dd3119d58a3d8e6c4fc74e907e4a288",
+    "deployment": {
+      "id": 6828068757,
+      "sha": "d4e5c09b1dd3119d58a3d8e6c4fc74e907e4a288"
+    }
+  }
+}

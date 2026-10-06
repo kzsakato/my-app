@@ -1,0 +1,225 @@
+{
+  "result": "PASS",
+  "at": "2026-10-06T06:38:10.096Z",
+  "ownerPartitionInspected": false,
+  "results": [
+    {
+      "profile": "legacy",
+      "oldSWIntercepted": true,
+      "classification": "legacy-active",
+      "storageSHA256": "a874a6b5f4974d390eb3ec9e46f62d1734cd150c5f9fa3696622e7e77ec14450",
+      "storageUnchanged": true,
+      "swAndCacheUnchanged": true,
+      "serverDiagnosticRequests": 1,
+      "result": {
+        "diagnostic": "H14 temporary read-only v1",
+        "timestamp": "2026-10-06T06:37:41.185Z",
+        "origin": "http://127.0.0.1:60161",
+        "productUI": "not inspected; compare with the screen seen immediately before this page",
+        "servedProduct": {
+          "build": "2026-10-06 / 118ff493",
+          "mainAsset": "/assets/index-ddSmqDMp.js",
+          "sha256": "648426d684a96d70f1c3993073a4f29ca7e081a0ef68bcb9cc5576a420f209ff",
+          "source": "fixed Worker artifact declaration, not previously executing Product JS"
+        },
+        "storage": {
+          "authority": "absent",
+          "canonical": "missing",
+          "legacyPresent": true,
+          "legacyVersion": 6,
+          "classification": "legacy-active"
+        },
+        "serviceWorker": {
+          "controller": "http://127.0.0.1:60161/sw.js",
+          "registrations": [
+            {
+              "scope": "http://127.0.0.1:60161/",
+              "activeScript": "http://127.0.0.1:60161/sw.js",
+              "activeState": "activated"
+            }
+          ]
+        }
+      },
+      "ordinaryUpdateAttempts": 1,
+      "diagnosticMutationCalls": [],
+      "diagnosticSWCalls": [],
+      "network": [
+        {
+          "url": "http://127.0.0.1:60161/__staging/diagnose.html",
+          "method": "GET"
+        }
+      ],
+      "restoreAttempts": 1,
+      "acceptedSWRestored": true
+    },
+    {
+      "profile": "canonical",
+      "oldSWIntercepted": true,
+      "classification": "canonical-ready",
+      "storageSHA256": "9b9da529f2b42a85f37e88898c32f59dae02d00a4607ca70745432239d14fb6e",
+      "storageUnchanged": true,
+      "swAndCacheUnchanged": true,
+      "serverDiagnosticRequests": 1,
+      "result": {
+        "diagnostic": "H14 temporary read-only v1",
+        "timestamp": "2026-10-06T06:37:56.927Z",
+        "origin": "http://127.0.0.1:60161",
+        "productUI": "not inspected; compare with the screen seen immediately before this page",
+        "servedProduct": {
+          "build": "2026-10-06 / 118ff493",
+          "mainAsset": "/assets/index-ddSmqDMp.js",
+          "sha256": "648426d684a96d70f1c3993073a4f29ca7e081a0ef68bcb9cc5576a420f209ff",
+          "source": "fixed Worker artifact declaration, not previously executing Product JS"
+        },
+        "storage": {
+          "authority": true,
+          "canonical": "valid",
+          "legacyPresent": true,
+          "legacyVersion": 6,
+          "classification": "canonical-ready"
+        },
+        "serviceWorker": {
+          "controller": "http://127.0.0.1:60161/sw.js",
+          "registrations": [
+            {
+              "scope": "http://127.0.0.1:60161/",
+              "activeScript": "http://127.0.0.1:60161/sw.js",
+              "activeState": "activated"
+            }
+          ]
+        }
+      },
+      "ordinaryUpdateAttempts": 1,
+      "diagnosticMutationCalls": [],
+      "diagnosticSWCalls": [],
+      "network": [
+        {
+          "url": "http://127.0.0.1:60161/__staging/diagnose.html",
+          "method": "GET"
+        }
+      ],
+      "restoreAttempts": 1,
+      "acceptedSWRestored": true
+    },
+    {
+      "profile": "pristine",
+      "result": {
+        "diagnostic": "H14 temporary read-only v1",
+        "timestamp": "2026-10-06T06:38:05.224Z",
+        "origin": "http://127.0.0.1:60161",
+        "productUI": "not inspected; compare with the screen seen immediately before this page",
+        "servedProduct": {
+          "build": "2026-10-06 / 118ff493",
+          "mainAsset": "/assets/index-ddSmqDMp.js",
+          "sha256": "648426d684a96d70f1c3993073a4f29ca7e081a0ef68bcb9cc5576a420f209ff",
+          "source": "fixed Worker artifact declaration, not previously executing Product JS"
+        },
+        "storage": {
+          "authority": "absent",
+          "canonical": "missing",
+          "legacyPresent": false,
+          "legacyVersion": null,
+          "classification": "legacy-active"
+        },
+        "serviceWorker": {
+          "controller": null,
+          "registrations": []
+        }
+      }
+    },
+    {
+      "profile": "read-error",
+      "result": {
+        "diagnostic": "H14 temporary read-only v1",
+        "timestamp": "2026-10-06T06:38:05.875Z",
+        "origin": "http://127.0.0.1:60161",
+        "productUI": "not inspected; compare with the screen seen immediately before this page",
+        "servedProduct": {
+          "build": "2026-10-06 / 118ff493",
+          "mainAsset": "/assets/index-ddSmqDMp.js",
+          "sha256": "648426d684a96d70f1c3993073a4f29ca7e081a0ef68bcb9cc5576a420f209ff",
+          "source": "fixed Worker artifact declaration, not previously executing Product JS"
+        },
+        "classification": "READ ERROR / STOP"
+      }
+    },
+    {
+      "profile": "canonical-missing",
+      "result": {
+        "diagnostic": "H14 temporary read-only v1",
+        "timestamp": "2026-10-06T06:38:07.080Z",
+        "origin": "http://127.0.0.1:60161",
+        "productUI": "not inspected; compare with the screen seen immediately before this page",
+        "servedProduct": {
+          "build": "2026-10-06 / 118ff493",
+          "mainAsset": "/assets/index-ddSmqDMp.js",
+          "sha256": "648426d684a96d70f1c3993073a4f29ca7e081a0ef68bcb9cc5576a420f209ff",
+          "source": "fixed Worker artifact declaration, not previously executing Product JS"
+        },
+        "storage": {
+          "authority": true,
+          "canonical": "missing",
+          "legacyPresent": false,
+          "legacyVersion": null,
+          "classification": "canonical-recovery-required"
+        },
+        "serviceWorker": {
+          "controller": null,
+          "registrations": []
+        }
+      }
+    },
+    {
+      "profile": "canonical-invalid",
+      "result": {
+        "diagnostic": "H14 temporary read-only v1",
+        "timestamp": "2026-10-06T06:38:08.276Z",
+        "origin": "http://127.0.0.1:60161",
+        "productUI": "not inspected; compare with the screen seen immediately before this page",
+        "servedProduct": {
+          "build": "2026-10-06 / 118ff493",
+          "mainAsset": "/assets/index-ddSmqDMp.js",
+          "sha256": "648426d684a96d70f1c3993073a4f29ca7e081a0ef68bcb9cc5576a420f209ff",
+          "source": "fixed Worker artifact declaration, not previously executing Product JS"
+        },
+        "storage": {
+          "authority": true,
+          "canonical": "invalid",
+          "legacyPresent": false,
+          "legacyVersion": null,
+          "classification": "canonical-recovery-required"
+        },
+        "serviceWorker": {
+          "controller": null,
+          "registrations": []
+        }
+      }
+    },
+    {
+      "profile": "stores-missing",
+      "result": {
+        "diagnostic": "H14 temporary read-only v1",
+        "timestamp": "2026-10-06T06:38:09.468Z",
+        "origin": "http://127.0.0.1:60161",
+        "productUI": "not inspected; compare with the screen seen immediately before this page",
+        "servedProduct": {
+          "build": "2026-10-06 / 118ff493",
+          "mainAsset": "/assets/index-ddSmqDMp.js",
+          "sha256": "648426d684a96d70f1c3993073a4f29ca7e081a0ef68bcb9cc5576a420f209ff",
+          "source": "fixed Worker artifact declaration, not previously executing Product JS"
+        },
+        "storage": {
+          "authority": "absent",
+          "canonical": "missing",
+          "legacyPresent": false,
+          "legacyVersion": null,
+          "classification": "legacy-active"
+        },
+        "serviceWorker": {
+          "controller": null,
+          "registrations": []
+        }
+      }
+    }
+  ]
+}

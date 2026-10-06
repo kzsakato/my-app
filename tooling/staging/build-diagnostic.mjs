@@ -21,7 +21,7 @@ const html='<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="vie
 fs.writeFileSync(path.join(generated,'diagnostic.txt'),html);
 const config=JSON.parse(fs.readFileSync(path.join(dir,'wrangler.json')));config.main='../diagnostic-worker.ts';config.assets.directory='./diagnostic-dist';
 fs.writeFileSync(path.join(generated,'diagnostic-wrangler.json'),JSON.stringify(config,null,2));
-const files=manifest.files.map(file=>({...file,sha256:hash(fs.readFileSync(path.join(output,file.path)))}));
+const files=manifest.files.map(file=>({...file,bytes:fs.statSync(path.join(output,file.path)).size,sha256:hash(fs.readFileSync(path.join(output,file.path)))}));
 if(files.filter((file,i)=>file.sha256!==manifest.files[i].sha256).map(file=>file.path).join()!=='sw.js')throw Error('Unexpected artifact change');
 fs.writeFileSync(path.join(generated,'diagnostic-manifest.json'),JSON.stringify({kind:'temporary diagnostic Staging, not H10 accepted artifact',product:manifest.productCommit,excludedPath:'/__staging/diagnose.html',diagnosticSHA256:hash(html),files},null,2));
 console.log('Temporary diagnostic artifact built; only sw.js differs. Accepted dist preserved.');

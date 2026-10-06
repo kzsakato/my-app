@@ -1,0 +1,24 @@
+
+ ⛅️ wrangler 4.147.0
+────────────────────
+🌀 Building list of assets...
+✨ Read 10 files from the assets directory C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\v1r-correction\tooling\staging\.generated\diagnostic-dist
+🌀 Starting asset upload...
+🌀 Found 1 new or modified static asset to upload. Proceeding with upload...
++ /sw.js
+Uploaded 1 of 1 asset
+✨ Success! Uploaded 1 file (7 already uploaded) (0.75 sec)
+
+Total Upload: 55.07 KiB / gzip: 15.68 KiB
+Worker Startup Time: 1 ms
+Your Worker has access to the following bindings:
+Binding                       Resource                  
+env.ASSETS                    Assets                    
+env.PREP_RUN ("")             Environment Variable      
+env.PREP_EXPIRES ("")         Environment Variable      
+env.PREP_TOKEN_HASH ("")      Environment Variable      
+
+Uploaded my-app-staging (4.26 sec)
+Deployed my-app-staging triggers (0.69 sec)
+  https://my-app-staging.kzsakato-lab.workers.dev
+Current Version ID: e9be1703-70eb-4bfe-9eb5-2d4acf7020c7

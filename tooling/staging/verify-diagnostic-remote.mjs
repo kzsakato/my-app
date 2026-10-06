@@ -1,4 +1,4 @@
-import fs from 'node:fs';import crypto from 'node:crypto';import assert from 'node:assert/strict';import {chromium} from '@playwright/test';
+import {isDeepStrictEqual} from 'node:util';import fs from 'node:fs';import crypto from 'node:crypto';import assert from 'node:assert/strict';import {chromium} from '@playwright/test';
 const dir='tooling/staging/.generated',origin='https://my-app-staging.kzsakato-lab.workers.dev';
 const hash=x=>crypto.createHash('sha256').update(JSON.stringify(x)).digest('hex');
 const snapshot=p=>p.evaluate(async()=>{
@@ -31,7 +31,7 @@ try{
   const summary={at:new Date().toISOString(),origin,storageSHA256:hash(before),sw:await swState(p),ownerPartitionInspected:false};
   fs.writeFileSync(dir+'/h14-remote-before-summary.json',JSON.stringify(summary,null,2));console.log(JSON.stringify(summary));
  }else{
-  const before=JSON.parse(fs.readFileSync(dir+'/h14-remote-before.local.json'));assert.deepEqual(await snapshot(p),before);
+  const saved=JSON.parse(fs.readFileSync(dir+'/h14-remote-before.local.json'));const before=await snapshot(p);assert.equal(hash(before),hash(saved),'Pre-deploy serialized storage hash changed');
   let result;
   for(let attempt=1;attempt<=12;attempt++){
    await p.goto(origin+'/',{waitUntil:'networkidle'});await p.waitForTimeout(10000);
@@ -39,7 +39,7 @@ try{
    await p.goto(origin+'/__staging/diagnose.html',{waitUntil:'networkidle'});
    if(await p.locator('#result').count()!==1)continue;
    await p.waitForFunction(()=>document.querySelector('#result')?.textContent?.startsWith('{'));
-   const diagnosis=JSON.parse(await p.locator('#result').innerText());assert.equal(diagnosis.storage.classification,'canonical-ready');assert.deepEqual(await snapshot(p),before);assert.deepEqual(await swState(p),swBefore);
+   const diagnosis=JSON.parse(await p.locator('#result').innerText());assert.equal(diagnosis.storage.classification,'canonical-ready');assert(isDeepStrictEqual(await snapshot(p),before),'Diagnostic changed storage including undefined fields');assert.deepEqual(await swState(p),swBefore);
    assert.deepEqual(mutations,[]);assert.deepEqual(swCalls,[]);assert(requests.every(r=>r.method==='GET'&&r.url===origin+'/__staging/diagnose.html'));
    result={result:'PASS',at:new Date().toISOString(),ordinaryAttempts:attempt,origin,storageSHA256:hash(before),storageUnchanged:true,swAndCacheUnchangedDuringDiagnosis:true,mutations,swCalls,requests,diagnosis,ownerPartitionInspected:false};
    await p.screenshot({path:dir+'/h14-diagnostic.png',fullPage:true});break;

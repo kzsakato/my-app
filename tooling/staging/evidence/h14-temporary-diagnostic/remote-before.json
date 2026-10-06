@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-06T06:38:24.311Z",
+  "origin": "https://my-app-staging.kzsakato-lab.workers.dev",
+  "storageSHA256": "0347cbf314813038b3c955040f92573f33ea4b02df2be1caa1770406ae3de821",
+  "sw": {
+    "controller": "https://my-app-staging.kzsakato-lab.workers.dev/sw.js",
+    "registrations": [
+      {
+        "scope": "https://my-app-staging.kzsakato-lab.workers.dev/",
+        "active": "https://my-app-staging.kzsakato-lab.workers.dev/sw.js",
+        "state": "activated"
+      }
+    ],
+    "caches": [
+      {
+        "name": "workbox-precache-v2-https://my-app-staging.kzsakato-lab.workers.dev/",
+        "keys": [
+          "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-DUgrbLyg.css",
+          "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-ddSmqDMp.js",
+          "https://my-app-staging.kzsakato-lab.workers.dev/index.html?__WB_REVISION__=e12abcf0d71743c9908a39a2d815f973",
+          "https://my-app-staging.kzsakato-lab.workers.dev/manifest.webmanifest?__WB_REVISION__=ee3c2890cab558b5087ca2d2d44091bc",
+          "https://my-app-staging.kzsakato-lab.workers.dev/prototypes/oic-012-density-prototype.html?__WB_REVISION__=70a3614905cdd480cc0708feec3bd129",
+          "https://my-app-staging.kzsakato-lab.workers.dev/registerSW.js?__WB_REVISION__=402b66900e731ca748771b6fc5e7a068"
+        ]
+      }
+    ]
+  },
+  "ownerPartitionInspected": false
+}

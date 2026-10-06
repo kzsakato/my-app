@@ -1,0 +1,47 @@
+{
+  "result": "PASS",
+  "at": "2026-10-06T06:41:47.227Z",
+  "ordinaryAttempts": 1,
+  "origin": "https://my-app-staging.kzsakato-lab.workers.dev",
+  "storageSHA256": "0347cbf314813038b3c955040f92573f33ea4b02df2be1caa1770406ae3de821",
+  "storageUnchanged": true,
+  "swAndCacheUnchangedDuringDiagnosis": true,
+  "mutations": [],
+  "swCalls": [],
+  "requests": [
+    {
+      "url": "https://my-app-staging.kzsakato-lab.workers.dev/__staging/diagnose.html",
+      "method": "GET"
+    }
+  ],
+  "diagnosis": {
+    "diagnostic": "H14 temporary read-only v1",
+    "timestamp": "2026-10-06T06:41:46.648Z",
+    "origin": "https://my-app-staging.kzsakato-lab.workers.dev",
+    "productUI": "not inspected; compare with the screen seen immediately before this page",
+    "servedProduct": {
+      "build": "2026-10-06 / 118ff493",
+      "mainAsset": "/assets/index-ddSmqDMp.js",
+      "sha256": "648426d684a96d70f1c3993073a4f29ca7e081a0ef68bcb9cc5576a420f209ff",
+      "source": "fixed Worker artifact declaration, not previously executing Product JS"
+    },
+    "storage": {
+      "authority": true,
+      "canonical": "valid",
+      "legacyPresent": false,
+      "legacyVersion": null,
+      "classification": "canonical-ready"
+    },
+    "serviceWorker": {
+      "controller": "https://my-app-staging.kzsakato-lab.workers.dev/sw.js",
+      "registrations": [
+        {
+          "scope": "https://my-app-staging.kzsakato-lab.workers.dev/",
+          "activeScript": "https://my-app-staging.kzsakato-lab.workers.dev/sw.js",
+          "activeState": "activated"
+        }
+      ]
+    }
+  },
+  "ownerPartitionInspected": false
+}
