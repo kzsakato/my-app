@@ -1,11 +1,11 @@
-// H-20261005-08: existing automation partition only; no initializer or storage writes.
+// H-20261006-10: existing automation partition only; no initializer or storage writes.
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { chromium } from '@playwright/test';
 const dir=path.dirname(new URL(import.meta.url).pathname.replace(/^\/(\w:)/,'$1'));
 const origin='https://my-app-staging.kzsakato-lab.workers.dev';
-const accepted=JSON.parse(fs.readFileSync(path.join(dir,'../../evidence/h-20261005-06/build-manifest.json')));
+const accepted=JSON.parse(fs.readFileSync(path.join(dir,'../../evidence/h-20261006-09/build-manifest.json')));
 const asset=accepted.files.find(file=>file.path.startsWith('assets/')&&file.path.endsWith('.js')).path;
 const expected=JSON.parse(fs.readFileSync(path.join(dir,'.generated/prepared-readback.json')));
 const assert=(value,message)=>{if(!value)throw Error(message)};
@@ -38,7 +38,7 @@ try{
  await page.getByRole('button',{name:'設定',exact:true}).click();
  const settings=await page.locator('body').innerText();
  assert(settings.includes(accepted.identifier)&&settings.includes('トレーナー連携')&&!settings.includes('カテゴリ'),'updated canonical discriminators');
- await page.screenshot({path:path.join(dir,'.generated/h08-settings.png'),fullPage:true});
+ await page.screenshot({path:path.join(dir,'.generated/h10-settings.png'),fullPage:true});
  assert(JSON.stringify(await state(page))===JSON.stringify(before),'update changed prepared data');
  const sw=await page.evaluate(async()=>({controller:navigator.serviceWorker.controller?.scriptURL,registrations:(await navigator.serviceWorker.getRegistrations()).map(r=>({scope:r.scope,state:r.active?.state}))}));
  assert(sw.controller===origin+'/sw.js'&&sw.registrations.every(r=>r.scope===origin+'/'),'SW scope');
