@@ -1,0 +1,185 @@
+[
+  {
+    "test": "H09 independent Session identity, both modes and cancellation: different-items-extra",
+    "evidence": [
+      {
+        "mode": "category",
+        "target": "normal-A",
+        "labels": [
+          "プレス軽",
+          "プレス重",
+          "プレス重"
+        ]
+      },
+      {
+        "mode": "recommended",
+        "target": "normal-A",
+        "labels": [
+          "プレス軽",
+          "プレス重",
+          "プレス重"
+        ]
+      },
+      {
+        "mode": "category",
+        "target": "normal-B",
+        "labels": [
+          "プレス軽",
+          "プレス重"
+        ]
+      },
+      {
+        "mode": "recommended",
+        "target": "normal-B",
+        "labels": [
+          "プレス軽",
+          "プレス重"
+        ]
+      },
+      {
+        "mode": "category",
+        "target": "extra-L",
+        "labels": [
+          "プレス軽"
+        ]
+      },
+      {
+        "mode": "recommended",
+        "target": "extra-L",
+        "labels": [
+          "プレス軽"
+        ]
+      },
+      {
+        "mode": "category",
+        "labels": []
+      },
+      {
+        "mode": "recommended",
+        "labels": []
+      }
+    ]
+  },
+  {
+    "test": "H09 independent Session identity, both modes and cancellation: different-entries",
+    "evidence": [
+      {
+        "mode": "category",
+        "target": "normal-A",
+        "labels": [
+          "プレス軽",
+          "プレス重",
+          "プレス重"
+        ]
+      },
+      {
+        "mode": "recommended",
+        "target": "normal-A",
+        "labels": [
+          "プレス軽",
+          "プレス重",
+          "プレス重"
+        ]
+      },
+      {
+        "mode": "category",
+        "target": "normal-B",
+        "labels": [
+          "プレス軽",
+          "プレス重"
+        ]
+      },
+      {
+        "mode": "recommended",
+        "target": "normal-B",
+        "labels": [
+          "プレス軽",
+          "プレス重"
+        ]
+      },
+      {
+        "mode": "category",
+        "target": "extra-L",
+        "labels": [
+          "プレス軽"
+        ]
+      },
+      {
+        "mode": "recommended",
+        "target": "extra-L",
+        "labels": [
+          "プレス軽"
+        ]
+      },
+      {
+        "mode": "category",
+        "labels": []
+      },
+      {
+        "mode": "recommended",
+        "labels": []
+      }
+    ]
+  },
+  {
+    "test": "H09 independent Session identity, both modes and cancellation: same-membership",
+    "evidence": [
+      {
+        "mode": "category",
+        "target": "normal-A",
+        "labels": [
+          "プレス軽",
+          "プレス重",
+          "プレス重"
+        ]
+      },
+      {
+        "mode": "recommended",
+        "target": "normal-A",
+        "labels": [
+          "プレス軽",
+          "プレス重",
+          "プレス重"
+        ]
+      },
+      {
+        "mode": "category",
+        "target": "normal-B",
+        "labels": [
+          "プレス軽",
+          "プレス重"
+        ]
+      },
+      {
+        "mode": "recommended",
+        "target": "normal-B",
+        "labels": [
+          "プレス軽",
+          "プレス重"
+        ]
+      },
+      {
+        "mode": "category",
+        "target": "extra-L",
+        "labels": [
+          "プレス軽"
+        ]
+      },
+      {
+        "mode": "recommended",
+        "target": "extra-L",
+        "labels": [
+          "プレス軽"
+        ]
+      },
+      {
+        "mode": "category",
+        "labels": []
+      },
+      {
+        "mode": "recommended",
+        "labels": []
+      }
+    ]
+  }
+]
