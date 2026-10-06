@@ -1,0 +1,9 @@
+file:///C:/Users/kzsak/Documents/Codex/2026-09-30/a/work/v1r-correction/tooling/staging/verify-update.mjs:11
+const assert=(value,message)=>{if(!value)throw Error(message)};
+                                               ^
+
+Error: updated canonical discriminators
+    at assert (file:///C:/Users/kzsak/Documents/Codex/2026-09-30/a/work/v1r-correction/tooling/staging/verify-update.mjs:11:48)
+    at file:///C:/Users/kzsak/Documents/Codex/2026-09-30/a/work/v1r-correction/tooling/staging/verify-update.mjs:40:2
+
+Node.js v24.21.0

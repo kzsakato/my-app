@@ -1,0 +1,26 @@
+{
+  "phase": "revoked",
+  "origin": "https://my-app-staging.kzsakato-lab.workers.dev",
+  "run": "H-20261005-owner-android-02",
+  "checks": [
+    "all-eight-accepted-assets-byte-identical",
+    "unauthorized-tool-and-mutation-denied",
+    "source-secrets-project-and-missing-assets-not-public",
+    "old-capability-revoked-on-real-server",
+    "ordinary-week-start-control-initial-Monday",
+    "ordinary-production-canonical-settings-build-scope-same-data",
+    "reload-active-menu-and-full-data-durable",
+    "browser-process-restart-same-dataset"
+  ],
+  "settings": "設定\n≡\nプロフィール\n体重・身長・年齢・性別\n›\n種目\n種目名・部位・回数／時間・重量の扱い\n›\n実施項目\n重量・回数／時間・セット数などの標準設定\n›\n週メニュー\n実施項目と推奨曜日の組み合わせ\n›\n分析\nトレーニング負荷の推移\n›\n設定履歴\n実施項目ごとの過去設定\n›\nデータ管理\nバックアップ作成・復元\n›\nトレーナー連携\nメニュー提案の取り込み・履歴の出力\n›\n\nBuild 2026-10-06 / 118ff493",
+  "sw": {
+    "controller": "https://my-app-staging.kzsakato-lab.workers.dev/sw.js",
+    "registrations": [
+      {
+        "scope": "https://my-app-staging.kzsakato-lab.workers.dev/",
+        "state": "activated"
+      }
+    ]
+  },
+  "result": "PASS"
+}

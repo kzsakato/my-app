@@ -1,0 +1,114 @@
+[
+  {
+    "at": "2026-10-06T03:32:41.413Z",
+    "state": {
+      "assets": [
+        "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-bGRkr4ft.js",
+        "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-DUgrbLyg.css"
+      ],
+      "sw": [
+        {
+          "scope": "https://my-app-staging.kzsakato-lab.workers.dev/",
+          "active": "activated"
+        }
+      ],
+      "cachedRequests": [
+        {
+          "cache": "workbox-precache-v2-https://my-app-staging.kzsakato-lab.workers.dev/",
+          "urls": [
+            "https://my-app-staging.kzsakato-lab.workers.dev/registerSW.js?__WB_REVISION__=402b66900e731ca748771b6fc5e7a068",
+            "https://my-app-staging.kzsakato-lab.workers.dev/prototypes/oic-012-density-prototype.html?__WB_REVISION__=70a3614905cdd480cc0708feec3bd129",
+            "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-DUgrbLyg.css",
+            "https://my-app-staging.kzsakato-lab.workers.dev/manifest.webmanifest?__WB_REVISION__=ee3c2890cab558b5087ca2d2d44091bc",
+            "https://my-app-staging.kzsakato-lab.workers.dev/index.html?__WB_REVISION__=85af033475ba53e07507e2b69299782e",
+            "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-bGRkr4ft.js"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "at": "2026-10-06T03:32:51.426Z",
+    "state": {
+      "assets": [
+        "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-bGRkr4ft.js",
+        "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-DUgrbLyg.css"
+      ],
+      "sw": [
+        {
+          "scope": "https://my-app-staging.kzsakato-lab.workers.dev/",
+          "active": "activated"
+        }
+      ],
+      "cachedRequests": [
+        {
+          "cache": "workbox-precache-v2-https://my-app-staging.kzsakato-lab.workers.dev/",
+          "urls": [
+            "https://my-app-staging.kzsakato-lab.workers.dev/registerSW.js?__WB_REVISION__=402b66900e731ca748771b6fc5e7a068",
+            "https://my-app-staging.kzsakato-lab.workers.dev/prototypes/oic-012-density-prototype.html?__WB_REVISION__=70a3614905cdd480cc0708feec3bd129",
+            "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-DUgrbLyg.css",
+            "https://my-app-staging.kzsakato-lab.workers.dev/manifest.webmanifest?__WB_REVISION__=ee3c2890cab558b5087ca2d2d44091bc",
+            "https://my-app-staging.kzsakato-lab.workers.dev/index.html?__WB_REVISION__=e12abcf0d71743c9908a39a2d815f973",
+            "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-ddSmqDMp.js"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "at": "2026-10-06T03:33:01.448Z",
+    "state": {
+      "assets": [
+        "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-bGRkr4ft.js",
+        "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-DUgrbLyg.css"
+      ],
+      "sw": [
+        {
+          "scope": "https://my-app-staging.kzsakato-lab.workers.dev/",
+          "active": "activated"
+        }
+      ],
+      "cachedRequests": [
+        {
+          "cache": "workbox-precache-v2-https://my-app-staging.kzsakato-lab.workers.dev/",
+          "urls": [
+            "https://my-app-staging.kzsakato-lab.workers.dev/registerSW.js?__WB_REVISION__=402b66900e731ca748771b6fc5e7a068",
+            "https://my-app-staging.kzsakato-lab.workers.dev/prototypes/oic-012-density-prototype.html?__WB_REVISION__=70a3614905cdd480cc0708feec3bd129",
+            "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-DUgrbLyg.css",
+            "https://my-app-staging.kzsakato-lab.workers.dev/manifest.webmanifest?__WB_REVISION__=ee3c2890cab558b5087ca2d2d44091bc",
+            "https://my-app-staging.kzsakato-lab.workers.dev/index.html?__WB_REVISION__=e12abcf0d71743c9908a39a2d815f973",
+            "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-ddSmqDMp.js"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "at": "2026-10-06T03:33:11.467Z",
+    "state": {
+      "assets": [
+        "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-bGRkr4ft.js",
+        "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-DUgrbLyg.css"
+      ],
+      "sw": [
+        {
+          "scope": "https://my-app-staging.kzsakato-lab.workers.dev/",
+          "active": "activated"
+        }
+      ],
+      "cachedRequests": [
+        {
+          "cache": "workbox-precache-v2-https://my-app-staging.kzsakato-lab.workers.dev/",
+          "urls": [
+            "https://my-app-staging.kzsakato-lab.workers.dev/registerSW.js?__WB_REVISION__=402b66900e731ca748771b6fc5e7a068",
+            "https://my-app-staging.kzsakato-lab.workers.dev/prototypes/oic-012-density-prototype.html?__WB_REVISION__=70a3614905cdd480cc0708feec3bd129",
+            "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-DUgrbLyg.css",
+            "https://my-app-staging.kzsakato-lab.workers.dev/manifest.webmanifest?__WB_REVISION__=ee3c2890cab558b5087ca2d2d44091bc",
+            "https://my-app-staging.kzsakato-lab.workers.dev/index.html?__WB_REVISION__=e12abcf0d71743c9908a39a2d815f973",
+            "https://my-app-staging.kzsakato-lab.workers.dev/assets/index-ddSmqDMp.js"
+          ]
+        }
+      ]
+    }
+  }
+]

@@ -1,0 +1,28 @@
+
+ ⛅️ wrangler 4.147.0
+────────────────────
+🌀 Building list of assets...
+✨ Read 10 files from the assets directory C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\v1r-correction\dist
+🌀 Starting asset upload...
+🌀 Found 3 new or modified static assets to upload. Proceeding with upload...
++ /index.html
++ /sw.js
++ /assets/index-ddSmqDMp.js
+Uploaded 1 of 3 assets
+Uploaded 2 of 3 assets
+Uploaded 3 of 3 assets
+✨ Success! Uploaded 3 files (5 already uploaded) (1.25 sec)
+
+Total Upload: 41.83 KiB / gzip: 12.74 KiB
+Worker Startup Time: 1 ms
+Your Worker has access to the following bindings:
+Binding                       Resource                  
+env.ASSETS                    Assets                    
+env.PREP_RUN ("")             Environment Variable      
+env.PREP_EXPIRES ("")         Environment Variable      
+env.PREP_TOKEN_HASH ("")      Environment Variable      
+
+Uploaded my-app-staging (5.78 sec)
+Deployed my-app-staging triggers (0.86 sec)
+  https://my-app-staging.kzsakato-lab.workers.dev
+Current Version ID: bc703b36-1eaa-41e2-acfc-acdd40092016

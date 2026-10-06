@@ -1,0 +1,9 @@
+file:///C:/Users/kzsak/Documents/Codex/2026-09-30/a/work/v1r-correction/tooling/staging/verify.mjs:8
+const assert=(v,m)=>{if(!v)throw Error(m)};
+                                 ^
+
+Error: Build
+    at assert (file:///C:/Users/kzsak/Documents/Codex/2026-09-30/a/work/v1r-correction/tooling/staging/verify.mjs:8:34)
+    at file:///C:/Users/kzsak/Documents/Codex/2026-09-30/a/work/v1r-correction/tooling/staging/verify.mjs:52:2
+
+Node.js v24.21.0
