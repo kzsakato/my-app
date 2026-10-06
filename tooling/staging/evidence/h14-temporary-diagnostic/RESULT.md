@@ -1,7 +1,7 @@
 # H-14 temporary SW除外 / read-only診断
 
 2026-10-06 JST、App Development実行。
-RESULT: **実装・隔離automation・Staging automation到達性 PASS。Owner診断結果待ち。**
+最新RESULT: **Owner診断結果受領。一時page/SW撤去・accepted artifact復帰 PASS。Owner partition修復は未実施。** 以下は配信時点の記録を保持し、末尾の復帰結果で更新する。
 
 - Authority: H-14 Technical SW reachability resolution（Project `ee8606e`）とOwnerの実装・automation検証指示。前turnのtemporary Staging限定deploy許可を継続。
 - Product: `118ff493838fa35aa0a80e88532d8731e4005c38`。Product source / canonical/legacy logic / schema / accepted distは変更なし。
@@ -41,3 +41,18 @@ Evidence: `local-evidence.json`, `remote-before.json`, `remote-evidence.json`, `
 ## 撤去待ち
 
 Owner結果を受け取りPMOへ返した後、`tooling/staging/DIAGNOSTIC.md` の撤去手順に従い元の `wrangler.json` でaccepted dist / Workerへ復帰。診断route 403、accepted全8hash、automation通常SW復帰・全storage不変、閉じたprep gate、Production不変のEvidenceを返す。復帰までV1R Close HOLD。現在はtemporary診断のため**未撤去**であり、accepted H-10 artifact状態への復帰完了を主張しない。
+
+## Owner結果受領・撤去完了 — 2026-10-06
+
+Owner提示の診断timestamp `2026-10-06T06:50:11.731Z`（15:50:11 JST）では、通常Staging originの当該partitionはauthority absent / canonical missing / legacyPresent true / legacyVersion 6 / legacy-activeだった。これはOwnerが貼り付けた結果であり、automation結果と区別する。欠損の発生時点・原因、H-10 MAN時とのpartition連続性は確定しない。Owner storageの修復・再prepは行っていない。
+
+事前に用意した撤去手順を実施し、元のWorkerとaccepted artifactを再配信した。
+
+- 復帰Worker version: `eb5b6bc8-c72b-4727-bceb-69d5da8801da`（`restore-deploy.log`）。
+- HTTPS全8fileがH-09 accepted manifestに一致。temporary SW hashではなくaccepted SW hashへ復帰。
+- 診断GETのHTTP応答は403。診断shellを配信しない。
+- 同じautomation profileで通常navigation 1cycleによりaccepted SWの元のnavigation fallbackへ復帰。配信前全storage serialization hashと一致（`restoration.json`）。
+- 通常remote revoked検証もPASS: canonical discriminator、新Build、全asset、閉じたgate、active menu、reload/restart全state一致（`restored-ordinary.json`）。
+- Production配信hash / deployment / main不変（更新済み `post-integrity.json`）。
+
+一時surfaceの**実Staging撤去は完了**。Ownerブラウザー内部のSW更新まで直接確認したものではない。通常Stagingのaccepted配信への復帰はOwner canonical-ready化を意味しない。Owner partition修復についてPMO判断を待ち、V1R Close HOLDを維持する。

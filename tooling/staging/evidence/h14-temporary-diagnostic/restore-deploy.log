@@ -1,0 +1,20 @@
+
+ ⛅️ wrangler 4.147.0
+────────────────────
+🌀 Building list of assets...
+✨ Read 10 files from the assets directory C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\v1r-correction\dist
+🌀 Starting asset upload...
+No updated asset files to upload. Proceeding with deployment...
+Total Upload: 41.83 KiB / gzip: 12.74 KiB
+Worker Startup Time: 2 ms
+Your Worker has access to the following bindings:
+Binding                       Resource                  
+env.ASSETS                    Assets                    
+env.PREP_RUN ("")             Environment Variable      
+env.PREP_EXPIRES ("")         Environment Variable      
+env.PREP_TOKEN_HASH ("")      Environment Variable      
+
+Uploaded my-app-staging (3.01 sec)
+Deployed my-app-staging triggers (0.54 sec)
+  https://my-app-staging.kzsakato-lab.workers.dev
+Current Version ID: eb5b6bc8-c72b-4727-bceb-69d5da8801da
