@@ -21,3 +21,12 @@ it('revoked tool and API cannot be fetched; ordinary assets unaffected',async()=
  expect(shell.headers.get('Cache-Control')).toContain('no-store');expect(await shell.text()).not.toContain('gated tool')
  expect(await(await worker.fetch(new Request('https://staging.example/'),closed)).text()).toBe('product')
 })
+it('server alone fixes purpose; unknown purposes fail closed', async () => {
+ const current = { ...env, PREP_EXPIRES: new Date(Date.now() + 60000).toISOString() }
+ for (const purpose of [undefined, 'fresh', 'h14-recovery']) {
+  const response = await worker.fetch(request(), { ...current, PREP_PURPOSE: purpose })
+  expect(response.status).toBe(200)
+  expect(await response.json()).toEqual({ run: 'test', purpose: purpose ?? 'fresh' })
+ }
+ expect((await worker.fetch(request(), { ...current, PREP_PURPOSE: 'guess' })).status).toBe(403)
+})

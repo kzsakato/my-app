@@ -27,6 +27,22 @@ Web Locks serialize preparation within one browser partition. A durable staging-
 
 The baseline comes from accepted `loadData()` on a known-clean partition and must equal accepted `base`. Profile `{weight:66}` is the accepted initial Profile weight, with no `analysisStartDate` adoption. Canonical initialization takes Profile explicitly; it has no separate default-Profile API. The fixture uses the existing three-item package, no Front Plank, three canonical initial setting-change records, existing Android proposal, zero Sessions, Monday (`0`), and a separate validated/write/read-back active-menu selection. Menu apply itself does not activate it.
 
+## H-14 explicit bounded recovery mode
+
+The preceding base-equality condition remains mandatory for normal `fresh` runs (also the default for existing configurations). A server-issued `PREP_PURPOSE=h14-recovery` run permits a different, valid, genuinely persisted legacy v6 payload only when authority is false and canonical, baseline, recovery point and preparation receipt are absent. The existing full legacy validator must pass. A completed receipt for this exact run/purpose is verification-only; partial, other-run or changed state stops. The client pins the server run/purpose and checks it again before persistence. Unknown purposes fail closed. Storage contents never promote a fresh run into recovery.
+
+Recovery preserves the full legacy payload in the existing immutable baseline using `cutoverCanonical`; it never writes `state/app`. No legacy Profile, IDs, Category, Menu, Session or history is imported. The canonical candidate and all subsequent approved bootstrap/proposal/activation operations are unchanged. Canonical Sessions start empty; previous Owner MAN Sessions are not reconstructed. Final and duplicate checks also verify that the legacy source still matches its baseline.
+
+`issue-run.mjs` accepts an optional fourth argument `h14-recovery` after run ID and duration. Issuing/deploying an Owner run requires the H-14 routing checkpoint; the automated implementation check does not issue one. In particular, the existing accepted Product SW intercepts `/__staging/prepare.html` navigation on already controlled partitions. H-14's former diagnostic-page exception does not authorize a preparation-page exception. Do not send the current preparation link to Owner as a proven recovery delivery path, reset storage, or change Product SW to work around this boundary.
+
+Reproduce local recovery automation after the build and unit/type checks above:
+
+```powershell
+node tooling/staging/verify-recovery-local.mjs <absolute-path-to-wrangler-4.147.0-package>
+```
+
+This uses local workerd, the accepted eight Product assets, real Chromium/IndexedDB and isolated synthetic legacy data. It checks baseline equality, no legacy import/write, zero-write duplicate, purpose pinning, live server revocation, ordinary canonical reload/process restart, and the existing SW delivery limitation. It neither reads Owner capabilities nor deploys to Staging. Its PASS is App Development automation evidence, not Owner PREPARED, QA acceptance or Close.
+
 ## Revocation and Owner checkpoint
 
 Deploying the checked-in config closes all mutation capabilities:

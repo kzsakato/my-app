@@ -5,22 +5,25 @@ import { createAndroidManMenuProposal } from '../../src/canonical/manMenuProposa
 import { applyMenuProposal, createMenuProposalCandidate } from '../../src/canonical/trainer'
 import { validateCanonical } from '../../src/canonical/validate'
 import type { AppData } from '../../src/domain'
+import { validateCanonical as validateLegacyV6 } from '../../src/domain'
 
 export const equal = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b)
-export type Receipt = { run: string; phase: 'started' | 'complete'; at: string; ids: string[]; baseline: AppData }
+export type PreparationPurpose = 'fresh' | 'h14-recovery'
+export type Receipt = { run: string; purpose?: PreparationPurpose; phase: 'started' | 'complete'; at: string; ids: string[]; baseline: AppData }
 export type Dependencies = {
   storage: CanonicalStorage; base: AppData;
   load: () => Promise<{ kind: string; data?: unknown }>;
   recovery: () => Promise<unknown>;
   journal: { read(): Receipt | null; write(r: Receipt): void };
-  authorize: () => Promise<{ run: string }>;
+  authorize: () => Promise<{ run: string; purpose?: PreparationPurpose }>;
+  legacySource?: () => Promise<unknown>;
   newId: () => string; now: () => string;
 }
 export function expected(r: Receipt) {
   if (r.ids.length !== 14 || new Set(r.ids).size !== 14 || r.ids.some(id => !id)) throw Error('IDs')
   let index = 0
   const newId = () => { const id = r.ids[index++]; if (!id) throw Error('ID exhausted'); return id }
-  // Accepted fresh-start Profile has weight=66; no legacy analysisStartDate adoption.
+  // Both purposes use the approved fixture Profile; no legacy Profile adoption.
   const initial = createInitialCanonicalCandidate({ weight: 66 })
   const bootstrap = createManMasterBootstrapCandidate(initial, { includeFrontPlank: false, newId, now: () => r.at })
   const proposal = createAndroidManMenuProposal(bootstrap.value, bootstrap.mappings, { includeTime: false, newId })
@@ -35,6 +38,12 @@ export async function prepare(d: Dependencies): Promise<{ status: 'PREPARED' | '
   const trace: string[] = []
   try {
     const gate = await d.authorize()
+    const purpose = gate.purpose ?? 'fresh'
+    if (purpose !== 'fresh' && purpose !== 'h14-recovery') throw Error('Unknown purpose')
+    const checkGate = async () => {
+      const current = await d.authorize()
+      if (current.run !== gate.run || (current.purpose ?? 'fresh') !== purpose) throw Error('Run changed')
+    }
     const old = d.journal.read()
     const verify = async (r: Receipt) => {
       const plan = expected(r)
@@ -48,22 +57,32 @@ export async function prepare(d: Dependencies): Promise<{ status: 'PREPARED' | '
         || (await d.load()).kind !== 'canonical-ready') throw Error('Read-back')
       const restarted = await loadCanonicalStartup(d.storage)
       if (restarted.kind !== 'canonical-ready' || !equal(restarted.data, plan.final)) throw Error('Restart')
-      await d.authorize()
+      if (purpose === 'h14-recovery' && (!d.legacySource || !equal(await d.legacySource(), r.baseline))) throw Error('Legacy changed')
+      await checkGate()
       trace.push('validation/read-back/restart')
     }
     if (old) {
-      if (old.run !== gate.run || old.phase !== 'complete') throw Error('Interrupted/other run')
+      if (old.run !== gate.run || (old.purpose ?? 'fresh') !== purpose || old.phase !== 'complete') throw Error('Interrupted/other run')
       await verify(old)
       trace.push('duplicate-zero-write')
       return { status: 'PREPARED', trace }
     }
     // Call the accepted ordinary startup, not an invented legacy payload.
     const loaded = await d.load()
-    if (loaded.kind !== 'ready' || !equal(loaded.data, d.base)
-      || (await d.storage.readCutoverState()).authoritative || await d.storage.readCanonical()
-      || await d.storage.readBaseline() || await d.recovery()) throw Error('Not pristine')
-    trace.push('genuine-initial-startup')
-    const receipt: Receipt = { run: gate.run, phase: 'started', at: d.now(), ids: Array.from({ length: 14 }, d.newId), baseline: structuredClone(loaded.data as AppData) }
+    if (loaded.kind !== 'ready' || (await d.storage.readCutoverState()).authoritative !== false
+      || (await d.storage.readCanonical()) !== undefined || (await d.storage.readBaseline()) !== undefined
+      || (await d.recovery()) !== undefined) throw Error('Unexpected start state')
+    if (purpose === 'fresh') {
+      if (!equal(loaded.data, d.base)) throw Error('Not pristine')
+      trace.push('genuine-initial-startup')
+    } else {
+      // The real persisted v6 must exist; loadData's default-base fallback alone
+      // is not proof of the diagnosed H14 starting state.
+      if (!d.legacySource || !equal(await d.legacySource(), loaded.data) || validateLegacyV6(loaded.data).errors.length) throw Error('Legacy baseline invalid')
+      trace.push('h14-valid-existing-legacy-v6/no-import')
+    }
+    await checkGate()
+    const receipt: Receipt = { run: gate.run, purpose, phase: 'started', at: d.now(), ids: Array.from({ length: 14 }, d.newId), baseline: structuredClone(loaded.data as AppData) }
     const plan = expected(receipt)
     d.journal.write(receipt) // Interruption at any later point is STOP, never guessed repair.
     const cutover = await cutoverCanonical(d.storage, receipt.baseline, plan.initial, receipt.at)

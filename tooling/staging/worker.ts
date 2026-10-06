@@ -1,8 +1,9 @@
 import initializer from './.generated/initializer.txt'
 
-type Env = { ASSETS: { fetch(r: Request): Promise<Response> }; PREP_TOKEN_HASH?: string; PREP_RUN?: string; PREP_EXPIRES?: string }
+type Env = { ASSETS: { fetch(r: Request): Promise<Response> }; PREP_TOKEN_HASH?: string; PREP_RUN?: string; PREP_EXPIRES?: string; PREP_PURPOSE?: string }
 const noStore = { 'Cache-Control': 'no-store, max-age=0', 'Referrer-Policy': 'no-referrer', 'X-Content-Type-Options': 'nosniff' }
 export async function permitted(request: Request, env: Env, now = Date.now()) {
+  if (env.PREP_PURPOSE !== undefined && env.PREP_PURPOSE !== 'fresh' && env.PREP_PURPOSE !== 'h14-recovery') return false
   if (!env.PREP_RUN || !env.PREP_TOKEN_HASH || !env.PREP_EXPIRES || !Number.isFinite(Date.parse(env.PREP_EXPIRES)) || now >= Date.parse(env.PREP_EXPIRES)) return false
   if (request.headers.get('Origin') !== new URL(request.url).origin) return false
   const token = request.headers.get('Authorization')?.match(/^Bearer ([a-f0-9]{64})$/)?.[1]
@@ -24,7 +25,7 @@ export default {
     if (path === '/__staging/prepare.html' && request.method === 'GET') return new Response(shell, { headers: { ...noStore, 'Content-Type': 'text/html; charset=utf-8', 'Content-Security-Policy': "default-src 'none'; script-src 'unsafe-inline' blob:; connect-src 'self'; worker-src 'none'; frame-ancestors 'none'; base-uri 'none'" } })
     if (path.startsWith('/__staging/')) {
       if (request.method !== 'POST' || !await permitted(request, env)) return new Response('STOP', { status: 403, headers: noStore })
-      if (path === '/__staging/authorize') return Response.json({ run: env.PREP_RUN }, { headers: noStore })
+      if (path === '/__staging/authorize') return Response.json({ run: env.PREP_RUN, purpose: env.PREP_PURPOSE ?? 'fresh' }, { headers: noStore })
       if (path === '/__staging/initializer') return new Response(initializer, { headers: { ...noStore, 'Content-Type': 'text/javascript; charset=utf-8' } })
       return new Response('STOP', { status: 404, headers: noStore })
     }
