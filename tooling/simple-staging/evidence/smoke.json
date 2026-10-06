@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-07",
+  "scope": "local bounded smoke only; no remote deploy",
+  "checks": [
+    "eight-Product-files-byte-identical-and-promotion-excludes-entry-fixture",
+    "fresh-canonical-approved-fixture-zero-Sessions-normal-Profile-edit",
+    "revisit-zero-provisioning-reload-preserves-MAN-change-SW-only-app",
+    "unexpected-data-and-old-DB-version-STOP-without-provisioning",
+    "interrupted-first-transaction-keeps-data-and-authority-absent",
+    "intercepted-Production-origin-zero-DB-provisioning-no-real-network"
+  ],
+  "revisitEntryPuts": 0,
+  "result": "PASS",
+  "productCommit": "118ff493838fa35aa0a80e88532d8731e4005c38",
+  "fixtureHash": "ae5e200b291b4e10a357fdff04a7b29f9bcec606a1b70946e21f1d68792fc4f3"
+}
