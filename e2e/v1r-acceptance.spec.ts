@@ -107,7 +107,8 @@ test('H-03 focused 4/5 + H06 A5: UI Extra completion has own actual and visible 
   await page.getByRole('button', { name: /^胸 / }).click()
   await expect(page.getByRole('button', { name: /^正規テストプレス / })).toHaveCount(0)
   await page.getByLabel('実施済も表示').check()
-  await expect(page.getByRole('button', { name: /^正規テストプレス / })).toHaveCount(2)
+  // H09: Extra owns one row; planned Entries do not borrow its actual.
+  await expect(page.getByRole('button', { name: /^正規テストプレス / })).toHaveCount(1)
   await assertFocusedMarkers(page, ['2026-09-26', '2026-10-03'])
   await top(page)
   await page.getByRole('button', { name: '＋ 追加トレーニングを登録' }).click()
@@ -193,7 +194,8 @@ test('OIC-008/009/010/012: temporary weekday filter, distinct today including Ex
   await expect(page.getByRole('button', { name: /表示する推奨曜日: 土/ })).toBeVisible()
   await page.getByLabel('実施済も表示').check()
   const rows = page.locator('.item-density')
-  await expect(rows).toHaveCount(4)
+  // H09: two individual Extra Sessions, without two planned aliases.
+  await expect(rows).toHaveCount(2)
   await expect(rows.first()).not.toContainText('kg')
   await expect(rows.first().locator('.item-detail-line')).toHaveCount(1)
   await page.getByRole('button', { name: /表示する推奨曜日:/ }).click()

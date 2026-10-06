@@ -102,7 +102,8 @@ test('H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/
   await page.getByRole('button', { name: 'カテゴリ表示', exact: true }).click()
   await page.getByRole('button', { name: /^肩 / }).click()
   await page.getByLabel('実施済も表示').check()
-  await expect(page.getByRole('button', { name: /^復旧ルートプレス / })).toHaveCount(2)
+  // H09: one completed Session, not one alias per planned Entry.
+  await expect(page.getByRole('button', { name: /^復旧ルートプレス / })).toHaveCount(1)
   await page.getByRole('button', { name: /^復旧ルートプレス / }).first().click()
   page.once('dialog', dialog => dialog.dismiss())
   await page.getByRole('button', { name: '9/21の実行を取り消す' }).click()

@@ -1,6 +1,7 @@
 import { compareInstants } from "./canonical/instant";
 import { useMemo, useRef, useState } from "react";
 import { currentWeekSessions, sessionOrder, shiftLocalDate, weeklyLoadSummary } from "./canonical/baseline";
+import { completedEntryIds, completedSessionRows, type CompletedSessionRow } from "./canonical/topProjection";
 import { cancelSession } from "./canonical/cancelSession";
 import { itemValidationMessages } from "./itemValidation";
 import { applyCanonicalRestore, createCanonicalBackup, previewCanonicalRestore, type BackupPreview } from "./canonical/backup";
@@ -432,20 +433,12 @@ function TopPage({
   const selectedDays = [...preferences.days].sort((left, right) => left - right);
   const topMode = preferences.mode;
   const [categoryShowCompleted, setCategoryShowCompleted] = useState(false);
-  const showCompleted = region ? categoryShowCompleted : preferences.showCompleted;
   const [dayFilterOpen, setDayFilterOpen] = useState(false);
-  const latestByEntry = new Map<string, Session>();
   const weekSessions = currentWeekSessions(data, today).sort(sessionOrder);
-  entries.forEach(entry => {
-    const exerciseId = data.trainingItems.find(item => item.id === entry.trainingItemId)?.exerciseId;
-    // Completion is Exercise-scoped, but a row binds its actual's ID here.
-    // Prefer its own membership before the Exercise completion representative.
-    const session = weekSessions.find(row => row.menuEntryId === entry.id && row.snapshot.exerciseId === exerciseId)
-      ?? weekSessions.find(row => row.snapshot.exerciseId === exerciseId);
-    if (session) latestByEntry.set(entry.id, session);
-  });
+  const completedEntries = completedEntryIds(data, entries, weekSessions);
+  const completedRows = completedSessionRows(weekSessions);
   const todayEntries = entries.filter(entry => entry.recommendedDay === currentDay);
-  const completedCount = (rows: MenuEntry[]) => rows.filter(entry => latestByEntry.has(entry.id)).length;
+  const completedCount = (rows: MenuEntry[]) => rows.filter(entry => completedEntries.has(entry.id)).length;
   const distinctCount = (rows: MenuEntry[]) => new Set(rows.map(entry => data.trainingItems.find(item => item.id === entry.trainingItemId)?.exerciseId)).size;
   const todayCompleted = new Set(data.sessions.filter(session => session.date === today).map(session => session.snapshot.exerciseId)).size;
   const load = weeklyLoadSummary(data, today);
@@ -489,14 +482,13 @@ function TopPage({
       exercise.lifecycle !== "active"
     )
       return null;
-    const session = latestByEntry.get(entry.id);
-    if (session && !showCompleted) return null;
+    if (completedEntries.has(entry.id)) return null;
     return (
       <button
         className="row item item-density"
         key={entry.id}
-        data-session-id={session?.id}
-        onClick={() => session ? onActual(session) : onRun(entry.id)}
+        data-menu-entry-id={entry.id}
+        onClick={() => onRun(entry.id)}
       >
         <span>
           <b>{item.displayName || exercise.name}</b>
@@ -505,15 +497,31 @@ function TopPage({
             <small className="item-history">{exerciseHistory(data.sessions, exercise.id, new Date(), data.weekStartsOn)}</small>
           </span>
         </span>
-        <span className={session ? "ok" : ""}>{session ? "✓ 実施済" : "未実施"}</span>
+        <span>未実施</span>
       </button>
     );
   };
+  const renderCompleted = ({ session, label }: CompletedSessionRow) => (
+    <button className="row item item-density" data-session-id={session.id}
+      data-session-menu-entry-id={session.menuEntryId} key={session.id} onClick={() => onActual(session)}>
+      <span><b>{label}</b><span className="item-detail-line">
+        <small>{session.menuEntryId ? "実施記録" : "追加実施"}　{session.date}</small>
+        <small className="item-history">{exerciseHistory(data.sessions, session.snapshot.exerciseId, new Date(), data.weekStartsOn)}</small>
+      </span></span><span className="ok">✓ 実施済</span>
+    </button>
+  );
+  // Include snapshot-only destinations so Extra remains discoverable even when
+  // no current planned candidate belongs to its historical region.
+  const categoryDestinations = [...new Set([
+    ...categoryGroups.map(([name]) => name),
+    ...completedRows.flatMap(row => row.bodyRegion ? [row.bodyRegion] : []),
+  ])].sort((left, right) => left.localeCompare(right, "ja"));
   return (
     <Frame title={region ?? "今週の実施メニュー"} back={region ? onTop : undefined} onSettings={onSettings} onTop={onTop}>
       {region ? <>
         <label className="check"><input type="checkbox" checked={categoryShowCompleted} onChange={event => setCategoryShowCompleted(event.target.checked)} />実施済も表示</label>
         {(categoryGroups.find(([name]) => name === region)?.[1] ?? []).map(renderEntry)}
+        {categoryShowCompleted && completedRows.filter(row => row.bodyRegion === region).map(renderCompleted)}
       </> : <>
       {notice && <p className="week">{notice}</p>}
       <select aria-label="週メニュー"
@@ -564,12 +572,13 @@ function TopPage({
           <button className="extra-button" onClick={onExtra}>＋ 追加トレーニングを登録</button>
           {topMode === "category" ? (
             <>
-              {categoryGroups.length === 0 ? (
+              {categoryDestinations.length === 0 ? (
                 <p className="week">カテゴリ表示できる実施項目はありません。</p>
               ) : (
-                categoryGroups.map(([bodyRegion, groupEntries]) => (
-                  <button className="row" key={bodyRegion} onClick={() => onCategory(bodyRegion)}><span><b>{bodyRegion}</b><small>{groupEntries.length}項目</small></span><span>{completedCount(groupEntries)}/{groupEntries.length}</span></button>
-                ))
+                categoryDestinations.map(bodyRegion => {
+                  const groupEntries = categoryGroups.find(([name]) => name === bodyRegion)?.[1] ?? [];
+                  return <button className="row" key={bodyRegion} onClick={() => onCategory(bodyRegion)}><span><b>{bodyRegion}</b><small>{groupEntries.length ? `${groupEntries.length}項目` : "実施記録"}</small></span>{groupEntries.length > 0 && <span>{completedCount(groupEntries)}/{groupEntries.length}</span>}</button>;
+                })
               )}
             </>
           ) : (
@@ -610,7 +619,7 @@ function TopPage({
               ) : (
                 recommendedEntries.map(renderEntry)
               )}
-              {preferences.showCompleted && weekSessions.filter(session => !session.menuEntryId || !recommendedEntries.some(entry => latestByEntry.get(entry.id)?.id === session.id)).map(session => <button className="row item item-density" data-session-id={session.id} key={session.id} onClick={() => onActual(session)}><span><b>{session.snapshot.trainingItemDisplayName}</b><span className="item-detail-line"><small>{session.menuEntryId ? "実施記録" : "追加実施"}　{session.date}</small><small className="item-history">{exerciseHistory(data.sessions, session.snapshot.exerciseId, new Date(), data.weekStartsOn)}</small></span></span><span>✓ 実施済</span></button>)}
+              {preferences.showCompleted && completedRows.map(renderCompleted)}
             </>
           )}
         </>
@@ -727,7 +736,7 @@ function RunPage({
     </Frame>
   );
   return (
-    <Frame title={item.displayName} back={pending ? undefined : onBack} onTop={pending ? () => {} : onTop} onSettings={onSettings}>
+    <Frame title={completedSession?.snapshot.trainingItemDisplayName ?? item.displayName} back={pending ? undefined : onBack} onTop={pending ? () => {} : onTop} onSettings={onSettings}>
       <p className="week">
         {entry
           ? `週メニュー: ${entry.recommendedDay === undefined ? "任意" : `推奨 ${days[entry.recommendedDay]}`}`
