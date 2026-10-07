@@ -3,6 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+    paths:
+      - 'release/**'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -14,25 +18,21 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  artifact:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
           node-version: 24
-      - run: npm install
-      - run: npm run build
-        env:
-          VITE_BUILD_SHA: ${{ github.sha }}
-      - run: touch dist/.nojekyll
+      - run: node release/verify.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: dist
+          path: release/118ff493/product
 
   deploy:
-    needs: build
+    needs: artifact
     runs-on: ubuntu-latest
     environment:
       name: github-pages
