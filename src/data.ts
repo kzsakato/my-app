@@ -2,6 +2,9 @@ import { openDB } from 'idb'
 import { DATA_VERSION, type AppData, type Category, type Exercise, type Item, type Menu, type MenuItem, type Profile, type Session, type SettingHistory, validateCanonical } from './domain'
 import { loadCanonicalStartup, type CanonicalStorage, type CutoverState, type LegacyBaseline } from './canonical/cutover'
 import type { CanonicalAppData } from './canonical/types'
+import { initializeOwnerManagement, rebaseOwnerChange } from './canonical/management'
+import { createTrainerApplyCandidate, trainerReadbackMatches, type TrainerApplyCandidate } from './canonical/trainerV11'
+import { validateCanonical as validateCanonicalDomain } from './canonical/validate'
 
 export type { AppData, Category, Exercise, Item, Menu, MenuItem, Profile, Session, SettingHistory } from './domain'
 export type { MeasureType, WeightMode } from './domain'
@@ -17,7 +20,9 @@ const values:(number|undefined)[][]=[[42.5,15,undefined,5],[34,15,undefined,5],[
 const items:Item[]=exercises.map((e,n)=>{const v=values[n],c=cats.find(x=>x.exerciseIds.includes(e.id))!;return{id:seedId(`item-${n}`),name:e.name,categoryId:c.id,exerciseId:e.id,weight:v[0],reps:v[1],seconds:v[2],sets:v[3]??0}})
 export const base:AppData={version:DATA_VERSION,activeMenuId:seedId('ramp'),profile:{weight:66,analysisStartDate:localDate()},exercises,categories:cats,items,menus:[{id:seedId('ramp'),name:'助走トレーニング'},{id:seedId('normal'),name:'通常メニュー'}],menuItems:items.map((x,n)=>({id:seedId(`mi-${n}`),menuId:seedId('ramp'),itemId:x.id,recommendedDay:null})),sessions:[],settingHistories:[]}
 
-const dbPromise=openDB('training-check',7,{upgrade(db){
+const isV11Candidate=import.meta.env.VITE_V1R11_CANDIDATE === 'true'
+if(isV11Candidate && location.origin !== 'http://127.0.0.1:4177')throw new Error('V1.1候補版は専用origin http://127.0.0.1:4177 で開いてください')
+const dbPromise=openDB(isV11Candidate ? 'training-check-v1r11-candidate' : 'training-check',7,{upgrade(db){
  if(!db.objectStoreNames.contains('state'))db.createObjectStore('state')
  if(!db.objectStoreNames.contains('recovery'))db.createObjectStore('recovery')
  if(!db.objectStoreNames.contains('canonical'))db.createObjectStore('canonical')
@@ -35,8 +40,57 @@ export const canonicalStorage:CanonicalStorage={
  async writeCutoverState(value){const db=await dbPromise;await db.put('cutover',value,cutoverKey)},
  async readBaseline(){const db=await dbPromise;return db.get('baseline',baselineKey) as Promise<LegacyBaseline|undefined>},
  async writeBaseline(value){const db=await dbPromise;await db.put('baseline',value,baselineKey)},
- async readCanonical(){const db=await dbPromise;return db.get('canonical',canonicalKey) as Promise<CanonicalAppData|undefined>},
+ async readCanonical(){const db=await dbPromise;const value = await db.get('canonical',canonicalKey) as CanonicalAppData|undefined;return value ? initializeOwnerManagement(value) : undefined},
  async writeCanonical(value){const db=await dbPromise;await db.put('canonical',value,canonicalKey)},
+}
+
+/** Atomic latest-root Owner delta; preserves Trainer IDs/authority changed since the UI was opened. */
+export async function commitOwnerCanonical(base: CanonicalAppData, next: CanonicalAppData): Promise<CanonicalAppData> {
+ const db=await dbPromise, tx=db.transaction('canonical','readwrite')
+ let completed=false
+ try {
+  const stored=await tx.store.get(canonicalKey) as CanonicalAppData|undefined
+  if(!stored)throw new Error('canonical dataがありません')
+  const candidate=rebaseOwnerChange(base,next,initializeOwnerManagement(stored))
+  const checked=validateCanonicalDomain(candidate)
+  if(checked.errors.length)throw new Error(checked.errors.map(value=>`${value.path}: ${value.message}`).join(' / '))
+  await tx.store.put(candidate,canonicalKey);await tx.done;completed=true
+  const readback=await canonicalStorage.readCanonical()
+  if(!readback || JSON.stringify(readback)!==JSON.stringify(candidate))throw new Error('保存後の読み戻しが一致しません')
+  return readback
+ } catch(error) {try{tx.abort()}catch{/* Transaction may already have completed. */}await tx.done.catch(()=>{});throw Object.assign(new Error(String(error)),{canonicalUnknown:completed})}
+}
+
+export type TrainerStorageResult = {ok:true;value:CanonicalAppData;mapping:TrainerApplyCandidate['mapping']} | {ok:false;unknown:boolean;reason:string}
+/** Existing cutover record keeps only the one unresolved apply marker; no ledger/control store. */
+export async function applyTrainerCanonical(input: unknown): Promise<TrainerStorageResult> {
+ const db=await dbPromise, tx=db.transaction(['canonical','cutover'],'readwrite')
+ let committed=false, unresolved=false
+ let candidate:TrainerApplyCandidate|undefined
+ const proposalId=String((input as {proposalId?:unknown})?.proposalId ?? '')
+ try {
+  const state=(await tx.objectStore('cutover').get(cutoverKey)) as CutoverState|undefined
+  if(!state?.authoritative)throw new Error('canonical authorityがありません')
+  if(state.trainerPendingProposalId){unresolved=true;throw new Error('先行するAI操作の結果が未確認です')}
+  const stored=await tx.objectStore('canonical').get(canonicalKey) as CanonicalAppData|undefined
+  if(!stored)throw new Error('canonical dataがありません')
+  candidate=createTrainerApplyCandidate(input,initializeOwnerManagement(stored),()=>crypto.randomUUID(),new Date().toISOString())
+  await tx.objectStore('canonical').put(candidate.data,canonicalKey)
+  await tx.objectStore('cutover').put({...state,trainerPendingProposalId:proposalId},cutoverKey)
+  await tx.done;committed=true
+  const readback=await canonicalStorage.readCanonical()
+  if(!readback || !trainerReadbackMatches(candidate,readback,proposalId))throw new Error('独立readbackで適用結果を確認できません')
+  const finish=db.transaction('cutover','readwrite')
+  const current=await finish.store.get(cutoverKey) as CutoverState
+  if(current.trainerPendingProposalId!==proposalId){finish.abort();await finish.done.catch(()=>{});throw new Error('AI操作の帰属を確認できません')}
+  delete current.trainerPendingProposalId
+  await finish.store.put(current,cutoverKey);await finish.done
+  return{ok:true,value:readback,mapping:candidate.mapping}
+ }catch(error){
+  try{tx.abort()}catch{/* Never write an old root back. */}
+  await tx.done.catch(()=>{})
+  return{ok:false,unknown:committed||unresolved,reason:String(error)}
+ }
 }
 export type LoadResult={kind:'ready';data:AppData}|{kind:'migration';legacy:unknown}|{kind:'invalid';errors:string[]}|{kind:'canonical-ready';data:CanonicalAppData}|{kind:'canonical-recovery';errors:string[]}
 export async function loadData():Promise<LoadResult>{

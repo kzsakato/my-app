@@ -143,6 +143,7 @@ export function validateCanonical(input: unknown): ValidationResult {
   trainingItems.forEach((row, index) => {
     const path = `trainingItems[${index}]`
     if (!isRecord(row) || !isId(row.id) || !isLifecycle(row.lifecycle) || !isId(row.exerciseId) || !isText(row.displayName)) { add(errors, path, '必須フィールドが不正です'); return }
+    if (row.managementMode !== 'TRAINER' && row.managementMode !== 'MAN') add(errors, `${path}.managementMode`, 'TRAINERまたはMANが必要です')
     const exercise = exerciseMap.get(row.exerciseId)
     if (!exercise) add(errors, `${path}.exerciseId`, '参照先Exerciseがありません')
     else validateMeasurement(row, exercise.measureType, path, errors)
@@ -155,6 +156,7 @@ export function validateCanonical(input: unknown): ValidationResult {
   menus.forEach((row, index) => {
     const path = `menus[${index}]`
     if (!isRecord(row) || !isId(row.id) || !isLifecycle(row.lifecycle) || !isText(row.name)) { add(errors, path, '必須フィールドが不正です'); return }
+    if (row.managementMode !== 'TRAINER' && row.managementMode !== 'MAN') add(errors, `${path}.managementMode`, 'TRAINERまたはMANが必要です')
     if (row.memo !== undefined && typeof row.memo !== 'string') add(errors, `${path}.memo`, '文字列ではありません')
     menuMap.set(row.id, row)
   })

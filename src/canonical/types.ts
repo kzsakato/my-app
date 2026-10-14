@@ -35,6 +35,7 @@ export type Exercise = {
 }
 
 export type TrainingItem = {
+  managementMode: 'TRAINER' | 'MAN'
   id: ID
   lifecycle: Lifecycle
   exerciseId: ID
@@ -48,6 +49,7 @@ export type TrainingItem = {
 }
 
 export type Menu = {
+  managementMode: 'TRAINER' | 'MAN'
   id: ID
   lifecycle: Lifecycle
   name: string

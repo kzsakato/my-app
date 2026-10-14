@@ -9,8 +9,8 @@ export const canonicalFixture: CanonicalAppData = {
     id: 'exercise-1', lifecycle: 'active', name: 'ダンベルプレス', measureType: 'reps',
     usesWeight: true, weightMode: 'perSide', classifications: [{ kind: 'bodyRegion', label: '胸' }],
   }],
-  trainingItems: [{ id: 'item-1', lifecycle: 'active', exerciseId: 'exercise-1', displayName: 'ダンベルプレス', weight: 18, reps: 15, sets: 5 }],
-  menus: [{ id: 'menu-1', lifecycle: 'active', name: '通常メニュー' }],
+  trainingItems: [{ id: 'item-1', lifecycle: 'active', managementMode: 'MAN', exerciseId: 'exercise-1', displayName: 'ダンベルプレス', weight: 18, reps: 15, sets: 5 }],
+  menus: [{ id: 'menu-1', lifecycle: 'active', managementMode: 'MAN', name: '通常メニュー' }],
   menuEntries: [{ id: 'entry-1', lifecycle: 'active', menuId: 'menu-1', trainingItemId: 'item-1', recommendedDay: 1, order: 0 }],
   sessions: [{
     id: 'session-1', trainingItemId: 'item-1', menuEntryId: 'entry-1', date: '2026-09-24', performedAt: '2026-09-24T09:00:00+09:00', performedOrder: 0, weight: 18, reps: 15, sets: 5, bodyWeight: 66,

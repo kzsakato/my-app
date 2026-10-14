@@ -5,7 +5,8 @@ import { completedEntryIds, completedSessionRows, type CompletedSessionRow } fro
 import { cancelSession } from "./canonical/cancelSession";
 import { itemValidationMessages } from "./itemValidation";
 import { applyCanonicalRestore, createCanonicalBackup, previewCanonicalRestore, type BackupPreview } from "./canonical/backup";
-import { canonicalStorage } from "./data";
+import { canonicalStorage, commitOwnerCanonical } from "./data";
+import { TrainerPanel, TrainerManagementOff } from "./TrainerPanel";
 import { buildIdentifier } from "./buildInfo";
 import {
   addTrainingItem,
@@ -20,15 +21,12 @@ import {
   updateTrainingItem,
   weekStart,
   exerciseHistory,
-  applyMenuProposal,
   applyManMasterBootstrap,
   createAndroidManMenuProposal,
-  createTrainerHistory,
   referenceTrainingLoad,
   analysisBucketStart,
   analysisBucketStarts,
   MAN_MASTER_BOOTSTRAP_PACKAGE,
-  validateMenuProposal,
 } from "./canonical";
 import type { AnalysisPeriod, AnalysisSeries, ManMasterBootstrapMapping } from "./canonical";
 import type {
@@ -171,7 +169,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   const [notice, setNotice] = useState("");
   const [needsRecovery, setNeedsRecovery] = useState(false);
   const [listPreferences, setListPreferences] = useState<ListPreferences>({ exercise: { filter: "", hidden: false }, item: { filter: "", hidden: false } });
-  const [topPreferences, setTopPreferences] = useState<TopPreferences>({ mode: "category", days: [dayOf(localDate())], showCompleted: false });
+  const [topPreferences, setTopPreferences] = useState<TopPreferences>({ mode: "recommended", days: [dayOf(localDate())], showCompleted: false });
   const [itemEditId, setItemEditId] = useState<string | null>();
   const [settingsTab, setSettingsTab] = useState<SettingsTab>("profile");
   const [menuToInspectId, setMenuToInspectId] = useState<string>();
@@ -189,16 +187,14 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
     writeBusy.current = true;
     let persisted = false;
     try {
-      await canonicalStorage.writeCanonical(next);
+      const saved = await commitOwnerCanonical(data, next);
       persisted = true;
-      const readBack = await canonicalStorage.readCanonical();
-      if (JSON.stringify(readBack) !== JSON.stringify(next)) throw new Error("保存後の読み戻しが一致しません");
-      setData(next);
+      setData(saved);
       setNotice("");
       return true;
     } catch (error) {
       setNotice(`保存に失敗しました: ${String(error)}`);
-      if (persisted) setNeedsRecovery(true);
+      if (persisted || (error as {canonicalUnknown?:boolean}).canonicalUnknown) setNeedsRecovery(true);
       return false;
     } finally { writeBusy.current = false; }
   };
@@ -292,10 +288,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
     return <AnalysisPage data={data} onBack={() => openSettings()} {...header} />;
   if (page === "trainer") return (
     <Frame title="トレーナー連携" back={() => openSettings()} {...header}>
-      <h2>メニュー提案を取り込む</h2>
-      <MenuImportPage embedded onPending={value => { writeBusy.current = value; }} onUncertain={() => { setNotice("メニュー投入後の保存状態を確認できません。"); setNeedsRecovery(true); }} data={data} onBack={() => openSettings()} onApplied={next => setData(next)} onInspectMenu={id => openSettings("menu", id)} {...header} />
-      <h2>トレーニング履歴を出力</h2>
-      <TrainerHistoryExportPage embedded data={data} onBack={() => openSettings()} {...header} />
+      <TrainerPanel data={data} onApplied={next => setData(next)} onPending={value => { writeBusy.current = value; }} />
     </Frame>
   );
   if (page === "masterBootstrap" && import.meta.env.DEV)
@@ -310,23 +303,11 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
         {...header}
       />
     );
-  if (page === "menuImport")
-    return (
-      <MenuImportPage
-        data={data}
-        onBack={() => openSettings("menu")}
-        onApplied={(next) => {
-          setData(next);
-          setNotice("メニューを投入しました。");
-        }}
-        onInspectMenu={(menuId) => openSettings("menu", menuId)}
-        {...header}
-      />
-    );
-  if (page === "trainerHistoryExport")
-    return (
-      <TrainerHistoryExportPage data={data} onBack={() => openSettings("settingHistory")} {...header} />
-    );
+  if (page === "menuImport" || page === "trainerHistoryExport") return (
+    <Frame title="トレーナー連携" back={() => openSettings()} {...header}>
+      <TrainerPanel data={data} onApplied={next => setData(next)} onPending={value => { writeBusy.current = value; }} />
+    </Frame>
+  );
   if (page === "backup")
     return <BackupPage data={data} onApplied={next => { setData(next); setMenuToInspectId(undefined); setItemEditId(undefined); setItemPresetExerciseId(undefined); setRunEntryId(undefined); setExtraItemId(undefined); setNotice(""); }} onBack={() => openSettings()} {...header} />;
   if (page === "settings")
@@ -497,7 +478,7 @@ function TopPage({
             <small className="item-history">{exerciseHistory(data.sessions, exercise.id, new Date(), data.weekStartsOn)}</small>
           </span>
         </span>
-        <span>未実施</span>
+        <span className="item-status">未実施</span>
       </button>
     );
   };
@@ -507,7 +488,7 @@ function TopPage({
       <span><b>{label}</b><span className="item-detail-line">
         <small>{session.menuEntryId ? "実施記録" : "追加実施"}　{session.date}</small>
         <small className="item-history">{exerciseHistory(data.sessions, session.snapshot.exerciseId, new Date(), data.weekStartsOn)}</small>
-      </span></span><span className="ok">✓ 実施済</span>
+      </span></span><span className="ok item-status">✓ 実施済</span>
     </button>
   );
   // Include snapshot-only destinations so Extra remains discoverable even when
@@ -560,7 +541,7 @@ function TopPage({
               className={topMode === "category" ? "active" : ""}
               onClick={() => onPreferences({ ...preferences, mode: "category" })}
             >
-              カテゴリ表示
+              部位表示
             </button>
             <button
               className={topMode === "recommended" ? "active" : ""}
@@ -573,7 +554,7 @@ function TopPage({
           {topMode === "category" ? (
             <>
               {categoryDestinations.length === 0 ? (
-                <p className="week">カテゴリ表示できる実施項目はありません。</p>
+                <p className="week">部位表示できる実施項目はありません。</p>
               ) : (
                 categoryDestinations.map(bodyRegion => {
                   const groupEntries = categoryGroups.find(([name]) => name === bodyRegion)?.[1] ?? [];
@@ -592,7 +573,7 @@ function TopPage({
                   aria-controls="recommended-day-options"
                   onClick={() => setDayFilterOpen((value) => !value)}
                 >
-                  {`表示する推奨曜日: ${selectedDays.length ? selectedDays.map((day) => days[day]).join("・") : "なし"}`}
+                  {`曜日指定: ${selectedDays.length ? selectedDays.map((day) => days[day]).join("・") : "なし"}`}
                 </button>
                 {dayFilterOpen && (
                   <div
@@ -744,10 +725,11 @@ function RunPage({
       </p>
       {done && <p className="week">今週実施済み（{latest!.date}）</p>}
       {latest && <section className="card" aria-label="当該実績">
-        <h2>当該実績</h2>
         <p>{`${latest.date}　${sessionDetail(latest)}`}</p>
+        <p>今回メモ：{latest.memo || "—"}</p>
       </section>}
       {message && <p role="status">{message}</p>}
+      {!done && <>
       {exercise.usesWeight && (
         <section className="run-weight">
           <span>重量</span>
@@ -790,7 +772,7 @@ function RunPage({
       </div>
       <button className="history-link" disabled={pending} onClick={() => setHistoryOpen(true)}>この実施項目の設定履歴を見る　›</button>
       <p className="run-meta">メモ1：<span>{item.standardMemo || "—"}</span></p>
-      <label>
+      <label className="seat-inline">
         シート位置
         <input value={seat} onChange={(event) => setSeat(event.target.value)} />
       </label>
@@ -802,7 +784,13 @@ function RunPage({
         {done ? "戻る" : "種目を完了"}
       </button>
       <button className="save-setting" disabled={pending} onClick={saveStandard}>この設定を登録</button>
+      </>}
+      {done && <>
+        <button className="history-link" disabled={pending} onClick={() => setHistoryOpen(true)}>この実施項目の設定履歴を見る　›</button>
+        <button className="primary" disabled={pending} onClick={onBack}>戻る</button>
+      </>}
       {latest && <button className="save-setting danger" disabled={pending} onClick={cancel}>{Number(latest.date.slice(5, 7))}/{Number(latest.date.slice(8))}の実行を取り消す</button>}
+      <TrainerManagementOff data={data} commit={commit} kind="trainingItems" id={item.id} />
     </Frame>
   );
 }
@@ -1051,7 +1039,7 @@ function SettingsPage(props: SettingsPageProps) {
   const labels = { profile: "プロフィール", exercise: "種目", item: "実施項目", menu: "週メニュー", settingHistory: "設定履歴" };
   const title = !route ? "設定" : edit !== undefined ? `${labels[route]}を${edit === null ? "登録" : "編集"}` : labels[route];
   const navigate = (next: SettingsTab) => { setRoute(next); setEdit(undefined); if (next === "menu") setMenuHidden(false); if (next === "settingHistory") { setHistoryItem(""); setHistoryRegion(""); setHistoryOpen(false); } };
-  const row = (name: string, sub: string, action: () => void) => <button className="row" key={name} onClick={action}><span><b>{name}</b><small>{sub}</small></span><span>›</span></button>;
+  const row = (name: string, sub: string, action: () => void) => <button className={`row ${edit === undefined && (route === "exercise" || route === "item") ? "settings-list-v11" : ""}`} key={name} title={sub} onClick={action}><span>{edit === undefined && (route === "exercise" || route === "item") ? <><small>{sub.split("　")[0]}</small><b>{name}</b></> : <><b>{name}</b><small>{sub}</small></>}</span><span>›</span></button>;
   const archiveExercise = async (value: Exercise) => { if (value.lifecycle === "active" && !confirm("この種目を非表示にしますか？")) return; if (await commit({ ...data, exercises: data.exercises.map(candidate => candidate.id === value.id ? { ...candidate, lifecycle: value.lifecycle === "active" ? "archived" : "active" } : candidate) })) list(); };
   const archiveItem = async (value: TrainingItem) => { if (value.lifecycle === "active" && !confirm("この実施項目を非表示にしますか？")) return; if (await commit({ ...data, trainingItems: data.trainingItems.map(candidate => candidate.id === value.id ? { ...candidate, lifecycle: value.lifecycle === "active" ? "archived" : "active" } : candidate) })) list(); };
   return <Frame outerHeader={!!route && !historyOpen} title={title} back={!route ? undefined : historyOpen ? () => setHistoryOpen(false) : edit !== undefined ? list : root} onSettings={root} onTop={onTop}>
@@ -1091,15 +1079,15 @@ function SettingsPage(props: SettingsPageProps) {
 }
 
 function MenuEditor({ data, commit, menuId, onSaved }: { data: CanonicalAppData; commit: (next: CanonicalAppData) => Promise<boolean>; menuId: string | null; onSaved: () => void }) {
-  const [menu, setMenu] = useState<Menu>(() => clone(data.menus.find(value => value.id === menuId) ?? { id: uid(), lifecycle: "active", name: "" }));
+  const [menu, setMenu] = useState<Menu>(() => clone(data.menus.find(value => value.id === menuId) ?? { id: uid(), lifecycle: "active", name: "", managementMode: "MAN" }));
   const [entries, setEntries] = useState(() => clone(data.menuEntries.filter(entry => entry.menuId === menuId)));
-  const [filter, setFilter] = useState(() => data.exercises.find(value => value.lifecycle === "active")?.classifications?.find(value => value.kind === "bodyRegion")?.label ?? "");
+  const [filter, setFilter] = useState("");
   const [byDay, setByDay] = useState(false);
   const regions = [...new Set(data.exercises.flatMap(value => value.classifications?.filter(c => c.kind === "bodyRegion").map(c => c.label) ?? []))];
   const activeEntries = entries.filter(entry => entry.lifecycle === "active").sort((a, b) => byDay ? (a.recommendedDay ?? 7) - (b.recommendedDay ?? 7) || a.order - b.order : a.order - b.order);
   const save = async () => {
     if (!menu.name.trim()) return;
-    const next = { ...data, menus: data.menus.some(value => value.id === menu.id) ? data.menus.map(value => value.id === menu.id ? { ...menu, name: menu.name.trim() } : value) : [...data.menus, { ...menu, name: menu.name.trim() }], menuEntries: [...data.menuEntries.filter(entry => entry.menuId !== menu.id), ...entries] };
+    const next = { ...data, menus: data.menus.some(value => value.id === menu.id) ? data.menus.map(value => value.id === menu.id ? { ...menu, managementMode: value.managementMode, name: menu.name.trim() } : value) : [...data.menus, { ...menu, name: menu.name.trim() }], menuEntries: [...data.menuEntries.filter(entry => entry.menuId !== menu.id), ...entries] };
     if (await commit(next)) onSaved();
   };
   const regionOf = (item: TrainingItem) => data.exercises.find(value => value.id === item.exerciseId)?.classifications?.find(value => value.kind === "bodyRegion")?.label ?? "";
@@ -1123,10 +1111,11 @@ function MenuEditor({ data, commit, menuId, onSaved }: { data: CanonicalAppData;
         <button className="small danger" onClick={() => { if (confirm("この実施項目を週メニューから外しますか？")) setEntries(entries.map(value => value.id === entry.id ? { ...value, lifecycle: "archived" } : value)); }}>外す</button></div>;
     })}
     <h2>実施項目を追加</h2>
-    <select aria-label="追加候補のカテゴリ" value={filter} onChange={event => setFilter(event.target.value)}>{regions.map(value => <option key={value}>{value}</option>)}</select>
+    <select aria-label="追加候補のカテゴリ" value={filter} onChange={event => setFilter(event.target.value)}><option value="">すべて</option>{regions.map(value => <option key={value}>{value}</option>)}</select>
     {active(data.trainingItems).filter(item => data.exercises.some(exercise => exercise.id === item.exerciseId && exercise.lifecycle === "active" && (!filter || exercise.classifications?.some(c => c.kind === "bodyRegion" && c.label === filter)))).map(item => <div className="row static" key={item.id}><span><b>{item.displayName}</b><small>{describe(item)}</small></span><button className="small" onClick={() => { if (confirm(`「${item.displayName}」を週メニューに追加しますか？`)) setEntries([...entries, { id: uid(), lifecycle: "active", menuId: menu.id, trainingItemId: item.id, order: Math.max(-1, ...entries.filter(entry => entry.lifecycle === "active").map(entry => entry.order)) + 1 }]); }}>追加</button></div>)}
     <button className="primary" disabled={!menu.name.trim()} onClick={save}>保存</button>
     {menuId && <button className={menu.lifecycle === "active" ? "archive" : "primary"} disabled={menu.id === data.activeMenuId} onClick={archive}>{menu.lifecycle === "archived" ? "再表示する" : menu.id === data.activeMenuId ? "使用中の週メニューは非表示にできません" : "この週メニューを非表示にする"}</button>}
+    {menuId && <TrainerManagementOff data={data} commit={commit} kind="menus" id={menuId} />}
   </>;
 }
 
@@ -1454,6 +1443,7 @@ function ItemEditor({
   const exercises = active(data.exercises);
   const presetExercise = exercises.find((value) => value.id === presetExerciseId);
   const initial = (): TrainingItem => ({
+    managementMode: "MAN",
     id: uid(),
     lifecycle: "active",
     exerciseId: presetExercise?.id ?? exercises[0]?.id ?? "",
@@ -1473,6 +1463,7 @@ function ItemEditor({
     if (!selected || !form.displayName.trim()) return;
     const normalized: TrainingItem = {
       ...form,
+      managementMode: data.trainingItems.find(value => value.id === form.id)?.managementMode ?? "MAN",
       displayName: form.displayName.trim(),
       weight: selected.usesWeight ? (form.weight ?? 0) : undefined,
       reps: selected.measureType === "reps" ? (form.reps ?? 0) : undefined,
@@ -1633,6 +1624,7 @@ function ItemEditor({
           <button className="primary" disabled={!selected || !form.displayName.trim()} onClick={save}>
             保存
           </button>
+          {exists && <TrainerManagementOff data={data} commit={commit} kind="trainingItems" id={form.id} />}
         </>
       )}
     </>
@@ -1644,16 +1636,25 @@ function SettingHistory({ data, commit, itemId }: { data: CanonicalAppData; comm
     if (!confirm("この設定変更履歴を削除しますか？")) return;
     await commit(deleteTrainingItemSettingChange(data, trainingItemId, id));
   };
-  return <>
-    <p className="week">{data.trainingItems.find(item => item.id === itemId)?.displayName}</p>
-    {rows.length === 0 ? <p className="week">まだ設定変更はありません。</p> : rows.map(change => <div className="row static" key={change.id}><span>
-      <b>{localDate(new Date(change.changedAt))}</b>
-      <small>{change.snapshot.weight !== undefined ? `${change.snapshot.weight}kg　` : ""}{change.snapshot.reps !== undefined ? `${change.snapshot.reps}回　` : ""}{change.snapshot.seconds !== undefined ? `${change.snapshot.seconds}秒　` : ""}{change.snapshot.sets}セット</small>
-      <small>シート位置：{change.snapshot.seat || "—"}</small>
-      {change.changeReason && <small>変更理由: {change.changeReason}</small>}
-      {change.isInitial && <small>初回設定（削除できません）</small>}
-    </span>{!change.isInitial && <button className="small danger" onClick={() => remove(change.id, change.trainingItemId)}>削除</button>}</div>)}
-  </>;
+  return <section className="setting-history-v11">
+    <h2 className="setting-history-title">{data.trainingItems.find(item => item.id === itemId)?.displayName}</h2>
+    {rows.length === 0 ? <p className="week">まだ設定変更はありません。</p> : rows.map(change => {
+      const item = data.trainingItems.find(value => value.id === change.trainingItemId);
+      const exercise = data.exercises.find(value => value.id === item?.exerciseId);
+      const time = exercise?.measureType === "time";
+      const values = time ? [["時間", change.snapshot.seconds, "秒"], ["回数", undefined, ""], ["セット数", change.snapshot.sets, "セット"]] : [["重量", change.snapshot.weight, "kg"], ["回数", change.snapshot.reps, "回"], ["セット数", change.snapshot.sets, "セット"]];
+      return <article className="setting-history-row" key={change.id}>
+        {!itemId && <b>{item?.displayName}</b>}
+        <div className="setting-history-date"><time>{localDate(new Date(change.changedAt))}</time>{change.isInitial && <span>初回設定</span>}</div>
+        <div className={`setting-history-values ${change.isInitial ? "initial" : ""}`}>
+          <div className="setting-history-metrics">{values.map(([label, value, unit]) => <div key={String(label)}><small>{label}</small><strong>{value ?? "—"}<small>{value === undefined ? "" : unit}</small></strong></div>)}</div>
+          {!change.isInitial && <button className="small danger" onClick={() => remove(change.id, change.trainingItemId)}>削除</button>}
+        </div>
+        <div className="setting-history-bottom"><span>シート位置：{change.snapshot.seat || "—"}</span>{change.isInitial && <small>初回設定（削除できません）</small>}</div>
+        {change.changeReason && <small>変更理由: {change.changeReason}</small>}
+      </article>;
+    })}
+  </section>;
 }
 
 function formatIssues(rows: { path: string; message: string }[]) {
@@ -1665,134 +1666,6 @@ function formatIssues(rows: { path: string; message: string }[]) {
         </li>
       ))}
     </ul>
-  );
-}
-
-function MenuImportPage({
-  embedded = false,
-  data,
-  onBack,
-  onApplied,
-  onUncertain,
-  onPending,
-  onInspectMenu,
-  onSettings,
-  onTop,
-}: {
-  onPending?: (pending: boolean) => void;
-  onUncertain?: () => void;
-  embedded?: boolean;
-  data: CanonicalAppData;
-  onBack: () => void;
-  onApplied: (next: CanonicalAppData) => void;
-  onInspectMenu: (menuId: string) => void;
-  onSettings: () => void;
-  onTop: () => void;
-}) {
-  const [checked, setChecked] = useState<ReturnType<typeof validateMenuProposal>>({
-    errors: [],
-    warnings: [],
-  });
-  const [acknowledged, setAcknowledged] = useState(false);
-  const [message, setMessage] = useState("");
-  const [applied, setApplied] = useState<{ id: string; name: string }>();
-  const busy = useRef(false);
-  const [pending, setPending] = useState(false);
-  const fileGeneration = useRef(0);
-  const read = (file?: File) => {
-    if (!file) return;
-    const generation = ++fileGeneration.current;
-    setApplied(undefined);
-    setChecked({ errors: [], warnings: [] });
-    setAcknowledged(false);
-    setMessage("");
-    const reader = new FileReader();
-    reader.onerror = () => {
-      if (generation !== fileGeneration.current) return;
-      setChecked({ errors: [{ path: "file", message: "ファイルを読み込めませんでした" }], warnings: [] });
-    };
-    reader.onload = () => {
-      if (generation !== fileGeneration.current) return;
-      try {
-        setChecked(validateMenuProposal(JSON.parse(String(reader.result)), data));
-      } catch (error) {
-        setChecked({ errors: [{ path: "JSON", message: `JSONを解析できません: ${String(error)}` }], warnings: [] });
-      }
-    };
-    reader.readAsText(file, "UTF-8");
-  };
-  const apply = async () => {
-    if (busy.current || applied || !checked.proposal || checked.errors.length || (checked.warnings.length && !acknowledged)) return;
-    if (!confirm("既存の週メニューを上書きせず、新しい週メニューを作成します。投入しますか？")) return;
-    busy.current = true; setPending(true); onPending?.(true);
-    const result = await applyMenuProposal(canonicalStorage, data, checked.proposal, uid);
-    busy.current = false; setPending(false); onPending?.(false);
-    if (!result.ok) {
-      if (result.recoveryRequired) onUncertain?.();
-      setMessage(`投入に失敗しました。${result.errors.map((row) => `${row.path}: ${row.message}`).join(" / ")}`);
-      return;
-    }
-    onApplied(result.value);
-    setApplied({ id: result.menu.id, name: result.menu.name });
-  };
-  const proposal = checked.proposal;
-  const Wrapper = SectionFrame;
-  return (
-    <Wrapper embedded={embedded} title="メニュー投入" back={onBack} onSettings={onSettings} onTop={onTop}>
-      <section className="card">
-        <p className="meta">提案JSONを確認してから、新しい週メニューとして作成します。アプリ復元用バックアップは選択できません。</p>
-        <label>
-          提案ファイルを選択
-          <input disabled={pending} type="file" accept="application/json,.json" onChange={(event) => read(event.target.files?.[0])} />
-        </label>
-      </section>
-      {checked.errors.length > 0 && (
-        <section className="card">
-          <h2>投入できません</h2>
-          {formatIssues(checked.errors)}
-        </section>
-      )}
-      {proposal && checked.errors.length === 0 && !applied && (
-        <section className="card">
-          <h2>内容確認</h2>
-          <p><b>{proposal.menu.name}</b>　{proposal.entries.length}件</p>
-          {proposal.menu.memo && <p className="meta">{proposal.menu.memo}</p>}
-          {proposal.entries
-            .slice()
-            .sort((left, right) => left.order - right.order)
-            .map((entry) => (
-              <p className="meta" key={`${entry.order}:${entry.trainingItemId}`}>
-                {entry.order + 1}. {data.trainingItems.find((item) => item.id === entry.trainingItemId)?.displayName ?? entry.trainingItemId}
-                {"　"}{entry.recommendedDay === undefined ? "推奨：任意" : `推奨：${days[entry.recommendedDay]}`}
-              </p>
-            ))}
-          {checked.warnings.length > 0 && (
-            <>
-              <h3>確認が必要な項目</h3>
-              {formatIssues(checked.warnings)}
-              <label>
-                <input type="checkbox" checked={acknowledged} onChange={(event) => setAcknowledged(event.target.checked)} />{" "}
-                内容を確認しました
-              </label>
-            </>
-          )}
-          <button className="primary" disabled={pending || (checked.warnings.length > 0 && !acknowledged)} onClick={apply}>
-            新しい週メニューを作成
-          </button>
-        </section>
-      )}
-      {applied && (
-        <section className="card">
-          <h2>メニューを作成しました</h2>
-          <p><b>{applied.name}</b></p>
-          <p className="meta">現在使用中の週メニューは変更していません。</p>
-          <button className="primary" onClick={() => onInspectMenu(applied.id)}>
-            週メニューで内容を確認
-          </button>
-        </section>
-      )}
-      {message && <p className="week">{message}</p>}
-    </Wrapper>
   );
 }
 
@@ -1883,66 +1756,6 @@ function downloadJson(filename: string, value: unknown) {
   anchor.download = filename;
   anchor.click();
   URL.revokeObjectURL(url);
-}
-
-function TrainerHistoryExportPage({
-  embedded = false,
-  data,
-  onBack,
-  onSettings,
-  onTop,
-}: {
-  embedded?: boolean;
-  data: CanonicalAppData;
-  onBack: () => void;
-  onSettings: () => void;
-  onTop: () => void;
-}) {
-  const today = localDate();
-  const fullHistory = false;
-  const [fromDate, setFromDate] = useState(today);
-  const [toDate, setToDate] = useState(today);
-  const [message, setMessage] = useState("");
-  const preview = createTrainerHistory(data, {
-    fullHistory,
-    fromDate,
-    toDate,
-    generatedAt: new Date().toISOString(),
-  });
-  const exportHistory = () => {
-    if (!preview.ok) return;
-    if (preview.value.sessions.length === 0) {
-      setMessage("対象期間に履歴がありません。");
-      return;
-    }
-    try {
-      const suffix = fullHistory ? `full-${today}` : `${fromDate}_${toDate}`;
-      downloadJson(`training-check-trainer-history-${suffix}.json`, preview.value);
-      setMessage(`${preview.value.sessions.length}件の実施履歴を出力しました。`);
-    } catch (error) {
-      setMessage(`出力に失敗しました: ${String(error)}`);
-    }
-  };
-  const Wrapper = SectionFrame;
-  return (
-    <Wrapper embedded={embedded} title="トレーニング履歴出力" back={onBack} onSettings={onSettings} onTop={onTop}>
-      <section className="card">
-        <p className="meta">メニュー調整・振り返り等に利用する実施履歴を出力します。アプリ復元用バックアップではありません。</p>
-        {!fullHistory && (
-          <>
-            <label>開始日<input type="date" value={fromDate} onChange={(event) => setFromDate(event.target.value)} /></label>
-            <label>終了日<input type="date" value={toDate} onChange={(event) => setToDate(event.target.value)} /></label>
-            <p className="meta">開始日・終了日を含む期間で出力します。</p>
-          </>
-        )}
-        {!preview.ok ? formatIssues(preview.errors) : <p className="meta">{preview.value.sessions.length === 0 ? "対象期間に履歴がありません。0件" : `対象Session: ${preview.value.sessions.length}件`}</p>}
-        <button className="primary" disabled={!preview.ok || preview.value.sessions.length === 0} onClick={exportHistory}>
-          JSONを出力
-        </button>
-      </section>
-      {message && <p className="week">{message}</p>}
-    </Wrapper>
-  );
 }
 
 export function CanonicalCutover({

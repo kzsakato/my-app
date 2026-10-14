@@ -3,7 +3,7 @@ import type { BackupEnvelope, CanonicalAppData, ValidationIssue } from './types'
 import { validateBackupEnvelope, validateCanonical } from './validate'
 import { migrateV5, parseBackup, validateCanonical as validateLegacyV6 } from '../domain'
 
-export type CutoverState = { authoritative: false } | { authoritative: true; establishedAt: string }
+export type CutoverState = ({ authoritative: false } | { authoritative: true; establishedAt: string }) & { trainerPendingProposalId?: string }
 export type LegacyBaseline = { sourceKind: 'legacy-v5-payload' | 'legacy-v6-payload' | 'legacy-v5-backup-envelope' | 'legacy-v6-backup-envelope'; rawJson: string; capturedAt: string }
 export type StorageDiagnostic = { stage: string; message: string }
 export type StorageResult<T> = { ok: true; value: T; diagnostics: StorageDiagnostic[] } | { ok: false; diagnostics: StorageDiagnostic[] }
