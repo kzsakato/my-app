@@ -16,6 +16,18 @@ export const trainerMessages = {
   exportFailed: 'トレーナー用ファイル作成失敗。診断情報を保存してください。',
 } as const
 
+/** Preserve internal failure classes without copying raw input or arbitrary error text into diagnostics. */
+export function trainerDiagnosticCategory(error: unknown): string {
+  const reason = String(error)
+  if (/managementMode|protected MAN|authority|権限/.test(reason)) return 'AUTHORITY'
+  if (/already applied|proposalId/.test(reason)) return 'REPLAY'
+  if (/collision|duplicate candidate|duplicate retained|duplicate order|ambiguous duplicate|重複/.test(reason)) return 'COLLISION'
+  if (/missing|archived|unresolved|reference|参照/.test(reason)) return 'REFERENCE'
+  if (/duplicate key|JSON|Unexpected|unterminated|colon|comma|trailing/.test(reason)) return 'JSON'
+  if (/readback|read-back|帰属|読み戻し/.test(reason)) return 'READBACK'
+  return 'SCHEMA_OR_STORAGE'
+}
+
 type RecordValue = Record<string, unknown>
 const fail = (path: string, reason: string): never => { throw new Error(`${path}: ${reason}`) }
 function object(value: unknown, path: string, required: string[], optional: string[] = []): RecordValue {

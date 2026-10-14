@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { CanonicalAppData } from './canonical/types'
 import { canonicalStorage, applyTrainerCanonical } from './data'
-import { createTrainerContextV11, parseUniqueJson, previewTrainerProposal, trainerMessages as messages, type TrainerProposalPreview } from './canonical/trainerV11'
+import { createTrainerContextV11, parseUniqueJson, previewTrainerProposal, trainerDiagnosticCategory, trainerMessages as messages, type TrainerProposalPreview } from './canonical/trainerV11'
 
 function download(name: string, value: unknown) {
   const url = URL.createObjectURL(new Blob([JSON.stringify(value, null, 2)], { type: 'application/json;charset=utf-8' }))
@@ -38,9 +38,9 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
       if (!value || typeof value !== 'object' || (value as { format?: unknown }).format !== 'training-project.trainer-proposal') { setImportMessage(messages.wrongFormat); return }
       const checked = previewTrainerProposal(value, data)
       setInput(value); setPreview(checked); setImportMessage('')
-    } catch {
+    } catch (error) {
       if (current !== generation.current) return
-      setImportMessage(messages.inconsistent); setDiagnostic({ stage: 'preview', code: 'PROPOSAL_VALIDATION_FAILED', at: new Date().toISOString() })
+      setImportMessage(messages.inconsistent); setDiagnostic({ stage: 'preview', code: 'PROPOSAL_VALIDATION_FAILED', category: trainerDiagnosticCategory(error), at: new Date().toISOString() })
     }
   }
   const apply = async () => {
@@ -54,7 +54,7 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
         setPreview(undefined); setInput(undefined)
       } else {
         setImportMessage(messages.inconsistent); setHeld(result.unknown)
-        setDiagnostic({ stage: 'apply', code: result.unknown ? 'UNKNOWN' : 'REJECTED_ZERO_MUTATION', proposalId: preview.proposalId, at: new Date().toISOString() })
+        setDiagnostic({ stage: 'apply', code: result.unknown ? 'UNKNOWN' : 'REJECTED_ZERO_MUTATION', category: trainerDiagnosticCategory(result.reason), proposalId: preview.proposalId, at: new Date().toISOString() })
         setPreview(undefined); setInput(undefined)
       }
     } catch {
@@ -73,8 +73,8 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
       const value = createTrainerContextV11(latest, new Date())
       download(`trainer-context-${value.exportedLocalDate}.json`, value)
       setExportMessage(`${value.history.length === 0 ? messages.empty + '\n' : ''}${messages.exported}`)
-    } catch {
-      setExportMessage(messages.exportFailed); setDiagnostic({ stage: 'export', code: 'CONTEXT_VALIDATION_OR_DOWNLOAD_FAILED', at: new Date().toISOString() })
+    } catch (error) {
+      setExportMessage(messages.exportFailed); setDiagnostic({ stage: 'export', code: 'CONTEXT_VALIDATION_OR_DOWNLOAD_FAILED', category: trainerDiagnosticCategory(error), at: new Date().toISOString() })
     } finally { busy.current = false; setPending(false); onPending(false) }
   }
   return <div className="trainer-v11">
