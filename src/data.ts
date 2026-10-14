@@ -21,7 +21,8 @@ const items:Item[]=exercises.map((e,n)=>{const v=values[n],c=cats.find(x=>x.exer
 export const base:AppData={version:DATA_VERSION,activeMenuId:seedId('ramp'),profile:{weight:66,analysisStartDate:localDate()},exercises,categories:cats,items,menus:[{id:seedId('ramp'),name:'助走トレーニング'},{id:seedId('normal'),name:'通常メニュー'}],menuItems:items.map((x,n)=>({id:seedId(`mi-${n}`),menuId:seedId('ramp'),itemId:x.id,recommendedDay:null})),sessions:[],settingHistories:[]}
 
 const isV11Candidate=import.meta.env.VITE_V1R11_CANDIDATE === 'true'
-if(isV11Candidate && location.origin !== 'http://127.0.0.1:4177')throw new Error('V1.1候補版は専用origin http://127.0.0.1:4177 で開いてください')
+const candidateOrigin=import.meta.env.VITE_V1R11_ORIGIN ?? 'http://127.0.0.1:4177'
+if(isV11Candidate && location.origin !== candidateOrigin)throw new Error('V1.1候補版は指定された専用originで開いてください')
 const dbPromise=openDB(isV11Candidate ? 'training-check-v1r11-candidate' : 'training-check',7,{upgrade(db){
  if(!db.objectStoreNames.contains('state'))db.createObjectStore('state')
  if(!db.objectStoreNames.contains('recovery'))db.createObjectStore('recovery')
