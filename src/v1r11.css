@@ -1,16 +1,18 @@
 /* Owner FIX: Issue #23, component 460289934197166080 / revision 460377996864405504. */
 .weekday-dropdown-trigger{padding-right:28px;position:relative;white-space:nowrap;font-size:14px}
 .weekday-dropdown-trigger::after{position:absolute;right:9px;top:14px;float:none}
-.item-density{position:relative;padding-top:28px}
+.item-density{position:relative;padding-top:9px}
 .item-density>span:first-child{width:100%}
-.item-density .item-status{position:absolute;right:0;top:7px;font-size:12px}
+.item-density .item-title-line{display:flex;align-items:baseline;gap:8px;text-align:left}
+.item-density .item-title-line b{flex:1;min-width:0;white-space:normal;overflow-wrap:anywhere;text-align:left}
+.item-density .item-status{position:static;flex:0 0 auto;font-size:12px;white-space:nowrap}
 .item-density .item-detail-line{justify-content:space-between;gap:8px}
 .item-density .item-history{margin-left:auto;text-align:right}
 .run-weight .weight-controls{grid-template-columns:48px 44px minmax(72px,1fr) 44px 48px;column-gap:4px}
 .run-weight .weight-controls button{width:44px}
 .run-weight .weight-controls button:last-child{justify-self:end}
 .seat-inline{display:flex;align-items:center;gap:16px}
-.seat-inline input{width:90px;min-width:0;margin-top:0}
+.seat-inline input{flex:1;width:auto;min-width:0;margin-top:0}
 .setting-history-title{font-size:23px;line-height:1.45;margin:0 0 8px;overflow-wrap:anywhere}
 .setting-history-row{padding:6px 0 4px;border-bottom:1px solid #dce4de}
 .setting-history-date{display:flex;gap:8px;align-items:center;min-height:18px;font-size:12px;color:#667a6c}
@@ -34,3 +36,8 @@
 .trainer-preview-detail dt{flex-shrink:0;color:#657267}.trainer-preview-detail dd{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
 .trainer-off{margin-top:22px;padding-top:8px;border-top:1px solid #e4e9e3}
 @media(max-width:360px){.run-weight{grid-template-columns:32px minmax(0,1fr)}.run-weight .weight-controls{grid-template-columns:48px 44px minmax(56px,1fr) 44px 48px}.run-weight .weight-controls b{min-width:56px}.weekday-dropdown-trigger{font-size:12px}.item-density .item-history{letter-spacing:0}}
+
+/* Issue #28 4-1: 1 CSS pt = 96/72 px; number and unit share this element. */
+.run-weight .weight-controls b{font-size:calc(14px + 1pt)}
+/* Reclaim the outer columns' 4px spare space each; keep every button 44px. */
+@media(max-width:360px){.run-weight .weight-controls{grid-template-columns:44px 44px minmax(64px,1fr) 44px 44px}.run-weight .weight-controls b{min-width:64px;font-size:calc(13px + 1pt)}}

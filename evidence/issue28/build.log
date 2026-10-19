@@ -1,0 +1,13 @@
+
+> training-check@0.1.0 candidate:build
+> tsc --noEmit && vite build --config vite.candidate.config.ts --configLoader runner
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 59 modules transformed.
+rendering chunks...
+computing gzip size...
+dist-v1r11-candidate/index.html                   0.42 kB │ gzip:   0.31 kB
+dist-v1r11-candidate/assets/index-CxqZBreo.css   13.08 kB │ gzip:   3.16 kB
+dist-v1r11-candidate/assets/index-C4YypKBz.js   389.70 kB │ gzip: 114.44 kB
+✓ built in 2.02s
