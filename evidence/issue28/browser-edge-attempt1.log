@@ -1,0 +1,51 @@
+[WebServer] (node:24248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:20712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:7284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [desktop] › e2e\issue28.spec.ts:165:1 › narrow long title and three-digit decimal weight remain visible (3.6s)
+(node:14712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [mobile360] › e2e\issue28.spec.ts:165:1 › narrow long title and three-digit decimal weight remain visible (1.8s)
+(node:24468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [mobile320] › e2e\issue28.spec.ts:165:1 › narrow long title and three-digit decimal weight remain visible (1.8s)
+
+
+  1) [mobile320] › e2e\issue28.spec.ts:165:1 › narrow long title and three-digit decimal weight remain visible 
+
+    Error: expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 56
+    Received:    61
+
+      175 |   const weight = await page.locator('.weight-controls b').evaluate(el => ({ text: el.textContent, width: el.clientWidth, scrollWidth: el.scrollWidth }))
+      176 |   expect(weight.text).toBe('125.25 kg')
+    > 177 |   expect(weight.scrollWidth).toBeLessThanOrEqual(weight.width)
+          |                              ^
+      178 |   await page.screenshot({ path: `${evidence}/${info.project.name}-large-weight.png`, fullPage: true })
+      179 |   save(info, 'large-weight', weight)
+      180 | })
+        at C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\issue28-owner-fixes\e2e\issue28.spec.ts:177:30
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\issue28\issue28-narrow-long-title--41289-cimal-weight-remain-visible-mobile320\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\issue28\issue28-narrow-long-title--41289-cimal-weight-remain-visible-mobile320\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\issue28\issue28-narrow-long-title--41289-cimal-weight-remain-visible-mobile320\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\issue28\issue28-narrow-long-title--41289-cimal-weight-remain-visible-mobile320\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [mobile320] › e2e\issue28.spec.ts:165:1 › narrow long title and three-digit decimal weight remain visible 
+  2 passed (14.9s)

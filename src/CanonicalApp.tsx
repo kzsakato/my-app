@@ -419,9 +419,10 @@ function TopPage({
   const completedEntries = completedEntryIds(data, entries, weekSessions);
   const completedRows = completedSessionRows(weekSessions);
   const todayEntries = entries.filter(entry => entry.recommendedDay === currentDay);
-  const completedCount = (rows: MenuEntry[]) => rows.filter(entry => completedEntries.has(entry.id)).length;
   const distinctCount = (rows: MenuEntry[]) => new Set(rows.map(entry => data.trainingItems.find(item => item.id === entry.trainingItemId)?.exerciseId)).size;
-  const todayCompleted = new Set(data.sessions.filter(session => session.date === today).map(session => session.snapshot.exerciseId)).size;
+  // Numerators count the same Session rows shown in the completed list.
+  const todayCompleted = completedRows.filter(row => row.session.date === today).length;
+  const selectedDayCompletedRows = completedRows.filter(row => selectedDays.includes(dayOf(row.session.date)));
   const load = weeklyLoadSummary(data, today);
   const toggleDay = (day: RecommendedDay) => onPreferences({ ...preferences, days: selectedDays.includes(day) ? selectedDays.filter(value => value !== day) : [...selectedDays, day] });
   const recommendedEntries = entries.filter(
@@ -472,23 +473,22 @@ function TopPage({
         onClick={() => onRun(entry.id)}
       >
         <span>
-          <b>{item.displayName || exercise.name}</b>
+          <span className="item-title-line"><b>{item.displayName || exercise.name}</b><span className="item-status">未実施</span></span>
           <span className="item-detail-line">
             <small>{`${exercise.classifications?.map((value) => value.label).join("・") || ""}　${entry.recommendedDay === undefined ? "推奨：任意" : `推奨：${days[entry.recommendedDay]}`}`}</small>
             <small className="item-history">{exerciseHistory(data.sessions, exercise.id, new Date(), data.weekStartsOn)}</small>
           </span>
         </span>
-        <span className="item-status">未実施</span>
       </button>
     );
   };
   const renderCompleted = ({ session, label }: CompletedSessionRow) => (
     <button className="row item item-density" data-session-id={session.id}
       data-session-menu-entry-id={session.menuEntryId} key={session.id} onClick={() => onActual(session)}>
-      <span><b>{label}</b><span className="item-detail-line">
+      <span><span className="item-title-line"><b>{label}</b><span className="ok item-status">✓ 実施済</span></span><span className="item-detail-line">
         <small>{session.menuEntryId ? "実施記録" : "追加実施"}　{session.date}</small>
         <small className="item-history">{exerciseHistory(data.sessions, session.snapshot.exerciseId, new Date(), data.weekStartsOn)}</small>
-      </span></span><span className="ok item-status">✓ 実施済</span>
+      </span></span>
     </button>
   );
   // Include snapshot-only destinations so Extra remains discoverable even when
@@ -534,7 +534,7 @@ function TopPage({
           <p className="week">{start} 〜 {shiftLocalDate(start, 6)}</p>
           <div className="totals">
             <span>今日の実施総数<b>{todayCompleted}/{distinctCount(todayEntries)}</b></span>
-            <span>今週の実施総数<b>{completedCount(entries)}/{entries.length}</b></span>
+            <span>今週の実施総数<b>{completedRows.length}/{entries.length}</b></span>
           </div>
           <div className="top-switch" aria-label="実施項目の表示方法">
             <button
@@ -558,7 +558,7 @@ function TopPage({
               ) : (
                 categoryDestinations.map(bodyRegion => {
                   const groupEntries = categoryGroups.find(([name]) => name === bodyRegion)?.[1] ?? [];
-                  return <button className="row" key={bodyRegion} onClick={() => onCategory(bodyRegion)}><span><b>{bodyRegion}</b><small>{groupEntries.length ? `${groupEntries.length}項目` : "実施記録"}</small></span>{groupEntries.length > 0 && <span>{completedCount(groupEntries)}/{groupEntries.length}</span>}</button>;
+                  return <button className="row" key={bodyRegion} onClick={() => onCategory(bodyRegion)}><span><b>{bodyRegion}</b><small>{groupEntries.length ? `${groupEntries.length}項目` : "実施記録"}</small></span>{groupEntries.length > 0 && <span>{completedRows.filter(row => row.bodyRegion === bodyRegion).length}/{groupEntries.length}</span>}</button>;
                 })
               )}
             </>
@@ -600,7 +600,7 @@ function TopPage({
               ) : (
                 recommendedEntries.map(renderEntry)
               )}
-              {preferences.showCompleted && completedRows.map(renderCompleted)}
+              {preferences.showCompleted && selectedDayCompletedRows.map(renderCompleted)}
             </>
           )}
         </>
@@ -663,7 +663,7 @@ function RunPage({
     if (!confirm("この設定を標準設定として登録しますか？当回メモは標準設定へ保存しません。")) return;
     const updated = { ...item, weight: exercise.usesWeight ? weight : undefined, reps: exercise.measureType === "reps" ? reps : undefined, seconds: exercise.measureType === "time" ? seconds : undefined, sets, seat: seat || undefined };
     if (await commit(updateTrainingItem(data, updated, { newId: uid, now: () => new Date().toISOString() }))) {
-      setMessage("標準設定を保存しました。");
+      setMessage("");
     } else setMessage("標準設定を保存できません。入力値を確認してください。");
   });
   const cancel = () => runAction(async () => {
@@ -718,42 +718,32 @@ function RunPage({
   );
   return (
     <Frame title={completedSession?.snapshot.trainingItemDisplayName ?? item.displayName} back={pending ? undefined : onBack} onTop={pending ? () => {} : onTop} onSettings={onSettings}>
-      <p className="week">
-        {entry
-          ? `週メニュー: ${entry.recommendedDay === undefined ? "任意" : `推奨 ${days[entry.recommendedDay]}`}`
-          : "追加トレーニング"}
-      </p>
       {done && <p className="week">今週実施済み（{latest!.date}）</p>}
-      {latest && <section className="card" aria-label="当該実績">
-        <p>{`${latest.date}　${sessionDetail(latest)}`}</p>
-        <p>今回メモ：{latest.memo || "—"}</p>
-      </section>}
       {message && <p role="status">{message}</p>}
-      {!done && <>
       {exercise.usesWeight && (
         <section className="run-weight">
           <span>重量</span>
           <div className="weight-controls">
-            <button
+            <button disabled={done || pending}
               aria-label="重量を1kg減らす"
               onClick={() => adjustWeight(-1)}
             >
               <strong>&lt;&lt;</strong>
             </button>
-            <button
+            <button disabled={done || pending}
               aria-label="重量を0.25kg減らす"
               onClick={() => adjustWeight(-0.25)}
             >
               &lt;
             </button>
             <b>{weight.toFixed(2)} kg</b>
-            <button
+            <button disabled={done || pending}
               aria-label="重量を0.25kg増やす"
               onClick={() => adjustWeight(0.25)}
             >
               &gt;
             </button>
-            <button
+            <button disabled={done || pending}
               aria-label="重量を1kg増やす"
               onClick={() => adjustWeight(1)}
             >
@@ -764,31 +754,26 @@ function RunPage({
       )}
       <div className="run-slot-grid">
         <section className="run-slot"><span>{exercise.measureType === "reps" ? "回数" : "時間（秒）"}</span><div>
-          <button aria-label={exercise.measureType === "reps" ? "回数を減らす" : "時間を減らす"} onClick={() => exercise.measureType === "reps" ? setReps(value => Math.max(1, value - 1)) : setSeconds(value => Math.max(10, value - 10))}>−</button>
+          <button disabled={done || pending} aria-label={exercise.measureType === "reps" ? "回数を減らす" : "時間を減らす"} onClick={() => exercise.measureType === "reps" ? setReps(value => Math.max(1, value - 1)) : setSeconds(value => Math.max(10, value - 10))}>−</button>
           <b>{exercise.measureType === "reps" ? `${reps} 回` : `${seconds} 秒`}</b>
-          <button aria-label={exercise.measureType === "reps" ? "回数を増やす" : "時間を増やす"} onClick={() => exercise.measureType === "reps" ? setReps(value => value + 1) : setSeconds(value => value + 10)}>＋</button>
+          <button disabled={done || pending} aria-label={exercise.measureType === "reps" ? "回数を増やす" : "時間を増やす"} onClick={() => exercise.measureType === "reps" ? setReps(value => value + 1) : setSeconds(value => value + 10)}>＋</button>
         </div></section>
-        <section className="run-slot"><span>実施セット数</span><div><button aria-label="セット数を減らす" onClick={() => setSets(value => Math.max(1, value - 1))}>−</button><b>{sets}</b><button aria-label="セット数を増やす" onClick={() => setSets(value => value + 1)}>＋</button></div></section>
+        <section className="run-slot"><span>実施セット数</span><div><button disabled={done || pending} aria-label="セット数を減らす" onClick={() => setSets(value => Math.max(1, value - 1))}>−</button><b>{sets}</b><button disabled={done || pending} aria-label="セット数を増やす" onClick={() => setSets(value => value + 1)}>＋</button></div></section>
       </div>
       <button className="history-link" disabled={pending} onClick={() => setHistoryOpen(true)}>この実施項目の設定履歴を見る　›</button>
       <p className="run-meta">メモ1：<span>{item.standardMemo || "—"}</span></p>
       <label className="seat-inline">
         シート位置
-        <input value={seat} onChange={(event) => setSeat(event.target.value)} />
+        <input disabled={done || pending} value={seat} onChange={(event) => setSeat(event.target.value)} />
       </label>
       <label>
         今回メモ
-        <textarea value={memo} onChange={(event) => setMemo(event.target.value)} />
+        <textarea disabled={done || pending} value={memo} onChange={(event) => setMemo(event.target.value)} />
       </label>
       <button className="primary" disabled={pending} onClick={complete}>
         {done ? "戻る" : "種目を完了"}
       </button>
       <button className="save-setting" disabled={pending} onClick={saveStandard}>この設定を登録</button>
-      </>}
-      {done && <>
-        <button className="history-link" disabled={pending} onClick={() => setHistoryOpen(true)}>この実施項目の設定履歴を見る　›</button>
-        <button className="primary" disabled={pending} onClick={onBack}>戻る</button>
-      </>}
       {latest && <button className="save-setting danger" disabled={pending} onClick={cancel}>{Number(latest.date.slice(5, 7))}/{Number(latest.date.slice(8))}の実行を取り消す</button>}
       <TrainerManagementOff data={data} commit={commit} kind="trainingItems" id={item.id} />
     </Frame>

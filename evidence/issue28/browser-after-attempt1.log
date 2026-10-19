@@ -1,0 +1,242 @@
+[WebServer] (node:14616) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1916) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:23460) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [desktop] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence (5.0s)
+(node:14272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [desktop] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries (2.1s)
+(node:11092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [desktop] › e2e\issue28.spec.ts:147:1 › 0 Sessions and non-Monday week start preserve planned filters and denominators (3.7s)
+(node:15672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [mobile360] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence (1.8s)
+(node:18952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  5 [mobile360] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries (2.1s)
+(node:22040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 6 [mobile360] › e2e\issue28.spec.ts:147:1 › 0 Sessions and non-Monday week start preserve planned filters and denominators (3.6s)
+(node:9308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  7 [mobile320] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence (2.7s)
+(node:2236) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  8 [mobile320] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries (2.0s)
+(node:9284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 9 [mobile320] › e2e\issue28.spec.ts:147:1 › 0 Sessions and non-Monday week start preserve planned filters and denominators (3.8s)
+
+
+  1) [desktop] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 3
+    Received:   4
+
+      71 |   const region = page.getByRole('button').filter({ has: page.locator('b', { hasText: '背中' }) })
+      72 |   const regionText = await region.innerText()
+    > 73 |   if (!before) { expect(weekly).toContain('1/6'); expect(regionText).toContain('1/6'); expect(parseFloat(status.font)).toBeGreaterThanOrEqual(12); expect(Math.abs(status.rect.y - title!.y)).toBeLessThan(3); expect(title!.x + title!.width).toBeLessThanOrEqual(status.rect.x) }
+         |                                                                                                                                                                                               ^
+      74 |   await region.click(); await page.getByLabel('実施済も表示').check()
+      75 |   await expect(page.locator('[data-session-id]')).toHaveCount(1)
+      76 |   await page.locator('[data-menu-entry-id="entry-2"]').click()
+        at C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\issue28-owner-fixes\e2e\issue28.spec.ts:73:191
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-desktop\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-desktop\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-desktop\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-desktop\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [desktop] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "mon-normal",
+        "mon-extra",
+    +   "mon-normal",
+      ]
+
+      133 |   await expect(page.getByText('今週の実施総数')).toContainText('4/6')
+      134 |   await days(page, ['月']); await expect(page.locator('[data-session-id]')).toHaveCount(2)
+    > 135 |   expect(await page.locator('[data-session-id]').evaluateAll(rows => rows.map(row => row.getAttribute('data-session-id')))).toEqual(['mon-normal', 'mon-extra'])
+          |                                                                                                                             ^
+      136 |   await days(page, ['火']); await expect(page.locator('[data-session-id]')).toHaveCount(2)
+      137 |   expect(await page.locator('[data-session-id]').evaluateAll(rows => rows.map(row => row.getAttribute('data-session-id')))).toEqual(['tue', 'tue-extra-other'])
+      138 |   await days(page, []); await expect(page.locator('[data-session-id]')).toHaveCount(0)
+        at C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\issue28-owner-fixes\e2e\issue28.spec.ts:135:125
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-3-2-4-2-5-repeat-510c6-d-local-day-week-boundaries-desktop\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\issue28\issue28-2-3-2-4-2-5-repeat-510c6-d-local-day-week-boundaries-desktop\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-3-2-4-2-5-repeat-510c6-d-local-day-week-boundaries-desktop\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\issue28\issue28-2-3-2-4-2-5-repeat-510c6-d-local-day-week-boundaries-desktop\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile360] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 3
+    Received:   4
+
+      71 |   const region = page.getByRole('button').filter({ has: page.locator('b', { hasText: '背中' }) })
+      72 |   const regionText = await region.innerText()
+    > 73 |   if (!before) { expect(weekly).toContain('1/6'); expect(regionText).toContain('1/6'); expect(parseFloat(status.font)).toBeGreaterThanOrEqual(12); expect(Math.abs(status.rect.y - title!.y)).toBeLessThan(3); expect(title!.x + title!.width).toBeLessThanOrEqual(status.rect.x) }
+         |                                                                                                                                                                                               ^
+      74 |   await region.click(); await page.getByLabel('実施済も表示').check()
+      75 |   await expect(page.locator('[data-session-id]')).toHaveCount(1)
+      76 |   await page.locator('[data-menu-entry-id="entry-2"]').click()
+        at C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\issue28-owner-fixes\e2e\issue28.spec.ts:73:191
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile360\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile360\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile360\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile360\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  4) [mobile360] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "mon-normal",
+        "mon-extra",
+    +   "mon-normal",
+      ]
+
+      133 |   await expect(page.getByText('今週の実施総数')).toContainText('4/6')
+      134 |   await days(page, ['月']); await expect(page.locator('[data-session-id]')).toHaveCount(2)
+    > 135 |   expect(await page.locator('[data-session-id]').evaluateAll(rows => rows.map(row => row.getAttribute('data-session-id')))).toEqual(['mon-normal', 'mon-extra'])
+          |                                                                                                                             ^
+      136 |   await days(page, ['火']); await expect(page.locator('[data-session-id]')).toHaveCount(2)
+      137 |   expect(await page.locator('[data-session-id]').evaluateAll(rows => rows.map(row => row.getAttribute('data-session-id')))).toEqual(['tue', 'tue-extra-other'])
+      138 |   await days(page, []); await expect(page.locator('[data-session-id]')).toHaveCount(0)
+        at C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\issue28-owner-fixes\e2e\issue28.spec.ts:135:125
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-3-2-4-2-5-repeat-510c6-d-local-day-week-boundaries-mobile360\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\issue28\issue28-2-3-2-4-2-5-repeat-510c6-d-local-day-week-boundaries-mobile360\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-3-2-4-2-5-repeat-510c6-d-local-day-week-boundaries-mobile360\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\issue28\issue28-2-3-2-4-2-5-repeat-510c6-d-local-day-week-boundaries-mobile360\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  5) [mobile320] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence 
+
+    Error: expect(received).toBeLessThan(expected)
+
+    Expected: < 3
+    Received:   4
+
+      71 |   const region = page.getByRole('button').filter({ has: page.locator('b', { hasText: '背中' }) })
+      72 |   const regionText = await region.innerText()
+    > 73 |   if (!before) { expect(weekly).toContain('1/6'); expect(regionText).toContain('1/6'); expect(parseFloat(status.font)).toBeGreaterThanOrEqual(12); expect(Math.abs(status.rect.y - title!.y)).toBeLessThan(3); expect(title!.x + title!.width).toBeLessThanOrEqual(status.rect.x) }
+         |                                                                                                                                                                                               ^
+      74 |   await region.click(); await page.getByLabel('実施済も表示').check()
+      75 |   await expect(page.locator('[data-session-id]')).toHaveCount(1)
+      76 |   await page.locator('[data-menu-entry-id="entry-2"]').click()
+        at C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\issue28-owner-fixes\e2e\issue28.spec.ts:73:191
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile320\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile320\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile320\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile320\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6) [mobile320] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries 
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   "mon-normal",
+        "mon-extra",
+    +   "mon-normal",
+      ]
+
+      133 |   await expect(page.getByText('今週の実施総数')).toContainText('4/6')
+      134 |   await days(page, ['月']); await expect(page.locator('[data-session-id]')).toHaveCount(2)
+    > 135 |   expect(await page.locator('[data-session-id]').evaluateAll(rows => rows.map(row => row.getAttribute('data-session-id')))).toEqual(['mon-normal', 'mon-extra'])
+          |                                                                                                                             ^
+      136 |   await days(page, ['火']); await expect(page.locator('[data-session-id]')).toHaveCount(2)
+      137 |   expect(await page.locator('[data-session-id]').evaluateAll(rows => rows.map(row => row.getAttribute('data-session-id')))).toEqual(['tue', 'tue-extra-other'])
+      138 |   await days(page, []); await expect(page.locator('[data-session-id]')).toHaveCount(0)
+        at C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\issue28-owner-fixes\e2e\issue28.spec.ts:135:125
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-3-2-4-2-5-repeat-510c6-d-local-day-week-boundaries-mobile320\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\issue28\issue28-2-3-2-4-2-5-repeat-510c6-d-local-day-week-boundaries-mobile320\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-3-2-4-2-5-repeat-510c6-d-local-day-week-boundaries-mobile320\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\issue28\issue28-2-3-2-4-2-5-repeat-510c6-d-local-day-week-boundaries-mobile320\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  6 failed
+    [desktop] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence 
+    [desktop] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries 
+    [mobile360] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence 
+    [mobile360] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries 
+    [mobile320] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence 
+    [mobile320] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries 
+  3 passed (42.6s)

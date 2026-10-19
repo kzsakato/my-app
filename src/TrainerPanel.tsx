@@ -123,7 +123,6 @@ export function TrainerManagementOff({ data, commit, kind, id }: { data: Canonic
   }
   return <section className="trainer-off">
     <label className="check"><input type="checkbox" checked={false} disabled={pending} onChange={() => void off()} />トレーナー管理をOFFにする</label>
-    <small>この版ではトレーナー管理に戻せません。</small>
     {failed && <><p role="alert">管理設定の変更を確認できません。</p><button className="save-setting" onClick={() => download('trainer-off-diagnostic.json', { stage: 'management-off', code: 'NOT_CONFIRMED', kind, id, at: new Date().toISOString() })}>診断情報を保存</button></>}
   </section>
 }

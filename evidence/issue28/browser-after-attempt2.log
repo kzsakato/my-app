@@ -1,0 +1,146 @@
+[WebServer] (node:13924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:14788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 9 tests using 1 worker
+
+(node:3576) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [desktop] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence (9.8s)
+(node:11168) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [desktop] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries (2.7s)
+  ok 3 [desktop] › e2e\issue28.spec.ts:147:1 › 0 Sessions and non-Monday week start preserve planned filters and denominators (3.0s)
+(node:13496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  4 [mobile360] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence (8.1s)
+(node:13400) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [mobile360] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries (2.6s)
+  ok 6 [mobile360] › e2e\issue28.spec.ts:147:1 › 0 Sessions and non-Monday week start preserve planned filters and denominators (2.7s)
+(node:5080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  7 [mobile320] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence (8.3s)
+(node:2032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 8 [mobile320] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries (3.1s)
+  ok 9 [mobile320] › e2e\issue28.spec.ts:147:1 › 0 Sessions and non-Monday week start preserve planned filters and denominators (3.2s)
+
+
+  1) [desktop] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence 
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator: getByLabel('今回メモ', { exact: true })
+    Expected: disabled
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeDisabled" getByLabel('今回メモ', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('今回メモ', { exact: true })
+
+
+      101 |   for (const button of await page.locator('.weight-controls button,.run-slot button').all()) await expect(button).toBeDisabled()
+      102 |   await expect(page.getByLabel('シート位置', { exact: true })).toBeDisabled()
+    > 103 |   await expect(page.getByLabel('今回メモ', { exact: true })).toBeDisabled()
+          |                                                          ^
+      104 |   await expect(page.getByRole('button', { name: 'この設定を登録', exact: true })).toBeEnabled()
+      105 |   await expect(page.getByText('この版ではトレーナー管理に戻せません。')).toHaveCount(0)
+      106 |   const prior = await read(page)
+        at C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\issue28-owner-fixes\e2e\issue28.spec.ts:103:58
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-desktop\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-desktop\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-desktop\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-desktop\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [mobile360] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence 
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator: getByLabel('今回メモ', { exact: true })
+    Expected: disabled
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeDisabled" getByLabel('今回メモ', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('今回メモ', { exact: true })
+
+
+      101 |   for (const button of await page.locator('.weight-controls button,.run-slot button').all()) await expect(button).toBeDisabled()
+      102 |   await expect(page.getByLabel('シート位置', { exact: true })).toBeDisabled()
+    > 103 |   await expect(page.getByLabel('今回メモ', { exact: true })).toBeDisabled()
+          |                                                          ^
+      104 |   await expect(page.getByRole('button', { name: 'この設定を登録', exact: true })).toBeEnabled()
+      105 |   await expect(page.getByText('この版ではトレーナー管理に戻せません。')).toHaveCount(0)
+      106 |   const prior = await read(page)
+        at C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\issue28-owner-fixes\e2e\issue28.spec.ts:103:58
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile360\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile360\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile360\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile360\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [mobile320] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence 
+
+    Error: expect(locator).toBeDisabled() failed
+
+    Locator: getByLabel('今回メモ', { exact: true })
+    Expected: disabled
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toBeDisabled" getByLabel('今回メモ', { exact: true }) with timeout 5000ms
+      - waiting for getByLabel('今回メモ', { exact: true })
+
+
+      101 |   for (const button of await page.locator('.weight-controls button,.run-slot button').all()) await expect(button).toBeDisabled()
+      102 |   await expect(page.getByLabel('シート位置', { exact: true })).toBeDisabled()
+    > 103 |   await expect(page.getByLabel('今回メモ', { exact: true })).toBeDisabled()
+          |                                                          ^
+      104 |   await expect(page.getByRole('button', { name: 'この設定を登録', exact: true })).toBeEnabled()
+      105 |   await expect(page.getByText('この版ではトレーナー管理に戻せません。')).toHaveCount(0)
+      106 |   const prior = await read(page)
+        at C:\Users\kzsak\Documents\Codex\2026-09-30\a\work\issue28-owner-fixes\e2e\issue28.spec.ts:103:58
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile320\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile320\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile320\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\issue28\issue28-2-1-2-3-2-4-3-1-5--9623f-t-standard-setting-evidence-mobile320\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [desktop] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence 
+    [mobile360] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence 
+    [mobile320] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence 
+  6 passed (55.0s)
