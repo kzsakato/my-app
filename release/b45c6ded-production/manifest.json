@@ -1,0 +1,53 @@
+{
+  "productCommit": "b45c6ded5e7457d80018d1cc6986a4f591739f8a",
+  "build": "Build 2026-10-23 / b45c6ded",
+  "status": "PREPARED - NOT DEPLOYED",
+  "target": "https://kzsakato.github.io/my-app/",
+  "buildCommand": "VITE_BUILD_DATE=2026-10-23 VITE_BUILD_SHA=b45c6ded5e7457d80018d1cc6986a4f591739f8a npm run build",
+  "config": "vite.config.ts unchanged from approved source; candidate variables unset; no .env files",
+  "node": "24.21.0",
+  "npm": "11.19.0",
+  "lockSha256": "3dc37f885ac152f90b05c86163a305c9f35097ea9180a231fde9c8bfc4502fe0",
+  "productFiles": [
+    {
+      "path": "assets/index-Bl9rZEDk.js",
+      "bytes": 389545,
+      "sha256": "8ed25d8484f609acaa28f695cddd55c4ed33edc343c1b014fb71b14dcb06c644"
+    },
+    {
+      "path": "assets/index-CxqZBreo.css",
+      "bytes": 13079,
+      "sha256": "cd95a5ede2ff652da678c77a6b5a9a32bfe43bf9be41ad9a9ff3a7197140d048"
+    },
+    {
+      "path": "index.html",
+      "bytes": 549,
+      "sha256": "42d729f74de03190fd8e7ac10babc882c1cbb885bb0ae907eb04612ff8cf39d4"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 193,
+      "sha256": "125b20ad76486349c25f02b46f473c0ec7a885c9f6e7514f37eaab98266f7031"
+    },
+    {
+      "path": "prototypes/oic-012-density-prototype.html",
+      "bytes": 13847,
+      "sha256": "6732ad15481c821fe1abf83d27d87356b1a488dec91feefc31155c59d9305f8c"
+    },
+    {
+      "path": "registerSW.js",
+      "bytes": 136,
+      "sha256": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 1188,
+      "sha256": "9e6b49b8e7ffcfb481dafacf280eed6ed082dda64bcf85c0594ad43ed018eb4f"
+    },
+    {
+      "path": "workbox-9c191d2f.js",
+      "bytes": 15112,
+      "sha256": "04b086f1b2f4215ee4b659a7bc9c76162894abdb43fa876247bc7c0bd6fd1c37"
+    }
+  ]
+}
