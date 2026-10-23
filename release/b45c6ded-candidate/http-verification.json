@@ -1,0 +1,105 @@
+{
+  "checkedAt": "2026-10-23T02:56:39.488Z",
+  "method": "Node fetch HTTP GET only; no browser or Owner storage access",
+  "checks": [
+    {
+      "environment": "candidate",
+      "url": "https://my-app-simple-118ff493.kzsakato-lab.workers.dev/",
+      "status": 200,
+      "bytes": 424,
+      "expected": "0f867985b2dc92af3b485015835330b22502eef1692aec666f4af1f2d41f5b2c",
+      "actual": "0f867985b2dc92af3b485015835330b22502eef1692aec666f4af1f2d41f5b2c",
+      "match": true
+    },
+    {
+      "environment": "candidate",
+      "url": "https://my-app-simple-118ff493.kzsakato-lab.workers.dev/assets/index-NftAJfvZ.js",
+      "status": 200,
+      "bytes": 389737,
+      "expected": "4684b59cbfecb4252e46466f7212dd0db6b31e7ece322e62190d2fba706216e5",
+      "actual": "4684b59cbfecb4252e46466f7212dd0db6b31e7ece322e62190d2fba706216e5",
+      "match": true
+    },
+    {
+      "environment": "candidate",
+      "url": "https://my-app-simple-118ff493.kzsakato-lab.workers.dev/assets/index-CxqZBreo.css",
+      "status": 200,
+      "bytes": 13079,
+      "expected": "cd95a5ede2ff652da678c77a6b5a9a32bfe43bf9be41ad9a9ff3a7197140d048",
+      "actual": "cd95a5ede2ff652da678c77a6b5a9a32bfe43bf9be41ad9a9ff3a7197140d048",
+      "match": true
+    },
+    {
+      "environment": "production",
+      "url": "https://kzsakato.github.io/my-app/assets/index-ddSmqDMp.js",
+      "status": 200,
+      "bytes": 341675,
+      "expected": "648426d684a96d70f1c3993073a4f29ca7e081a0ef68bcb9cc5576a420f209ff",
+      "actual": "648426d684a96d70f1c3993073a4f29ca7e081a0ef68bcb9cc5576a420f209ff",
+      "match": true
+    },
+    {
+      "environment": "production",
+      "url": "https://kzsakato.github.io/my-app/assets/index-DUgrbLyg.css",
+      "status": 200,
+      "bytes": 9562,
+      "expected": "eaf24f7ac025451923a623806be94150d6c5fbf3d024b88a75b99320c47c4ce6",
+      "actual": "eaf24f7ac025451923a623806be94150d6c5fbf3d024b88a75b99320c47c4ce6",
+      "match": true
+    },
+    {
+      "environment": "production",
+      "url": "https://kzsakato.github.io/my-app/",
+      "status": 200,
+      "bytes": 549,
+      "expected": "0cdb2525933b5c927895fd7b4823a84510308ede17fc3e4d49aae9f135253013",
+      "actual": "0cdb2525933b5c927895fd7b4823a84510308ede17fc3e4d49aae9f135253013",
+      "match": true
+    },
+    {
+      "environment": "production",
+      "url": "https://kzsakato.github.io/my-app/manifest.webmanifest",
+      "status": 200,
+      "bytes": 193,
+      "expected": "125b20ad76486349c25f02b46f473c0ec7a885c9f6e7514f37eaab98266f7031",
+      "actual": "125b20ad76486349c25f02b46f473c0ec7a885c9f6e7514f37eaab98266f7031",
+      "match": true
+    },
+    {
+      "environment": "production",
+      "url": "https://kzsakato.github.io/my-app/prototypes/oic-012-density-prototype.html",
+      "status": 200,
+      "bytes": 13847,
+      "expected": "6732ad15481c821fe1abf83d27d87356b1a488dec91feefc31155c59d9305f8c",
+      "actual": "6732ad15481c821fe1abf83d27d87356b1a488dec91feefc31155c59d9305f8c",
+      "match": true
+    },
+    {
+      "environment": "production",
+      "url": "https://kzsakato.github.io/my-app/registerSW.js",
+      "status": 200,
+      "bytes": 136,
+      "expected": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7",
+      "actual": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7",
+      "match": true
+    },
+    {
+      "environment": "production",
+      "url": "https://kzsakato.github.io/my-app/sw.js",
+      "status": 200,
+      "bytes": 1188,
+      "expected": "f4b5489e5372aef9f3503a2cc6e513aa6f4c37b84e26097d3242377a2f3b3ddf",
+      "actual": "f4b5489e5372aef9f3503a2cc6e513aa6f4c37b84e26097d3242377a2f3b3ddf",
+      "match": true
+    },
+    {
+      "environment": "production",
+      "url": "https://kzsakato.github.io/my-app/workbox-9c191d2f.js",
+      "status": 200,
+      "bytes": 15112,
+      "expected": "04b086f1b2f4215ee4b659a7bc9c76162894abdb43fa876247bc7c0bd6fd1c37",
+      "actual": "04b086f1b2f4215ee4b659a7bc9c76162894abdb43fa876247bc7c0bd6fd1c37",
+      "match": true
+    }
+  ]
+}

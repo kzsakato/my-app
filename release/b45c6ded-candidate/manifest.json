@@ -1,0 +1,25 @@
+{
+  "status": "REFERENCE ONLY — NOT PAGES DEPLOYABLE",
+  "sourceCommit": "b45c6ded5e7457d80018d1cc6986a4f591739f8a",
+  "build": "V1.1 candidate / b45c6ded",
+  "approvedOrigin": "https://my-app-simple-118ff493.kzsakato-lab.workers.dev",
+  "database": "training-check-v1r11-candidate",
+  "provenance": "Existing 2026-10-19 local artifact; all files match Issue #28 #6262042573 and fresh HTTP GET; no rebuild",
+  "productFiles": [
+    {
+      "path": "index.html",
+      "bytes": 424,
+      "sha256": "0f867985b2dc92af3b485015835330b22502eef1692aec666f4af1f2d41f5b2c"
+    },
+    {
+      "path": "assets/index-NftAJfvZ.js",
+      "bytes": 389737,
+      "sha256": "4684b59cbfecb4252e46466f7212dd0db6b31e7ece322e62190d2fba706216e5"
+    },
+    {
+      "path": "assets/index-CxqZBreo.css",
+      "bytes": 13079,
+      "sha256": "cd95a5ede2ff652da678c77a6b5a9a32bfe43bf9be41ad9a9ff3a7197140d048"
+    }
+  ]
+}
