@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OIC-012 画面高密度化 Prototype</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#172019;background:#edf2ec;line-height:1.35}*{box-sizing:border-box}body{margin:0}.app{width:min(100%,520px);min-height:100vh;margin:auto;padding:0 16px 28px;background:#fff}.proto-note{margin:0 -16px;padding:7px 16px;background:#edf5ed;color:#326a41;font-size:12px}.header{min-height:62px;display:grid;grid-template-columns:64px 1fr 64px;align-items:center;border-bottom:1px solid #e4e9e3}.header h1{margin:0;font-size:18px;line-height:1.2;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.icon-button{width:44px;height:44px;border:0;border-radius:10px;background:transparent;color:#326a41;cursor:pointer}.back{width:58px;height:36px;border:1px solid #b8cbbd;background:#f8fbf8;color:#285c37;font-size:13px;font-weight:600;box-shadow:0 1px 2px #183d1c12}.menu-button{font-size:25px;line-height:1}.icon-button:focus-visible,.row:focus-visible,.action:focus-visible{outline:3px solid #8bb894;outline-offset:2px}.menu{position:relative;justify-self:end}.menu-panel{position:absolute;z-index:3;right:0;top:47px;width:160px;padding:6px;background:#fff;border:1px solid #d8e1d7;border-radius:12px;box-shadow:0 8px 20px #183d1c22}.menu-panel button{width:100%;min-height:44px;border:0;border-radius:8px;background:#fff;text-align:left;padding:0 12px;color:#245d34;font:inherit}.menu-panel button:hover{background:#edf5ed}.hidden{display:none}.blank{visibility:hidden}.summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:14px 0 10px}.summary div{padding:9px 10px;border-radius:10px;background:#f0f5ef;color:#627165;font-size:12px}.summary b{display:block;margin-top:2px;color:#285c37;font-size:17px}.switches{display:flex;gap:8px;margin:4px 0 10px}.switches button{flex:1;min-height:42px;border:1px solid #b8cbbd;border-radius:9px;background:#fff;color:#326a41;font:inherit}.switches button.active{background:#326a41;color:#fff}.section-title{margin:16px 0 5px;font-size:16px}.check{display:flex;align-items:center;gap:7px;min-height:36px;margin:2px 0 5px;color:#526556;font-size:13px}.check input{width:18px;height:18px}.card-list{border-top:1px solid #e4e9e3}.row{width:100%;min-height:72px;display:block;padding:10px 0;border:0;border-bottom:1px solid #e4e9e3;background:#fff;text-align:left;color:inherit;cursor:pointer}.row-top,.row-bottom{display:flex;align-items:center;gap:8px;min-width:0}.row-top{justify-content:space-between;font-size:16px}.exercise-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}.state{flex:0 0 auto;color:#5c7460;font-size:13px;font-weight:600}.state.done{color:#317044}.row-bottom{margin-top:5px;color:#657267;font-size:12px;white-space:nowrap}.history{margin-left:auto;letter-spacing:.5px;color:#4c8056;font-size:13px}.history .bar{padding:0 2px;color:#89968b}.hint{margin:15px 0 0;color:#657267;font-size:12px}.category-card{width:100%;min-height:58px;margin:0;border:0;border-bottom:1px solid #e4e9e3;background:#fff;display:flex;align-items:center;justify-content:space-between;text-align:left;font:inherit;cursor:pointer}.category-card b{font-size:16px}.category-card span{color:#657267;font-size:13px}.recommendation{margin:0 0 9px;color:#657267;font-size:13px}.slot-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid #e4e9e3}.slot{min-height:88px;padding:10px 0;border-bottom:1px solid #e4e9e3}.slot:nth-child(2){padding-right:16px;border-right:1px solid #dbe3da}.slot:nth-child(3){padding-left:16px}.slot-label{display:block;color:#657267;font-size:12px}.slot-controls{display:grid;grid-template-columns:40px 1fr 40px;align-items:center;gap:4px;margin-top:6px}.slot-controls button{width:40px;height:40px;border:0;border-radius:50%;background:#e6ebe5;color:#254a2e;font-size:19px}.slot-controls b{text-align:center;font-size:15px}.wide-slot{grid-column:1/-1;display:grid;grid-template-columns:44px 1fr;align-items:center;min-height:70px}.wide-slot .slot-controls{grid-template-columns:46px 42px 1fr 42px 46px;margin-top:0}.wide-slot .slot-controls button{width:auto;border-radius:9px;font-size:14px}.history-link{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:42px;padding:0;border:0;border-bottom:1px solid #e4e9e3;background:#fff;color:#326a41;text-align:left;font:inherit}.seat{display:flex;gap:7px;align-items:center;min-height:42px;border-bottom:1px solid #e4e9e3;color:#657267;font-size:13px}.seat b{color:#172019}.memo{margin:13px 0 0}.memo label{display:block;font-size:13px}.memo textarea{width:100%;min-height:58px;margin-top:5px;padding:8px;border:1px solid #ccd5cc;border-radius:8px;font:inherit;resize:vertical}.action{width:100%;min-height:50px;margin-top:14px;border:0;border-radius:12px;background:#326a41;color:#fff;font:inherit;font-weight:700}.settings-row{width:100%;min-height:58px;padding:0;border:0;border-bottom:1px solid #e4e9e3;background:#fff;display:flex;align-items:center;justify-content:space-between;text-align:left;font:inherit;cursor:pointer}.settings-row span:last-child{color:#657267}.view{display:none}.view.active{display:block}@media(max-width:360px){.app{padding:0 12px 24px}.proto-note{margin:0 -12px;padding-inline:12px}.history{font-size:12px;letter-spacing:0}.row-bottom{gap:5px}.slot-controls b{font-size:14px}.wide-slot .slot-controls{grid-template-columns:42px 38px 1fr 38px 42px}.slot:nth-child(2){padding-right:12px}.slot:nth-child(3){padding-left:12px}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <p class="proto-note">Prototype only — OIC-012の見た目・配置確認用。実データは変更しません。</p>
+
+    <section class="view active" id="top" data-title="今週の実施メニュー" data-root="true">
+      <div class="summary"><div>今日の実施総数<b>2 / 4</b></div><div>今週の実施総数<b>7 / 18</b></div></div>
+      <div class="switches"><button class="active" type="button">カテゴリ表示</button><button type="button" onclick="showView('recommended')">推奨曜日</button></div>
+      <h2 class="section-title">実施メニュー</h2>
+      <div class="card-list">
+        <button class="category-card" type="button" onclick="showView('category')"><b>背中</b><span>未実施 3件　›</span></button>
+        <button class="category-card" type="button"><b>胸・肩</b><span>未実施 4件　›</span></button>
+        <button class="category-card" type="button"><b>体幹・腕</b><span>未実施 2件　›</span></button>
+        <button class="category-card" type="button"><b>下半身</b><span>未実施 2件　›</span></button>
+      </div>
+      <p class="hint">先頭画面では、最下部の相互ナビゲーションは置かない案です。</p>
+    </section>
+
+    <section class="view" id="recommended" data-title="今週の実施メニュー" data-root="true">
+      <div class="summary"><div>今日の実施総数<b>2 / 4</b></div><div>今週の実施総数<b>7 / 18</b></div></div>
+      <div class="switches"><button type="button" onclick="showView('top')">カテゴリ表示</button><button class="active" type="button">推奨曜日</button></div>
+      <h2 class="section-title">推奨曜日の実施項目</h2>
+      <label class="check"><input type="checkbox" onchange="toggleDone(this.checked)">実施済も表示</label>
+      <div class="card-list">
+        <button class="row" type="button" onclick="showView('run')"><span class="row-top"><span class="exercise-name">ロー（オーバーグリップ）</span><span class="state">未実施</span></span><span class="row-bottom"><span>背中</span><span>推奨：月</span><span class="history">○○○○○○○<span class="bar">｜</span>○○○○○○○</span></span></button>
+        <button class="row" type="button" onclick="showView('run')"><span class="row-top"><span class="exercise-name">ダンベルプレス</span><span class="state">未実施</span></span><span class="row-bottom"><span>胸</span><span>推奨：金</span><span class="history">○●○○○○○<span class="bar">｜</span>○○○○○○○</span></span></button>
+        <button class="row done-row hidden" type="button"><span class="row-top"><span class="exercise-name">サイドレイズ</span><span class="state done">✓ 実施済</span></span><span class="row-bottom"><span>肩</span><span>推奨：金</span><span class="history">○○○○○○○<span class="bar">｜</span>○○○○○●○</span></span></button>
+      </div>
+    </section>
+
+    <section class="view" id="category" data-title="背中">
+      <p class="recommendation">今週の実施項目</p>
+      <div class="card-list">
+        <button class="row" type="button" onclick="showView('run')"><span class="row-top"><span class="exercise-name">ロー（オーバーグリップ）</span><span class="state">未実施</span></span><span class="row-bottom"><span>背中</span><span>推奨：月</span><span class="history">○○○○○○○<span class="bar">｜</span>○○○○○○○</span></span></button>
+        <button class="row" type="button"><span class="row-top"><span class="exercise-name">プルダウン</span><span class="state">未実施</span></span><span class="row-bottom"><span>背中</span><span>推奨：金</span><span class="history">●○○○○○○<span class="bar">｜</span>○○○○○○○</span></span></button>
+        <button class="row" type="button"><span class="row-top"><span class="exercise-name">バックエクステンション</span><span class="state done">✓ 実施済</span></span><span class="row-bottom"><span>背中</span><span>推奨：任意</span><span class="history">○○○●○○○<span class="bar">｜</span>○○○○○●○</span></span></button>
+        <button class="row" type="button"><span class="row-top"><span class="exercise-name">ストレートアーム・プルオーバー</span><span class="state">未実施</span></span><span class="row-bottom"><span>背中</span><span>推奨：日</span><span class="history">○○○○○○○<span class="bar">｜</span>○○○○○○○</span></span></button>
+      </div>
+    </section>
+
+    <section class="view" id="run" data-title="ロー（オーバーグリップ）">
+      <p class="recommendation">背中　推奨：月</p>
+      <div class="slot-grid">
+        <section class="slot wide-slot"><span class="slot-label">重量</span><div class="slot-controls"><button><strong>&lt;&lt;</strong></button><button>&lt;</button><b>18.00 kg</b><button>&gt;</button><button><strong>&gt;&gt;</strong></button></div></section>
+        <section class="slot"><span class="slot-label">回数</span><div class="slot-controls"><button>−</button><b>20 回</b><button>＋</button></div></section>
+        <section class="slot"><span class="slot-label">実施セット数</span><div class="slot-controls"><button>−</button><b>5</b><button>＋</button></div></section>
+      </div>
+      <button class="history-link" type="button">この実施項目の設定履歴を見る <span>›</span></button>
+      <p class="seat">シート位置：<b>5</b></p>
+      <div class="memo"><label>メモ2<textarea placeholder="今回のメモ"></textarea></label></div>
+      <button class="action" type="button">種目を完了</button>
+    </section>
+
+    <section class="view" id="settings" data-title="設定" data-root="true">
+      <h2 class="section-title">設定・参照</h2>
+      <div class="card-list">
+        <button class="settings-row" type="button"><b>週メニュー</b><span>›</span></button>
+        <button class="settings-row" type="button"><b>実施項目</b><span>›</span></button>
+        <button class="settings-row" type="button"><b>種目</b><span>›</span></button>
+        <button class="settings-row" type="button"><b>カテゴリ</b><span>›</span></button>
+        <button class="settings-row" type="button"><b>設定履歴</b><span>›</span></button>
+        <button class="settings-row" type="button"><b>分析</b><span>›</span></button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const views = [...document.querySelectorAll('.view')];
+    let current = 'top';
+    function header(view) {
+      const root = view.dataset.root === 'true';
+      return `<header class="header"><button class="icon-button ${root ? 'blank' : 'back'}" type="button" aria-label="戻る" onclick="goBack()">‹ 戻る</button><h1>${view.dataset.title}</h1><div class="menu"><button class="icon-button menu-button" type="button" aria-label="共通メニュー" onclick="toggleMenu(event)">≡</button><div class="menu-panel hidden" id="menu-panel"><button type="button" onclick="showView('top')">実施メニュー</button><button type="button" onclick="showView('settings')">設定</button></div></div></header>`;
+    }
+    function renderHeaders(){views.forEach(view=>{const old=view.querySelector('.header');if(old)old.remove();view.insertAdjacentHTML('afterbegin',header(view))})}
+    function showView(id){current=id;views.forEach(v=>v.classList.toggle('active',v.id===id));window.scrollTo(0,0);}
+    function goBack(){showView(current==='run'?'category':'top')}
+    function toggleMenu(event){event.stopPropagation();document.querySelector(`#${current} .menu-panel`).classList.toggle('hidden')}
+    function toggleDone(show){document.querySelectorAll('.done-row').forEach(row=>row.classList.toggle('hidden',!show))}
+    document.addEventListener('click',()=>document.querySelectorAll('.menu-panel').forEach(x=>x.classList.add('hidden')));
+    renderHeaders();
+  </script>
+</body>
+</html>

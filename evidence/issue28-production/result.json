@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "checkedAt": "2026-10-23T04:22:44.334Z",
+  "browser": "156.0.8078.4",
+  "environment": {
+    "origin": "http://127.0.0.1:4189",
+    "secure": true,
+    "databases": [
+      {
+        "name": "training-check",
+        "version": 7
+      }
+    ],
+    "controller": "http://127.0.0.1:4189/my-app/sw.js",
+    "scopes": [
+      "http://127.0.0.1:4189/my-app/"
+    ]
+  },
+  "checks": [
+    "fresh startup under /my-app/",
+    "build identifier",
+    "explicit canonical preparation through UI",
+    "synthetic full restore + exact DB readback",
+    "profile UI save + reload + DB readback",
+    "backup export",
+    "SW scope/controller",
+    "offline reload persistence"
+  ],
+  "errors": [],
+  "badResponses": [],
+  "limitations": "Isolated loopback Chromium only; not real Pages HTTPS or Owner Brave/Chrome. No real data accessed."
+}
