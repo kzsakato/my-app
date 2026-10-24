@@ -57,8 +57,10 @@ describe('V1R ordering compatibility boundary', () => {
     const storage = memory()
     for (let attempt = 0; attempt < 2; attempt++) {
       expect((await applyCanonicalRestore(storage, envelope, false)).ok).toBe(true)
-      expect(await storage.readCanonical()).toEqual(source)
-      expect(await loadCanonicalStartup(storage)).toEqual({ kind: 'canonical-ready', data: source })
+      expect(await storage.readCanonical()).toEqual(envelope.payload)
+      const { displayPreferences: _preferences, ...facts } = envelope.payload
+      expect(facts).toEqual(source)
+      expect(await loadCanonicalStartup(storage)).toEqual({ kind: 'canonical-ready', data: envelope.payload })
     }
     expect(envelope.payload.sessions).toEqual(source.sessions)
   })

@@ -3,6 +3,7 @@ import { DATA_VERSION, type AppData, type Category, type Exercise, type Item, ty
 import { loadCanonicalStartup, type CanonicalStorage, type CutoverState, type LegacyBaseline } from './canonical/cutover'
 import type { CanonicalAppData } from './canonical/types'
 import { initializeOwnerManagement, rebaseOwnerChange } from './canonical/management'
+import { withDisplayPreferences } from './canonical/displayPreferences'
 import { createTrainerApplyCandidate, trainerReadbackMatches, type TrainerApplyCandidate } from './canonical/trainerV11'
 import { validateCanonical as validateCanonicalDomain } from './canonical/validate'
 
@@ -52,7 +53,7 @@ export async function commitOwnerCanonical(base: CanonicalAppData, next: Canonic
  try {
   const stored=await tx.store.get(canonicalKey) as CanonicalAppData|undefined
   if(!stored)throw new Error('canonical dataがありません')
-  const candidate=rebaseOwnerChange(base,next,initializeOwnerManagement(stored))
+  const candidate=withDisplayPreferences(rebaseOwnerChange(base,next,initializeOwnerManagement(stored)))
   const checked=validateCanonicalDomain(candidate)
   if(checked.errors.length)throw new Error(checked.errors.map(value=>`${value.path}: ${value.message}`).join(' / '))
   await tx.store.put(candidate,canonicalKey);await tx.done;completed=true

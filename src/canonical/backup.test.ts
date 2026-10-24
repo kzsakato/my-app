@@ -23,7 +23,14 @@ describe('canonical full backup/restore', () => {
     source.appliedProposalIds = ['applied']
     source.weekStartsOn = 6
     const exported = createCanonicalBackup(source, '2026-09-30T01:00:00Z')
-    expect(exported.payload).toEqual(source)
+    // V1.2 05_JSON §3.1: new Export explicitly contains effective preferences.
+    const { displayPreferences, ...facts } = exported.payload
+    expect(facts).toEqual(source)
+    expect(displayPreferences).toEqual({
+      defaultSort: { priority: ['recommendedDay', 'completion', 'bodyRegion'], completionDirection: 'incompleteFirst' },
+      optionSort: { priority: ['completion', 'recommendedDay', 'bodyRegion'], completionDirection: 'incompleteFirst' },
+      bodyRegionOrder: ['胸', '背中', '腕', '肩', '下半身', '体幹', 'その他'],
+    })
     exported.payload.profile.weight = 70
     expect(source.profile.weight).toBe(66)
     const storage = memory()

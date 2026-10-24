@@ -1,4 +1,10 @@
 import type { CanonicalAppData, MenuEntry, Session } from './types'
+import { sessionOrder } from './baseline'
+
+/** V1.2 formal 06 §4.5: presentation-only final ID tie; no persisted ordering changes. */
+export function displayedSessionOrder(left: Session, right: Session): number {
+  return sessionOrder(left, right) || (left.id < right.id ? -1 : left.id > right.id ? 1 : 0)
+}
 
 /** Exercise completion answers only a boolean; it cannot select an actual. */
 export function completedEntryIds(data: CanonicalAppData, entries: MenuEntry[], sessions: Session[]): Set<string> {
