@@ -2,8 +2,8 @@ import { DisplayPreferencesEditor, DisplayPreferencesSummary, OptionSort } from 
 import { bodyRegions, compareBodyRegions, compareNames, effectiveDisplayPreferences, exerciseBodyRegion, recentlyPerformedExercises, sortDisplayRows } from "./canonical/displayPreferences";
 import { compareInstants } from "./canonical/instant";
 import { useMemo, useRef, useState } from "react";
-import { currentWeekSessions, sessionOrder, shiftLocalDate, weeklyLoadSummary } from "./canonical/baseline";
-import { completedEntryIds, completedSessionRows, type CompletedSessionRow } from "./canonical/topProjection";
+import { currentWeekSessions, shiftLocalDate, weeklyLoadSummary } from "./canonical/baseline";
+import { completedEntryIds, completedSessionRows, displayedSessionOrder, type CompletedSessionRow } from "./canonical/topProjection";
 import { cancelSession } from "./canonical/cancelSession";
 import { itemValidationMessages } from "./itemValidation";
 import { applyCanonicalRestore, createCanonicalBackup, previewCanonicalRestore, type BackupPreview } from "./canonical/backup";
@@ -425,10 +425,16 @@ function TopPage({
   const start = weekStart(today, data.weekStartsOn);
   const selectedDays = [...preferences.days].sort((left, right) => left - right);
   const topMode = preferences.mode;
+  const [option, setOption] = useState(false);
   const [categoryShowCompleted, setCategoryShowCompleted] = useState(false);
   const [dayFilterOpen, setDayFilterOpen] = useState(false);
-  const weekSessions = currentWeekSessions(data, today).sort(sessionOrder);
+  const weekSessions = currentWeekSessions(data, today).sort(displayedSessionOrder);
   const completedEntries = completedEntryIds(data, entries, weekSessions);
+  const sortEntries = (rows: MenuEntry[]) => sortDisplayRows(rows, entry => {
+    const item = data.trainingItems.find(item => item.id === entry.trainingItemId)!;
+    const exercise = data.exercises.find(exercise => exercise.id === item.exerciseId)!;
+    return { id: entry.id, name: item.displayName || exercise.name, recommendedDay: entry.recommendedDay, bodyRegion: exerciseBodyRegion(exercise), completed: completedEntries.has(entry.id) };
+  }, effectiveDisplayPreferences(data), option, region ? ['recommendedDay', 'completion'] : ['recommendedDay', 'completion', 'bodyRegion']);
   const completedRows = completedSessionRows(weekSessions);
   const todayEntries = entries.filter(entry => entry.recommendedDay === currentDay);
   const distinctCount = (rows: MenuEntry[]) => new Set(rows.map(entry => data.trainingItems.find(item => item.id === entry.trainingItemId)?.exerciseId)).size;
@@ -474,7 +480,7 @@ function TopPage({
       exercise.lifecycle !== "active"
     )
       return null;
-    if (completedEntries.has(entry.id)) return null;
+    const completed = completedEntries.has(entry.id);
     return (
       <div key={entry.id}>
       <button
@@ -483,7 +489,7 @@ function TopPage({
         onClick={() => onRun(entry.id)}
       >
         <span>
-          <span className="item-title-line"><b>{item.displayName || exercise.name}</b><span className="item-status">未実施</span></span>
+          <span className="item-title-line"><b>{item.displayName || exercise.name}</b><span className={completed ? "ok item-status" : "item-status"}>{completed ? "✓ 実施済" : "未実施"}</span></span>
           <span className="item-detail-line">
             <small>{`${exerciseBodyRegion(exercise) ?? ""}　${entry.recommendedDay === undefined ? "推奨：任意" : `推奨：${days[entry.recommendedDay]}`}`}</small>
             <small className="item-history">{exerciseHistory(data.sessions, exercise.id, new Date(), data.weekStartsOn)}</small>
@@ -512,9 +518,9 @@ function TopPage({
   return (
     <Frame title={region ?? "今週の実施メニュー"} back={region ? onTop : undefined} onSettings={onSettings} onTop={onTop}>
       {region ? <>
-        <label className="check"><input type="checkbox" checked={categoryShowCompleted} onChange={event => setCategoryShowCompleted(event.target.checked)} />実施済も表示</label>
-        {(categoryGroups.find(([name]) => name === region)?.[1] ?? []).map(renderEntry)}
-        {categoryShowCompleted && completedRows.filter(row => row.bodyRegion === region).map(renderCompleted)}
+        <div className="list-checks"><label className="check"><input type="checkbox" checked={categoryShowCompleted} onChange={event => setCategoryShowCompleted(event.target.checked)} />実施済も表示</label><OptionSort checked={option} onChange={setOption} /></div>
+        <div data-projection="planned">{sortEntries(categoryGroups.find(([name]) => name === region)?.[1] ?? []).map(renderEntry)}</div>
+        {categoryShowCompleted && <div data-projection="actual">{completedRows.filter(row => row.bodyRegion === region).map(renderCompleted)}</div>}
       </> : <>
       {notice && <p className="week">{notice}</p>}
       <select aria-label="週メニュー"
@@ -565,7 +571,7 @@ function TopPage({
           <button className="extra-button" onClick={onExtra}>＋ 追加トレーニングを登録</button>
           {topMode === "category" ? (
             <>
-              {(categoryGroups.find(([name]) => name === "")?.[1] ?? []).map(renderEntry)}
+              {sortEntries(categoryGroups.find(([name]) => name === "")?.[1] ?? []).map(renderEntry)}
               {categoryDestinations.length === 0 ? (
                 <p className="week">部位表示できる実施項目はありません。</p>
               ) : (
@@ -578,7 +584,7 @@ function TopPage({
           ) : (
             <>
               <h2 className="recommended-title">推奨曜日の実施項目</h2>
-              <label className="check"><input type="checkbox" checked={preferences.showCompleted} onChange={event => onPreferences({ ...preferences, showCompleted: event.target.checked })} />実施済も表示</label>
+              <div className="list-checks"><label className="check"><input type="checkbox" checked={preferences.showCompleted} onChange={event => onPreferences({ ...preferences, showCompleted: event.target.checked })} />実施済も表示</label><OptionSort checked={option} onChange={setOption} /></div>
               <div className="weekday-dropdown">
                 <button
                   className="weekday-dropdown-trigger"
@@ -612,9 +618,9 @@ function TopPage({
               {recommendedEntries.length === 0 ? (
                 <p className="week">選択した推奨曜日の項目はありません。</p>
               ) : (
-                recommendedEntries.map(renderEntry)
+                <div data-projection="planned">{sortEntries(recommendedEntries).map(renderEntry)}</div>
               )}
-              {preferences.showCompleted && selectedDayCompletedRows.map(renderCompleted)}
+              {preferences.showCompleted && <div data-projection="actual">{selectedDayCompletedRows.map(renderCompleted)}</div>}
             </>
           )}
         </>

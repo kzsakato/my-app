@@ -1,5 +1,5 @@
 // Oracle: formal app-design V1.2 addenda; Issue #30 QA #6385055723.
-// TOP/REGION Entry/Session integration is explicitly HOLD, not covered as PASS.
+// TOP/REGION oracle: Technical #6385559389; formal 03 TOP/REGION and 06 §4.5.
 import { test, expect, type Page } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { canonicalFixture } from '../src/canonical/fixtures'
@@ -39,7 +39,7 @@ async function read(page: Page): Promise<CanonicalAppData> {
 }
 async function settings(page: Page) { await page.getByRole('button', { name: '共通メニュー' }).click(); await page.getByRole('button', { name: '設定', exact: true }).click() }
 async function top(page: Page) { await page.getByRole('button', { name: '共通メニュー' }).click(); await page.getByRole('button', { name: '実施メニュー', exact: true }).click() }
-async function screenshot(page: Page, project: string, name: string) { mkdirSync('evidence/issue30-v12', { recursive: true }); await page.screenshot({ path: `evidence/issue30-v12/${project}-${name}.png`, fullPage: true }) }
+async function screenshot(page: Page, project: string, name: string) { const directory = process.env.V12_EVIDENCE_ROOT ?? 'evidence/issue30-v12'; mkdirSync(directory, { recursive: true }); await page.screenshot({ path: `${directory}/${project}-${name}.png`, fullPage: true }) }
 
 test('display editor: approved controls, discard, explicit save/reload/readback and no non-target changes', async ({ page }, info) => {
   const d = await seed(page); await settings(page)
@@ -208,4 +208,122 @@ test('display save quota failure remains on draft, preserves storage and support
   await page.getByRole('button', { name: '設定を保存', exact: true }).click()
   await expect(page.getByRole('heading', { name: '設定', exact: true })).toBeVisible()
   expect((await read(page)).displayPreferences!.defaultSort.completionDirection).toBe('completeFirst')
+})
+
+function connectionFixture() {
+  const d = fixture()
+  const session = (id: string, itemId: string, date: string, performedAt: string, order: number, entryId: string | undefined, region: string | undefined) => {
+    const item = d.trainingItems.find(row => row.id === itemId)!, exercise = d.exercises.find(row => row.id === item.exerciseId)!
+    return { ...structuredClone(canonicalFixture.sessions[0]), id, trainingItemId: itemId, menuEntryId: entryId, date, performedAt, performedOrder: order,
+      snapshot: { ...canonicalFixture.sessions[0].snapshot, exerciseId: exercise.id, exerciseName: `記録種目-${id}`, trainingItemDisplayName: `記録-${id}`, classifications: region ? [{ kind: 'bodyRegion' as const, label: region }] : undefined } }
+  }
+  d.sessions = [
+    session('actual-a','ti-1','2026-10-24','2026-10-24T03:00:00Z',0,'entry-1','履歴部位'),
+    session('actual-b','ti-chest-2','2026-10-24','2026-10-24T03:00:00Z',1,'entry-5','胸'),
+    session('extra-missing','ti-1','2026-10-23','2026-10-23T09:00:00+09:00',0,undefined,undefined),
+    session('snapshot-only','ti-2','2026-10-24','2026-10-24T04:00:00Z',0,undefined,'過去部位'),
+    session('previous-week','ti-0','2026-10-18','2026-10-18T09:00:00+09:00',0,undefined,'肩'),
+    session('next-week','ti-4','2026-10-26','2026-10-26T09:00:00+09:00',0,undefined,'独自'),
+  ]
+  return d
+}
+const planned = (page: Page) => page.locator('[data-projection="planned"] [data-menu-entry-id]')
+const actuals = (page: Page) => page.locator('[data-projection="actual"] [data-session-id]')
+const entryIds = (page: Page) => planned(page).evaluateAll(rows => rows.map(row => row.getAttribute('data-menu-entry-id')))
+const actualIds = (page: Page) => actuals(page).evaluateAll(rows => rows.map(row => row.getAttribute('data-session-id')))
+async function allDays(page: Page) { await page.locator('.weekday-dropdown-trigger').click(); await page.getByRole('button', { name: '全ON', exact: true }).click(); await page.locator('.weekday-dropdown-trigger').click() }
+async function openRegion(page: Page, name: string) {
+  await page.getByRole('button', { name: '部位表示', exact: true }).click()
+  await page.getByRole('button').filter({ has: page.locator('b', { hasText: new RegExp(`^${name}$`) }) }).click()
+}
+
+test('TOP two projections: complete Entries remain with independent sort/filters; every Session and counts/load are preserved', async ({ page }, info) => {
+  const d = await seed(page, connectionFixture()); await allDays(page)
+  await expect(page.getByLabel('Optionソート')).not.toBeChecked()
+  expect(await entryIds(page)).toEqual(['entry-1','entry-3','entry-0','entry-4','entry-5','entry-2'])
+  await expect(actuals(page)).toHaveCount(0)
+  await expect(planned(page).filter({ hasText: '実施済' })).toHaveCount(3)
+  await page.getByLabel('実施済も表示').check()
+  expect(await actualIds(page)).toEqual(['snapshot-only','actual-b','actual-a','extra-missing'])
+  await expect(page.locator('[data-session-id="actual-a"] b')).toHaveText('記録-actual-a')
+  await expect(page.getByText('今週の実施総数')).toContainText('4/6')
+  const loadText = await page.locator('.load-summary').innerText()
+  await page.getByLabel('Optionソート').check()
+  expect(await entryIds(page)).toEqual(['entry-3','entry-0','entry-4','entry-1','entry-5','entry-2'])
+  expect(await actualIds(page)).toEqual(['snapshot-only','actual-b','actual-a','extra-missing'])
+  await page.getByLabel('実施済も表示').uncheck()
+  await expect(actuals(page)).toHaveCount(0)
+  await expect(planned(page)).toHaveCount(6)
+  await expect(planned(page).filter({ hasText: '実施済' })).toHaveCount(3)
+  await page.getByLabel('実施済も表示').check()
+  await page.locator('.weekday-dropdown-trigger').click(); await page.getByRole('button', { name: '全OFF', exact: true }).click()
+  await expect(planned(page)).toHaveCount(0); await expect(actuals(page)).toHaveCount(0)
+  await expect(page.getByLabel('実施済も表示')).toBeChecked()
+  await page.getByRole('group', { name: '推奨曜日を複数選択' }).getByLabel('月', { exact: true }).check()
+  expect(await entryIds(page)).toEqual(['entry-1']); await expect(actuals(page)).toHaveCount(0)
+  await page.getByRole('group', { name: '推奨曜日を複数選択' }).getByLabel('土', { exact: true }).check()
+  expect(await actualIds(page)).toEqual(['snapshot-only','actual-b','actual-a'])
+  await page.locator('.weekday-dropdown-trigger').click(); await allDays(page)
+  expect(await page.locator('.load-summary').innerText()).toBe(loadText)
+  expect(await read(page)).toEqual(d)
+  await screenshot(page, info.project.name, 'top-connected')
+  await settings(page); await top(page); await expect(page.getByLabel('Optionソート')).not.toBeChecked()
+  expect(await read(page)).toEqual(d)
+})
+
+test('REGION current planned vs snapshot actual, missing snapshot stays only in TOP; completed Entry always opens PLAN-RUN', async ({ page }, info) => {
+  const d = await seed(page, connectionFixture()); await allDays(page); await page.getByLabel('実施済も表示').check()
+  expect(await actualIds(page)).toContain('extra-missing')
+  await page.getByLabel('Optionソート').check(); await openRegion(page, '胸')
+  await expect(page.getByLabel('Optionソート')).not.toBeChecked()
+  expect(await entryIds(page)).toEqual(['entry-1','entry-5'])
+  await expect(planned(page).filter({ hasText: '実施済' })).toHaveCount(2)
+  await expect(actuals(page)).toHaveCount(0)
+  await page.getByLabel('実施済も表示').check(); expect(await actualIds(page)).toEqual(['actual-b'])
+  await screenshot(page, info.project.name, 'region-connected')
+  await page.locator('[data-menu-entry-id="entry-5"]').click()
+  await expect(page.getByRole('heading', { name: '別の胸TI', exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: '重量を1kg減らす' })).toBeEnabled()
+  await expect(page.getByRole('button', { name: '種目を完了', exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: /の実行を取り消す/ })).toHaveCount(0)
+  await page.getByRole('button', { name: '‹ 戻る', exact: true }).click()
+  await page.getByLabel('実施済も表示').check(); await page.locator('[data-session-id="actual-b"]').click()
+  await expect(page.getByRole('heading', { name: '記録-actual-b', exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: '重量を1kg減らす' })).toBeDisabled()
+  await top(page); await openRegion(page, '過去部位'); await page.getByLabel('実施済も表示').check()
+  await expect(planned(page)).toHaveCount(0); expect(await actualIds(page)).toEqual(['snapshot-only'])
+  await top(page); await openRegion(page, '履歴部位'); await page.getByLabel('実施済も表示').check()
+  await expect(planned(page)).toHaveCount(0); expect(await actualIds(page)).toEqual(['actual-a'])
+  await top(page); await openRegion(page, '背中'); await page.getByLabel('実施済も表示').check()
+  expect(await entryIds(page)).toEqual(['entry-2']); await expect(actuals(page)).toHaveCount(0)
+  expect(await read(page)).toEqual(d)
+})
+
+test('specific repeated Session cancellation removes only selected ID and leaves Exercise completion via other actuals', async ({ page }) => {
+  const d = await seed(page, connectionFixture()); await allDays(page); await page.getByLabel('実施済も表示').check()
+  await page.locator('[data-session-id="actual-b"]').click()
+  page.once('dialog', dialog => dialog.accept()); await page.getByRole('button', { name: '10/24の実行を取り消す', exact: true }).click()
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+  const expected = { ...d, sessions: d.sessions.filter(row => row.id !== 'actual-b'), displayPreferences: defaultDisplayPreferences }
+  expect(await read(page)).toEqual(expected)
+  await expect(page.locator('[data-menu-entry-id="entry-1"]')).toContainText('実施済')
+  await expect(page.locator('[data-menu-entry-id="entry-5"]')).toContainText('実施済')
+  expect(await actualIds(page)).toEqual(['snapshot-only','actual-a','extra-missing'])
+  await expect(page.getByText('今週の実施総数')).toContainText('3/6')
+  await page.reload(); expect(await read(page)).toEqual(expected)
+})
+
+test('completed Entry re-execution adds a new Session without replacing any existing actual or saved Entry order', async ({ page }) => {
+  const d = await seed(page, connectionFixture()); await allDays(page)
+  await page.locator('[data-menu-entry-id="entry-5"]').click()
+  await page.getByRole('button', { name: '種目を完了', exact: true }).click()
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+  const saved = await read(page)
+  expect(saved.menuEntries).toEqual(d.menuEntries)
+  expect(saved.trainingItems).toEqual(d.trainingItems)
+  expect(saved.sessions.filter(row => d.sessions.some(old => old.id === row.id))).toEqual(d.sessions)
+  expect(saved.sessions).toHaveLength(d.sessions.length + 1)
+  expect(saved.sessions.at(-1)).toMatchObject({ menuEntryId: 'entry-5', trainingItemId: 'ti-chest-2', date: '2026-10-24', snapshot: { exerciseId: 'ex-1', trainingItemDisplayName: '別の胸TI' } })
+  await expect(page.getByText('今週の実施総数')).toContainText('5/6')
+  await page.reload(); expect(await read(page)).toEqual(saved)
 })

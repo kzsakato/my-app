@@ -1,0 +1,10 @@
+$ vitest run "--reporter=dot"
+
+ RUN  v3.2.7 C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/my-app
+
+················································································································································
+
+ Test Files  18 passed (18)
+      Tests  144 passed (144)
+   Start at  23:52:03
+   Duration  4.88s (transform 3.96s, setup 0ms, collect 11.82s, tests 1.10s, environment 10ms, prepare 16.19s)

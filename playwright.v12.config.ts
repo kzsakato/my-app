@@ -1,4 +1,5 @@
 import { defineConfig } from '@playwright/test'
+process.env.V12_EVIDENCE_ROOT = 'evidence/issue30-v12/connection'
 export default defineConfig({
   testDir: './e2e', testMatch: 'issue30-v12.spec.ts', workers: 1, retries: 0,
   outputDir: 'test-results-v12',
