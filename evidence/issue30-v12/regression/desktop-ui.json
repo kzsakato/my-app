@@ -1,0 +1,53 @@
+{
+  "baseline": "943aa2aa",
+  "weekly": "今週の実施総数\n1/6",
+  "regionText": "背中\n6項目\n1/6",
+  "status": {
+    "font": "13.3333px",
+    "rect": {
+      "x": 827.015625,
+      "y": 722,
+      "width": 56.984375,
+      "height": 17,
+      "top": 722,
+      "right": 884,
+      "bottom": 739,
+      "left": 827.015625
+    }
+  },
+  "title": {
+    "x": 396,
+    "y": 719,
+    "width": 423.015625,
+    "height": 21
+  },
+  "weight": {
+    "text": "18.00 kg",
+    "font": "15.3333px",
+    "rect": {
+      "x": 540,
+      "y": 97,
+      "width": 244,
+      "height": 21,
+      "top": 97,
+      "right": 784,
+      "bottom": 118,
+      "left": 540
+    },
+    "overflow": false
+  },
+  "seat": {
+    "x": 469.859375,
+    "y": 327,
+    "width": 414.140625,
+    "height": 42
+  },
+  "seatLabel": {
+    "x": 396,
+    "y": 327,
+    "width": 488,
+    "height": 42
+  },
+  "inputsBefore": 7,
+  "completedStandardButtonCount": 1
+}

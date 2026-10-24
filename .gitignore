@@ -9,3 +9,5 @@ test-results-release/
 
 playwright-report-v1r-visual/
 test-results-v1r-visual/
+test-results-v12/
+test-results-v12-regression/

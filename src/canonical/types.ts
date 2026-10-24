@@ -114,6 +114,7 @@ export type TrainingItemSettingChange = {
 }
 
 export type CanonicalAppData = {
+  displayPreferences?: import('./displayPreferences').DisplayPreferences
   schemaVersion: 1
   /** 0=月曜 … 6=日曜。週境界と集計表示の規則。 */
   weekStartsOn: RecommendedDay

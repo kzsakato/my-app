@@ -5,7 +5,7 @@
 .item-density>span:first-child{width:100%}
 .item-density .item-title-line{display:flex;align-items:baseline;gap:8px;text-align:left}
 .item-density .item-title-line b{flex:1;min-width:0;white-space:normal;overflow-wrap:anywhere;text-align:left}
-.item-density .item-status{position:static;flex:0 0 auto;font-size:12px;white-space:nowrap}
+.item-density .item-status{position:static;flex:0 0 auto;font-size:calc(12px + 1pt);white-space:nowrap}
 .item-density .item-detail-line{justify-content:space-between;gap:8px}
 .item-density .item-history{margin-left:auto;text-align:right}
 .run-weight .weight-controls{grid-template-columns:48px 44px minmax(72px,1fr) 44px 48px;column-gap:4px}
@@ -38,6 +38,19 @@
 @media(max-width:360px){.run-weight{grid-template-columns:32px minmax(0,1fr)}.run-weight .weight-controls{grid-template-columns:48px 44px minmax(56px,1fr) 44px 48px}.run-weight .weight-controls b{min-width:56px}.weekday-dropdown-trigger{font-size:12px}.item-density .item-history{letter-spacing:0}}
 
 /* Issue #28 4-1: 1 CSS pt = 96/72 px; number and unit share this element. */
+.list-checks{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.extra-filters{display:flex;gap:12px;align-items:end;flex-wrap:wrap}
+.extra-filters>select,.extra-filters>label{flex:1;min-width:120px}
+.display-preference-section fieldset{border:0;padding:0;margin:12px 0;min-width:0}
+.sort-priority-row{display:flex;align-items:center;gap:8px;min-height:44px}
+.sort-priority-row>span{flex:1;min-width:0}
+.sort-priority-row .small{width:44px;min-height:44px;flex-shrink:0}
+.region-warning{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;color:#8a4900;font-size:13px}
+.region-warning .small{min-height:44px;width:auto}
+.preference-preview{font-size:13px;overflow-wrap:anywhere}
+.preference-preview dd{margin:0 0 10px}
+.weekday-actions{display:flex;gap:8px;grid-column:1/-1}
+.weekday-actions button{flex:1;min-height:44px}
 .run-weight .weight-controls b{font-size:calc(14px + 1pt)}
 /* Reclaim the outer columns' 4px spare space each; keep every button 44px. */
 @media(max-width:360px){.run-weight .weight-controls{grid-template-columns:44px 44px minmax(64px,1fr) 44px 44px}.run-weight .weight-controls b{min-width:64px;font-size:calc(13px + 1pt)}}
