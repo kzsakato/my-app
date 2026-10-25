@@ -1,5 +1,7 @@
 # Issue #30 — V1.2 App Development return
 
+**Latest additional QA-requested verification (2026-10-25): [qa-additional/RETURN.md](qa-additional/RETURN.md). App runtime remains d7e41c5; this follow-up adds tests/Evidence only.**
+
 **Current follow-up: the TOP/REGION HOLD is resolved under Technical #6385559389 and formal 06 §4.5. See [latest implementation/PC verification return](connection/RETURN.md). The original partial return below records the earlier 4fd21f8 state.**
 
 Date: 2026-10-24 JST
