@@ -7,7 +7,7 @@ Authority: Issue #30 PMO #6406832357 / Technical #6406809943。USB/ADB/Android S
 ## 担当側の準備済み構成
 
 - `vite.v12-wifi.config.ts`：V12_WIFI_ORIGIN必須、HTTPS/private IPv4/8443だけ許可。localhost用entryのorigin guardをbuild時にその1originへ固定。既存src/本番config不変更。
-- `wifi-server.mjs`：指定IPが現在のPC interfaceか、build/config origin一致、証明書SAN/期限/鍵一致を確認。指定IPだけbind、Host一致必須。0.0.0.0、HTTP、公開tunnel、Firewall変更、証明書trust追加を自動実行しない。
+- `wifi-server.mjs`：指定IPが現在のPC interfaceか、build/config/inventory originと全artifact hash、証明書SAN/期限/鍵一致を確認。指定IPだけbind、Host一致必須。inventory掲載assetだけ配信し、鍵/config/inventoryのsite配下配置は禁止。0.0.0.0、HTTP、公開tunnel、Firewall変更、証明書trust追加を自動実行しない。
 - DB名は承認済み`training-check-v12-local-man`を維持。originがlocalhostと別なので保存領域も別。PWA id=/v12-local-man、scope/start_url=/はoriginを含む実効identityで分離。空DB限定seed/非空保持/不完全DB停止は既存検証entryを再利用。
 - test-only loopback例外はV12_WIFI_TEST=1でのみ使用。証明書試験用でありAndroid用の入口ではない。
 
@@ -24,7 +24,7 @@ LAN用証明書の発行元/Android側の信頼は未確定。端末への専用
 3. PC非公開の`wifi.private.json`を作る。例（値は担当が確定、実鍵は送らない）：
 
 ```json
-{"origin":"https://<PC-private-IP>:8443","site":"<absolute-path-to-dist-v12-wifi>","cert":"<local-leaf-or-chain.pem>","key":"<local-private-key.pem>"}
+{"origin":"https://<PC-private-IP>:8443","site":"<absolute-path-to-dist-v12-wifi>","cert":"<local-leaf-or-chain.pem>","key":"<local-private-key.pem>","inventory":"<absolute-path-to-artifact.json>"}
 ```
 
 4. 担当が`node tooling/v12-local/wifi-server.mjs <config-path>`で開始。鍵ファイルをsite配下へ置かない。

@@ -1,6 +1,7 @@
 import { execFileSync,spawn } from 'node:child_process'
 import { resolve,join } from 'node:path'
-import { mkdirSync,writeFileSync,readFileSync } from 'node:fs'
+import { mkdirSync,writeFileSync,readFileSync,readdirSync } from 'node:fs'
+import { createHash } from 'node:crypto'
 import { get } from 'node:https'
 import { createServer } from 'node:net'
 import { chromium } from '@playwright/test'
@@ -9,7 +10,10 @@ const temp=resolve('../wifi-test-'+Date.now());mkdirSync(temp,{recursive:true})
 const cert=join(temp,'test-only-cert.pem'),key=join(temp,'test-only-key.pem')
 execFileSync('C:/Program Files/Git/usr/bin/openssl.exe',['req','-x509','-newkey','rsa:2048','-nodes','-subj','/CN=V12-Test-Only','-addext','subjectAltName=IP:127.0.0.1','-addext','basicConstraints=critical,CA:FALSE','-addext','extendedKeyUsage=serverAuth','-keyout',key,'-out',cert,'-days','1'],{stdio:'ignore'})
 const free=createServer();await new Promise((ok,no)=>{free.once('error',no);free.listen(8443,'127.0.0.1',()=>free.close(ok))})
-const config=join(temp,'wifi.private.json');writeFileSync(config,JSON.stringify({origin:'https://127.0.0.1:8443',site:resolve('dist-v12-wifi'),cert,key}))
+const site=resolve('dist-v12-wifi'),inventory=join(temp,'artifact.json')
+function files(dir,prefix=''){return readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?files(join(dir,e.name),prefix+e.name+'/'):[{path:prefix+e.name,sha256:createHash('sha256').update(readFileSync(join(dir,e.name))).digest('hex')}])}
+writeFileSync(inventory,JSON.stringify({build:JSON.parse(readFileSync(join(site,'wifi-build.json'),'utf8')),files:files(site)}))
+const config=join(temp,'wifi.private.json');writeFileSync(config,JSON.stringify({origin:'https://127.0.0.1:8443',site,cert,key,inventory}))
 const child=spawn(process.execPath,['tooling/v12-local/wifi-server.mjs',config],{stdio:['ignore','pipe','pipe'],windowsHide:true});let log='';child.stdout.on('data',d=>log+=d);child.stderr.on('data',d=>log+=d)
 const request=(options={})=>new Promise((ok,no)=>{get('https://127.0.0.1:8443/',options,r=>{let body='';r.on('data',d=>body+=d);r.on('end',()=>ok({status:r.statusCode,body}))}).on('error',no)})
 const result={atUTC:new Date().toISOString(),tests:[],androidMeasured:false,systemTrustChanged:false}
