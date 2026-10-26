@@ -3,6 +3,7 @@ dist/
 dist-v1r11-candidate/
 dist-v12-local/
 dist-v12-wifi/
+dist-v12-worker/
 *.local
 playwright-report/
 test-results/

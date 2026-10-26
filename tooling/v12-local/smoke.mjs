@@ -2,7 +2,7 @@ import { chromium } from '@playwright/test'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { resolve, extname } from 'node:path'
 import assert from 'node:assert/strict'
-const dir = 'evidence/issue30-v12/local-adb'
+const dir = process.env.V12_SMOKE_DIR ?? 'evidence/issue30-v12/local-adb'
 await mkdir(dir, { recursive: true })
 const browser = await chromium.launch()
 const result = { atUTC: new Date().toISOString(), runtime: await browser.version(), platform: process.platform, tests: [] }
@@ -54,11 +54,11 @@ try {
   const wrong=await browser.newContext();const wp=await wrong.newPage()
   await wp.route('http://127.0.0.1:4182/**',async route=>{
     const pathname=new URL(route.request().url()).pathname
-    const file=resolve('dist-v12-local','.'+(pathname==='/'?'/index.html':pathname))
+    const file=resolve(process.env.V12_SMOKE_DIST ?? 'dist-v12-local','.'+(pathname==='/'?'/index.html':pathname))
     await route.fulfill({body:await readFile(file),contentType:extname(file)==='.js'?'text/javascript':'text/html'})
   })
   await wp.goto('http://127.0.0.1:4182/')
-  await wp.getByText('検証用localhost以外では起動しません',{exact:false}).waitFor()
+  await wp.getByText(/検証.*以外では起動しません/).waitFor()
   assert.deepEqual(await wp.evaluate(()=>indexedDB.databases()),[])
   result.tests.push({name:'wrong-origin artifact execution fails before any DB access',pass:true});await wrong.close()
   const occupied=await browser.newContext();const op=await occupied.newPage()
