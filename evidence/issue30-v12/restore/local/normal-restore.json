@@ -1,0 +1,10 @@
+{
+  "result": "PASS",
+  "usesOwnerData": false,
+  "fixture": "existing canonicalBackupFixture (schemaVersion1; optional displayPreferences absent)",
+  "offlineRestoreAndReload": true,
+  "fullReplacementConfirmation": true,
+  "readbackExact": true,
+  "nonCanonicalStoresUnchanged": true,
+  "dataRequests": 0
+}
