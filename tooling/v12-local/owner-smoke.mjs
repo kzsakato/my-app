@@ -15,6 +15,14 @@ function setup(name,mode='ok'){
   return {dir,env,command}
 }
 const delay=()=>new Promise(r=>setTimeout(r,300))
+{
+  const t=setup('cmd-wrappers','none')
+  for(const [file,expected] of [['START.cmd',1],['CHECK.cmd',1],['STOP.cmd',0]]){
+    const r=spawnSync(process.env.ComSpec,['/d','/c',file],{cwd:t.dir,env:t.env,input:'\r\n',encoding:'utf8',timeout:10000,windowsHide:true})
+    assert.equal(r.status,expected,r.stdout+r.stderr)
+  }
+  tests.push({name:'Windows CMD wrappers with safe no-device failures and idempotent stop',pass:true})
+}
 for(const mode of ['none','unauthorized','multiple']){
   const t=setup(mode,mode),r=t.command('start');assert.equal(r.status,1);assert(!existsSync(join(t.dir,'session.private.json')));assert(!existsSync(join(t.dir,'run/session.private.json')));assert(!existsSync(join(t.dir,'mapping.txt')));tests.push({name:mode,pass:true})
 }

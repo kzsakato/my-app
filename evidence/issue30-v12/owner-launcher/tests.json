@@ -1,9 +1,13 @@
 {
-  "atUTC": "2026-10-26T01:58:17.330Z",
+  "atUTC": "2026-10-26T01:59:24.561Z",
   "platform": "win32",
   "node": "v24.21.0",
   "adb": "synthetic executable; no Android accessed",
   "tests": [
+    {
+      "name": "Windows CMD wrappers with safe no-device failures and idempotent stop",
+      "pass": true
+    },
     {
       "name": "none",
       "pass": true
