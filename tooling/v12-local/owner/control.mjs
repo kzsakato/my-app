@@ -60,6 +60,7 @@ async function check(){
     const facts=await collect(s.forwardPort)
     evidence.facts=facts
     evidence.result=facts.secure&&facts.db.authoritative&&facts.sw.controller==='http://localhost:4182/sw.js'&&facts.sw.scopes.includes('http://localhost:4182/')?'ANDROID_TAB_SW_DB_READ_PASS':'ANDROID_TAB_SW_DB_READ_FAIL'
+    if(evidence.result.endsWith('_FAIL'))process.exitCode=1
     evidence.androidMeasured=true
     writeFileSync(join(run,'android-check-'+Date.now()+'.json'),JSON.stringify(evidence,null,2))
   }finally{removeForward(s)}
