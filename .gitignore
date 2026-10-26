@@ -1,6 +1,7 @@
 node_modules/
 dist/
 dist-v1r11-candidate/
+dist-v12-local/
 *.local
 playwright-report/
 test-results/
