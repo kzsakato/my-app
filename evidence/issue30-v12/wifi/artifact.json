@@ -1,0 +1,67 @@
+{
+  "sourceSHA": "f5bb5942872d11f4d8e2b170b4692aca23da9f6c",
+  "build": {
+    "origin": "https://192.168.11.6:8443",
+    "testOnly": false,
+    "db": "training-check-v12-local-man",
+    "pwaId": "/v12-local-man"
+  },
+  "files": [
+    {
+      "path": "assets/index-DZHTsiRy.js",
+      "sha256": "d5dc3b8fe613d2c982ce5b8550714243b7274f7ed7b42a8b837681a88c3aaca2",
+      "bytes": 25882
+    },
+    {
+      "path": "assets/main-7gn2eGSg.js",
+      "sha256": "61195c7baf16047a28752049ef084d71be2a00d902e20809f2693d6a7e1070e4",
+      "bytes": 347737
+    },
+    {
+      "path": "assets/main-CnmrNIox.css",
+      "sha256": "5d0fa1b00e7ff2e5ab8344e062f6214f008b924a29bb9f39f9ee6eb5beca7433",
+      "bytes": 13940
+    },
+    {
+      "path": "dummy-backup-warning.json",
+      "sha256": "eff7055cd4c81ad72899f247eadaa83750b3c9d7cdfb5317a9fb36c6df235dca",
+      "bytes": 2475
+    },
+    {
+      "path": "icon-192.png",
+      "sha256": "f87e2cd16fa4b07a5fdcd2da3e5b4252118e8c3880adede47824f3b0d4965f9f",
+      "bytes": 941
+    },
+    {
+      "path": "icon-512.png",
+      "sha256": "35f7a0fbe56586ef90564c661ebda0522e447d00b16e0c8cb8dbef2f0fbd3c80",
+      "bytes": 5657
+    },
+    {
+      "path": "index.html",
+      "sha256": "363707ea671a0149f9fc2837df06d9da501596980eb33cda0494cefe0ec8cae4",
+      "bytes": 405
+    },
+    {
+      "path": "manifest.webmanifest",
+      "sha256": "9f44b892b5242ceafd32c0c2bd3eb65fdbb5299efc0039793d1ed284a0527bf1",
+      "bytes": 374
+    },
+    {
+      "path": "sw.js",
+      "sha256": "2b48040961bdbd138a1931dba57ca2cf11cba16f64d06d56fcc06d314ff61542",
+      "bytes": 1285
+    },
+    {
+      "path": "wifi-build.json",
+      "sha256": "a5e8b07ed6416d0300d90b498b508189c8bbc8ae03758d806be2343fa5bd0719",
+      "bytes": 116
+    },
+    {
+      "path": "workbox-5bc3ec07.js",
+      "sha256": "95f6de361e1478054d96a198292198e6feee680dfc3d068420c77b46e73ee0ab",
+      "bytes": 14848
+    }
+  ],
+  "inventorySHA256": "c0b47db09e4aa9151d10cdbba5396627f70b57b28817f6d875bb5d5af1b62311"
+}
