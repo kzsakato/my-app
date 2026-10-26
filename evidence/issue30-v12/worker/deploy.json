@@ -1,0 +1,10 @@
+{
+  "atUTC": "2026-10-26T03:26:31.425036+00:00",
+  "worker": "my-app-staging-v1r",
+  "exitCode": 0,
+  "versionID": "10422bfd-23cf-4949-bff5-e313790bbe0a",
+  "targetURLMentioned": true,
+  "errorCodes": [],
+  "rawOutputStored": false,
+  "scope": "one authorized Worker; keep_vars false; static assets only"
+}
