@@ -1,5 +1,5 @@
 // Oracle: formal app-design V1.2 addenda; Issue #30 QA #6385055723.
-// TOP/REGION oracle superseded by Owner/PMO and design 799df27 (Issue #30 #6432136072).
+// TOP/REGION mixed sort: Technical #6433073812 and QA #6433103067 / TEST_SPEC cbafbcea.
 import { test, expect, type Page } from '@playwright/test'
 import { mkdirSync } from 'node:fs'
 import { canonicalFixture } from '../src/canonical/fixtures'
@@ -244,13 +244,13 @@ test('TOP two projections: completed Entries hidden with independent sort/filter
   await expect(actuals(page)).toHaveCount(0)
   await expect(planned(page).filter({ hasText: '実施済' })).toHaveCount(0)
   await page.getByLabel('実施済も表示').check()
-  expect(await actualIds(page)).toEqual(['snapshot-only','actual-b','actual-a','extra-missing'])
+  expect(await actualIds(page)).toEqual(['extra-missing','actual-b','snapshot-only','actual-a'])
   await expect(page.locator('[data-session-id="actual-a"] b')).toHaveText('記録-actual-a')
   await expect(page.getByText('今週の実施総数')).toContainText('4/6')
   const loadText = await page.locator('.load-summary').innerText()
   await page.getByLabel('Optionソート').check()
   expect(await entryIds(page)).toEqual(['entry-3','entry-0','entry-4'])
-  expect(await actualIds(page)).toEqual(['snapshot-only','actual-b','actual-a','extra-missing'])
+  expect(await actualIds(page)).toEqual(['extra-missing','actual-b','snapshot-only','actual-a'])
   await page.getByLabel('実施済も表示').uncheck()
   await expect(actuals(page)).toHaveCount(0)
   await expect(planned(page)).toHaveCount(3)
@@ -262,7 +262,7 @@ test('TOP two projections: completed Entries hidden with independent sort/filter
   await page.getByRole('group', { name: '推奨曜日を複数選択' }).getByLabel('月', { exact: true }).check()
   expect(await entryIds(page)).toEqual([]); await expect(actuals(page)).toHaveCount(0)
   await page.getByRole('group', { name: '推奨曜日を複数選択' }).getByLabel('土', { exact: true }).check()
-  expect(await actualIds(page)).toEqual(['snapshot-only','actual-b','actual-a'])
+  expect(await actualIds(page)).toEqual(['actual-b','snapshot-only','actual-a'])
   await page.locator('.weekday-dropdown-trigger').click(); await allDays(page)
   expect(await page.locator('.load-summary').innerText()).toBe(loadText)
   expect(await read(page)).toEqual(d)
@@ -302,7 +302,7 @@ test('specific repeated Session cancellation removes only selected ID and leaves
   expect(await read(page)).toEqual(expected)
   await expect(page.locator('[data-menu-entry-id="entry-1"]')).toHaveCount(0)
   await expect(page.locator('[data-menu-entry-id="entry-5"]')).toHaveCount(0)
-  expect(await actualIds(page)).toEqual(['snapshot-only','actual-a','extra-missing'])
+  expect(await actualIds(page)).toEqual(['extra-missing','snapshot-only','actual-a'])
   await expect(page.getByText('今週の実施総数')).toContainText('3/6')
   await page.reload(); expect(await read(page)).toEqual(expected)
 })

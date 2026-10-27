@@ -3,7 +3,7 @@ import { bodyRegions, compareBodyRegions, compareNames, effectiveDisplayPreferen
 import { compareInstants } from "./canonical/instant";
 import { useMemo, useRef, useState } from "react";
 import { currentWeekSessions, shiftLocalDate, weeklyLoadSummary } from "./canonical/baseline";
-import { completedEntryIds, completedSessionRows, displayedSessionOrder, type CompletedSessionRow } from "./canonical/topProjection";
+import { completedEntryIds, completedSessionRows, displayedSessionOrder, sortMixedTopRows, type CompletedSessionRow } from "./canonical/topProjection";
 import { cancelSession } from "./canonical/cancelSession";
 import { itemValidationMessages } from "./itemValidation";
 import { applyCanonicalRestore, createCanonicalBackup, previewCanonicalRestore, type BackupPreview } from "./canonical/backup";
@@ -510,6 +510,13 @@ function TopPage({
       </span></span>
     </button>
   );
+  const renderMixed = (planned: MenuEntry[], actuals: CompletedSessionRow[]) => (
+    <div data-projection="mixed">{sortMixedTopRows(data, planned.filter(entry => !completedEntries.has(entry.id)), actuals, option).map(row => (
+      <div key={`${row.kind}:${row.kind === "entry" ? row.entry.id : row.actual.session.id}`} data-projection={row.kind === "entry" ? "planned" : "actual"}>
+        {row.kind === "entry" ? renderEntry(row.entry) : renderCompleted(row.actual)}
+      </div>
+    ))}</div>
+  );
   // Include snapshot-only destinations so Extra remains discoverable even when
   // no current planned candidate belongs to its historical region.
   const categoryDestinations = [...new Set([
@@ -520,8 +527,7 @@ function TopPage({
     <Frame title={region ?? "今週の実施メニュー"} back={region ? onTop : undefined} onSettings={onSettings} onTop={onTop}>
       {region ? <>
         <div className="list-checks"><label className="check"><input type="checkbox" checked={categoryShowCompleted} onChange={event => setCategoryShowCompleted(event.target.checked)} />実施済も表示</label><OptionSort checked={option} onChange={setOption} /></div>
-        <div data-projection="planned">{sortEntries(categoryGroups.find(([name]) => name === region)?.[1] ?? []).map(renderEntry)}</div>
-        {categoryShowCompleted && <div data-projection="actual">{completedRows.filter(row => row.bodyRegion === region).map(renderCompleted)}</div>}
+        {renderMixed(categoryGroups.find(([name]) => name === region)?.[1] ?? [], categoryShowCompleted ? completedRows.filter(row => row.bodyRegion === region) : [])}
       </> : <>
       {notice && <p className="week">{notice}</p>}
       <select aria-label="週メニュー"
@@ -616,12 +622,8 @@ function TopPage({
                   </div>
                 )}
               </div>
-              {recommendedEntries.length === 0 ? (
-                <p className="week">選択した推奨曜日の項目はありません。</p>
-              ) : (
-                <div data-projection="planned">{sortEntries(recommendedEntries).map(renderEntry)}</div>
-              )}
-              {preferences.showCompleted && <div data-projection="actual">{selectedDayCompletedRows.map(renderCompleted)}</div>}
+              {recommendedEntries.length === 0 && <p className="week">選択した推奨曜日の項目はありません。</p>}
+              {renderMixed(recommendedEntries, preferences.showCompleted ? selectedDayCompletedRows : [])}
             </>
           )}
         </>

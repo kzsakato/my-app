@@ -1,0 +1,43 @@
+// Oracle supplied by QA #6433103067, TEST_SPEC cbafbcea: Fixture A/D only.
+import {test,expect,type Page} from '@playwright/test'
+import {mkdirSync,writeFileSync} from 'node:fs'
+import {fixture,A,D} from './mixedSortFixtures'
+import {defaultDisplayPreferences,type SortPreference} from '../src/canonical/displayPreferences'
+import type {CanonicalAppData} from '../src/canonical/types'
+const dir='evidence/issue30-v12/mixed-sort-fix';mkdirSync(dir,{recursive:true})
+const priorities:SortPreference['priority'][]=[['completion','recommendedDay','bodyRegion'],['recommendedDay','completion','bodyRegion'],['recommendedDay','bodyRegion','completion']]
+const orders=[[['E-A','E-B','S-A','S-B'],['S-A','S-B','E-A','E-B']],[['E-A','S-A','E-B','S-B'],['S-A','E-A','S-B','E-B']],[['E-A','S-A','S-B','E-B'],['E-A','S-A','S-B','E-B']]]
+async function read(page:Page){return page.evaluate(async()=>{const db=await new Promise<IDBDatabase>(ok=>{const r=indexedDB.open('training-check-v1r11-candidate',7);r.onsuccess=()=>ok(r.result)});const v=await new Promise<CanonicalAppData>(ok=>{const r=db.transaction('canonical').objectStore('canonical').get('app');r.onsuccess=()=>ok(r.result)});db.close();return v})}
+async function seed(page:Page,d:CanonicalAppData){await page.clock.install({time:new Date('2026-09-24T12:00:00+09:00')});await page.goto('/');await page.evaluate(async data=>{const db=await new Promise<IDBDatabase>(ok=>{const r=indexedDB.open('training-check-v1r11-candidate',7);r.onsuccess=()=>ok(r.result)});await new Promise<void>(ok=>{const tx=db.transaction(['canonical','cutover'],'readwrite');tx.objectStore('canonical').put(data,'app');tx.objectStore('cutover').put({authoritative:true,establishedAt:'2026-09-24T00:00:00+09:00'},'state');tx.oncomplete=()=>ok()});db.close()},d);await page.reload()}
+async function top(page:Page){await page.getByRole('button',{name:'共通メニュー'}).click();await page.getByRole('button',{name:'実施メニュー',exact:true}).click()}
+async function allDays(page:Page){await page.locator('.weekday-dropdown-trigger').click();await page.getByRole('button',{name:'全ON',exact:true}).click();await page.locator('.weekday-dropdown-trigger').click()}
+async function ids(page:Page){return page.locator('[data-projection="mixed"] [data-menu-entry-id],[data-projection="mixed"] [data-session-id]').evaluateAll(els=>els.map(e=>e.getAttribute('data-menu-entry-id')??e.getAttribute('data-session-id')))}
+async function region(page:Page,name:string){await top(page);await page.getByRole('button',{name:'部位表示',exact:true}).click();await page.getByRole('button').filter({has:page.locator('b',{hasText:new RegExp(`^${name}$`)})}).click()}
+for(const mode of ['Default','Option']as const)for(const[p,priority]of priorities.entries())for(const[i,direction]of(['incompleteFirst','completeFirst']as const).entries())test(`QA A ${mode} completion-key-${p+1} ${direction} save/reload/TOP/REGION`,async({page},info)=>{
+ const d=fixture(A);d.displayPreferences=structuredClone(defaultDisplayPreferences);await seed(page,d)
+ await page.getByRole('button',{name:'共通メニュー'}).click();await page.getByRole('button',{name:'設定',exact:true}).click();await page.getByRole('button',{name:/^表示設定/}).click()
+ const section=page.getByRole('region',{name:mode,exact:true}),labels={recommendedDay:'推奨曜日',completion:'実施状況',bodyRegion:'部位'}
+ for(const [target,key]of priority.entries()){const texts=await section.locator('.sort-priority-row>span').allTextContents();for(let n=texts.findIndex(x=>x.endsWith(labels[key]))-target;n>0;n--)await section.getByRole('button',{name:`${labels[key]}を上へ`}).click()}
+ await section.getByLabel(direction==='incompleteFirst'?'未実施先':'実施済先',{exact:true}).check();await page.getByRole('button',{name:'設定を保存',exact:true}).click();await expect(page.getByRole('heading',{name:'設定',exact:true})).toBeVisible()
+ const expected=structuredClone(d);expected.displayPreferences![mode==='Default'?'defaultSort':'optionSort']={priority,completionDirection:direction};expect(await read(page)).toEqual(expected)
+ await page.reload();expect(await read(page)).toEqual(expected);await expect(page.getByLabel('Optionソート')).not.toBeChecked();await allDays(page);await page.getByLabel('実施済も表示').check();if(mode==='Option')await page.getByLabel('Optionソート').check()
+ expect(await ids(page)).toEqual(orders[p][i]);const load=await page.locator('.load-summary').innerText()
+ const rows=await page.locator('[data-projection="mixed"] [data-menu-entry-id],[data-projection="mixed"] [data-session-id]').evaluateAll(es=>es.map(e=>({id:e.getAttribute('data-menu-entry-id')??e.getAttribute('data-session-id'),y:e.getBoundingClientRect().y})));for(let k=1;k<rows.length;k++)expect(rows[k].y).toBeGreaterThan(rows[k-1].y)
+ await page.screenshot({path:`${dir}/${info.project.name}-A-${mode}-${p+1}-${direction}.png`,fullPage:true})
+ await page.getByLabel('実施済も表示').uncheck();expect(await ids(page)).toEqual(['E-A','E-B']);await page.getByLabel('実施済も表示').check();expect(await page.locator('.load-summary').innerText()).toBe(load);expect(await read(page)).toEqual(expected)
+ for(const [r,allowed]of [['胸',['E-A','S-B']],['背中',['E-B','S-A']]]as const){await region(page,r);await expect(page.getByLabel('Optionソート')).not.toBeChecked();await page.getByLabel('実施済も表示').check();if(mode==='Option')await page.getByLabel('Optionソート').check();expect(await ids(page)).toEqual(orders[p][i].filter(id=>(allowed as readonly string[]).includes(id)))}
+ expect(await read(page)).toEqual(expected);writeFileSync(`${dir}/${info.project.name}-A-${mode}-${p+1}-${direction}.json`,JSON.stringify({authority:'QA #6433103067 / TEST_SPEC cbafbcea Fixture A',priority,direction,mode,expected:orders[p][i],actual:rows,settingsSaveReload:'PASS',nonTargetData:'PASS',result:'PASS'},null,2))
+})
+for(const mode of ['Default','Option']as const)for(const direction of ['incompleteFirst','completeFirst']as const)test(`QA D ${mode} ${direction} same-key IDs, OFF, zero and individual actual`,async({page},info)=>{
+ const d=fixture(D);d.displayPreferences=structuredClone(defaultDisplayPreferences);d.displayPreferences[mode==='Default'?'defaultSort':'optionSort']={priority:priorities[1],completionDirection:direction};await seed(page,d);await allDays(page);await page.getByLabel('実施済も表示').check();if(mode==='Option')await page.getByLabel('Optionソート').check();const expected=direction==='incompleteFirst'?['E-11','E-12','S-11','S-12']:['S-11','S-12','E-11','E-12'];expect(await ids(page)).toEqual(expected)
+ await page.getByLabel('実施済も表示').uncheck();expect(await ids(page)).toEqual(['E-11','E-12']);await page.getByLabel('実施済も表示').check();expect(await read(page)).toEqual(d)
+ await page.screenshot({path:`${dir}/${info.project.name}-D-${mode}-${direction}.png`,fullPage:true})
+ await page.locator('[data-session-id="S-12"]').click();page.once('dialog',dialog=>dialog.accept());await page.getByRole('button',{name:'9/21の実行を取り消す',exact:true}).click();await expect(page.getByRole('heading',{name:'今週の実施メニュー'})).toBeVisible();const after=await read(page);expect(after).toEqual({...d,sessions:d.sessions.filter(s=>s.id!=='S-12')});await page.reload();expect(await read(page)).toEqual(after)
+})
+test('QA A weekday filter Monday/Tuesday/zero retains row source; empty projection',async({page})=>{
+ const d=fixture(A);d.displayPreferences=structuredClone(defaultDisplayPreferences);d.displayPreferences.defaultSort={priority:priorities[2],completionDirection:'completeFirst'};await seed(page,d);await page.getByLabel('実施済も表示').check();await page.locator('.weekday-dropdown-trigger').click();await page.getByRole('button',{name:'全OFF',exact:true}).click();expect(await ids(page)).toEqual([])
+ const group=page.getByRole('group',{name:'推奨曜日を複数選択'});await group.getByLabel('月',{exact:true}).check();expect(await ids(page)).toEqual(['E-A','S-A']);await group.getByLabel('月',{exact:true}).uncheck();await group.getByLabel('火',{exact:true}).check();expect(await ids(page)).toEqual(['S-B','E-B']);expect(await read(page)).toEqual(d)
+})
+for(const mode of ['Default','Option']as const)for(const only of ['sessions','empty']as const)test(`QA D ${mode} ${only} no phantom entries`,async({page})=>{
+ const d=fixture(D);d.menuEntries=[];if(only==='empty')d.sessions=[];d.displayPreferences=structuredClone(defaultDisplayPreferences);d.displayPreferences[mode==='Default'?'defaultSort':'optionSort']={priority:priorities[1],completionDirection:'completeFirst'};await seed(page,d);await allDays(page);await page.getByLabel('実施済も表示').check();if(mode==='Option')await page.getByLabel('Optionソート').check();expect(await ids(page)).toEqual(only==='sessions'?['S-11','S-12']:[]);await page.getByLabel('実施済も表示').uncheck();expect(await ids(page)).toEqual([]);expect(await read(page)).toEqual(d)
+})

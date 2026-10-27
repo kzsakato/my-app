@@ -16,7 +16,7 @@ test('V12-01 799df27: normal Restore, completed planned rows hidden, actual IDs 
  const before=await read()
  await page.getByRole('button',{name:'共通メニュー'}).click();await page.getByRole('button',{name:'実施メニュー',exact:true}).click()
  await page.locator('.weekday-dropdown-trigger').click();await page.getByRole('button',{name:'全ON',exact:true}).click();await page.locator('.weekday-dropdown-trigger').click()
- const dir='evidence/issue30-v12/final-01-07';mkdirSync(dir,{recursive:true})
+ const dir=process.env.V12_OWNER_EVIDENCE??'evidence/issue30-v12/final-01-07';mkdirSync(dir,{recursive:true})
  const facts=[]
  for(const screen of ['TOP','REGION']){
   if(screen==='REGION'){await page.getByRole('button',{name:'部位表示',exact:true}).click();await page.getByRole('button').filter({has:page.locator('b',{hasText:/^胸$/})}).click()}
@@ -24,7 +24,7 @@ test('V12-01 799df27: normal Restore, completed planned rows hidden, actual IDs 
   await toggle.uncheck();await expect(page.locator('[data-menu-entry-id]')).toHaveCount(0);await expect(page.locator('[data-session-id]')).toHaveCount(0)
   await page.screenshot({path:`${dir}/${info.project.name}-${screen}-OFF.png`,fullPage:true})
   await toggle.check();const ids=await page.locator('[data-session-id]').evaluateAll(els=>els.map(el=>el.getAttribute('data-session-id')))
-  expect(ids).toEqual(['session-2','session-1']);expect(new Set(ids).size).toBe(2);await expect(page.locator('[data-menu-entry-id]')).toHaveCount(0)
+  expect(ids).toEqual(['session-1','session-2']);expect(new Set(ids).size).toBe(2);await expect(page.locator('[data-menu-entry-id]')).toHaveCount(0)
   await toggle.uncheck();await expect(page.locator('[data-session-id]')).toHaveCount(0);await toggle.check();await expect(page.locator('[data-session-id]')).toHaveCount(2)
   await page.screenshot({path:`${dir}/${info.project.name}-${screen}-ON.png`,fullPage:true})
   expect(await read()).toEqual(before);facts.push({screen,off:{planned:0,actual:0},on:{planned:0,actualIDs:ids},dataUnchanged:true})
@@ -43,7 +43,7 @@ test('V12-01: eight completed entries OFF zero ON eight, Option independent; las
  await page.evaluate(async data=>{const db=await new Promise<IDBDatabase>(ok=>{const r=indexedDB.open('training-check-v1r11-candidate',7);r.onsuccess=()=>ok(r.result)});await new Promise<void>(ok=>{const t=db.transaction(['canonical','cutover'],'readwrite');t.objectStore('canonical').put(data,'app');t.objectStore('cutover').put({authoritative:true,establishedAt:'2026-09-24T00:00:00+09:00'},'state');t.oncomplete=()=>ok()});db.close()},d);await page.reload()
  const read=()=>page.evaluate(async()=>{const db=await new Promise<IDBDatabase>(ok=>{const r=indexedDB.open('training-check-v1r11-candidate',7);r.onsuccess=()=>ok(r.result)});const v=await new Promise(ok=>{const r=db.transaction('canonical').objectStore('canonical').get('app');r.onsuccess=()=>ok(r.result)});db.close();return v})
  await page.locator('.weekday-dropdown-trigger').click();await page.getByRole('button',{name:'全ON',exact:true}).click();await page.locator('.weekday-dropdown-trigger').click()
- const dir='evidence/issue30-v12/final-01-07';mkdirSync(dir,{recursive:true})
+ const dir=process.env.V12_OWNER_EVIDENCE??'evidence/issue30-v12/final-01-07';mkdirSync(dir,{recursive:true})
  for(const screen of ['TOP','REGION']){
   if(screen==='REGION'){await page.getByRole('button',{name:'部位表示',exact:true}).click();await page.getByRole('button').filter({has:page.locator('b',{hasText:/^胸$/})}).click()}
   const toggle=page.getByLabel('実施済も表示');await toggle.uncheck();await expect(page.locator('[data-menu-entry-id]')).toHaveCount(0);await expect(page.locator('[data-session-id]')).toHaveCount(0)
