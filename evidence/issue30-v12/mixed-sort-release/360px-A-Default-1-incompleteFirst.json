@@ -1,0 +1,37 @@
+{
+  "authority": "QA #6433103067 / TEST_SPEC cbafbcea Fixture A",
+  "priority": [
+    "completion",
+    "recommendedDay",
+    "bodyRegion"
+  ],
+  "direction": "incompleteFirst",
+  "mode": "Default",
+  "expected": [
+    "E-A",
+    "E-B",
+    "S-A",
+    "S-B"
+  ],
+  "actual": [
+    {
+      "id": "E-A",
+      "y": 473
+    },
+    {
+      "id": "E-B",
+      "y": 535
+    },
+    {
+      "id": "S-A",
+      "y": 597
+    },
+    {
+      "id": "S-B",
+      "y": 659
+    }
+  ],
+  "settingsSaveReload": "PASS",
+  "nonTargetData": "PASS",
+  "result": "PASS"
+}

@@ -1,0 +1,1161 @@
+{
+  "authority": "QA #6435758117 / TEST_SPEC bad82b1",
+  "results": [
+    {
+      "width": 1280,
+      "sourceSHA": "c4fe4514ab093a9e2084dc286310d46f81ab8864",
+      "androidMeasured": false,
+      "ownerDataUsed": false,
+      "canonicalSwitchingUnchanged": true,
+      "facts": [
+        {
+          "fixture": "A",
+          "mode": "Default",
+          "priority": [
+            "completion",
+            "recommendedDay",
+            "bodyRegion"
+          ],
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "E-B",
+            "S-A",
+            "S-B"
+          ],
+          "actual": [
+            "E-A",
+            "E-B",
+            "S-A",
+            "S-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Default",
+          "priority": [
+            "completion",
+            "recommendedDay",
+            "bodyRegion"
+          ],
+          "direction": "completeFirst",
+          "expected": [
+            "S-A",
+            "S-B",
+            "E-A",
+            "E-B"
+          ],
+          "actual": [
+            "S-A",
+            "S-B",
+            "E-A",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Default",
+          "priority": [
+            "recommendedDay",
+            "completion",
+            "bodyRegion"
+          ],
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "S-A",
+            "E-B",
+            "S-B"
+          ],
+          "actual": [
+            "E-A",
+            "S-A",
+            "E-B",
+            "S-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Default",
+          "priority": [
+            "recommendedDay",
+            "completion",
+            "bodyRegion"
+          ],
+          "direction": "completeFirst",
+          "expected": [
+            "S-A",
+            "E-A",
+            "S-B",
+            "E-B"
+          ],
+          "actual": [
+            "S-A",
+            "E-A",
+            "S-B",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Default",
+          "priority": [
+            "recommendedDay",
+            "bodyRegion",
+            "completion"
+          ],
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "actual": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Default",
+          "priority": [
+            "recommendedDay",
+            "bodyRegion",
+            "completion"
+          ],
+          "direction": "completeFirst",
+          "expected": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "actual": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Option",
+          "priority": [
+            "completion",
+            "recommendedDay",
+            "bodyRegion"
+          ],
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "E-B",
+            "S-A",
+            "S-B"
+          ],
+          "actual": [
+            "E-A",
+            "E-B",
+            "S-A",
+            "S-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Option",
+          "priority": [
+            "completion",
+            "recommendedDay",
+            "bodyRegion"
+          ],
+          "direction": "completeFirst",
+          "expected": [
+            "S-A",
+            "S-B",
+            "E-A",
+            "E-B"
+          ],
+          "actual": [
+            "S-A",
+            "S-B",
+            "E-A",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Option",
+          "priority": [
+            "recommendedDay",
+            "completion",
+            "bodyRegion"
+          ],
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "S-A",
+            "E-B",
+            "S-B"
+          ],
+          "actual": [
+            "E-A",
+            "S-A",
+            "E-B",
+            "S-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Option",
+          "priority": [
+            "recommendedDay",
+            "completion",
+            "bodyRegion"
+          ],
+          "direction": "completeFirst",
+          "expected": [
+            "S-A",
+            "E-A",
+            "S-B",
+            "E-B"
+          ],
+          "actual": [
+            "S-A",
+            "E-A",
+            "S-B",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Option",
+          "priority": [
+            "recommendedDay",
+            "bodyRegion",
+            "completion"
+          ],
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "actual": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Option",
+          "priority": [
+            "recommendedDay",
+            "bodyRegion",
+            "completion"
+          ],
+          "direction": "completeFirst",
+          "expected": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "actual": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "B",
+          "mode": "Default",
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-10",
+            "E-20",
+            "S-10",
+            "S-20"
+          ],
+          "actual": [
+            "E-10",
+            "E-20",
+            "S-10",
+            "S-20"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "E-10",
+                "E-20",
+                "S-10",
+                "S-20"
+              ],
+              "actual": [
+                "E-10",
+                "E-20",
+                "S-10",
+                "S-20"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "B",
+          "mode": "Default",
+          "direction": "completeFirst",
+          "expected": [
+            "S-10",
+            "S-20",
+            "E-10",
+            "E-20"
+          ],
+          "actual": [
+            "S-10",
+            "S-20",
+            "E-10",
+            "E-20"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "S-10",
+                "S-20",
+                "E-10",
+                "E-20"
+              ],
+              "actual": [
+                "S-10",
+                "S-20",
+                "E-10",
+                "E-20"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "B",
+          "mode": "Option",
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-10",
+            "E-20",
+            "S-10",
+            "S-20"
+          ],
+          "actual": [
+            "E-10",
+            "E-20",
+            "S-10",
+            "S-20"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "E-10",
+                "E-20",
+                "S-10",
+                "S-20"
+              ],
+              "actual": [
+                "E-10",
+                "E-20",
+                "S-10",
+                "S-20"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "B",
+          "mode": "Option",
+          "direction": "completeFirst",
+          "expected": [
+            "S-10",
+            "S-20",
+            "E-10",
+            "E-20"
+          ],
+          "actual": [
+            "S-10",
+            "S-20",
+            "E-10",
+            "E-20"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "S-10",
+                "S-20",
+                "E-10",
+                "E-20"
+              ],
+              "actual": [
+                "S-10",
+                "S-20",
+                "E-10",
+                "E-20"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "C",
+          "mode": "Default",
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "actual": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "E-A",
+                "E-N"
+              ],
+              "actual": [
+                "E-A",
+                "E-N"
+              ]
+            },
+            {
+              "name": "前腕",
+              "expected": [
+                "S-X"
+              ],
+              "actual": [
+                "S-X"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "C",
+          "mode": "Default",
+          "direction": "completeFirst",
+          "expected": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "actual": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "E-A",
+                "E-N"
+              ],
+              "actual": [
+                "E-A",
+                "E-N"
+              ]
+            },
+            {
+              "name": "前腕",
+              "expected": [
+                "S-X"
+              ],
+              "actual": [
+                "S-X"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "C",
+          "mode": "Option",
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "actual": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "E-A",
+                "E-N"
+              ],
+              "actual": [
+                "E-A",
+                "E-N"
+              ]
+            },
+            {
+              "name": "前腕",
+              "expected": [
+                "S-X"
+              ],
+              "actual": [
+                "S-X"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "C",
+          "mode": "Option",
+          "direction": "completeFirst",
+          "expected": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "actual": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "E-A",
+                "E-N"
+              ],
+              "actual": [
+                "E-A",
+                "E-N"
+              ]
+            },
+            {
+              "name": "前腕",
+              "expected": [
+                "S-X"
+              ],
+              "actual": [
+                "S-X"
+              ]
+            }
+          ],
+          "result": "PASS"
+        }
+      ],
+      "result": "PASS"
+    },
+    {
+      "width": 360,
+      "sourceSHA": "c4fe4514ab093a9e2084dc286310d46f81ab8864",
+      "androidMeasured": false,
+      "ownerDataUsed": false,
+      "canonicalSwitchingUnchanged": true,
+      "facts": [
+        {
+          "fixture": "A",
+          "mode": "Default",
+          "priority": [
+            "completion",
+            "recommendedDay",
+            "bodyRegion"
+          ],
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "E-B",
+            "S-A",
+            "S-B"
+          ],
+          "actual": [
+            "E-A",
+            "E-B",
+            "S-A",
+            "S-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Default",
+          "priority": [
+            "completion",
+            "recommendedDay",
+            "bodyRegion"
+          ],
+          "direction": "completeFirst",
+          "expected": [
+            "S-A",
+            "S-B",
+            "E-A",
+            "E-B"
+          ],
+          "actual": [
+            "S-A",
+            "S-B",
+            "E-A",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Default",
+          "priority": [
+            "recommendedDay",
+            "completion",
+            "bodyRegion"
+          ],
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "S-A",
+            "E-B",
+            "S-B"
+          ],
+          "actual": [
+            "E-A",
+            "S-A",
+            "E-B",
+            "S-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Default",
+          "priority": [
+            "recommendedDay",
+            "completion",
+            "bodyRegion"
+          ],
+          "direction": "completeFirst",
+          "expected": [
+            "S-A",
+            "E-A",
+            "S-B",
+            "E-B"
+          ],
+          "actual": [
+            "S-A",
+            "E-A",
+            "S-B",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Default",
+          "priority": [
+            "recommendedDay",
+            "bodyRegion",
+            "completion"
+          ],
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "actual": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Default",
+          "priority": [
+            "recommendedDay",
+            "bodyRegion",
+            "completion"
+          ],
+          "direction": "completeFirst",
+          "expected": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "actual": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Option",
+          "priority": [
+            "completion",
+            "recommendedDay",
+            "bodyRegion"
+          ],
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "E-B",
+            "S-A",
+            "S-B"
+          ],
+          "actual": [
+            "E-A",
+            "E-B",
+            "S-A",
+            "S-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Option",
+          "priority": [
+            "completion",
+            "recommendedDay",
+            "bodyRegion"
+          ],
+          "direction": "completeFirst",
+          "expected": [
+            "S-A",
+            "S-B",
+            "E-A",
+            "E-B"
+          ],
+          "actual": [
+            "S-A",
+            "S-B",
+            "E-A",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Option",
+          "priority": [
+            "recommendedDay",
+            "completion",
+            "bodyRegion"
+          ],
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "S-A",
+            "E-B",
+            "S-B"
+          ],
+          "actual": [
+            "E-A",
+            "S-A",
+            "E-B",
+            "S-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Option",
+          "priority": [
+            "recommendedDay",
+            "completion",
+            "bodyRegion"
+          ],
+          "direction": "completeFirst",
+          "expected": [
+            "S-A",
+            "E-A",
+            "S-B",
+            "E-B"
+          ],
+          "actual": [
+            "S-A",
+            "E-A",
+            "S-B",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Option",
+          "priority": [
+            "recommendedDay",
+            "bodyRegion",
+            "completion"
+          ],
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "actual": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "A",
+          "mode": "Option",
+          "priority": [
+            "recommendedDay",
+            "bodyRegion",
+            "completion"
+          ],
+          "direction": "completeFirst",
+          "expected": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "actual": [
+            "E-A",
+            "S-A",
+            "S-B",
+            "E-B"
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "B",
+          "mode": "Default",
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-10",
+            "E-20",
+            "S-10",
+            "S-20"
+          ],
+          "actual": [
+            "E-10",
+            "E-20",
+            "S-10",
+            "S-20"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "E-10",
+                "E-20",
+                "S-10",
+                "S-20"
+              ],
+              "actual": [
+                "E-10",
+                "E-20",
+                "S-10",
+                "S-20"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "B",
+          "mode": "Default",
+          "direction": "completeFirst",
+          "expected": [
+            "S-10",
+            "S-20",
+            "E-10",
+            "E-20"
+          ],
+          "actual": [
+            "S-10",
+            "S-20",
+            "E-10",
+            "E-20"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "S-10",
+                "S-20",
+                "E-10",
+                "E-20"
+              ],
+              "actual": [
+                "S-10",
+                "S-20",
+                "E-10",
+                "E-20"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "B",
+          "mode": "Option",
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-10",
+            "E-20",
+            "S-10",
+            "S-20"
+          ],
+          "actual": [
+            "E-10",
+            "E-20",
+            "S-10",
+            "S-20"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "E-10",
+                "E-20",
+                "S-10",
+                "S-20"
+              ],
+              "actual": [
+                "E-10",
+                "E-20",
+                "S-10",
+                "S-20"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "B",
+          "mode": "Option",
+          "direction": "completeFirst",
+          "expected": [
+            "S-10",
+            "S-20",
+            "E-10",
+            "E-20"
+          ],
+          "actual": [
+            "S-10",
+            "S-20",
+            "E-10",
+            "E-20"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "S-10",
+                "S-20",
+                "E-10",
+                "E-20"
+              ],
+              "actual": [
+                "S-10",
+                "S-20",
+                "E-10",
+                "E-20"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "C",
+          "mode": "Default",
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "actual": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "E-A",
+                "E-N"
+              ],
+              "actual": [
+                "E-A",
+                "E-N"
+              ]
+            },
+            {
+              "name": "前腕",
+              "expected": [
+                "S-X"
+              ],
+              "actual": [
+                "S-X"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "C",
+          "mode": "Default",
+          "direction": "completeFirst",
+          "expected": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "actual": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "E-A",
+                "E-N"
+              ],
+              "actual": [
+                "E-A",
+                "E-N"
+              ]
+            },
+            {
+              "name": "前腕",
+              "expected": [
+                "S-X"
+              ],
+              "actual": [
+                "S-X"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "C",
+          "mode": "Option",
+          "direction": "incompleteFirst",
+          "expected": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "actual": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "E-A",
+                "E-N"
+              ],
+              "actual": [
+                "E-A",
+                "E-N"
+              ]
+            },
+            {
+              "name": "前腕",
+              "expected": [
+                "S-X"
+              ],
+              "actual": [
+                "S-X"
+              ]
+            }
+          ],
+          "result": "PASS"
+        },
+        {
+          "fixture": "C",
+          "mode": "Option",
+          "direction": "completeFirst",
+          "expected": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "actual": [
+            "E-A",
+            "S-X",
+            "S-M"
+          ],
+          "regionFacts": [
+            {
+              "name": "胸",
+              "expected": [
+                "E-A",
+                "E-N"
+              ],
+              "actual": [
+                "E-A",
+                "E-N"
+              ]
+            },
+            {
+              "name": "前腕",
+              "expected": [
+                "S-X"
+              ],
+              "actual": [
+                "S-X"
+              ]
+            }
+          ],
+          "result": "PASS"
+        }
+      ],
+      "result": "PASS"
+    }
+  ]
+}

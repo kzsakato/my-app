@@ -1,0 +1,44 @@
+{
+  "authority": "QA #6435758117 / TEST_SPEC bad82b1",
+  "mode": "Option",
+  "direction": "completeFirst",
+  "priority": [
+    "recommendedDay",
+    "bodyRegion",
+    "completion"
+  ],
+  "facts": [
+    {
+      "screen": "TOP all days",
+      "expected": [
+        "S-10",
+        "S-20",
+        "E-10",
+        "E-20"
+      ],
+      "actual": [
+        "S-10",
+        "S-20",
+        "E-10",
+        "E-20"
+      ]
+    },
+    {
+      "screen": "REGION 胸",
+      "expected": [
+        "S-10",
+        "S-20",
+        "E-10",
+        "E-20"
+      ],
+      "actual": [
+        "S-10",
+        "S-20",
+        "E-10",
+        "E-20"
+      ]
+    }
+  ],
+  "canonicalUnchanged": true,
+  "result": "PASS"
+}

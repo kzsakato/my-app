@@ -1,0 +1,47 @@
+{
+  "authority": "QA #6435758117 / TEST_SPEC bad82b1",
+  "mode": "Option",
+  "direction": "incompleteFirst",
+  "priority": [
+    "recommendedDay",
+    "bodyRegion",
+    "completion"
+  ],
+  "facts": [
+    {
+      "screen": "TOP all days",
+      "expected": [
+        "E-A",
+        "S-X",
+        "S-M"
+      ],
+      "actual": [
+        "E-A",
+        "S-X",
+        "S-M"
+      ]
+    },
+    {
+      "screen": "REGION 胸",
+      "expected": [
+        "E-A",
+        "E-N"
+      ],
+      "actual": [
+        "E-A",
+        "E-N"
+      ]
+    },
+    {
+      "screen": "REGION 前腕",
+      "expected": [
+        "S-X"
+      ],
+      "actual": [
+        "S-X"
+      ]
+    }
+  ],
+  "canonicalUnchanged": true,
+  "result": "PASS"
+}

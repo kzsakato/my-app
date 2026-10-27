@@ -1,0 +1,36 @@
+{
+  "ownerDataUsed": false,
+  "result": "PASS_NEW_799DF27_ORACLE",
+  "facts": [
+    {
+      "screen": "TOP",
+      "off": {
+        "planned": 0,
+        "actual": 0
+      },
+      "on": {
+        "planned": 0,
+        "actualIDs": [
+          "session-1",
+          "session-2"
+        ]
+      },
+      "dataUnchanged": true
+    },
+    {
+      "screen": "REGION",
+      "off": {
+        "planned": 0,
+        "actual": 0
+      },
+      "on": {
+        "planned": 0,
+        "actualIDs": [
+          "session-1",
+          "session-2"
+        ]
+      },
+      "dataUnchanged": true
+    }
+  ]
+}

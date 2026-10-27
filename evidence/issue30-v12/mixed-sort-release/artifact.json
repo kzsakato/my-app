@@ -1,0 +1,57 @@
+{
+  "sourceSHA": "c4fe4514ab093a9e2084dc286310d46f81ab8864",
+  "origin": "https://my-app-staging-v1r.kzsakato-lab.workers.dev",
+  "files": [
+    {
+      "path": "assets/index-nRZ4Xi_w.js",
+      "bytes": 25891,
+      "sha256": "1e3cc4a2124ffa7acc825f56ad46cfb2bd2a14a78b3b92e6f12b190311459cd1"
+    },
+    {
+      "path": "assets/main-BaqXtqJX.js",
+      "bytes": 348973,
+      "sha256": "e09d3807fa708d4a345ccec9f7a866d09e2c632135a275ce61a827d967e00ea1"
+    },
+    {
+      "path": "assets/main-CVHoY4uC.css",
+      "bytes": 14303,
+      "sha256": "5d0c1dedbd1ce464d757df03c846e762c300148678ad60ca8742c0814fbacadd"
+    },
+    {
+      "path": "candidate-build.json",
+      "bytes": 219,
+      "sha256": "1b155625f1e948c172f8b7ad2b9eac0d98f3a248655239e8beeb12a4a9c46857"
+    },
+    {
+      "path": "icon-192.png",
+      "bytes": 941,
+      "sha256": "f87e2cd16fa4b07a5fdcd2da3e5b4252118e8c3880adede47824f3b0d4965f9f"
+    },
+    {
+      "path": "icon-512.png",
+      "bytes": 5657,
+      "sha256": "35f7a0fbe56586ef90564c661ebda0522e447d00b16e0c8cb8dbef2f0fbd3c80"
+    },
+    {
+      "path": "index.html",
+      "bytes": 403,
+      "sha256": "727d37402f29643e3f6c56052a71470fefeb32694948545b7318a4ec756fcde4"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 369,
+      "sha256": "400d66d634614aca98c4154f3334017f48d4bf2615ed2b0b1e2390ef0b1311a7"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 1285,
+      "sha256": "b67d859e143a537570e088d5935c54b1bb9b08077dccd012f2d8f7ce04790c46"
+    },
+    {
+      "path": "workbox-5bc3ec07.js",
+      "bytes": 14848,
+      "sha256": "95f6de361e1478054d96a198292198e6feee680dfc3d068420c77b46e73ee0ab"
+    }
+  ],
+  "inventorySHA256": "81d72c1b04ea2c2c92737c62053a89eb360fa78a1598fc6317a2ee9d84c5faaa"
+}

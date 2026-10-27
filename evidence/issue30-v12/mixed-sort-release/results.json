@@ -1,0 +1,2799 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\my-app\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.v12-mixed-release.config.ts"
+    ],
+    "configFile": "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\my-app\\playwright.v12-mixed-release.config.ts",
+    "rootDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/my-app/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/my-app/test-results-v12-mixed-release",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "pc",
+        "name": "pc",
+        "testDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/my-app/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "owner-v12-mixed.spec.ts",
+          "owner-v12-sort.spec.ts",
+          "owner-v12-01.spec.ts",
+          "owner-v12-07.spec.ts",
+          "issue30-v12.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/my-app/test-results-v12-mixed-release",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "360px",
+        "name": "360px",
+        "testDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/my-app/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "owner-v12-mixed.spec.ts",
+          "owner-v12-sort.spec.ts",
+          "owner-v12-01.spec.ts",
+          "owner-v12-07.spec.ts",
+          "issue30-v12.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "evidence/issue30-v12/mixed-sort-release/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "pnpm exec vite --config vite.candidate.config.ts --configLoader runner",
+      "url": "http://127.0.0.1:4177",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "issue30-v12.spec.ts",
+      "file": "issue30-v12.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "Extra AND exclusion N+1, all TIs per Exercise, future outside, Option reset and snapshot invariants",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3262,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:58:54.999Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-573cb24f76e37787d413",
+          "file": "issue30-v12.spec.ts",
+          "line": 75,
+          "column": 1
+        },
+        {
+          "title": "TOP two projections: completed Entries hidden with independent sort/filters; every Session and counts/load are preserved",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1728,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:58:58.696Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-80027919111d77f368b5",
+          "file": "issue30-v12.spec.ts",
+          "line": 240,
+          "column": 1
+        },
+        {
+          "title": "REGION current planned vs snapshot actual, missing snapshot stays only in TOP; completed Entry hidden and actual opens specific Session",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1873,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:00.441Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-430dd346b127e9de66c9",
+          "file": "issue30-v12.spec.ts",
+          "line": 274,
+          "column": 1
+        },
+        {
+          "title": "specific repeated Session cancellation removes only selected ID and leaves Exercise completion via other actuals",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1080,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:02.332Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-441ceaf489421fb43b64",
+          "file": "issue30-v12.spec.ts",
+          "line": 296,
+          "column": 1
+        },
+        {
+          "title": "uncompleted Entry execution adds a new Session without replacing any existing actual or saved Entry order",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1140,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:03.437Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-33b0c76cd9b41ae60716",
+          "file": "issue30-v12.spec.ts",
+          "line": 310,
+          "column": 1
+        },
+        {
+          "title": "Extra AND exclusion N+1, all TIs per Exercise, future outside, Option reset and snapshot invariants",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1542,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:02.671Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-9eb297d882fc9c3e64ff",
+          "file": "issue30-v12.spec.ts",
+          "line": 75,
+          "column": 1
+        },
+        {
+          "title": "TOP two projections: completed Entries hidden with independent sort/filters; every Session and counts/load are preserved",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3447,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:04.523Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-a7a6b6c21dd930d8dbce",
+          "file": "issue30-v12.spec.ts",
+          "line": 240,
+          "column": 1
+        },
+        {
+          "title": "REGION current planned vs snapshot actual, missing snapshot stays only in TOP; completed Entry hidden and actual opens specific Session",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7110,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:08.058Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-f38925a03a8d4660c046",
+          "file": "issue30-v12.spec.ts",
+          "line": 274,
+          "column": 1
+        },
+        {
+          "title": "specific repeated Session cancellation removes only selected ID and leaves Exercise completion via other actuals",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2878,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:15.305Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-04ce4d0f2e40be4934b8",
+          "file": "issue30-v12.spec.ts",
+          "line": 296,
+          "column": 1
+        },
+        {
+          "title": "uncompleted Entry execution adds a new Session without replacing any existing actual or saved Entry order",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1517,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:18.273Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-cef0c8050e9b7b1cc82b",
+          "file": "issue30-v12.spec.ts",
+          "line": 310,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "owner-v12-01.spec.ts",
+      "file": "owner-v12-01.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "V12-01 799df27: normal Restore, completed planned rows hidden, actual IDs unique in TOP and REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1859,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:04.644Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fd16182bbd5870b3975-dde8401cc28e55c70e4a",
+          "file": "owner-v12-01.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "V12-01: eight completed entries OFF zero ON eight, Option independent; last cancellation restores planned entry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1686,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:06.523Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fd16182bbd5870b3975-bc5079730ad28683ffd5",
+          "file": "owner-v12-01.spec.ts",
+          "line": 35,
+          "column": 1
+        },
+        {
+          "title": "V12-01 799df27: normal Restore, completed planned rows hidden, actual IDs unique in TOP and REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3024,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:19.886Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fd16182bbd5870b3975-ae3f05e37052fdbfb79f",
+          "file": "owner-v12-01.spec.ts",
+          "line": 4,
+          "column": 1
+        },
+        {
+          "title": "V12-01: eight completed entries OFF zero ON eight, Option independent; last cancellation restores planned entry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2291,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:22.953Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "8fd16182bbd5870b3975-f7b398c97a7f3c9ff9b6",
+          "file": "owner-v12-01.spec.ts",
+          "line": 35,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "owner-v12-07.spec.ts",
+      "file": "owner-v12-07.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "V12-07: existing row height preserved, fourteen days right aligned, data unchanged",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 746,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:08.252Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0d677628ccca14646af8-c61971ab4317f924e1e5",
+          "file": "owner-v12-07.spec.ts",
+          "line": 6,
+          "column": 1
+        },
+        {
+          "title": "V12-07: existing row height preserved, fourteen days right aligned, data unchanged",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1001,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:25.312Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "0d677628ccca14646af8-650476a95750cb7da4d5",
+          "file": "owner-v12-07.spec.ts",
+          "line": 6,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "owner-v12-mixed.spec.ts",
+      "file": "owner-v12-mixed.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "QA A Default completion-key-1 incompleteFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2028,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:09.048Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-ba3e8c6131b4af532947",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Default completion-key-1 completeFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2168,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:11.121Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-f0d9de192b7d19de2135",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Default completion-key-2 incompleteFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1966,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:13.330Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-d59d564308adb87a96d1",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Default completion-key-2 completeFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1964,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:15.311Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-aacf5b57bd4351edecbd",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Default completion-key-3 incompleteFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1992,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:17.290Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-1324fae09a41872a6f42",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Default completion-key-3 completeFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2308,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:19.308Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-7b0aa23c920af299c2c5",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Option completion-key-1 incompleteFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2298,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:21.654Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-20373f6c2b8837493835",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Option completion-key-1 completeFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2383,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:23.985Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-14c096c3bf8c7ef07545",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Option completion-key-2 incompleteFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2105,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:26.388Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-ea19e5017836b9dcdd36",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Option completion-key-2 completeFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2766,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:28.524Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-feec72ac779eaf1178af",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Option completion-key-3 incompleteFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2314,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:31.326Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-ddac275be449fd8319ce",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Option completion-key-3 completeFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2123,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:33.668Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-ea21ea0b967c62a644d4",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA D Default incompleteFirst same-key IDs, OFF, zero and individual actual",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1208,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:35.816Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-c0695a3974a48afb4198",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 31,
+          "column": 115
+        },
+        {
+          "title": "QA D Default completeFirst same-key IDs, OFF, zero and individual actual",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1224,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:37.045Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-d93956a422140de745d8",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 31,
+          "column": 115
+        },
+        {
+          "title": "QA D Option incompleteFirst same-key IDs, OFF, zero and individual actual",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1209,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:38.287Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-fdd31de8fdc949244bab",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 31,
+          "column": 115
+        },
+        {
+          "title": "QA D Option completeFirst same-key IDs, OFF, zero and individual actual",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1237,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:39.514Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-806dd62459184fef0f46",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 31,
+          "column": 115
+        },
+        {
+          "title": "QA A weekday filter Monday/Tuesday/zero retains row source; empty projection",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 878,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:40.770Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-1f350f010ab73d0f6d3a",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 37,
+          "column": 1
+        },
+        {
+          "title": "QA D Default sessions no phantom entries",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 877,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:41.669Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-d3add74f60d857d452d0",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 41,
+          "column": 95
+        },
+        {
+          "title": "QA D Default empty no phantom entries",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 826,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:42.561Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-7eb91592395598882c0d",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 41,
+          "column": 95
+        },
+        {
+          "title": "QA D Option sessions no phantom entries",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 833,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:43.406Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-59df333661b5f9e31660",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 41,
+          "column": 95
+        },
+        {
+          "title": "QA D Option empty no phantom entries",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 903,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:44.256Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-3652463369a15e9c7949",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 41,
+          "column": 95
+        },
+        {
+          "title": "QA B corrected bad82b1 Default incompleteFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1440,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:45.173Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-ad7b479ea7dcdfe5622c",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA C corrected bad82b1 Default incompleteFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2164,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:46.631Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-5532f4cee3cd44af4595",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA B corrected bad82b1 Default completeFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1508,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:48.816Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-91f644f1995f2d859719",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA C corrected bad82b1 Default completeFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1907,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:50.348Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-5dfb611e17244d21441e",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA B corrected bad82b1 Option incompleteFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1453,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:52.280Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-6d66dc49fee0de827be8",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA C corrected bad82b1 Option incompleteFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2102,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:53.753Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-c47f329f47c807dc0939",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA B corrected bad82b1 Option completeFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1453,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:55.884Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-f0defdd7dba61feb90d3",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA C corrected bad82b1 Option completeFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2000,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:57.364Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-192461c862f6167d779b",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA A Default completion-key-1 incompleteFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2159,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:26.390Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-292c6a6ed83751975bc8",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Default completion-key-1 completeFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1953,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:28.575Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-2e530eb35fcecb034beb",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Default completion-key-2 incompleteFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1878,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:30.548Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-b6defbe724a79256b6ef",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Default completion-key-2 completeFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1855,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:32.455Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-c7292c198813c55acbf1",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Default completion-key-3 incompleteFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1842,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:34.330Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-d4bf88afb7f1dcf5d8fa",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Default completion-key-3 completeFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1996,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:36.197Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-42b007387fde9e8edf6d",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Option completion-key-1 incompleteFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1946,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:38.212Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-7deac1866c1aa2babf8d",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Option completion-key-1 completeFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2060,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:40.178Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-2cfeb557024237ce2257",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Option completion-key-2 incompleteFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2130,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:42.267Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-7526dfd6841a96e526e5",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Option completion-key-2 completeFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2291,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:44.425Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-6a64341e5434a27bed0f",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Option completion-key-3 incompleteFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2122,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:46.747Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-531021963608f99d7dd2",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA A Option completion-key-3 completeFirst save/reload/TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2292,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:48.896Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-f3a2598753e3eb87c5e0",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 16,
+          "column": 173
+        },
+        {
+          "title": "QA D Default incompleteFirst same-key IDs, OFF, zero and individual actual",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1389,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:51.222Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-60b7fb49d25f46004602",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 31,
+          "column": 115
+        },
+        {
+          "title": "QA D Default completeFirst same-key IDs, OFF, zero and individual actual",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1221,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:52.639Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-3883badcbc8aad1e37d5",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 31,
+          "column": 115
+        },
+        {
+          "title": "QA D Option incompleteFirst same-key IDs, OFF, zero and individual actual",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1182,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:53.882Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-0e688974613f43045386",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 31,
+          "column": 115
+        },
+        {
+          "title": "QA D Option completeFirst same-key IDs, OFF, zero and individual actual",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1207,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:55.081Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-1ed8e62d9ee9aee527aa",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 31,
+          "column": 115
+        },
+        {
+          "title": "QA A weekday filter Monday/Tuesday/zero retains row source; empty projection",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 878,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:56.303Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-55a535d007aee9fc97f8",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 37,
+          "column": 1
+        },
+        {
+          "title": "QA D Default sessions no phantom entries",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 826,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:57.199Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-befc9e3c9002116ea95d",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 41,
+          "column": 95
+        },
+        {
+          "title": "QA D Default empty no phantom entries",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1029,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:58.042Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-65acced967d55b0bf976",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 41,
+          "column": 95
+        },
+        {
+          "title": "QA D Option sessions no phantom entries",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 835,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:59.091Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-1804743fe4f8da873977",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 41,
+          "column": 95
+        },
+        {
+          "title": "QA D Option empty no phantom entries",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 869,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:59.942Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-de272651d9edfb1c4ed5",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 41,
+          "column": 95
+        },
+        {
+          "title": "QA B corrected bad82b1 Default incompleteFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1405,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:01:00.830Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-46875aa3ff9134918ac3",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA C corrected bad82b1 Default incompleteFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1825,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:01:02.253Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-6539f8e4a389c5deef81",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA B corrected bad82b1 Default completeFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1570,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:01:04.101Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-da37311760677a867972",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA C corrected bad82b1 Default completeFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2012,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:01:05.694Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-b7f68ea9a58b5060bad1",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA B corrected bad82b1 Option incompleteFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1513,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:01:07.731Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-5e8809254583edbc55c6",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA C corrected bad82b1 Option incompleteFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1979,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:01:09.266Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-f19b84ff754708f879b4",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA B corrected bad82b1 Option completeFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1459,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:01:11.264Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-6e9e2a584f4d5fe6fdba",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        },
+        {
+          "title": "QA C corrected bad82b1 Option completeFirst TOP/REGION",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2115,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:01:12.748Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e024d79e13d9e357139a-fd5ed7cfbf52334423f5",
+          "file": "owner-v12-mixed.spec.ts",
+          "line": 45,
+          "column": 153
+        }
+      ]
+    },
+    {
+      "title": "owner-v12-sort.spec.ts",
+      "file": "owner-v12-sort.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "V12-sort diagnosis: Default completion first must put actual before uncompleted",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 849,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T06:59:59.415Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "75837f4b3209b404860b-1ef8c5b3450502219820",
+          "file": "owner-v12-sort.spec.ts",
+          "line": 6,
+          "column": 40
+        },
+        {
+          "title": "V12-sort diagnosis: Option completion first must put actual before uncompleted",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 890,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:00:00.281Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "75837f4b3209b404860b-ebe5bba85d99dffe7359",
+          "file": "owner-v12-sort.spec.ts",
+          "line": 6,
+          "column": 40
+        },
+        {
+          "title": "V12-sort diagnosis: Default completion first must put actual before uncompleted",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 761,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:01:14.909Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "75837f4b3209b404860b-c6d69b5c1e7b5a80789a",
+          "file": "owner-v12-sort.spec.ts",
+          "line": 6,
+          "column": 40
+        },
+        {
+          "title": "V12-sort diagnosis: Option completion first must put actual before uncompleted",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "360px",
+              "projectName": "360px",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 780,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-27T07:01:15.686Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "75837f4b3209b404860b-c18616b043b23a73e53d",
+          "file": "owner-v12-sort.spec.ts",
+          "line": 6,
+          "column": 40
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-27T06:58:50.351Z",
+    "duration": 146945.484,
+    "expected": 78,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
