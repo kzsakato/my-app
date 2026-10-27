@@ -601,7 +601,6 @@ function TopPage({
                     role="group"
                     aria-label="推奨曜日を複数選択"
                   >
-                    <div className="weekday-actions"><button onClick={() => onPreferences({ ...preferences, days: [0, 1, 2, 3, 4, 5, 6] })}>全ON</button><button onClick={() => onPreferences({ ...preferences, days: [] })}>全OFF</button></div>
                     {days.map((label, index) => (
                       <label key={label}>
                         <input
@@ -612,6 +611,7 @@ function TopPage({
                         {label}
                       </label>
                     ))}
+                    <div className="weekday-actions"><button onClick={() => onPreferences({ ...preferences, days: [0, 1, 2, 3, 4, 5, 6] })}>全ON</button><button onClick={() => onPreferences({ ...preferences, days: [] })}>全OFF</button></div>
                   </div>
                 )}
               </div>
