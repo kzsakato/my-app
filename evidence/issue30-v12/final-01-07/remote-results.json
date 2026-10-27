@@ -1,0 +1,207 @@
+{
+  "androidMeasured": false,
+  "results": [
+    {
+      "width": 1280,
+      "sourceSHA": "2f1cbfa473f91c4058234cf9c4b56f57cf14551e",
+      "result": "PASS",
+      "projections": [
+        {
+          "screen": "TOP",
+          "off": {
+            "planned": 0,
+            "actual": 0
+          },
+          "on": {
+            "planned": 0,
+            "actual": 8
+          },
+          "ids": [
+            "session-7",
+            "session-6",
+            "session-5",
+            "session-4",
+            "session-3",
+            "session-2",
+            "session-1",
+            "session-0"
+          ]
+        },
+        {
+          "screen": "REGION",
+          "off": {
+            "planned": 0,
+            "actual": 0
+          },
+          "on": {
+            "planned": 0,
+            "actual": 8
+          },
+          "ids": [
+            "session-7",
+            "session-6",
+            "session-5",
+            "session-4",
+            "session-3",
+            "session-2",
+            "session-1",
+            "session-0"
+          ]
+        }
+      ],
+      "extra": [
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        }
+      ],
+      "canonicalUnchanged": true,
+      "ownerDataUsed": false
+    },
+    {
+      "width": 360,
+      "sourceSHA": "2f1cbfa473f91c4058234cf9c4b56f57cf14551e",
+      "result": "PASS",
+      "projections": [
+        {
+          "screen": "TOP",
+          "off": {
+            "planned": 0,
+            "actual": 0
+          },
+          "on": {
+            "planned": 0,
+            "actual": 8
+          },
+          "ids": [
+            "session-7",
+            "session-6",
+            "session-5",
+            "session-4",
+            "session-3",
+            "session-2",
+            "session-1",
+            "session-0"
+          ]
+        },
+        {
+          "screen": "REGION",
+          "off": {
+            "planned": 0,
+            "actual": 0
+          },
+          "on": {
+            "planned": 0,
+            "actual": 8
+          },
+          "ids": [
+            "session-7",
+            "session-6",
+            "session-5",
+            "session-4",
+            "session-3",
+            "session-2",
+            "session-1",
+            "session-0"
+          ]
+        }
+      ],
+      "extra": [
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        },
+        {
+          "height": 57,
+          "rightAligned": true,
+          "days": 14,
+          "today": true
+        }
+      ],
+      "canonicalUnchanged": true,
+      "ownerDataUsed": false
+    }
+  ]
+}
