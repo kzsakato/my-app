@@ -1,0 +1,56 @@
+{
+  "atUTC": "2026-10-27T01:37:49.977476+00:00",
+  "result": "PASS",
+  "files": [
+    {
+      "path": "assets/index-CvpuS7LO.js",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "assets/main-CgMdPaTm.css",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "assets/main-DiW3s-fO.js",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "candidate-build.json",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "icon-192.png",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "icon-512.png",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "manifest.webmanifest",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "sw.js",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "workbox-5bc3ec07.js",
+      "status": 200,
+      "matches": true
+    }
+  ]
+}
