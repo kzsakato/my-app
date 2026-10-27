@@ -1,0 +1,28 @@
+{
+  "result": "PASS_IMPLEMENTATION_PC_DEPLOYMENT",
+  "authority": "QA #6435758117 / TEST_SPEC bad82b1c4bcdebca1aea3e4317bd5b86109a9c7c",
+  "sourceSHA": "c4fe4514ab093a9e2084dc286310d46f81ab8864",
+  "unit": {
+    "files": 19,
+    "passed": 163
+  },
+  "E2E": {
+    "passed": 78,
+    "failed": 0,
+    "skipped": 0
+  },
+  "publicSmoke": {
+    "passedCases": 40,
+    "widths": [
+      1280,
+      360
+    ],
+    "androidDevice": false
+  },
+  "typecheck": "PASS",
+  "workerBuild": "PASS",
+  "wranglerDryRun": "PASS",
+  "assetHashes": 10,
+  "protectedInvariants": "PASS",
+  "residual": "Owner Android MAN / QA final acceptance"
+}
