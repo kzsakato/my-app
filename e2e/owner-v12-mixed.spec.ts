@@ -1,10 +1,10 @@
-// Oracle supplied by QA #6433103067, TEST_SPEC cbafbcea: Fixture A/D only.
+// Fixed QA oracle: #6435758117 / TEST_SPEC bad82b1; prior A/D unchanged.
 import {test,expect,type Page} from '@playwright/test'
 import {mkdirSync,writeFileSync} from 'node:fs'
-import {fixture,A,D} from './mixedSortFixtures'
+import {fixture,A,B,C,D} from './mixedSortFixtures'
 import {defaultDisplayPreferences,type SortPreference} from '../src/canonical/displayPreferences'
 import type {CanonicalAppData} from '../src/canonical/types'
-const dir='evidence/issue30-v12/mixed-sort-fix';mkdirSync(dir,{recursive:true})
+const dir=process.env.V12_MIXED_EVIDENCE??'evidence/issue30-v12/mixed-sort-fix';mkdirSync(dir,{recursive:true})
 const priorities:SortPreference['priority'][]=[['completion','recommendedDay','bodyRegion'],['recommendedDay','completion','bodyRegion'],['recommendedDay','bodyRegion','completion']]
 const orders=[[['E-A','E-B','S-A','S-B'],['S-A','S-B','E-A','E-B']],[['E-A','S-A','E-B','S-B'],['S-A','E-A','S-B','E-B']],[['E-A','S-A','S-B','E-B'],['E-A','S-A','S-B','E-B']]]
 async function read(page:Page){return page.evaluate(async()=>{const db=await new Promise<IDBDatabase>(ok=>{const r=indexedDB.open('training-check-v1r11-candidate',7);r.onsuccess=()=>ok(r.result)});const v=await new Promise<CanonicalAppData>(ok=>{const r=db.transaction('canonical').objectStore('canonical').get('app');r.onsuccess=()=>ok(r.result)});db.close();return v})}
@@ -14,7 +14,7 @@ async function allDays(page:Page){await page.locator('.weekday-dropdown-trigger'
 async function ids(page:Page){return page.locator('[data-projection="mixed"] [data-menu-entry-id],[data-projection="mixed"] [data-session-id]').evaluateAll(els=>els.map(e=>e.getAttribute('data-menu-entry-id')??e.getAttribute('data-session-id')))}
 async function region(page:Page,name:string){await top(page);await page.getByRole('button',{name:'部位表示',exact:true}).click();await page.getByRole('button').filter({has:page.locator('b',{hasText:new RegExp(`^${name}$`)})}).click()}
 for(const mode of ['Default','Option']as const)for(const[p,priority]of priorities.entries())for(const[i,direction]of(['incompleteFirst','completeFirst']as const).entries())test(`QA A ${mode} completion-key-${p+1} ${direction} save/reload/TOP/REGION`,async({page},info)=>{
- const d=fixture(A);d.displayPreferences=structuredClone(defaultDisplayPreferences);await seed(page,d)
+ const d=fixture(A);d.displayPreferences=structuredClone(defaultDisplayPreferences);writeFileSync(`${dir}/fixture-A.json`,JSON.stringify(d));await seed(page,d)
  await page.getByRole('button',{name:'共通メニュー'}).click();await page.getByRole('button',{name:'設定',exact:true}).click();await page.getByRole('button',{name:/^表示設定/}).click()
  const section=page.getByRole('region',{name:mode,exact:true}),labels={recommendedDay:'推奨曜日',completion:'実施状況',bodyRegion:'部位'}
  for(const [target,key]of priority.entries()){const texts=await section.locator('.sort-priority-row>span').allTextContents();for(let n=texts.findIndex(x=>x.endsWith(labels[key]))-target;n>0;n--)await section.getByRole('button',{name:`${labels[key]}を上へ`}).click()}
@@ -40,4 +40,16 @@ test('QA A weekday filter Monday/Tuesday/zero retains row source; empty projecti
 })
 for(const mode of ['Default','Option']as const)for(const only of ['sessions','empty']as const)test(`QA D ${mode} ${only} no phantom entries`,async({page})=>{
  const d=fixture(D);d.menuEntries=[];if(only==='empty')d.sessions=[];d.displayPreferences=structuredClone(defaultDisplayPreferences);d.displayPreferences[mode==='Default'?'defaultSort':'optionSort']={priority:priorities[1],completionDirection:'completeFirst'};await seed(page,d);await allDays(page);await page.getByLabel('実施済も表示').check();if(mode==='Option')await page.getByLabel('Optionソート').check();expect(await ids(page)).toEqual(only==='sessions'?['S-11','S-12']:[]);await page.getByLabel('実施済も表示').uncheck();expect(await ids(page)).toEqual([]);expect(await read(page)).toEqual(d)
+})
+
+for(const mode of ['Default','Option']as const)for(const direction of ['incompleteFirst','completeFirst']as const)for(const letter of ['B','C']as const)test(`QA ${letter} corrected bad82b1 ${mode} ${direction} TOP/REGION`,async({page},info)=>{
+ const d=fixture(letter==='B'?B:C);d.displayPreferences=structuredClone(defaultDisplayPreferences);d.displayPreferences[mode==='Default'?'defaultSort':'optionSort']={priority:priorities[2],completionDirection:direction};writeFileSync(`${dir}/fixture-${letter}.json`,JSON.stringify(d));await seed(page,d);await allDays(page);await page.getByLabel('実施済も表示').check();if(mode==='Option')await page.getByLabel('Optionソート').check()
+ const expected=letter==='B'?(direction==='incompleteFirst'?['E-10','E-20','S-10','S-20']:['S-10','S-20','E-10','E-20']):['E-A','S-X','S-M'];const actual=await ids(page);expect(actual).toEqual(expected);const facts:{screen:string;expected:string[];actual:(string|null)[]}[]=[{screen:'TOP all days',expected,actual}]
+ await page.screenshot({path:`${dir}/${info.project.name}-${letter}-${mode}-${direction}-TOP.png`,fullPage:true})
+ await page.getByLabel('実施済も表示').uncheck();expect(await ids(page)).toEqual(letter==='B'?['E-10','E-20']:['E-A']);await page.getByLabel('実施済も表示').check()
+ if(letter==='C'){
+  await page.locator('.weekday-dropdown-trigger').click();await page.getByRole('button',{name:'全OFF',exact:true}).click();expect(await ids(page)).toEqual([]);await page.getByRole('group',{name:'推奨曜日を複数選択'}).getByLabel('月',{exact:true}).check();expect(await ids(page)).toEqual(['E-A','S-X','S-M']);await page.locator('.weekday-dropdown-trigger').click()
+ }
+ for(const [name,order]of (letter==='B'?[['胸',expected]]:[['胸',['E-A','E-N']],['前腕',['S-X']]])as [string,string[]][]){await region(page,name);await page.getByLabel('実施済も表示').check();if(mode==='Option')await page.getByLabel('Optionソート').check();const actual=await ids(page);expect(actual).toEqual(order);facts.push({screen:`REGION ${name}`,expected:order,actual});await page.screenshot({path:`${dir}/${info.project.name}-${letter}-${mode}-${direction}-${name}.png`,fullPage:true})}
+ expect(await read(page)).toEqual(d);await page.reload();expect(await read(page)).toEqual(d);writeFileSync(`${dir}/${info.project.name}-${letter}-${mode}-${direction}.json`,JSON.stringify({authority:'QA #6435758117 / TEST_SPEC bad82b1',mode,direction,priority:priorities[2],facts,canonicalUnchanged:true,result:'PASS'},null,2))
 })

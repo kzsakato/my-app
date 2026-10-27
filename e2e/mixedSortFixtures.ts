@@ -15,3 +15,5 @@ export function fixture(rows:SpecRow[]):CanonicalAppData{
 export const A:SpecRow[]=[{kind:'entry',id:'E-A',day:0,region:'胸'},{kind:'entry',id:'E-B',day:1,region:'背中'},{kind:'session',id:'S-A',day:0,region:'背中'},{kind:'session',id:'S-B',day:1,region:'胸'}]
 export const C:SpecRow[]=[{kind:'entry',id:'E-A',day:0,region:'胸'},{kind:'session',id:'S-X',day:0,region:'前腕'},{kind:'session',id:'S-M',day:0},{kind:'entry',id:'E-N',region:'胸'}]
 export const D:SpecRow[]=[{kind:'entry',id:'E-12',day:0,region:'胸',exercise:'pending'},{kind:'entry',id:'E-11',day:0,region:'胸',exercise:'pending'},{kind:'session',id:'S-12',day:0,region:'胸',exercise:'actual'},{kind:'session',id:'S-11',day:0,region:'胸',exercise:'actual'}]
+
+export const B:SpecRow[]=[{kind:"entry",id:"E-20",day:0,region:"胸",name:"い"},{kind:"entry",id:"E-10",day:0,region:"胸",name:"あ"},{kind:"session",id:"S-20",day:0,region:"胸",name:"い"},{kind:"session",id:"S-10",day:0,region:"胸",name:"あ"}]
