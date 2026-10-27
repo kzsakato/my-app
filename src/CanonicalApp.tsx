@@ -430,7 +430,8 @@ function TopPage({
   const [dayFilterOpen, setDayFilterOpen] = useState(false);
   const weekSessions = currentWeekSessions(data, today).sort(displayedSessionOrder);
   const completedEntries = completedEntryIds(data, entries, weekSessions);
-  const sortEntries = (rows: MenuEntry[]) => sortDisplayRows(rows, entry => {
+  // Owner contract 799df27: completed planned Entries stay in data, not in either list.
+  const sortEntries = (rows: MenuEntry[]) => sortDisplayRows(rows.filter(entry => !completedEntries.has(entry.id)), entry => {
     const item = data.trainingItems.find(item => item.id === entry.trainingItemId)!;
     const exercise = data.exercises.find(exercise => exercise.id === item.exerciseId)!;
     return { id: entry.id, name: item.displayName || exercise.name, recommendedDay: entry.recommendedDay, bodyRegion: exerciseBodyRegion(exercise), completed: completedEntries.has(entry.id) };
@@ -818,7 +819,7 @@ function ExtraPage({ data, onBack, onChoose, onEditExercise, onSettings, onTop }
     <div className="extra-filters"><select aria-label="部位" value={filter} onChange={event => setFilter(event.target.value)}><option value="">部位：すべて</option>{regions.map(value => <option key={value}>{value}</option>)}</select>
     <label>除外<select aria-label="除外" value={excludeDays} onChange={event => setExcludeDays(Number(event.target.value))}>{[0, 2, 4, 6, 10].map(value => <option key={value} value={value}>{value ? `直近${value}日` : "なし"}</option>)}</select></label></div>
     <OptionSort checked={option} onChange={setOption} />
-    {rows.map(item => { const exercise = data.exercises.find(value => value.id === item.exerciseId)!; return <div key={item.id} data-training-item-id={item.id}><button className="row" onClick={() => onChoose(item.id)}><span><b>{exerciseBodyRegion(exercise) ?? ""}：{item.displayName}</b><small>{exercise.measureType === "reps" ? `${exercise.usesWeight ? `${item.weight ?? 0} kg × ` : ""}${item.reps ?? 0} 回` : `${item.seconds ?? 0} 秒`} × {item.sets} セット</small></span><span>›</span></button><RegionWarning exercise={exercise} onEdit={onEditExercise} /></div>; })}
+    {rows.map(item => { const exercise = data.exercises.find(value => value.id === item.exerciseId)!; return <div key={item.id} data-training-item-id={item.id}><button className="row extra-item-row" onClick={() => onChoose(item.id)}><span className="extra-item-content"><b>{exerciseBodyRegion(exercise) ?? ""}：{item.displayName}</b><span className="extra-item-details"><small>{exercise.measureType === "reps" ? `${exercise.usesWeight ? `${item.weight ?? 0} kg × ` : ""}${item.reps ?? 0} 回` : `${item.seconds ?? 0} 秒`} × {item.sets} セット</small><small className="item-history">{exerciseHistory(data.sessions, exercise.id, new Date(), data.weekStartsOn)}</small></span></span><span>›</span></button><RegionWarning exercise={exercise} onEdit={onEditExercise} /></div>; })}
   </Frame>;
 }
 

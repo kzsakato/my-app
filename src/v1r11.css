@@ -54,3 +54,8 @@
 .run-weight .weight-controls b{font-size:calc(14px + 1pt)}
 /* Reclaim the outer columns' 4px spare space each; keep every button 44px. */
 @media(max-width:360px){.run-weight .weight-controls{grid-template-columns:44px 44px minmax(64px,1fr) 44px 44px}.run-weight .weight-controls b{min-width:64px;font-size:calc(13px + 1pt)}}
+
+/* V12-07: reuse the existing detail line, preserving row height. */
+.extra-item-row .extra-item-content{flex:1;min-width:0}
+.extra-item-details{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.extra-item-details .item-history{flex:0 0 auto;white-space:nowrap;font-size:11px;color:#4d8459}
