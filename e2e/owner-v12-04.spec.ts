@@ -8,14 +8,22 @@ test('V12-04: actions after weekdays, minus 1pt, one line; filter semantics unch
  const group=page.getByRole('group',{name:'推奨曜日を複数選択'})
  const geometry=await group.evaluate(el=>{
    const labels=[...el.querySelectorAll(':scope > label')].map(e=>e.getBoundingClientRect().toJSON()),buttons=[...el.querySelectorAll('.weekday-actions button')].map(e=>({rect:e.getBoundingClientRect().toJSON(),fontSize:getComputedStyle(e).fontSize,parentFont:getComputedStyle(e.parentElement!).fontSize,whiteSpace:getComputedStyle(e).whiteSpace,scrollWidth:e.scrollWidth,clientWidth:e.clientWidth}))
-   return{actionsLast:el.lastElementChild?.className==='weekday-actions',labels,buttons}
+   return{panel:el.getBoundingClientRect().toJSON(),actionsLast:el.lastElementChild?.className==='weekday-actions',labels,buttons}
  })
  expect(geometry.actionsLast).toBe(true);expect(geometry.labels).toHaveLength(7)
  const [on,off]=geometry.buttons
- expect(on.rect.top).toBeGreaterThanOrEqual(Math.max(...geometry.labels.map(r=>r.bottom)))
+ const rows=[...new Set(geometry.labels.map(r=>Math.round(r.top)))]
+ expect(rows.length).toBeLessThanOrEqual(2)
+ expect(geometry.panel.height).toBeLessThanOrEqual(2*geometry.labels[0].height+6+18)
+ if(info.project.name==='360px'){
+  expect(rows).toHaveLength(2);expect(geometry.labels[5].top).toBe(geometry.labels[6].top)
+  expect(on.rect.left).toBeGreaterThan(geometry.labels[6].right)
+  expect(on.rect.top).toBeGreaterThanOrEqual(geometry.labels[6].top)
+  expect(on.rect.bottom).toBeLessThanOrEqual(geometry.labels[6].bottom)
+ }
  expect(Math.abs(on.rect.top-off.rect.top)).toBeLessThan(1)
  for(const b of geometry.buttons){expect(Math.abs(parseFloat(b.fontSize)-(parseFloat(b.parentFont)-96/72))).toBeLessThan(.02);expect(b.whiteSpace).toBe('nowrap');expect(b.scrollWidth).toBeLessThanOrEqual(b.clientWidth)}
  await group.getByRole('button',{name:'全ON',exact:true}).click();await expect(group.getByRole('checkbox',{checked:true})).toHaveCount(7);await expect(page.getByLabel('実施済も表示')).toBeChecked()
  await group.getByRole('button',{name:'全OFF',exact:true}).click();await expect(group.getByRole('checkbox',{checked:true})).toHaveCount(0);await expect(page.getByLabel('実施済も表示')).toBeChecked()
- const dir='evidence/issue30-v12/owner-fixes';mkdirSync(dir,{recursive:true});writeFileSync(`${dir}/${info.project.name}-weekday.json`,JSON.stringify(geometry,null,2)+'\n');await page.screenshot({path:`${dir}/${info.project.name}-weekday.png`,fullPage:true})
+ const dir='evidence/issue30-v12/weekday-compact';mkdirSync(dir,{recursive:true});writeFileSync(`${dir}/${info.project.name}-weekday.json`,JSON.stringify(geometry,null,2)+'\n');await page.screenshot({path:`${dir}/${info.project.name}-weekday.png`,fullPage:true})
 })

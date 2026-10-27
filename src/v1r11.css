@@ -49,8 +49,8 @@
 .region-warning .small{min-height:44px;width:auto}
 .preference-preview{font-size:13px;overflow-wrap:anywhere}
 .preference-preview dd{margin:0 0 10px}
-.weekday-actions{display:flex;flex-wrap:nowrap;gap:8px;flex-basis:100%;min-width:0}
-.weekday-actions button{flex:1;min-width:0;min-height:44px;font-size:calc(1em - 1pt);white-space:nowrap}
+.weekday-actions{display:flex;flex-wrap:nowrap;align-items:center;gap:8px;flex:0 0 auto;min-width:0}
+.weekday-actions button{flex:0 0 auto;min-width:0;min-height:0;padding:2px 6px;font-size:calc(1em - 1pt);white-space:nowrap}
 .run-weight .weight-controls b{font-size:calc(14px + 1pt)}
 /* Reclaim the outer columns' 4px spare space each; keep every button 44px. */
 @media(max-width:360px){.run-weight .weight-controls{grid-template-columns:44px 44px minmax(64px,1fr) 44px 44px}.run-weight .weight-controls b{min-width:64px;font-size:calc(13px + 1pt)}}
