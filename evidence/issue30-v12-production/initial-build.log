@@ -1,0 +1,22 @@
+
+> training-check@0.1.0 build
+> tsc -b && vite build --configLoader runner
+
+vite v7.3.6 building client environment for production...
+transforming...
+✓ 61 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/registerSW.js                0.14 kB
+dist/manifest.webmanifest         0.19 kB
+dist/index.html                   0.55 kB │ gzip:   0.36 kB
+dist/assets/index-CVHoY4uC.css   14.30 kB │ gzip:   3.41 kB
+dist/assets/index-Dvu4JjdW.js   370.06 kB │ gzip: 108.92 kB
+✓ built in 2.75s
+
+PWA v1.3.0
+mode      generateSW
+precache  6 entries (389.54 KiB)
+files generated
+  dist/sw.js
+  dist/workbox-9c191d2f.js

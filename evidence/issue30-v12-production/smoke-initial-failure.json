@@ -1,0 +1,13 @@
+{
+  "result": "FAIL",
+  "error": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n'66' !== '67'\n",
+  "completed": [
+    {
+      "scenario": "fresh production startup",
+      "result": "PASS",
+      "db": "training-check",
+      "version": 7,
+      "noAutomaticCanonicalSeed": true
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "result": "PASS",
+  "sourceSHA": "c4fe4514ab093a9e2084dc286310d46f81ab8864",
+  "atUTC": "2026-10-28T11:49:34.511Z",
+  "browser": "153.0.8010.12",
+  "results": [
+    {
+      "scenario": "fresh production startup",
+      "result": "PASS",
+      "db": "training-check",
+      "version": 7,
+      "noAutomaticCanonicalSeed": true
+    },
+    {
+      "scenario": "V1.1 to V1.2 artifact upgrade",
+      "width": 1280,
+      "result": "PASS",
+      "environment": {
+        "origin": "http://127.0.0.1:56781",
+        "secure": true,
+        "databases": [
+          {
+            "name": "training-check",
+            "version": 7
+          }
+        ],
+        "controller": "http://127.0.0.1:56781/my-app/sw.js",
+        "scopes": [
+          "http://127.0.0.1:56781/my-app/"
+        ]
+      },
+      "manifestUnchanged": true,
+      "DBUnchangedOnUpgrade": true,
+      "beforeDataSHA256": "1da1e62b295eafe73e28efce5b3351a843a6fbad0969c63b957e9ae8b48fd7dc",
+      "postSaveDataSHA256": "c35c4b7db374cc0e771749cb5fd6f100b04f2e8b2ed96eada159ba3e084ff880",
+      "checks": [
+        "new Build",
+        "existing five stores/keys/values preserved",
+        "Default/Option completed direction",
+        "profile UI save/reload/read-back",
+        "Export equals saved canonical",
+        "SW activation/controller/scope",
+        "offline reload retains saved values"
+      ],
+      "errors": [],
+      "badResponses": [],
+      "ownerDataUsed": false
+    },
+    {
+      "scenario": "V1.1 to V1.2 artifact upgrade",
+      "width": 360,
+      "result": "PASS",
+      "environment": {
+        "origin": "http://127.0.0.1:56781",
+        "secure": true,
+        "databases": [
+          {
+            "name": "training-check",
+            "version": 7
+          }
+        ],
+        "controller": "http://127.0.0.1:56781/my-app/sw.js",
+        "scopes": [
+          "http://127.0.0.1:56781/my-app/"
+        ]
+      },
+      "manifestUnchanged": true,
+      "DBUnchangedOnUpgrade": true,
+      "beforeDataSHA256": "1da1e62b295eafe73e28efce5b3351a843a6fbad0969c63b957e9ae8b48fd7dc",
+      "postSaveDataSHA256": "c35c4b7db374cc0e771749cb5fd6f100b04f2e8b2ed96eada159ba3e084ff880",
+      "checks": [
+        "new Build",
+        "existing five stores/keys/values preserved",
+        "Default/Option completed direction",
+        "profile UI save/reload/read-back",
+        "Export equals saved canonical",
+        "SW activation/controller/scope",
+        "offline reload retains saved values"
+      ],
+      "errors": [],
+      "badResponses": [],
+      "ownerDataUsed": false
+    }
+  ],
+  "limitations": "Loopback isolated Chromium only; actual Pages HTTPS/Owner DB/Android install/update are not verified. No real data used."
+}

@@ -1,0 +1,26 @@
+{
+  "mainSHA": "4233692fb07aeaec0fcc59fe585cadbc1b4b77ec",
+  "PR4": {
+    "baseRefName": "codex/v1r11-implementation",
+    "headRefOid": "c4fe4514ab093a9e2084dc286310d46f81ab8864",
+    "mergeCommit": {
+      "oid": "b41b8869fa3ac53e6eb85ee527959b11f263effe"
+    },
+    "state": "MERGED"
+  },
+  "pages": {
+    "build_type": "workflow",
+    "cname": null,
+    "html_url": "https://kzsakato.github.io/my-app/",
+    "https_enforced": true,
+    "source": {
+      "branch": "main",
+      "path": "/"
+    }
+  },
+  "oldEightArtifactBytesUnchanged": true,
+  "oldManifestAndReadmeGitDiffEmpty": true,
+  "productionDeployPerformed": false,
+  "artifactBuild": "Build 2026-10-28 / c4fe4514",
+  "productFiles": 8
+}
