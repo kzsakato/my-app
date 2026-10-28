@@ -1,0 +1,12 @@
+$ vitest run "--reporter=dot" "--reporter=json" "--outputFile=evidence/issue30-v12/qa-additional/unit-results.json"
+
+ RUN  v3.2.7 C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/my-app
+
+················································································································································
+
+ Test Files  18 passed (18)
+      Tests  144 passed (144)
+   Start at  13:50:15
+   Duration  10.11s (transform 8.59s, setup 0ms, collect 27.32s, tests 1.53s, environment 13ms, prepare 52.17s)
+
+JSON report written to C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/my-app/evidence/issue30-v12/qa-additional/unit-results.json

@@ -1,4 +1,5 @@
 import { instantKey } from './instant'
+import { normalizeDisplayPreferences } from './displayPreferences'
 import type {
   CanonicalAppData, ClassificationMeaning, Exercise, SessionSnapshot,
   TrainingItem, TrainingItemSettingSnapshot, ValidationIssue, ValidationResult,
@@ -98,6 +99,7 @@ export function validateCanonical(input: unknown): ValidationResult {
   const warnings: ValidationIssue[] = []
   if (!isRecord(input)) { add(errors, '$', 'オブジェクトではありません'); return { errors, warnings } }
   if (input.schemaVersion !== 1) add(errors, 'schemaVersion', '対応していないschemaVersionです')
+  if (input.displayPreferences !== undefined) warnings.push(...normalizeDisplayPreferences(input.displayPreferences).warnings)
   if (!Number.isInteger(input.weekStartsOn) || Number(input.weekStartsOn) < 0 || Number(input.weekStartsOn) > 6) add(errors, 'weekStartsOn', '月曜0から日曜6の整数が必要です')
 
   const exercises = arrayAt(input, 'exercises', errors)

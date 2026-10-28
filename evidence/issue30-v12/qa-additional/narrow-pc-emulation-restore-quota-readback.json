@@ -1,0 +1,1730 @@
+{
+  "before": {
+    "baseline": [],
+    "canonical": [
+      {
+        "key": "app",
+        "value": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "menu-1",
+          "profile": {
+            "weight": 66
+          },
+          "exercises": [
+            {
+              "id": "exercise-1",
+              "lifecycle": "active",
+              "name": "ダンベルプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            },
+            {
+              "id": "ex-2",
+              "lifecycle": "active",
+              "name": "未実施の背中種目",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "背中"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "item-1",
+              "lifecycle": "active",
+              "managementMode": "MAN",
+              "exerciseId": "exercise-1",
+              "displayName": "ダンベルプレス",
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "ti-2",
+              "lifecycle": "active",
+              "managementMode": "MAN",
+              "exerciseId": "ex-2",
+              "displayName": "未実施の背中項目",
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          ],
+          "menus": [
+            {
+              "id": "menu-1",
+              "lifecycle": "active",
+              "managementMode": "MAN",
+              "name": "通常メニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "entry-1",
+              "lifecycle": "active",
+              "menuId": "menu-1",
+              "trainingItemId": "item-1",
+              "recommendedDay": 5,
+              "order": 0
+            },
+            {
+              "id": "entry-2",
+              "lifecycle": "active",
+              "menuId": "menu-1",
+              "trainingItemId": "ti-2",
+              "recommendedDay": 5,
+              "order": 1
+            }
+          ],
+          "sessions": [
+            {
+              "id": "session-1",
+              "trainingItemId": "item-1",
+              "menuEntryId": "entry-1",
+              "date": "2026-10-24",
+              "performedAt": "2026-10-24T09:00:00+09:00",
+              "performedOrder": 0,
+              "weight": 18,
+              "reps": 15,
+              "sets": 5,
+              "bodyWeight": 66,
+              "snapshot": {
+                "exerciseId": "exercise-1",
+                "exerciseName": "ダンベルプレス",
+                "trainingItemDisplayName": "ダンベルプレス",
+                "measureType": "reps",
+                "weightMode": "perSide",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "過去部位"
+                  }
+                ]
+              }
+            }
+          ],
+          "trainingItemSettingChanges": [
+            {
+              "id": "change-1",
+              "trainingItemId": "item-1",
+              "changedAt": "2026-09-24T09:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 18,
+                "reps": 15,
+                "sets": 5
+              }
+            },
+            {
+              "id": "change-2",
+              "trainingItemId": "ti-2",
+              "changedAt": "2026-09-24T09:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 18,
+                "reps": 15,
+                "sets": 5
+              }
+            }
+          ],
+          "appliedProposalIds": []
+        }
+      }
+    ],
+    "cutover": [
+      {
+        "key": "state",
+        "value": {
+          "authoritative": true,
+          "establishedAt": "2026-10-24T00:00:00+09:00"
+        }
+      }
+    ],
+    "recovery": [],
+    "state": [
+      {
+        "key": "app",
+        "value": {
+          "version": 6,
+          "activeMenuId": "seed-ramp",
+          "profile": {
+            "weight": 66,
+            "analysisStartDate": "2026-10-24"
+          },
+          "exercises": [
+            {
+              "id": "seed-pull",
+              "name": "プルダウン",
+              "bodyPart": "背中",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-shrug",
+              "name": "シュラッグ",
+              "bodyPart": "背中",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "perSide",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-row-o",
+              "name": "ロー（オーバーグリップ）",
+              "bodyPart": "背中",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-row-u",
+              "name": "ロー（アンダーグリップ）",
+              "bodyPart": "背中",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-backext",
+              "name": "バックエクステンション",
+              "bodyPart": "背中",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-pullover",
+              "name": "ストレートアーム・プルオーバー",
+              "bodyPart": "背中",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-dbpress",
+              "name": "ダンベルプレス",
+              "bodyPart": "胸",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-fly",
+              "name": "ペクトラルフライ（マシン）",
+              "bodyPart": "胸",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-bench",
+              "name": "ベンチプレス（逆手）",
+              "bodyPart": "胸",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-inc",
+              "name": "インクラインショルダープレス",
+              "bodyPart": "肩",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-side",
+              "name": "サイドレイズ",
+              "bodyPart": "肩",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "perSide",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-bend",
+              "name": "ダンベルサイドベント",
+              "bodyPart": "体幹",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "perSide",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-raise",
+              "name": "レッグレイズ",
+              "bodyPart": "体幹",
+              "measureType": "reps",
+              "usesWeight": false,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-rotation",
+              "name": "トーソローテーション",
+              "bodyPart": "体幹",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-front",
+              "name": "フロントプランク",
+              "bodyPart": "体幹",
+              "measureType": "time",
+              "usesWeight": false,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-sideplank",
+              "name": "サイドプランク",
+              "bodyPart": "体幹",
+              "measureType": "time",
+              "usesWeight": false,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-legpress",
+              "name": "レッグプレス",
+              "bodyPart": "下半身",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-calf",
+              "name": "カーフレイズ",
+              "bodyPart": "下半身",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-curl",
+              "name": "レッグカール",
+              "bodyPart": "下半身",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-add",
+              "name": "ヒップアダクション",
+              "bodyPart": "下半身",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-abd",
+              "name": "ヒップアブダクション",
+              "bodyPart": "下半身",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            }
+          ],
+          "categories": [
+            {
+              "id": "seed-chest",
+              "name": "胸・肩",
+              "bodyParts": [
+                "胸",
+                "肩"
+              ],
+              "exerciseIds": [
+                "seed-dbpress",
+                "seed-fly",
+                "seed-bench",
+                "seed-inc",
+                "seed-side"
+              ]
+            },
+            {
+              "id": "seed-back",
+              "name": "背中",
+              "bodyParts": [
+                "背中"
+              ],
+              "exerciseIds": [
+                "seed-pull",
+                "seed-shrug",
+                "seed-row-o",
+                "seed-row-u",
+                "seed-backext",
+                "seed-pullover"
+              ]
+            },
+            {
+              "id": "seed-core",
+              "name": "体幹・腕",
+              "bodyParts": [
+                "体幹",
+                "腕"
+              ],
+              "exerciseIds": [
+                "seed-bend",
+                "seed-raise",
+                "seed-rotation",
+                "seed-front",
+                "seed-sideplank"
+              ]
+            },
+            {
+              "id": "seed-lower",
+              "name": "下半身",
+              "bodyParts": [
+                "下半身"
+              ],
+              "exerciseIds": [
+                "seed-legpress",
+                "seed-calf",
+                "seed-curl",
+                "seed-add",
+                "seed-abd"
+              ]
+            }
+          ],
+          "items": [
+            {
+              "id": "seed-item-0",
+              "name": "プルダウン",
+              "categoryId": "seed-back",
+              "exerciseId": "seed-pull",
+              "weight": 42.5,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-1",
+              "name": "シュラッグ",
+              "categoryId": "seed-back",
+              "exerciseId": "seed-shrug",
+              "weight": 34,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-2",
+              "name": "ロー（オーバーグリップ）",
+              "categoryId": "seed-back",
+              "exerciseId": "seed-row-o",
+              "weight": 18,
+              "reps": 20,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-3",
+              "name": "ロー（アンダーグリップ）",
+              "categoryId": "seed-back",
+              "exerciseId": "seed-row-u",
+              "weight": 54,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-4",
+              "name": "バックエクステンション",
+              "categoryId": "seed-back",
+              "exerciseId": "seed-backext",
+              "weight": 89,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-5",
+              "name": "ストレートアーム・プルオーバー",
+              "categoryId": "seed-back",
+              "exerciseId": "seed-pullover",
+              "weight": 24,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-6",
+              "name": "ダンベルプレス",
+              "categoryId": "seed-chest",
+              "exerciseId": "seed-dbpress",
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-7",
+              "name": "ペクトラルフライ（マシン）",
+              "categoryId": "seed-chest",
+              "exerciseId": "seed-fly",
+              "weight": 22.5,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-8",
+              "name": "ベンチプレス（逆手）",
+              "categoryId": "seed-chest",
+              "exerciseId": "seed-bench",
+              "weight": 30,
+              "reps": 15,
+              "sets": 3
+            },
+            {
+              "id": "seed-item-9",
+              "name": "インクラインショルダープレス",
+              "categoryId": "seed-chest",
+              "exerciseId": "seed-inc",
+              "weight": 14,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-10",
+              "name": "サイドレイズ",
+              "categoryId": "seed-chest",
+              "exerciseId": "seed-side",
+              "weight": 4,
+              "reps": 20,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-11",
+              "name": "ダンベルサイドベント",
+              "categoryId": "seed-core",
+              "exerciseId": "seed-bend",
+              "weight": 18,
+              "reps": 20,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-12",
+              "name": "レッグレイズ",
+              "categoryId": "seed-core",
+              "exerciseId": "seed-raise",
+              "reps": 10,
+              "sets": 4
+            },
+            {
+              "id": "seed-item-13",
+              "name": "トーソローテーション",
+              "categoryId": "seed-core",
+              "exerciseId": "seed-rotation",
+              "weight": 57,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-14",
+              "name": "フロントプランク",
+              "categoryId": "seed-core",
+              "exerciseId": "seed-front",
+              "seconds": 30,
+              "sets": 3
+            },
+            {
+              "id": "seed-item-15",
+              "name": "サイドプランク",
+              "categoryId": "seed-core",
+              "exerciseId": "seed-sideplank",
+              "seconds": 30,
+              "sets": 3
+            },
+            {
+              "id": "seed-item-16",
+              "name": "レッグプレス",
+              "categoryId": "seed-lower",
+              "exerciseId": "seed-legpress",
+              "weight": 115,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-17",
+              "name": "カーフレイズ",
+              "categoryId": "seed-lower",
+              "exerciseId": "seed-calf",
+              "weight": 125,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-18",
+              "name": "レッグカール",
+              "categoryId": "seed-lower",
+              "exerciseId": "seed-curl",
+              "weight": 42.5,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-19",
+              "name": "ヒップアダクション",
+              "categoryId": "seed-lower",
+              "exerciseId": "seed-add",
+              "weight": 124,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-20",
+              "name": "ヒップアブダクション",
+              "categoryId": "seed-lower",
+              "exerciseId": "seed-abd",
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "seed-ramp",
+              "name": "助走トレーニング"
+            },
+            {
+              "id": "seed-normal",
+              "name": "通常メニュー"
+            }
+          ],
+          "menuItems": [
+            {
+              "id": "seed-mi-0",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-0",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-1",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-1",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-2",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-2",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-3",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-3",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-4",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-4",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-5",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-5",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-6",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-6",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-7",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-7",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-8",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-8",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-9",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-9",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-10",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-10",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-11",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-11",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-12",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-12",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-13",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-13",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-14",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-14",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-15",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-15",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-16",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-16",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-17",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-17",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-18",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-18",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-19",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-19",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-20",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-20",
+              "recommendedDay": null
+            }
+          ],
+          "sessions": [],
+          "settingHistories": []
+        }
+      }
+    ]
+  },
+  "after": {
+    "baseline": [],
+    "canonical": [
+      {
+        "key": "app",
+        "value": {
+          "schemaVersion": 1,
+          "weekStartsOn": 0,
+          "activeMenuId": "menu-1",
+          "profile": {
+            "weight": 74
+          },
+          "exercises": [
+            {
+              "id": "exercise-1",
+              "lifecycle": "active",
+              "name": "ダンベルプレス",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            },
+            {
+              "id": "ex-2",
+              "lifecycle": "active",
+              "name": "未実施の背中種目",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "背中"
+                }
+              ]
+            }
+          ],
+          "trainingItems": [
+            {
+              "id": "item-1",
+              "lifecycle": "active",
+              "managementMode": "MAN",
+              "exerciseId": "exercise-1",
+              "displayName": "ダンベルプレス",
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "ti-2",
+              "lifecycle": "active",
+              "managementMode": "MAN",
+              "exerciseId": "ex-2",
+              "displayName": "未実施の背中項目",
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          ],
+          "menus": [
+            {
+              "id": "menu-1",
+              "lifecycle": "active",
+              "managementMode": "MAN",
+              "name": "通常メニュー"
+            }
+          ],
+          "menuEntries": [
+            {
+              "id": "entry-1",
+              "lifecycle": "active",
+              "menuId": "menu-1",
+              "trainingItemId": "item-1",
+              "recommendedDay": 5,
+              "order": 0
+            },
+            {
+              "id": "entry-2",
+              "lifecycle": "active",
+              "menuId": "menu-1",
+              "trainingItemId": "ti-2",
+              "recommendedDay": 5,
+              "order": 1
+            }
+          ],
+          "sessions": [
+            {
+              "id": "session-1",
+              "trainingItemId": "item-1",
+              "menuEntryId": "entry-1",
+              "date": "2026-10-24",
+              "performedAt": "2026-10-24T09:00:00+09:00",
+              "performedOrder": 0,
+              "weight": 18,
+              "reps": 15,
+              "sets": 5,
+              "bodyWeight": 66,
+              "snapshot": {
+                "exerciseId": "exercise-1",
+                "exerciseName": "ダンベルプレス",
+                "trainingItemDisplayName": "ダンベルプレス",
+                "measureType": "reps",
+                "weightMode": "perSide",
+                "classifications": [
+                  {
+                    "kind": "bodyRegion",
+                    "label": "過去部位"
+                  }
+                ]
+              }
+            }
+          ],
+          "trainingItemSettingChanges": [
+            {
+              "id": "change-1",
+              "trainingItemId": "item-1",
+              "changedAt": "2026-09-24T09:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 18,
+                "reps": 15,
+                "sets": 5
+              }
+            },
+            {
+              "id": "change-2",
+              "trainingItemId": "ti-2",
+              "changedAt": "2026-09-24T09:00:00+09:00",
+              "isInitial": true,
+              "snapshot": {
+                "weight": 18,
+                "reps": 15,
+                "sets": 5
+              }
+            }
+          ],
+          "appliedProposalIds": [],
+          "displayPreferences": {
+            "defaultSort": {
+              "priority": [
+                "recommendedDay",
+                "completion",
+                "bodyRegion"
+              ],
+              "completionDirection": "incompleteFirst"
+            },
+            "optionSort": {
+              "priority": [
+                "completion",
+                "recommendedDay",
+                "bodyRegion"
+              ],
+              "completionDirection": "incompleteFirst"
+            },
+            "bodyRegionOrder": [
+              "胸",
+              "背中",
+              "腕",
+              "肩",
+              "下半身",
+              "体幹",
+              "その他"
+            ]
+          }
+        }
+      }
+    ],
+    "cutover": [
+      {
+        "key": "state",
+        "value": {
+          "authoritative": true,
+          "establishedAt": "2026-10-24T00:00:00+09:00"
+        }
+      }
+    ],
+    "recovery": [],
+    "state": [
+      {
+        "key": "app",
+        "value": {
+          "version": 6,
+          "activeMenuId": "seed-ramp",
+          "profile": {
+            "weight": 66,
+            "analysisStartDate": "2026-10-24"
+          },
+          "exercises": [
+            {
+              "id": "seed-pull",
+              "name": "プルダウン",
+              "bodyPart": "背中",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-shrug",
+              "name": "シュラッグ",
+              "bodyPart": "背中",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "perSide",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-row-o",
+              "name": "ロー（オーバーグリップ）",
+              "bodyPart": "背中",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-row-u",
+              "name": "ロー（アンダーグリップ）",
+              "bodyPart": "背中",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-backext",
+              "name": "バックエクステンション",
+              "bodyPart": "背中",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-pullover",
+              "name": "ストレートアーム・プルオーバー",
+              "bodyPart": "背中",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-dbpress",
+              "name": "ダンベルプレス",
+              "bodyPart": "胸",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-fly",
+              "name": "ペクトラルフライ（マシン）",
+              "bodyPart": "胸",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-bench",
+              "name": "ベンチプレス（逆手）",
+              "bodyPart": "胸",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-inc",
+              "name": "インクラインショルダープレス",
+              "bodyPart": "肩",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-side",
+              "name": "サイドレイズ",
+              "bodyPart": "肩",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "perSide",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-bend",
+              "name": "ダンベルサイドベント",
+              "bodyPart": "体幹",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "perSide",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-raise",
+              "name": "レッグレイズ",
+              "bodyPart": "体幹",
+              "measureType": "reps",
+              "usesWeight": false,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-rotation",
+              "name": "トーソローテーション",
+              "bodyPart": "体幹",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-front",
+              "name": "フロントプランク",
+              "bodyPart": "体幹",
+              "measureType": "time",
+              "usesWeight": false,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-sideplank",
+              "name": "サイドプランク",
+              "bodyPart": "体幹",
+              "measureType": "time",
+              "usesWeight": false,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-legpress",
+              "name": "レッグプレス",
+              "bodyPart": "下半身",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-calf",
+              "name": "カーフレイズ",
+              "bodyPart": "下半身",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-curl",
+              "name": "レッグカール",
+              "bodyPart": "下半身",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-add",
+              "name": "ヒップアダクション",
+              "bodyPart": "下半身",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            },
+            {
+              "id": "seed-abd",
+              "name": "ヒップアブダクション",
+              "bodyPart": "下半身",
+              "measureType": "reps",
+              "usesWeight": true,
+              "weightMode": "total",
+              "selfWeightRatio": 0,
+              "secondsLoadRatio": 0
+            }
+          ],
+          "categories": [
+            {
+              "id": "seed-chest",
+              "name": "胸・肩",
+              "bodyParts": [
+                "胸",
+                "肩"
+              ],
+              "exerciseIds": [
+                "seed-dbpress",
+                "seed-fly",
+                "seed-bench",
+                "seed-inc",
+                "seed-side"
+              ]
+            },
+            {
+              "id": "seed-back",
+              "name": "背中",
+              "bodyParts": [
+                "背中"
+              ],
+              "exerciseIds": [
+                "seed-pull",
+                "seed-shrug",
+                "seed-row-o",
+                "seed-row-u",
+                "seed-backext",
+                "seed-pullover"
+              ]
+            },
+            {
+              "id": "seed-core",
+              "name": "体幹・腕",
+              "bodyParts": [
+                "体幹",
+                "腕"
+              ],
+              "exerciseIds": [
+                "seed-bend",
+                "seed-raise",
+                "seed-rotation",
+                "seed-front",
+                "seed-sideplank"
+              ]
+            },
+            {
+              "id": "seed-lower",
+              "name": "下半身",
+              "bodyParts": [
+                "下半身"
+              ],
+              "exerciseIds": [
+                "seed-legpress",
+                "seed-calf",
+                "seed-curl",
+                "seed-add",
+                "seed-abd"
+              ]
+            }
+          ],
+          "items": [
+            {
+              "id": "seed-item-0",
+              "name": "プルダウン",
+              "categoryId": "seed-back",
+              "exerciseId": "seed-pull",
+              "weight": 42.5,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-1",
+              "name": "シュラッグ",
+              "categoryId": "seed-back",
+              "exerciseId": "seed-shrug",
+              "weight": 34,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-2",
+              "name": "ロー（オーバーグリップ）",
+              "categoryId": "seed-back",
+              "exerciseId": "seed-row-o",
+              "weight": 18,
+              "reps": 20,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-3",
+              "name": "ロー（アンダーグリップ）",
+              "categoryId": "seed-back",
+              "exerciseId": "seed-row-u",
+              "weight": 54,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-4",
+              "name": "バックエクステンション",
+              "categoryId": "seed-back",
+              "exerciseId": "seed-backext",
+              "weight": 89,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-5",
+              "name": "ストレートアーム・プルオーバー",
+              "categoryId": "seed-back",
+              "exerciseId": "seed-pullover",
+              "weight": 24,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-6",
+              "name": "ダンベルプレス",
+              "categoryId": "seed-chest",
+              "exerciseId": "seed-dbpress",
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-7",
+              "name": "ペクトラルフライ（マシン）",
+              "categoryId": "seed-chest",
+              "exerciseId": "seed-fly",
+              "weight": 22.5,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-8",
+              "name": "ベンチプレス（逆手）",
+              "categoryId": "seed-chest",
+              "exerciseId": "seed-bench",
+              "weight": 30,
+              "reps": 15,
+              "sets": 3
+            },
+            {
+              "id": "seed-item-9",
+              "name": "インクラインショルダープレス",
+              "categoryId": "seed-chest",
+              "exerciseId": "seed-inc",
+              "weight": 14,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-10",
+              "name": "サイドレイズ",
+              "categoryId": "seed-chest",
+              "exerciseId": "seed-side",
+              "weight": 4,
+              "reps": 20,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-11",
+              "name": "ダンベルサイドベント",
+              "categoryId": "seed-core",
+              "exerciseId": "seed-bend",
+              "weight": 18,
+              "reps": 20,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-12",
+              "name": "レッグレイズ",
+              "categoryId": "seed-core",
+              "exerciseId": "seed-raise",
+              "reps": 10,
+              "sets": 4
+            },
+            {
+              "id": "seed-item-13",
+              "name": "トーソローテーション",
+              "categoryId": "seed-core",
+              "exerciseId": "seed-rotation",
+              "weight": 57,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-14",
+              "name": "フロントプランク",
+              "categoryId": "seed-core",
+              "exerciseId": "seed-front",
+              "seconds": 30,
+              "sets": 3
+            },
+            {
+              "id": "seed-item-15",
+              "name": "サイドプランク",
+              "categoryId": "seed-core",
+              "exerciseId": "seed-sideplank",
+              "seconds": 30,
+              "sets": 3
+            },
+            {
+              "id": "seed-item-16",
+              "name": "レッグプレス",
+              "categoryId": "seed-lower",
+              "exerciseId": "seed-legpress",
+              "weight": 115,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-17",
+              "name": "カーフレイズ",
+              "categoryId": "seed-lower",
+              "exerciseId": "seed-calf",
+              "weight": 125,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-18",
+              "name": "レッグカール",
+              "categoryId": "seed-lower",
+              "exerciseId": "seed-curl",
+              "weight": 42.5,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-19",
+              "name": "ヒップアダクション",
+              "categoryId": "seed-lower",
+              "exerciseId": "seed-add",
+              "weight": 124,
+              "reps": 15,
+              "sets": 5
+            },
+            {
+              "id": "seed-item-20",
+              "name": "ヒップアブダクション",
+              "categoryId": "seed-lower",
+              "exerciseId": "seed-abd",
+              "sets": 3
+            }
+          ],
+          "menus": [
+            {
+              "id": "seed-ramp",
+              "name": "助走トレーニング"
+            },
+            {
+              "id": "seed-normal",
+              "name": "通常メニュー"
+            }
+          ],
+          "menuItems": [
+            {
+              "id": "seed-mi-0",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-0",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-1",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-1",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-2",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-2",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-3",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-3",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-4",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-4",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-5",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-5",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-6",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-6",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-7",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-7",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-8",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-8",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-9",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-9",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-10",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-10",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-11",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-11",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-12",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-12",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-13",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-13",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-14",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-14",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-15",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-15",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-16",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-16",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-17",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-17",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-18",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-18",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-19",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-19",
+              "recommendedDay": null
+            },
+            {
+              "id": "seed-mi-20",
+              "menuId": "seed-ramp",
+              "itemId": "seed-item-20",
+              "recommendedDay": null
+            }
+          ],
+          "sessions": [],
+          "settingHistories": []
+        }
+      }
+    ]
+  },
+  "expected": {
+    "schemaVersion": 1,
+    "weekStartsOn": 0,
+    "activeMenuId": "menu-1",
+    "profile": {
+      "weight": 74
+    },
+    "exercises": [
+      {
+        "id": "exercise-1",
+        "lifecycle": "active",
+        "name": "ダンベルプレス",
+        "measureType": "reps",
+        "usesWeight": true,
+        "weightMode": "perSide",
+        "classifications": [
+          {
+            "kind": "bodyRegion",
+            "label": "胸"
+          }
+        ]
+      },
+      {
+        "id": "ex-2",
+        "lifecycle": "active",
+        "name": "未実施の背中種目",
+        "measureType": "reps",
+        "usesWeight": true,
+        "weightMode": "perSide",
+        "classifications": [
+          {
+            "kind": "bodyRegion",
+            "label": "背中"
+          }
+        ]
+      }
+    ],
+    "trainingItems": [
+      {
+        "id": "item-1",
+        "lifecycle": "active",
+        "managementMode": "MAN",
+        "exerciseId": "exercise-1",
+        "displayName": "ダンベルプレス",
+        "weight": 18,
+        "reps": 15,
+        "sets": 5
+      },
+      {
+        "id": "ti-2",
+        "lifecycle": "active",
+        "managementMode": "MAN",
+        "exerciseId": "ex-2",
+        "displayName": "未実施の背中項目",
+        "weight": 18,
+        "reps": 15,
+        "sets": 5
+      }
+    ],
+    "menus": [
+      {
+        "id": "menu-1",
+        "lifecycle": "active",
+        "managementMode": "MAN",
+        "name": "通常メニュー"
+      }
+    ],
+    "menuEntries": [
+      {
+        "id": "entry-1",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "item-1",
+        "recommendedDay": 5,
+        "order": 0
+      },
+      {
+        "id": "entry-2",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "ti-2",
+        "recommendedDay": 5,
+        "order": 1
+      }
+    ],
+    "sessions": [
+      {
+        "id": "session-1",
+        "trainingItemId": "item-1",
+        "menuEntryId": "entry-1",
+        "date": "2026-10-24",
+        "performedAt": "2026-10-24T09:00:00+09:00",
+        "performedOrder": 0,
+        "weight": 18,
+        "reps": 15,
+        "sets": 5,
+        "bodyWeight": 66,
+        "snapshot": {
+          "exerciseId": "exercise-1",
+          "exerciseName": "ダンベルプレス",
+          "trainingItemDisplayName": "ダンベルプレス",
+          "measureType": "reps",
+          "weightMode": "perSide",
+          "classifications": [
+            {
+              "kind": "bodyRegion",
+              "label": "過去部位"
+            }
+          ]
+        }
+      }
+    ],
+    "trainingItemSettingChanges": [
+      {
+        "id": "change-1",
+        "trainingItemId": "item-1",
+        "changedAt": "2026-09-24T09:00:00+09:00",
+        "isInitial": true,
+        "snapshot": {
+          "weight": 18,
+          "reps": 15,
+          "sets": 5
+        }
+      },
+      {
+        "id": "change-2",
+        "trainingItemId": "ti-2",
+        "changedAt": "2026-09-24T09:00:00+09:00",
+        "isInitial": true,
+        "snapshot": {
+          "weight": 18,
+          "reps": 15,
+          "sets": 5
+        }
+      }
+    ],
+    "appliedProposalIds": [],
+    "displayPreferences": {
+      "defaultSort": {
+        "priority": [
+          "recommendedDay",
+          "completion",
+          "bodyRegion"
+        ],
+        "completionDirection": "incompleteFirst"
+      },
+      "optionSort": {
+        "priority": [
+          "completion",
+          "recommendedDay",
+          "bodyRegion"
+        ],
+        "completionDirection": "incompleteFirst"
+      },
+      "bodyRegionOrder": [
+        "胸",
+        "背中",
+        "腕",
+        "肩",
+        "下半身",
+        "体幹",
+        "その他"
+      ]
+    }
+  }
+}

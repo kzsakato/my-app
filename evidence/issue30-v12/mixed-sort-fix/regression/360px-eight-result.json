@@ -1,0 +1,14 @@
+{
+  "result": "PASS",
+  "off": {
+    "planned": 0,
+    "actual": 0
+  },
+  "on": {
+    "planned": 0,
+    "actual": 8
+  },
+  "lastSessionCancellationRestoresEntry": true,
+  "canonicalSwitchingUnchanged": true,
+  "ownerDataUsed": false
+}

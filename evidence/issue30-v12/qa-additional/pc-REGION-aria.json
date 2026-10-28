@@ -1,0 +1,1 @@
+"- main:\n  - button \"‹ 戻る\"\n  - heading \"胸\" [level=1]\n  - button \"共通メニュー\": ≡\n  - checkbox \"実施済も表示\"\n  - text: 実施済も表示\n  - checkbox \"Optionソート\"\n  - text: Optionソート\n  - button \"ダンベルプレス ✓ 実施済 胸 推奨：土 ○｜○○○○○○○｜○○○○○●\""

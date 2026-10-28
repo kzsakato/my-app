@@ -7,7 +7,7 @@ import { validateCanonical } from '../src/canonical/validate'
 import type { CanonicalAppData } from '../src/canonical/types'
 
 const before = process.env.ISSUE28_BEFORE === '1'
-const evidence = `evidence/issue28/${before ? 'before' : 'after'}`
+const evidence = process.env.ISSUE28_EVIDENCE_ROOT ?? `evidence/issue28/${before ? 'before' : 'after'}`
 const now = new Date('2026-10-20T12:00:00+09:00')
 function fixture(): CanonicalAppData {
   const d = structuredClone(canonicalFixture)

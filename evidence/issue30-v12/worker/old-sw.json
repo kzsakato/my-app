@@ -1,0 +1,20 @@
+{
+  "atUTC": "2026-10-26T03:23:31.136Z",
+  "syntheticOldSW": true,
+  "ownerBrowserUsed": false,
+  "result": "PASS",
+  "facts": {
+    "old": "OLD-DUMMY-PRESERVED",
+    "dbs": [
+      {
+        "name": "training-check",
+        "version": 7
+      },
+      {
+        "name": "training-check-v12-local-man",
+        "version": 7
+      }
+    ],
+    "controller": "http://localhost:4182/sw.js"
+  }
+}

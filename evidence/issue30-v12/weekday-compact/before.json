@@ -1,0 +1,98 @@
+{
+  "atUTC": "2026-10-27T01:47:36.099642+00:00",
+  "phase": "before",
+  "workers": {
+    "my-app-staging-v1r": {
+      "deployments": {
+        "status": 200,
+        "success": true,
+        "errorCodes": [],
+        "result": [
+          {
+            "id": "2462aa43-a534-4820-94a4-06d3620101a2",
+            "versions": [
+              {
+                "version_id": "5e978e9c-db4d-4775-ac55-8e5e5d055652",
+                "percentage": 100
+              }
+            ]
+          }
+        ]
+      },
+      "settings": {
+        "status": 200,
+        "success": true,
+        "errorCodes": [],
+        "result": {
+          "compatibility_date": "2026-10-04",
+          "bindings": []
+        }
+      },
+      "subdomain": {
+        "status": 200,
+        "success": true,
+        "errorCodes": [],
+        "result": {
+          "enabled": true,
+          "previews_enabled": false
+        }
+      }
+    },
+    "my-app-staging": {
+      "deployments": {
+        "status": 200,
+        "success": true,
+        "errorCodes": [],
+        "result": [
+          {
+            "id": "6dcb53b8-9041-4e85-b799-4641ba4cd505",
+            "versions": [
+              {
+                "version_id": "16113452-360a-455d-a98b-bfd780ddb350",
+                "percentage": 100
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "my-app-simple-118ff493": {
+      "deployments": {
+        "status": 200,
+        "success": true,
+        "errorCodes": [],
+        "result": [
+          {
+            "id": "d1819eec-352f-4735-b91b-9abf3884a808",
+            "versions": [
+              {
+                "version_id": "a2954d2f-ac86-472e-b43d-2a4f7dc3f19c",
+                "percentage": 100
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "domains": {
+    "status": 200,
+    "success": true,
+    "errorCodes": [],
+    "result": []
+  },
+  "productionPages": {
+    "html_url": "https://kzsakato.github.io/my-app/",
+    "cname": null,
+    "build_type": "workflow",
+    "source": {
+      "branch": "main",
+      "path": "/"
+    },
+    "public": true,
+    "https_enforced": true
+  },
+  "productionMain": {
+    "sha": "4233692fb07aeaec0fcc59fe585cadbc1b4b77ec"
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "panel": {
+    "x": 16,
+    "y": 465,
+    "width": 328,
+    "height": 86,
+    "top": 465,
+    "right": 344,
+    "bottom": 551,
+    "left": 16
+  },
+  "actionsLast": true,
+  "labels": [
+    {
+      "x": 25,
+      "y": 474,
+      "width": 50,
+      "height": 31,
+      "top": 474,
+      "right": 75,
+      "bottom": 505,
+      "left": 25
+    },
+    {
+      "x": 81,
+      "y": 474,
+      "width": 50,
+      "height": 31,
+      "top": 474,
+      "right": 131,
+      "bottom": 505,
+      "left": 81
+    },
+    {
+      "x": 137,
+      "y": 474,
+      "width": 50,
+      "height": 31,
+      "top": 474,
+      "right": 187,
+      "bottom": 505,
+      "left": 137
+    },
+    {
+      "x": 193,
+      "y": 474,
+      "width": 50,
+      "height": 31,
+      "top": 474,
+      "right": 243,
+      "bottom": 505,
+      "left": 193
+    },
+    {
+      "x": 249,
+      "y": 474,
+      "width": 50,
+      "height": 31,
+      "top": 474,
+      "right": 299,
+      "bottom": 505,
+      "left": 249
+    },
+    {
+      "x": 25,
+      "y": 511,
+      "width": 50,
+      "height": 31,
+      "top": 511,
+      "right": 75,
+      "bottom": 542,
+      "left": 25
+    },
+    {
+      "x": 81,
+      "y": 511,
+      "width": 50,
+      "height": 31,
+      "top": 511,
+      "right": 131,
+      "bottom": 542,
+      "left": 81
+    }
+  ],
+  "buttons": [
+    {
+      "rect": {
+        "x": 137,
+        "y": 512.5,
+        "width": 52.6875,
+        "height": 28,
+        "top": 512.5,
+        "right": 189.6875,
+        "bottom": 540.5,
+        "left": 137
+      },
+      "fontSize": "14.6667px",
+      "parentFont": "16px",
+      "whiteSpace": "nowrap",
+      "scrollWidth": 49,
+      "clientWidth": 49
+    },
+    {
+      "rect": {
+        "x": 197.6875,
+        "y": 512.5,
+        "width": 56.03125,
+        "height": 28,
+        "top": 512.5,
+        "right": 253.71875,
+        "bottom": 540.5,
+        "left": 197.6875
+      },
+      "fontSize": "14.6667px",
+      "parentFont": "16px",
+      "whiteSpace": "nowrap",
+      "scrollWidth": 52,
+      "clientWidth": 52
+    }
+  ]
+}

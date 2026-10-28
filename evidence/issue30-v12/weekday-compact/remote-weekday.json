@@ -1,0 +1,201 @@
+{
+  "androidMeasured": false,
+  "results": [
+    {
+      "width": 1280,
+      "sourceSHA": "d4bbe3e86484e47b196f6cf42ad491305482438c",
+      "result": "PASS",
+      "facts": {
+        "height": 83,
+        "labels": [
+          {
+            "x": 405,
+            "y": 527,
+            "width": 50,
+            "height": 31,
+            "top": 527,
+            "right": 455,
+            "bottom": 558,
+            "left": 405
+          },
+          {
+            "x": 461,
+            "y": 527,
+            "width": 50,
+            "height": 31,
+            "top": 527,
+            "right": 511,
+            "bottom": 558,
+            "left": 461
+          },
+          {
+            "x": 517,
+            "y": 527,
+            "width": 50,
+            "height": 31,
+            "top": 527,
+            "right": 567,
+            "bottom": 558,
+            "left": 517
+          },
+          {
+            "x": 573,
+            "y": 527,
+            "width": 50,
+            "height": 31,
+            "top": 527,
+            "right": 623,
+            "bottom": 558,
+            "left": 573
+          },
+          {
+            "x": 629,
+            "y": 527,
+            "width": 50,
+            "height": 31,
+            "top": 527,
+            "right": 679,
+            "bottom": 558,
+            "left": 629
+          },
+          {
+            "x": 685,
+            "y": 527,
+            "width": 50,
+            "height": 31,
+            "top": 527,
+            "right": 735,
+            "bottom": 558,
+            "left": 685
+          },
+          {
+            "x": 741,
+            "y": 527,
+            "width": 50,
+            "height": 31,
+            "top": 527,
+            "right": 791,
+            "bottom": 558,
+            "left": 741
+          }
+        ],
+        "actionsLast": true,
+        "lastDayBottom": 558,
+        "buttons": [
+          {
+            "y": 564,
+            "font": 14.6667,
+            "parentFont": 16,
+            "nowrap": true,
+            "fits": true
+          },
+          {
+            "y": 564,
+            "font": 14.6667,
+            "parentFont": 16,
+            "nowrap": true,
+            "fits": true
+          }
+        ]
+      }
+    },
+    {
+      "width": 360,
+      "sourceSHA": "d4bbe3e86484e47b196f6cf42ad491305482438c",
+      "result": "PASS",
+      "facts": {
+        "height": 86,
+        "labels": [
+          {
+            "x": 25,
+            "y": 548,
+            "width": 50,
+            "height": 31,
+            "top": 548,
+            "right": 75,
+            "bottom": 579,
+            "left": 25
+          },
+          {
+            "x": 81,
+            "y": 548,
+            "width": 50,
+            "height": 31,
+            "top": 548,
+            "right": 131,
+            "bottom": 579,
+            "left": 81
+          },
+          {
+            "x": 137,
+            "y": 548,
+            "width": 50,
+            "height": 31,
+            "top": 548,
+            "right": 187,
+            "bottom": 579,
+            "left": 137
+          },
+          {
+            "x": 193,
+            "y": 548,
+            "width": 50,
+            "height": 31,
+            "top": 548,
+            "right": 243,
+            "bottom": 579,
+            "left": 193
+          },
+          {
+            "x": 249,
+            "y": 548,
+            "width": 50,
+            "height": 31,
+            "top": 548,
+            "right": 299,
+            "bottom": 579,
+            "left": 249
+          },
+          {
+            "x": 25,
+            "y": 585,
+            "width": 50,
+            "height": 31,
+            "top": 585,
+            "right": 75,
+            "bottom": 616,
+            "left": 25
+          },
+          {
+            "x": 81,
+            "y": 585,
+            "width": 50,
+            "height": 31,
+            "top": 585,
+            "right": 131,
+            "bottom": 616,
+            "left": 81
+          }
+        ],
+        "actionsLast": true,
+        "lastDayBottom": 616,
+        "buttons": [
+          {
+            "y": 586.5,
+            "font": 14.6667,
+            "parentFont": 16,
+            "nowrap": true,
+            "fits": true
+          },
+          {
+            "y": 586.5,
+            "font": 14.6667,
+            "parentFont": 16,
+            "nowrap": true,
+            "fits": true
+          }
+        ]
+      }
+    }
+  ]
+}

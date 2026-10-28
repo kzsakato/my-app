@@ -1,0 +1,8 @@
+{
+  "result": "PASS",
+  "otherWorkerDeploymentsUnchanged": true,
+  "productionPagesAndMainUnchanged": true,
+  "targetSettingsAndSubdomainUnchanged": true,
+  "servedArtifactHashes": "10/10 match",
+  "optionalRemovedURLObservation": "HTTP403; 404 not proven; original checker result retained"
+}

@@ -1,6 +1,7 @@
 import { expect, it } from 'vitest'
 import { canonicalFixture } from './fixtures'
-import { completedEntryIds, completedSessionRows } from './topProjection'
+import { completedEntryIds, completedSessionRows, displayedSessionOrder } from './topProjection'
+import { validateCanonical } from './validate'
 
 it('aggregates Exercise completion across memberships without returning any representative actual', () => {
   const data = structuredClone(canonicalFixture)
@@ -31,4 +32,19 @@ it('does not drop compatibility missing from classification-free projection or i
   expect(rows[0].bodyRegion).toBeUndefined()
   expect(rows[0].label).toBe(session.snapshot.trainingItemDisplayName)
   expect(session.snapshot.classifications).toBeUndefined()
+})
+
+it('uses performed instant then order descending and final exact Session ID ascending only for display', () => {
+  const session = canonicalFixture.sessions[0]
+  // Equal ordering pairs are synthetic comparator inputs, not a relaxation of canonical validation.
+  const rows = [
+    { ...session, id: 'z', performedOrder: 1 },
+    { ...session, id: 'a', performedOrder: 1 },
+    { ...session, id: 'b', performedOrder: 0 },
+    { ...session, id: 'latest', performedAt: '2026-09-24T10:00:00+09:00', performedOrder: 0 },
+  ]
+  const before = structuredClone(rows)
+  expect([...rows].sort(displayedSessionOrder).map(row => row.id)).toEqual(['latest', 'a', 'z', 'b'])
+  expect(rows).toEqual(before)
+  expect(validateCanonical({ ...canonicalFixture, sessions: rows }).errors.some(issue => issue.message === '実施instant/順序が重複しています')).toBe(true)
 })

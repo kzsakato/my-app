@@ -1,6 +1,9 @@
 node_modules/
 dist/
 dist-v1r11-candidate/
+dist-v12-local/
+dist-v12-wifi/
+dist-v12-worker/
 *.local
 playwright-report/
 test-results/
@@ -9,3 +12,7 @@ test-results-release/
 
 playwright-report-v1r-visual/
 test-results-v1r-visual/
+test-results-v12/
+test-results-v12-regression/
+test-results-v12-additional/
+test-results-v12-additional-regression/

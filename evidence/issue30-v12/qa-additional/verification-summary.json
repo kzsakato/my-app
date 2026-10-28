@@ -1,0 +1,1333 @@
+{
+  "e2e-main-results": {
+    "stats": {
+      "startTime": "2026-10-25T04:49:40.040Z",
+      "duration": 115317.852,
+      "expected": 42,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "title": "Q09 invalid JSON/envelope/core never applies or writes any IndexedDB store",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 4765,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q09 invalid defaultSort: independent valid settings survive, effective preview, acknowledgement/cancel/apply/readback",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2163,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q09 invalid optionSort: independent valid settings survive, effective preview, acknowledgement/cancel/apply/readback",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1689,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q09 invalid bodyRegionOrder: independent valid settings survive, effective preview, acknowledgement/cancel/apply/readback",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1878,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q09 Restore quota failure: no success/no mutation, retained preview and explicit retry",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1631,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q10 classification missing: no first/Other assignment, warning/edit repair and historical facts unchanged",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1888,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q10 classification multiple: no first/Other assignment, warning/edit repair and historical facts unchanged",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1903,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q10 classification invalid-trim: no first/Other assignment, warning/edit repair and historical facts unchanged",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2072,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q14/Q15/Q16 target screen visible/accessible wording, geometry and CSS, including warning/edit routes",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 3943,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q10/Q15 ambiguous classification across current-Exercise UI routes never picks the first label",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 3215,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q09 invalid JSON/envelope/core never applies or writes any IndexedDB store",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2239,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q09 invalid defaultSort: independent valid settings survive, effective preview, acknowledgement/cancel/apply/readback",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1838,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q09 invalid optionSort: independent valid settings survive, effective preview, acknowledgement/cancel/apply/readback",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1748,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q09 invalid bodyRegionOrder: independent valid settings survive, effective preview, acknowledgement/cancel/apply/readback",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1840,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q09 Restore quota failure: no success/no mutation, retained preview and explicit retry",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1704,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q10 classification missing: no first/Other assignment, warning/edit repair and historical facts unchanged",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2130,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q10 classification multiple: no first/Other assignment, warning/edit repair and historical facts unchanged",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2110,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q10 classification invalid-trim: no first/Other assignment, warning/edit repair and historical facts unchanged",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2097,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q14/Q15/Q16 target screen visible/accessible wording, geometry and CSS, including warning/edit routes",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 3946,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q10/Q15 ambiguous classification across current-Exercise UI routes never picks the first label",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 3116,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "display editor: approved controls, discard, explicit save/reload/readback and no non-target changes",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 3948,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Extra AND exclusion N+1, all TIs per Exercise, future outside, Option reset and snapshot invariants",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2828,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "MENU one Option affects both projections but never order/model/save payload; EX/TI lists reset Option",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 5741,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "classification warning edits only the explicit Exercise; snapshot history survives",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 5212,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "old Backup preview warns with effective values; cancel is no-op; explicit restore/export/reload keeps exact candidate",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 5136,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "TOP weekday all ON/OFF preserves completed flag; approved +1pt status and unchanged run weight",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2155,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "display save quota failure remains on draft, preserves storage and supports explicit retry",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2159,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "TOP two projections: complete Entries remain with independent sort/filters; every Session and counts/load are preserved",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 3408,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "REGION current planned vs snapshot actual, missing snapshot stays only in TOP; completed Entry always opens PLAN-RUN",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 3665,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "specific repeated Session cancellation removes only selected ID and leaves Exercise completion via other actuals",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2459,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "completed Entry re-execution adds a new Session without replacing any existing actual or saved Entry order",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2099,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "display editor: approved controls, discard, explicit save/reload/readback and no non-target changes",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 3000,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Extra AND exclusion N+1, all TIs per Exercise, future outside, Option reset and snapshot invariants",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1645,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "MENU one Option affects both projections but never order/model/save payload; EX/TI lists reset Option",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2129,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "classification warning edits only the explicit Exercise; snapshot history survives",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1546,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "old Backup preview warns with effective values; cancel is no-op; explicit restore/export/reload keeps exact candidate",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2285,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "TOP weekday all ON/OFF preserves completed flag; approved +1pt status and unchanged run weight",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1801,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "display save quota failure remains on draft, preserves storage and supports explicit retry",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1395,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "TOP two projections: complete Entries remain with independent sort/filters; every Session and counts/load are preserved",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2661,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "REGION current planned vs snapshot actual, missing snapshot stays only in TOP; completed Entry always opens PLAN-RUN",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2683,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "specific repeated Session cancellation removes only selected ID and leaves Exercise completion via other actuals",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1838,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "completed Entry re-execution adds a new Session without replacing any existing actual or saved Entry order",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1799,
+            "errors": []
+          }
+        ]
+      }
+    ]
+  },
+  "q08-e2e-results": {
+    "stats": {
+      "startTime": "2026-10-25T04:52:06.716Z",
+      "duration": 12689.032,
+      "expected": 2,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "title": "Q08 independent Default/Option editing persists both; discard and failed save preserve previous effective definitions",
+        "project": "pc",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 5450,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "Q08 independent Default/Option editing persists both; discard and failed save preserve previous effective definitions",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2842,
+            "errors": []
+          }
+        ]
+      }
+    ]
+  },
+  "issue28-regression-results": {
+    "stats": {
+      "startTime": "2026-10-25T04:52:46.638Z",
+      "duration": 26267.745000000003,
+      "expected": 8,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "title": "2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence",
+        "project": "desktop",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 4795,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries",
+        "project": "desktop",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2573,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "0 Sessions and non-Monday week start preserve planned filters and denominators",
+        "project": "desktop",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 3847,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "narrow long title and three-digit decimal weight remain visible",
+        "project": "desktop",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1659,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 3063,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2176,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "0 Sessions and non-Monday week start preserve planned filters and denominators",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 2583,
+            "errors": []
+          }
+        ]
+      },
+      {
+        "title": "narrow long title and three-digit decimal weight remain visible",
+        "project": "narrow-pc-emulation",
+        "expectedStatus": "passed",
+        "results": [
+          {
+            "status": "passed",
+            "durationMs": 1408,
+            "errors": []
+          }
+        ]
+      }
+    ]
+  },
+  "unit": {
+    "numTotalTests": 144,
+    "numPassedTests": 144,
+    "numFailedTests": 0,
+    "numPendingTests": 0,
+    "success": true
+  },
+  "layout": {
+    "states": 82,
+    "allPassed": true,
+    "screenshots": 96,
+    "geometry": [
+      {
+        "file": "narrow-pc-emulation-ambiguous-EX-LIST-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-ambiguous-HISTORY-SELECT-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-ambiguous-MENU-EDIT-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-ambiguous-MENU-edit-route-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-ambiguous-MENU-NEW-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-ambiguous-TI-LIST-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-ambiguous-TOP-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-ambiguous-TOP-regions-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-ANALYSIS-detail-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-ANALYSIS-region-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-classification-invalid-trim-edit-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-classification-invalid-trim-repaired-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-classification-invalid-trim-warning-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-classification-missing-edit-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-classification-missing-repaired-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-classification-missing-warning-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-classification-multiple-edit-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-classification-multiple-repaired-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-classification-multiple-warning-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-DISPLAY-independent-drafts-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-DISPLAY-save-failure-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-EX-LIST-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-EXTRA-LIST-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-HISTORY-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-HISTORY-SELECT-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-MENU-EDIT-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-MENU-NEW-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-REGION-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-restore-blank-classification-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-restore-dangling-ti-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-restore-fallback-bodyRegionOrder-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-restore-fallback-defaultSort-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-restore-fallback-optionSort-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-restore-invalid-format-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-restore-invalid-json-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-restore-quota-failure-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-restore-unsupported-version-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-restore-zero-sets-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-RUN-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-TI-LIST-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "narrow-pc-emulation-TOP-geometry.json",
+        "viewport": 360,
+        "document": 360,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-ambiguous-EX-LIST-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-ambiguous-HISTORY-SELECT-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-ambiguous-MENU-EDIT-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-ambiguous-MENU-edit-route-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-ambiguous-MENU-NEW-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-ambiguous-TI-LIST-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-ambiguous-TOP-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-ambiguous-TOP-regions-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-ANALYSIS-detail-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-ANALYSIS-region-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-classification-invalid-trim-edit-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-classification-invalid-trim-repaired-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-classification-invalid-trim-warning-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-classification-missing-edit-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-classification-missing-repaired-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-classification-missing-warning-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-classification-multiple-edit-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-classification-multiple-repaired-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-classification-multiple-warning-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-DISPLAY-independent-drafts-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-DISPLAY-save-failure-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-EX-LIST-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-EXTRA-LIST-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-HISTORY-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-HISTORY-SELECT-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-MENU-EDIT-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-MENU-NEW-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-REGION-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-restore-blank-classification-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-restore-dangling-ti-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-restore-fallback-bodyRegionOrder-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-restore-fallback-defaultSort-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-restore-fallback-optionSort-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-restore-invalid-format-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-restore-invalid-json-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-restore-quota-failure-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-restore-unsupported-version-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-restore-zero-sets-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-RUN-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-TI-LIST-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      },
+      {
+        "file": "pc-TOP-geometry.json",
+        "viewport": 1280,
+        "document": 1280,
+        "outside": [],
+        "clipped": [],
+        "overlaps": []
+      }
+    ]
+  },
+  "ariaStates": 82
+}

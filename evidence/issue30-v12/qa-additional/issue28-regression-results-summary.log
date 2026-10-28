@@ -1,0 +1,9 @@
+Derived case log from issue28-regression-results.json (not raw process stdout).
+desktop: PASS 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence
+desktop: PASS 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries
+desktop: PASS 0 Sessions and non-Monday week start preserve planned filters and denominators
+desktop: PASS narrow long title and three-digit decimal weight remain visible
+narrow-pc-emulation: PASS 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence
+narrow-pc-emulation: PASS 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries
+narrow-pc-emulation: PASS 0 Sessions and non-Monday week start preserve planned filters and denominators
+narrow-pc-emulation: PASS narrow long title and three-digit decimal weight remain visible

@@ -1,0 +1,24 @@
+// Fixed authorized validation origin; isolated browser profiles and synthetic data only.
+import {chromium} from '@playwright/test'
+import {mkdirSync,writeFileSync} from 'node:fs'
+import assert from 'node:assert/strict'
+const dir='evidence/issue30-v12/final-01-07',origin='https://my-app-staging-v1r.kzsakato-lab.workers.dev',results=[]
+mkdirSync(dir,{recursive:true});const browser=await chromium.launch()
+try{for(const width of [1280,360]){
+ const c=await browser.newContext({viewport:{width,height:900},locale:'ja-JP',timezoneId:'Asia/Tokyo'}),p=await c.newPage();p.setDefaultTimeout(15000);await p.clock.install({time:new Date('2026-09-24T12:00:00+09:00')})
+ assert.equal((await p.goto(origin+'/')).status(),200);await p.getByRole('heading',{name:'今週の実施メニュー'}).waitFor()
+ const meta=await p.evaluate(async()=>await(await fetch('/candidate-build.json')).json());assert.equal(meta.sourceSHA,process.env.EXPECTED_SOURCE_SHA);assert(meta.restoreEnabled&&!meta.testOnly)
+ const before=await p.evaluate(async()=>{const db=await new Promise(ok=>{const r=indexedDB.open('training-check-v12-local-man',7);r.onsuccess=()=>ok(r.result)});const d=await new Promise(ok=>{const r=db.transaction('canonical').objectStore('canonical').get('app');r.onsuccess=()=>ok(r.result)});const template=structuredClone(d);d.exercises=Array.from({length:8},(_,i)=>({...template.exercises[0],id:`ex-${i}`,name:`検証種目${i}`}));d.trainingItems=d.exercises.map((e,i)=>({...template.trainingItems[0],id:`ti-${i}`,exerciseId:e.id,displayName:e.name}));d.menuEntries=d.trainingItems.map((t,i)=>({...template.menuEntries[0],id:`entry-${i}`,trainingItemId:t.id,order:i}));d.trainingItemSettingChanges=d.trainingItems.map((t,i)=>({...template.trainingItemSettingChanges[0],id:`change-${i}`,trainingItemId:t.id}));d.sessions=d.trainingItems.map((t,i)=>({...structuredClone(template.sessions[0]),id:`session-${i}`,trainingItemId:t.id,menuEntryId:`entry-${i}`,date:'2026-09-24',performedAt:'2026-09-24T09:00:00+09:00',performedOrder:i,snapshot:{...template.sessions[0].snapshot,exerciseId:t.exerciseId,exerciseName:t.displayName,trainingItemDisplayName:t.displayName}}));await new Promise(ok=>{const t=db.transaction('canonical','readwrite');t.objectStore('canonical').put(d,'app');t.oncomplete=()=>ok()});db.close();return JSON.stringify(d)})
+ await p.reload();await p.locator('.weekday-dropdown-trigger').click();await p.getByRole('button',{name:'全ON',exact:true}).click();await p.locator('.weekday-dropdown-trigger').click()
+ const projections=[]
+ for(const screen of ['TOP','REGION']){
+  if(screen==='REGION'){await p.getByRole('button',{name:'部位表示',exact:true}).click();await p.getByRole('button').filter({has:p.locator('b',{hasText:/^胸$/})}).click()}
+  const toggle=p.getByLabel('実施済も表示');await toggle.uncheck();assert.equal(await p.locator('[data-menu-entry-id]').count(),0);assert.equal(await p.locator('[data-session-id]').count(),0);await p.screenshot({path:`${dir}/remote-${width}-${screen}-OFF.png`,fullPage:true})
+  await toggle.check();await p.locator('[data-session-id]').first().waitFor();const ids=await p.locator('[data-session-id]').evaluateAll(els=>els.map(e=>e.getAttribute('data-session-id')));assert.equal(ids.length,8);assert.equal(new Set(ids).size,8);assert.equal(await p.locator('[data-menu-entry-id]').count(),0);await p.screenshot({path:`${dir}/remote-${width}-${screen}-ON.png`,fullPage:true});projections.push({screen,off:{planned:0,actual:0},on:{planned:0,actual:8},ids})
+ }
+ await p.getByRole('button',{name:'共通メニュー'}).click();await p.getByRole('button',{name:'実施メニュー',exact:true}).click();await p.getByRole('button',{name:'＋ 追加トレーニングを登録'}).click()
+ const extra=await p.locator('.extra-item-row').evaluateAll(els=>els.map(e=>{const h=e.querySelector('.item-history'),d=e.querySelector('.extra-item-details');return{height:e.getBoundingClientRect().height,rightAligned:Math.abs(h.getBoundingClientRect().right-d.getBoundingClientRect().right)<1,days:h.textContent.replace(/[^●○]/g,'').length,today:h.textContent.endsWith('●')}}));assert.equal(extra.length,8);for(const e of extra){assert.equal(e.height,57);assert(e.rightAligned&&e.today);assert.equal(e.days,14)};await p.screenshot({path:`${dir}/remote-${width}-EXTRA.png`,fullPage:true})
+ const after=await p.evaluate(async()=>{const db=await new Promise(ok=>{const r=indexedDB.open('training-check-v12-local-man',7);r.onsuccess=()=>ok(r.result)});const d=await new Promise(ok=>{const r=db.transaction('canonical').objectStore('canonical').get('app');r.onsuccess=()=>ok(r.result)});db.close();return JSON.stringify(d)});assert.equal(after,before)
+ results.push({width,sourceSHA:meta.sourceSHA,result:'PASS',projections,extra,canonicalUnchanged:true,ownerDataUsed:false});await c.close()
+}}finally{await browser.close();writeFileSync(`${dir}/remote-results.json`,JSON.stringify({androidMeasured:false,results},null,2)+'\n')}
+console.log(JSON.stringify(results.map(({width,result})=>({width,result}))))

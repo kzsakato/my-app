@@ -46,7 +46,7 @@ export function rebaseOwnerChange(base: CanonicalAppData, next: CanonicalAppData
     }
     Object.assign(result, { [key]: rows })
   }
-  for (const key of ['activeMenuId', 'weekStartsOn', 'profile'] as const) {
+  for (const key of ['activeMenuId', 'weekStartsOn', 'profile', 'displayPreferences'] as const) {
     if (!equal(base[key], next[key])) Object.assign(result, { [key]: structuredClone(next[key]) })
   }
   result.trainingItemSettingChanges = result.trainingItemSettingChanges.flatMap(change => {
