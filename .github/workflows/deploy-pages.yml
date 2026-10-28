@@ -29,7 +29,7 @@ jobs:
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: release/b45c6ded-production/product
+          path: release/c4fe4514-v1.2-production/product
 
   deploy:
     needs: artifact

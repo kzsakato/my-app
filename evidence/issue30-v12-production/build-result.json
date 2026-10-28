@@ -1,0 +1,9 @@
+{
+  "sourceSHA": "c4fe4514ab093a9e2084dc286310d46f81ab8864",
+  "command": "npm run build",
+  "exitCode": 0,
+  "date": "2026-10-28",
+  "candidateEnvUnset": true,
+  "dotenvFiles": [],
+  "initialWrapperIssue": "Initial build log saved; printing unicode stdout through cp932 raised after subprocess completed. Repeated fixed build with recorded exit status."
+}
