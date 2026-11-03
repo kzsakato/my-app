@@ -1,0 +1,19 @@
+[WebServer] (node:43728) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:50044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [desktop] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence (7.4s)
+  ok 2 [desktop] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries (2.5s)
+  ok 3 [desktop] › e2e\issue28.spec.ts:147:1 › 0 Sessions and non-Monday week start preserve planned filters and denominators (3.5s)
+  ok 4 [desktop] › e2e\issue28.spec.ts:165:1 › narrow long title and three-digit decimal weight remain visible (2.5s)
+(node:8124) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [narrow-pc-emulation] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence (3.9s)
+  ok 6 [narrow-pc-emulation] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries (2.5s)
+  ok 7 [narrow-pc-emulation] › e2e\issue28.spec.ts:147:1 › 0 Sessions and non-Monday week start preserve planned filters and denominators (3.4s)
+  ok 8 [narrow-pc-emulation] › e2e\issue28.spec.ts:165:1 › narrow long title and three-digit decimal weight remain visible (1.8s)
+
+  8 passed (33.2s)

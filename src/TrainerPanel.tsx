@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import type { CanonicalAppData } from './canonical/types'
 import { canonicalStorage, applyTrainerCanonical } from './data'
-import { createTrainerContextV11, parseUniqueJson, previewTrainerProposal, trainerDiagnosticCategory, trainerMessages as messages, type TrainerProposalPreview } from './canonical/trainerV11'
+import { parseUniqueJson, previewTrainerProposal, trainerDiagnosticCategory, trainerMessages as messages, type TrainerProposalPreview } from './canonical/trainerV11'
+import { createTrainerContextV2, previewInitialContributions } from './canonical/trainerV13'
+import { contributionLabels, contributionKeys, initialContributionWriteUnavailable } from './canonical/contributions'
 
 function download(name: string, value: unknown) {
   const url = URL.createObjectURL(new Blob([JSON.stringify(value, null, 2)], { type: 'application/json;charset=utf-8' }))
@@ -13,6 +15,7 @@ type Props = { data: CanonicalAppData; onApplied: (data: CanonicalAppData) => vo
 export function TrainerPanel({ data, onApplied, onPending }: Props) {
   const [ready, setReady] = useState(false), [held, setHeld] = useState(false), [pending, setPending] = useState(false)
   const [input, setInput] = useState<unknown>(), [preview, setPreview] = useState<TrainerProposalPreview>()
+  const [v2Preview, setV2Preview] = useState<ReturnType<typeof previewInitialContributions>>()
   const [importMessage, setImportMessage] = useState<string>(messages.unselected), [exportMessage, setExportMessage] = useState('')
   const [diagnostic, setDiagnostic] = useState<object>(), [mapping, setMapping] = useState<Record<string, Record<string, string>>>()
   const generation = useRef(0), busy = useRef(false)
@@ -28,7 +31,7 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
   const read = async (file?: File) => {
     if (!file || held || busy.current || !ready) return
     const current = ++generation.current
-    setInput(undefined); setPreview(undefined); setMapping(undefined); setDiagnostic(undefined)
+    setInput(undefined); setPreview(undefined); setV2Preview(undefined); setMapping(undefined); setDiagnostic(undefined)
     try {
       const state = await canonicalStorage.readCutoverState()
       if (current !== generation.current) return
@@ -36,11 +39,26 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
       const value = parseUniqueJson(await file.text())
       if (current !== generation.current) return
       if (!value || typeof value !== 'object' || (value as { format?: unknown }).format !== 'training-project.trainer-proposal') { setImportMessage(messages.wrongFormat); return }
+      if ((value as { version?: unknown }).version === 2) {
+        const rows = previewInitialContributions(value, data)
+        setInput(value); setV2Preview(rows); setImportMessage(''); return
+      }
       const checked = previewTrainerProposal(value, data)
       setInput(value); setPreview(checked); setImportMessage('')
     } catch (error) {
       if (current !== generation.current) return
       setImportMessage(messages.inconsistent); setDiagnostic({ stage: 'preview', code: 'PROPOSAL_VALIDATION_FAILED', category: trainerDiagnosticCategory(error), at: new Date().toISOString() })
+    }
+  }
+  const cancelV2 = () => { setV2Preview(undefined); setInput(undefined); setImportMessage(messages.unselected) }
+  const rejectV2Apply = async () => {
+    if (!v2Preview || !input || pending || held) return
+    // No migration/provenance proof or all-writer integration: deliberately no write.
+    const result = await applyTrainerCanonical(input)
+    if (!result.ok) {
+      setHeld(result.unknown)
+      setDiagnostic({ stage: 'apply', code: result.unknown ? 'UNKNOWN_HELD' : 'REJECTED_ZERO_MUTATION', reason: result.reason })
+      setImportMessage(messages.inconsistent); setV2Preview(undefined); setInput(undefined)
     }
   }
   const apply = async () => {
@@ -70,11 +88,13 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
       if (state.trainerPendingProposalId) { setHeld(true); setImportMessage(messages.inconsistent); setDiagnostic({ stage: 'export', code: 'UNRESOLVED_AI_APPLY', proposalId: state.trainerPendingProposalId }); return }
       const latest = await canonicalStorage.readCanonical()
       if (!latest) throw new Error('Missing canonical')
-      const value = createTrainerContextV11(latest, new Date())
+      // Current source lacks an independent V13 provenance attestation. Do not
+      // downgrade a requested v2 Context to v1, or download a partial file.
+      const value = createTrainerContextV2(latest, new Date(), false)
       download(`trainer-context-${value.exportedLocalDate}.json`, value)
       setExportMessage(`${value.history.length === 0 ? messages.empty + '\n' : ''}${messages.exported}`)
     } catch (error) {
-      setExportMessage(messages.exportFailed); setDiagnostic({ stage: 'export', code: 'CONTEXT_VALIDATION_OR_DOWNLOAD_FAILED', category: trainerDiagnosticCategory(error), at: new Date().toISOString() })
+      setExportMessage(messages.exportFailed); setDiagnostic({ stage: 'export', code: 'CONTEXT_VALIDATION_OR_DOWNLOAD_FAILED', reason: error instanceof Error ? error.message : initialContributionWriteUnavailable, category: trainerDiagnosticCategory(error), at: new Date().toISOString() })
     } finally { busy.current = false; setPending(false); onPending(false) }
   }
   return <div className="trainer-v11">
@@ -84,6 +104,10 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
       <p>トレーナーから受け取った提案ファイルを選びます。</p>
       <label>提案ファイルを選ぶ<input type="file" accept="application/json,.json" disabled={!ready || pending || held} onChange={event => void read(event.target.files?.[0])} /></label>
       {importMessage && <p role="status">{importMessage}</p>}
+      {v2Preview && <section className="trainer-preview"><h3>トレーナー提案の確認</h3>
+        {v2Preview.map(row => <section key={row.exerciseId}><h4>{row.name}</h4><p>未設定 → {contributionLabels.map((name, i) => `${name} ${row.rates[contributionKeys[i]]}%`).join('／')}</p><p>{row.reason}</p><p>保存した寄与率で部位別分析を再計算します。実施記録は変更しません。</p></section>)}
+        <button disabled={pending || held} onClick={cancelV2}>取消</button><button disabled={pending || held} onClick={() => void rejectV2Apply()}>承認</button>
+      </section>}
       {preview && <section className="trainer-preview">
         <h3>取り込む内容</h3>
         <p>種目 {preview.exercises.length}件／実施項目 {preview.trainingItems.length}件／週メニュー {preview.menus.length}件</p>
