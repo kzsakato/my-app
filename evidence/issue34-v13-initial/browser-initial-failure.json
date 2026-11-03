@@ -1,0 +1,579 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.v13-initial.config.ts"
+    ],
+    "configFile": "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\playwright.v13-initial.config.ts",
+    "rootDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/v13-initial/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/v13-initial/test-results-v13-initial",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "pc",
+        "name": "pc",
+        "testDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/v13-initial/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "issue34-v13-initial.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/v13-initial/test-results-v13-initial",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "touch360-emulation",
+        "name": "touch360-emulation",
+        "testDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/v13-initial/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "issue34-v13-initial.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "evidence/issue34-v13-initial/browser.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "pnpm exec vite --host 127.0.0.1 --port 4179 --strictPort --configLoader runner",
+      "url": "http://127.0.0.1:4179",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "issue34-v13-initial.spec.ts",
+      "file": "issue34-v13-initial.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "F01/F02/F03/F05: unknown legacy provenance rejects Export/v2 without migration or file",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6448,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:35:52.555Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b18f0edd2991315025ea-0cb3695a78d0125bef09",
+          "file": "issue34-v13-initial.spec.ts",
+          "line": 40,
+          "column": 1
+        },
+        {
+          "title": "F04/F07: single v2 preview Cancel and safe apply refusal leave every store unchanged",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1643,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:36:01.184Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b18f0edd2991315025ea-4965bf514e89016367ad",
+          "file": "issue34-v13-initial.spec.ts",
+          "line": 53,
+          "column": 1
+        },
+        {
+          "title": "F08: unresolved existing marker stays HELD across restart, no blind retry or Export",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2176,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:36:02.868Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b18f0edd2991315025ea-2169e30f967efb4f6558",
+          "file": "issue34-v13-initial.spec.ts",
+          "line": 66,
+          "column": 1
+        },
+        {
+          "title": "F09: coefficients cannot enter through old Backup Restore",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1243,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:36:05.071Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b18f0edd2991315025ea-fc8bd7587c7c84637446",
+          "file": "issue34-v13-initial.spec.ts",
+          "line": 75,
+          "column": 1
+        },
+        {
+          "title": "F11: unproven missing master is UNAVAILABLE, never U or ZERO",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1345,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:36:06.335Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b18f0edd2991315025ea-5fc309ab91bdf993806d",
+          "file": "issue34-v13-initial.spec.ts",
+          "line": 82,
+          "column": 1
+        },
+        {
+          "title": "F11: D-only percentage band, U outside, independent legends, 360px and unchanged facts",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 30418,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\e2e\\issue34-v13-initial.spec.ts",
+                        "column": 48,
+                        "line": 107
+                      },
+                      "message": "Error: locator.selectOption: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('部位', { exact: true })\u001b[22m\n\n\n  105 |   await page.getByRole('checkbox', { name: '胸', exact: true }).uncheck()\n  106 |   await expect(page.getByRole('checkbox', { name: '胸', exact: true })).not.toBeChecked()\n> 107 |   await page.getByLabel('部位', { exact: true }).selectOption('1')\n      |                                                ^\n  108 |   await expect(page.getByText('ダンベルプレス：1セット相当')).toBeVisible()\n  109 |   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)\n  110 |   await page.screenshot({ path: `${root}/${info.project.name}-analysis.png`, fullPage: true })\n    at C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\e2e\\issue34-v13-initial.spec.ts:107:48"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:36:07.705Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\test-results-v13-initial\\issue34-v13-initial-F11-D--67008-s-360px-and-unchanged-facts-pc\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\test-results-v13-initial\\issue34-v13-initial-F11-D--67008-s-360px-and-unchanged-facts-pc\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\test-results-v13-initial\\issue34-v13-initial-F11-D--67008-s-360px-and-unchanged-facts-pc\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b18f0edd2991315025ea-e29365823faf2e21c9cb",
+          "file": "issue34-v13-initial.spec.ts",
+          "line": 92,
+          "column": 1
+        },
+        {
+          "title": "F01/F02/F03/F05: unknown legacy provenance rejects Export/v2 without migration or file",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "touch360-emulation",
+              "projectName": "touch360-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1474,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:36:39.210Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b18f0edd2991315025ea-4a6d97d5759d41d69d88",
+          "file": "issue34-v13-initial.spec.ts",
+          "line": 40,
+          "column": 1
+        },
+        {
+          "title": "F04/F07: single v2 preview Cancel and safe apply refusal leave every store unchanged",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "touch360-emulation",
+              "projectName": "touch360-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1337,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:36:40.959Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b18f0edd2991315025ea-df1b8d34864beeee49ac",
+          "file": "issue34-v13-initial.spec.ts",
+          "line": 53,
+          "column": 1
+        },
+        {
+          "title": "F08: unresolved existing marker stays HELD across restart, no blind retry or Export",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "touch360-emulation",
+              "projectName": "touch360-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1650,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:36:42.325Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b18f0edd2991315025ea-a5dee5c386779f44b22e",
+          "file": "issue34-v13-initial.spec.ts",
+          "line": 66,
+          "column": 1
+        },
+        {
+          "title": "F09: coefficients cannot enter through old Backup Restore",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "touch360-emulation",
+              "projectName": "touch360-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1091,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:36:43.994Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b18f0edd2991315025ea-a838a085c5f9201cf9aa",
+          "file": "issue34-v13-initial.spec.ts",
+          "line": 75,
+          "column": 1
+        },
+        {
+          "title": "F11: unproven missing master is UNAVAILABLE, never U or ZERO",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "touch360-emulation",
+              "projectName": "touch360-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1215,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:36:45.106Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "b18f0edd2991315025ea-0cfc5c2cd5d3b2ca8c9c",
+          "file": "issue34-v13-initial.spec.ts",
+          "line": 82,
+          "column": 1
+        },
+        {
+          "title": "F11: D-only percentage band, U outside, independent legends, 360px and unchanged facts",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "touch360-emulation",
+              "projectName": "touch360-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "timedOut",
+                  "duration": 30173,
+                  "error": {
+                    "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                    "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                    },
+                    {
+                      "location": {
+                        "file": "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\e2e\\issue34-v13-initial.spec.ts",
+                        "column": 48,
+                        "line": 107
+                      },
+                      "message": "Error: locator.selectOption: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByLabel('部位', { exact: true })\u001b[22m\n\n\n  105 |   await page.getByRole('checkbox', { name: '胸', exact: true }).uncheck()\n  106 |   await expect(page.getByRole('checkbox', { name: '胸', exact: true })).not.toBeChecked()\n> 107 |   await page.getByLabel('部位', { exact: true }).selectOption('1')\n      |                                                ^\n  108 |   await expect(page.getByText('ダンベルプレス：1セット相当')).toBeVisible()\n  109 |   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)\n  110 |   await page.screenshot({ path: `${root}/${info.project.name}-analysis.png`, fullPage: true })\n    at C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\e2e\\issue34-v13-initial.spec.ts:107:48"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:36:46.347Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\test-results-v13-initial\\issue34-v13-initial-F11-D--67008-s-360px-and-unchanged-facts-touch360-emulation\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\test-results-v13-initial\\issue34-v13-initial-F11-D--67008-s-360px-and-unchanged-facts-touch360-emulation\\error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\test-results-v13-initial\\issue34-v13-initial-F11-D--67008-s-360px-and-unchanged-facts-touch360-emulation\\trace.zip"
+                    }
+                  ]
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "b18f0edd2991315025ea-de379fbd20ebbdb15071",
+          "file": "issue34-v13-initial.spec.ts",
+          "line": 92,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-03T13:35:49.559Z",
+    "duration": 87873.40000000001,
+    "expected": 10,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

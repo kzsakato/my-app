@@ -1,0 +1,855 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config",
+      "playwright.v12.config.ts"
+    ],
+    "configFile": "C:\\Users\\kzsak\\Documents\\Codex\\2026-10-24\\training-project-app-development-test-execution\\work\\v13-initial\\playwright.v12.config.ts",
+    "rootDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/v13-initial/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/v13-initial/test-results-v12",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "pc",
+        "name": "pc",
+        "testDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/v13-initial/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "issue30-v12.spec.ts"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/v13-initial/test-results-v12",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "narrow-pc-emulation",
+        "name": "narrow-pc-emulation",
+        "testDir": "C:/Users/kzsak/Documents/Codex/2026-10-24/training-project-app-development-test-execution/work/v13-initial/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "issue30-v12.spec.ts"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results-v12/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": {
+      "command": "pnpm exec vite --config vite.candidate.config.ts --configLoader runner",
+      "url": "http://127.0.0.1:4177",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "issue30-v12.spec.ts",
+      "file": "issue30-v12.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "display editor: approved controls, discard, explicit save/reload/readback and no non-target changes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7552,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:39:21.590Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-342eb0c80592111d493a",
+          "file": "issue30-v12.spec.ts",
+          "line": 44,
+          "column": 1
+        },
+        {
+          "title": "Extra AND exclusion N+1, all TIs per Exercise, future outside, Option reset and snapshot invariants",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3646,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:39:29.659Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-573cb24f76e37787d413",
+          "file": "issue30-v12.spec.ts",
+          "line": 75,
+          "column": 1
+        },
+        {
+          "title": "MENU one Option affects both projections but never order/model/save payload; EX/TI lists reset Option",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6965,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:39:33.369Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-d0e61730ac70d14c7a81",
+          "file": "issue30-v12.spec.ts",
+          "line": 102,
+          "column": 1
+        },
+        {
+          "title": "classification warning edits only the explicit Exercise; snapshot history survives",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3186,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:39:40.408Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-feccda05c57c363a6b04",
+          "file": "issue30-v12.spec.ts",
+          "line": 134,
+          "column": 1
+        },
+        {
+          "title": "old Backup preview warns with effective values; cancel is no-op; explicit restore/export/reload keeps exact candidate",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4814,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:39:43.653Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-eeddefce9c7b0959b000",
+          "file": "issue30-v12.spec.ts",
+          "line": 153,
+          "column": 1
+        },
+        {
+          "title": "TOP weekday all ON/OFF preserves completed flag; approved +1pt status and unchanged run weight",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2794,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:39:48.513Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-95d257bad1c07e7e28c0",
+          "file": "issue30-v12.spec.ts",
+          "line": 176,
+          "column": 1
+        },
+        {
+          "title": "display save quota failure remains on draft, preserves storage and supports explicit retry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3212,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:39:51.340Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-853a93d1cd5a55e2304a",
+          "file": "issue30-v12.spec.ts",
+          "line": 195,
+          "column": 1
+        },
+        {
+          "title": "TOP two projections: completed Entries hidden with independent sort/filters; every Session and counts/load are preserved",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3855,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:39:54.587Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-80027919111d77f368b5",
+          "file": "issue30-v12.spec.ts",
+          "line": 240,
+          "column": 1
+        },
+        {
+          "title": "REGION current planned vs snapshot actual, missing snapshot stays only in TOP; completed Entry hidden and actual opens specific Session",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4596,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:39:58.463Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-430dd346b127e9de66c9",
+          "file": "issue30-v12.spec.ts",
+          "line": 274,
+          "column": 1
+        },
+        {
+          "title": "specific repeated Session cancellation removes only selected ID and leaves Exercise completion via other actuals",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2836,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:40:03.084Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-441ceaf489421fb43b64",
+          "file": "issue30-v12.spec.ts",
+          "line": 296,
+          "column": 1
+        },
+        {
+          "title": "uncompleted Entry execution adds a new Session without replacing any existing actual or saved Entry order",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "pc",
+              "projectName": "pc",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2638,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:40:05.956Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-33b0c76cd9b41ae60716",
+          "file": "issue30-v12.spec.ts",
+          "line": 310,
+          "column": 1
+        },
+        {
+          "title": "display editor: approved controls, discard, explicit save/reload/readback and no non-target changes",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "narrow-pc-emulation",
+              "projectName": "narrow-pc-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3057,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:40:09.981Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-8208fd7ecd4d00dda44e",
+          "file": "issue30-v12.spec.ts",
+          "line": 44,
+          "column": 1
+        },
+        {
+          "title": "Extra AND exclusion N+1, all TIs per Exercise, future outside, Option reset and snapshot invariants",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "narrow-pc-emulation",
+              "projectName": "narrow-pc-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2925,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:40:13.385Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-7c64499fb683d797ac05",
+          "file": "issue30-v12.spec.ts",
+          "line": 75,
+          "column": 1
+        },
+        {
+          "title": "MENU one Option affects both projections but never order/model/save payload; EX/TI lists reset Option",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "narrow-pc-emulation",
+              "projectName": "narrow-pc-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3464,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:40:16.376Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-5555fdb81c23cb0f5581",
+          "file": "issue30-v12.spec.ts",
+          "line": 102,
+          "column": 1
+        },
+        {
+          "title": "classification warning edits only the explicit Exercise; snapshot history survives",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "narrow-pc-emulation",
+              "projectName": "narrow-pc-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1745,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:40:19.902Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-07864b6e5d0da621cd7e",
+          "file": "issue30-v12.spec.ts",
+          "line": 134,
+          "column": 1
+        },
+        {
+          "title": "old Backup preview warns with effective values; cancel is no-op; explicit restore/export/reload keeps exact candidate",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "narrow-pc-emulation",
+              "projectName": "narrow-pc-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4225,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:40:21.672Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-4dab00a7f26728df2b43",
+          "file": "issue30-v12.spec.ts",
+          "line": 153,
+          "column": 1
+        },
+        {
+          "title": "TOP weekday all ON/OFF preserves completed flag; approved +1pt status and unchanged run weight",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "narrow-pc-emulation",
+              "projectName": "narrow-pc-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2100,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:40:25.953Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-2214ad514662e02e65e7",
+          "file": "issue30-v12.spec.ts",
+          "line": 176,
+          "column": 1
+        },
+        {
+          "title": "display save quota failure remains on draft, preserves storage and supports explicit retry",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "narrow-pc-emulation",
+              "projectName": "narrow-pc-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2113,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:40:28.073Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-fab0c2b02c4a598451af",
+          "file": "issue30-v12.spec.ts",
+          "line": 195,
+          "column": 1
+        },
+        {
+          "title": "TOP two projections: completed Entries hidden with independent sort/filters; every Session and counts/load are preserved",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "narrow-pc-emulation",
+              "projectName": "narrow-pc-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 3503,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:40:30.213Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-7b369f0a1d29eba055a0",
+          "file": "issue30-v12.spec.ts",
+          "line": 240,
+          "column": 1
+        },
+        {
+          "title": "REGION current planned vs snapshot actual, missing snapshot stays only in TOP; completed Entry hidden and actual opens specific Session",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "narrow-pc-emulation",
+              "projectName": "narrow-pc-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4522,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:40:33.755Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-16192571667dbbeec1cb",
+          "file": "issue30-v12.spec.ts",
+          "line": 274,
+          "column": 1
+        },
+        {
+          "title": "specific repeated Session cancellation removes only selected ID and leaves Exercise completion via other actuals",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "narrow-pc-emulation",
+              "projectName": "narrow-pc-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1883,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:40:38.323Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-6ff59d6e6670a2a105e2",
+          "file": "issue30-v12.spec.ts",
+          "line": 296,
+          "column": 1
+        },
+        {
+          "title": "uncompleted Entry execution adds a new Session without replacing any existing actual or saved Entry order",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "narrow-pc-emulation",
+              "projectName": "narrow-pc-emulation",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1625,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:40:40.229Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "dddbcbcca5c9309a09ad-f5f65aaac1c09d308fe4",
+          "file": "issue30-v12.spec.ts",
+          "line": 310,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-03T13:39:16.520Z",
+    "duration": 86452.473,
+    "expected": 22,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

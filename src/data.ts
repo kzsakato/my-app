@@ -6,6 +6,7 @@ import { initializeOwnerManagement, rebaseOwnerChange } from './canonical/manage
 import { withDisplayPreferences } from './canonical/displayPreferences'
 import { createTrainerApplyCandidate, trainerReadbackMatches, type TrainerApplyCandidate } from './canonical/trainerV11'
 import { validateCanonical as validateCanonicalDomain } from './canonical/validate'
+import { rejectUnintegratedV13Write, initialContributionWriteUnavailable } from './canonical/contributions'
 
 export type { AppData, Category, Exercise, Item, Menu, MenuItem, Profile, Session, SettingHistory } from './domain'
 export type { MeasureType, WeightMode } from './domain'
@@ -43,7 +44,7 @@ export const canonicalStorage:CanonicalStorage={
  async readBaseline(){const db=await dbPromise;return db.get('baseline',baselineKey) as Promise<LegacyBaseline|undefined>},
  async writeBaseline(value){const db=await dbPromise;await db.put('baseline',value,baselineKey)},
  async readCanonical(){const db=await dbPromise;const value = await db.get('canonical',canonicalKey) as CanonicalAppData|undefined;return value ? initializeOwnerManagement(value) : undefined},
- async writeCanonical(value){const db=await dbPromise;await db.put('canonical',value,canonicalKey)},
+ async writeCanonical(value){const db=await dbPromise;const tx=db.transaction('canonical','readwrite');try{rejectUnintegratedV13Write(value,await tx.store.get(canonicalKey));await tx.store.put(value,canonicalKey);await tx.done}catch(error){try{tx.abort()}catch{}await tx.done.catch(()=>{});throw error}},
 }
 
 /** Atomic latest-root Owner delta; preserves Trainer IDs/authority changed since the UI was opened. */
@@ -53,6 +54,7 @@ export async function commitOwnerCanonical(base: CanonicalAppData, next: Canonic
  try {
   const stored=await tx.store.get(canonicalKey) as CanonicalAppData|undefined
   if(!stored)throw new Error('canonical dataがありません')
+  rejectUnintegratedV13Write(stored,base,next)
   const candidate=withDisplayPreferences(rebaseOwnerChange(base,next,initializeOwnerManagement(stored)))
   const checked=validateCanonicalDomain(candidate)
   if(checked.errors.length)throw new Error(checked.errors.map(value=>`${value.path}: ${value.message}`).join(' / '))
@@ -66,6 +68,10 @@ export async function commitOwnerCanonical(base: CanonicalAppData, next: Canonic
 export type TrainerStorageResult = {ok:true;value:CanonicalAppData;mapping:TrainerApplyCandidate['mapping']} | {ok:false;unknown:boolean;reason:string}
 /** Existing cutover record keeps only the one unresolved apply marker; no ledger/control store. */
 export async function applyTrainerCanonical(input: unknown): Promise<TrainerStorageResult> {
+ if((input as {version?:unknown})?.version===2){
+  try{const state=await canonicalStorage.readCutoverState();return{ok:false,unknown:!!state.trainerPendingProposalId,reason:state.trainerPendingProposalId?'UNRESOLVED_AI_APPLY':initialContributionWriteUnavailable}}
+  catch{return{ok:false,unknown:true,reason:'STORAGE_STATE_UNAVAILABLE'}}
+ }
  const db=await dbPromise, tx=db.transaction(['canonical','cutover'],'readwrite')
  let committed=false, unresolved=false
  let candidate:TrainerApplyCandidate|undefined
@@ -76,6 +82,7 @@ export async function applyTrainerCanonical(input: unknown): Promise<TrainerStor
   if(state.trainerPendingProposalId){unresolved=true;throw new Error('先行するAI操作の結果が未確認です')}
   const stored=await tx.objectStore('canonical').get(canonicalKey) as CanonicalAppData|undefined
   if(!stored)throw new Error('canonical dataがありません')
+  rejectUnintegratedV13Write(stored)
   candidate=createTrainerApplyCandidate(input,initializeOwnerManagement(stored),()=>crypto.randomUUID(),new Date().toISOString())
   await tx.objectStore('canonical').put(candidate.data,canonicalKey)
   await tx.objectStore('cutover').put({...state,trainerPendingProposalId:proposalId},cutoverKey)

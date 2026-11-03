@@ -1,0 +1,23 @@
+{
+  "projectHead": "c1fec8d794bc1490f4038b1e316ff1a299e7f254",
+  "appSource": "c4fe4514ab093a9e2084dc286310d46f81ab8864",
+  "implementationBase": "c4fe4514ab093a9e2084dc286310d46f81ab8864",
+  "appMain": "90552c9bce58848f19740a13054c087147b71803",
+  "issueInstruction": 6605006790,
+  "blobs": {
+    "app-design/V13-05_最小Data交換Contract_v1.0.md": "d02cb87bd6c366bd46dcb8ca77cb9b8f9d2c5cb0",
+    "app-design/V13-05_最小Data交換Contract_v1.0_追補01_初回寄与率保存.md": "1eb56b0870431fef4931d5b8eb0394556277e8a9",
+    "app-design/05_データ仕様.md": "6ab7950286b33a4bb9aecb62c36f6adc86333400",
+    "app-design/05_JSON交換・連携仕様.md": "b54aa35ab037aa89e5b1a377a6524c6d45eb0a8d",
+    "governance/TEAM_CASE.md": "4a6927ff9e0c444fb278dda0a94f51ddf28fbf82"
+  },
+  "periodOracleMissingReference": [
+    6555713359,
+    6556799581,
+    6577343452
+  ],
+  "ownerVisibleReference": [
+    6580006841,
+    6603833022
+  ]
+}

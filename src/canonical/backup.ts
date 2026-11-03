@@ -1,4 +1,5 @@
 import { identifyInput } from './identify'
+import { rejectUnintegratedV13Write } from './contributions'
 import { recoverCanonical, type CanonicalStorage, type StorageResult } from './cutover'
 import { validateBackupEnvelope } from './validate'
 import { normalizeDisplayPreferences, withDisplayPreferences } from './displayPreferences'
@@ -7,6 +8,7 @@ import type { BackupEnvelope, CanonicalAppData, ValidationResult } from './types
 export type BackupPreview = ValidationResult & { envelope?: BackupEnvelope }
 
 export function createCanonicalBackup(data: CanonicalAppData, createdAt: string): BackupEnvelope {
+  rejectUnintegratedV13Write(data) // Never mislabel a V13 payload as outer v1.
   const envelope: BackupEnvelope = { format: 'training-check-backup', schemaVersion: 1, createdAt, payload: withDisplayPreferences(structuredClone(data)) }
   const checked = validateBackupEnvelope(envelope)
   if (checked.errors.length) throw new Error(checked.errors.map(issue => `${issue.path}: ${issue.message}`).join(' / '))
@@ -21,6 +23,8 @@ export function previewCanonicalRestore(raw: string): BackupPreview {
   if (kind !== 'canonical-backup-envelope') return { errors: [{ path: 'format/schema', message: `正規バックアップではありません (${kind})。rawデータ・旧形式の自動変換には対応していません。` }], warnings: [] }
   // Normalize only the optional settings, before validating all required facts.
   const envelope = input as BackupEnvelope
+  try { rejectUnintegratedV13Write(envelope.payload) }
+  catch { return { errors: [{ path: 'payload', message: '寄与率を含む復元は現在有効化されていません' }], warnings: [] } }
   const normalized = normalizeDisplayPreferences(envelope.payload?.displayPreferences)
   if (envelope.payload && typeof envelope.payload === 'object' && !Array.isArray(envelope.payload)) {
     envelope.payload.displayPreferences = normalized.value

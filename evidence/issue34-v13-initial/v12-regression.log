@@ -1,0 +1,33 @@
+[WebServer] (node:8160) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 22 tests using 1 worker
+
+(node:3288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [pc] › e2e\issue30-v12.spec.ts:44:1 › display editor: approved controls, discard, explicit save/reload/readback and no non-target changes (7.6s)
+  ok  2 [pc] › e2e\issue30-v12.spec.ts:75:1 › Extra AND exclusion N+1, all TIs per Exercise, future outside, Option reset and snapshot invariants (3.6s)
+  ok  3 [pc] › e2e\issue30-v12.spec.ts:102:1 › MENU one Option affects both projections but never order/model/save payload; EX/TI lists reset Option (7.0s)
+  ok  4 [pc] › e2e\issue30-v12.spec.ts:134:1 › classification warning edits only the explicit Exercise; snapshot history survives (3.2s)
+  ok  5 [pc] › e2e\issue30-v12.spec.ts:153:1 › old Backup preview warns with effective values; cancel is no-op; explicit restore/export/reload keeps exact candidate (4.8s)
+  ok  6 [pc] › e2e\issue30-v12.spec.ts:176:1 › TOP weekday all ON/OFF preserves completed flag; approved +1pt status and unchanged run weight (2.8s)
+  ok  7 [pc] › e2e\issue30-v12.spec.ts:195:1 › display save quota failure remains on draft, preserves storage and supports explicit retry (3.2s)
+  ok  8 [pc] › e2e\issue30-v12.spec.ts:240:1 › TOP two projections: completed Entries hidden with independent sort/filters; every Session and counts/load are preserved (3.9s)
+  ok  9 [pc] › e2e\issue30-v12.spec.ts:274:1 › REGION current planned vs snapshot actual, missing snapshot stays only in TOP; completed Entry hidden and actual opens specific Session (4.6s)
+  ok 10 [pc] › e2e\issue30-v12.spec.ts:296:1 › specific repeated Session cancellation removes only selected ID and leaves Exercise completion via other actuals (2.8s)
+  ok 11 [pc] › e2e\issue30-v12.spec.ts:310:1 › uncompleted Entry execution adds a new Session without replacing any existing actual or saved Entry order (2.6s)
+(node:2976) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 12 [narrow-pc-emulation] › e2e\issue30-v12.spec.ts:44:1 › display editor: approved controls, discard, explicit save/reload/readback and no non-target changes (3.1s)
+  ok 13 [narrow-pc-emulation] › e2e\issue30-v12.spec.ts:75:1 › Extra AND exclusion N+1, all TIs per Exercise, future outside, Option reset and snapshot invariants (2.9s)
+  ok 14 [narrow-pc-emulation] › e2e\issue30-v12.spec.ts:102:1 › MENU one Option affects both projections but never order/model/save payload; EX/TI lists reset Option (3.5s)
+  ok 15 [narrow-pc-emulation] › e2e\issue30-v12.spec.ts:134:1 › classification warning edits only the explicit Exercise; snapshot history survives (1.7s)
+  ok 16 [narrow-pc-emulation] › e2e\issue30-v12.spec.ts:153:1 › old Backup preview warns with effective values; cancel is no-op; explicit restore/export/reload keeps exact candidate (4.2s)
+  ok 17 [narrow-pc-emulation] › e2e\issue30-v12.spec.ts:176:1 › TOP weekday all ON/OFF preserves completed flag; approved +1pt status and unchanged run weight (2.1s)
+  ok 18 [narrow-pc-emulation] › e2e\issue30-v12.spec.ts:195:1 › display save quota failure remains on draft, preserves storage and supports explicit retry (2.1s)
+  ok 19 [narrow-pc-emulation] › e2e\issue30-v12.spec.ts:240:1 › TOP two projections: completed Entries hidden with independent sort/filters; every Session and counts/load are preserved (3.5s)
+  ok 20 [narrow-pc-emulation] › e2e\issue30-v12.spec.ts:274:1 › REGION current planned vs snapshot actual, missing snapshot stays only in TOP; completed Entry hidden and actual opens specific Session (4.5s)
+  ok 21 [narrow-pc-emulation] › e2e\issue30-v12.spec.ts:296:1 › specific repeated Session cancellation removes only selected ID and leaves Exercise completion via other actuals (1.9s)
+  ok 22 [narrow-pc-emulation] › e2e\issue30-v12.spec.ts:310:1 › uncompleted Entry execution adds a new Session without replacing any existing actual or saved Entry order (1.6s)
+
+  22 passed (1.4m)
