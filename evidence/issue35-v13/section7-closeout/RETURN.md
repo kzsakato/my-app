@@ -9,3 +9,8 @@ Product build 2a2fe51 (V1.3 isolated app only). 195 unit tests passed on retry w
 - Analysis inputs, all five exact plot vectors and matching real-build 360px images are linked from section7-fault; calendar boundary unit cases are in section7-boundaries. No new SW browser guard trial, no old root/profile work.
 
 Owner visual assessment and QA independent sign-off are separate. ENV-04/05 retains its prior record under the Owner's V1.3 browser separation plan.
+## Specified Actions result
+
+d5c5b5b Actions #42213796265 completed/failure. Unit/build PASS, normal E2E 78 PASS / 41 FAIL (119), release E2E 11 PASS / 35 FAIL (46). These are the same totals as #42210461418. See ci-failure-delta.json for comparison by test title. The full CI output is retained in GitHub Actions. Three earlier baseline-common failures were then corrected on both fixed c4fe4514 and PR-side source; all three also passed targeted release 3/3. Linux V12-07 row height difference and remaining unclassified failures still require reproduction before attribution. No suite-level PASS.
+
+https://github.com/kzsakato/my-app/actions/runs/42213796265
