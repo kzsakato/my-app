@@ -1,0 +1,186 @@
+[WebServer] (node:12468) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:22680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › e2e\grouped-baseline.spec.ts:130:1 › H12 canonical backup preview, invalid non-destructive restore, full replacement/read-back/reload (28.4s)
+(node:42128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  2 [chromium] › e2e\owner-v12-07.spec.ts:6:1 › V12-07: existing row height preserved, fourteen days right aligned, data unchanged (5.1s)
+(node:33968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  3 [chromium] › e2e\worker-restore.spec.ts:5:1 › canonical V1.1 Backup normal Restore stays local, preserves confirmation and persists offline (6.1s)
+
+
+  1) [chromium] › e2e\grouped-baseline.spec.ts:130:1 › H12 canonical backup preview, invalid non-destructive restore, full replacement/read-back/reload
+
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  0
+    + Received  + 29
+
+    @@ -1,10 +1,37 @@
+      Object {
+        "activeMenuId": "canonical-menu",
+        "appliedProposalIds": Array [
+          "already-applied",
+        ],
+    +   "displayPreferences": Object {
+    +     "bodyRegionOrder": Array [
+    +       "胸",
+    +       "背中",
+    +       "腕",
+    +       "肩",
+    +       "下半身",
+    +       "体幹",
+    +       "その他",
+    +     ],
+    +     "defaultSort": Object {
+    +       "completionDirection": "incompleteFirst",
+    +       "priority": Array [
+    +         "recommendedDay",
+    +         "completion",
+    +         "bodyRegion",
+    +       ],
+    +     },
+    +     "optionSort": Object {
+    +       "completionDirection": "incompleteFirst",
+    +       "priority": Array [
+    +         "completion",
+    +         "recommendedDay",
+    +         "bodyRegion",
+    +       ],
+    +     },
+    +   },
+        "exercises": Array [
+          Object {
+            "classifications": Array [
+              Object {
+                "kind": "bodyRegion",
+    @@ -39,10 +66,11 @@
+        ],
+        "menus": Array [
+          Object {
+            "id": "canonical-menu",
+            "lifecycle": "active",
+    +       "managementMode": "MAN",
+            "name": "正規E2Eメニュー",
+          },
+        ],
+        "profile": Object {
+          "weight": 66,
+    @@ -66,10 +94,11 @@
+          Object {
+            "displayName": "正規テストプレス",
+            "exerciseId": "canonical-exercise",
+            "id": "canonical-item",
+            "lifecycle": "active",
+    +       "managementMode": "MAN",
+            "reps": 10,
+            "sets": 3,
+            "weight": 20,
+          },
+        ],
+
+      139 |   const download = await downloadEvent
+      140 |   const exported = JSON.parse(await readFile((await download.path())!, 'utf8'))
+    > 141 |   expect(exported.payload).toEqual(original)
+          |                            ^
+      142 |   expect(await readCanonicalState(page)).toEqual(original)
+      143 |   const legacyBefore = await readStoredState(page)
+      144 |   await page.getByRole('button', { name: '‹ 戻る' }).click()
+        at C:\Users\kzsak\Documents\Codex\2026-11-06\training-project-app-development-test-execution\work\v13-before-ci\e2e\grouped-baseline.spec.ts:141:28
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\grouped-baseline-H12-canon-c6216-eplacement-read-back-reload-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\grouped-baseline-H12-canon-c6216-eplacement-read-back-reload-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\grouped-baseline-H12-canon-c6216-eplacement-read-back-reload-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\grouped-baseline-H12-canon-c6216-eplacement-read-back-reload-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\grouped-baseline-H12-canon-c6216-eplacement-read-back-reload-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e\owner-v12-07.spec.ts:6:1 › V12-07: existing row height preserved, fourteen days right aligned, data unchanged
+
+
+    Error: page.evaluate: NotFoundError: Failed to execute 'transaction' on 'IDBDatabase': One of the specified object stores was not found.
+        at eval (eval at evaluate (:311:30), <anonymous>:7:20)
+        at new Promise (<anonymous>)
+        at eval (eval at evaluate (:311:30), <anonymous>:6:11)
+        at async <anonymous>:337:30
+        at eval (eval at evaluate (:311:30), <anonymous>:7:20)
+        at eval (eval at evaluate (:311:30), <anonymous>:6:11)
+        at async <anonymous>:337:30
+        at C:\Users\kzsak\Documents\Codex\2026-11-06\training-project-app-development-test-execution\work\v13-before-ci\e2e\owner-v12-07.spec.ts:8:13
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\owner-v12-07-V12-07-existi-118c8-ight-aligned-data-unchanged-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\owner-v12-07-V12-07-existi-118c8-ight-aligned-data-unchanged-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\owner-v12-07-V12-07-existi-118c8-ight-aligned-data-unchanged-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\owner-v12-07-V12-07-existi-118c8-ight-aligned-data-unchanged-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\owner-v12-07-V12-07-existi-118c8-ight-aligned-data-unchanged-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › e2e\worker-restore.spec.ts:5:1 › canonical V1.1 Backup normal Restore stays local, preserves confirmation and persists offline
+
+
+    Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:4182/
+    Call log:
+      - navigating to "http://localhost:4182/", waiting until "load"
+
+
+       7 |  const directory=process.env.V12_RESTORE_EVIDENCE??'evidence/issue30-v12/restore/local'
+       8 |  mkdirSync(directory,{recursive:true})
+    >  9 |  await page.goto(origin+'/');await expect(page.getByRole('heading',{name:'今週の実施メニュー'})).toBeVisible()
+         |             ^
+      10 |  await page.evaluate(()=>navigator.serviceWorker.ready);await page.reload()
+      11 |  await page.getByRole('button',{name:'共通メニュー'}).click();await page.getByRole('button',{name:'設定',exact:true}).click();await page.getByRole('button',{name:/データ管理/}).click()
+      12 |  await expect(page.getByText('復元すると全データを置き換えます。',{exact:false})).toBeVisible()
+        at C:\Users\kzsak\Documents\Codex\2026-11-06\training-project-app-development-test-execution\work\v13-before-ci\e2e\worker-restore.spec.ts:9:13
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results\worker-restore-canonical-V-42882-mation-and-persists-offline-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results\worker-restore-canonical-V-42882-mation-and-persists-offline-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\worker-restore-canonical-V-42882-mation-and-persists-offline-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results\worker-restore-canonical-V-42882-mation-and-persists-offline-chromium\trace.zip
+    Usage:
+
+        pnpm exec playwright show-trace test-results\worker-restore-canonical-V-42882-mation-and-persists-offline-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › e2e\grouped-baseline.spec.ts:130:1 › H12 canonical backup preview, invalid non-destructive restore, full replacement/read-back/reload
+
+    [chromium] › e2e\owner-v12-07.spec.ts:6:1 › V12-07: existing row height preserved, fourteen days right aligned, data unchanged
+
+    [chromium] › e2e\worker-restore.spec.ts:5:1 › canonical V1.1 Backup normal Restore stays local, preserves confirmation and persists offline
