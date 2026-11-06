@@ -26,6 +26,20 @@ async function assertFocusedMarkers(page: Page, completedDates: string[]) {
     return Object.fromEntries(focusedDates.map((date, index) => [date, markers[index]]))
   }, { message: 'H-03: each fixed calendar date must have its own expected 14-day marker' }).toEqual(expected)
 }
+function canonicalWriteFixture() {
+  const fixture = canonicalData()
+  return {
+    ...fixture,
+    trainingItems: (fixture.trainingItems as object[]).map(item => ({ ...item, managementMode: 'MAN' })),
+    menus: (fixture.menus as object[]).map(menu => ({ ...menu, managementMode: 'MAN' })),
+    displayPreferences: structuredClone(defaultDisplayPreferences),
+    appliedProposalIds: [],
+  }
+}
+async function focusedChest(page: Page) {
+  await page.getByRole('button', { name: '部位表示', exact: true }).click()
+  await page.getByRole('button').filter({ has: page.locator('b').getByText('胸', { exact: true }) }).click()
+}
 async function focusedActuals(page: Page) {
   await page.getByRole('button', { name: '推奨曜日', exact: true }).click()
   await page.getByLabel('実施済も表示').check()
@@ -43,15 +57,7 @@ for (const scenario of [
     await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
     const untouched = session('non-target-outside-window', '2026-09-10')
     const targets = scenario.targets.map(value => ({ ...value, snapshot: { ...value.snapshot, trainingItemDisplayName: `取消対象-${value.id}` } }))
-    const fixture = canonicalData()
-    const data = {
-      ...fixture,
-      trainingItems: (fixture.trainingItems as object[]).map(item => ({ ...item, managementMode: 'MAN' })),
-      menus: (fixture.menus as object[]).map(menu => ({ ...menu, managementMode: 'MAN' })),
-      displayPreferences: structuredClone(defaultDisplayPreferences),
-      appliedProposalIds: [],
-      sessions: [untouched, ...targets],
-    }
+    const data = { ...canonicalWriteFixture(), sessions: [untouched, ...targets] }
     await seedCanonicalAndReload(page, data)
     const legacy = await readStoredState(page)
     await focusedActuals(page)
@@ -87,10 +93,10 @@ for (const scenario of [
 test('H-03 focused 4/5 + H06 A5: UI Extra completion has own actual and visible completed Exercise', async ({ page }, info) => {
   await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
   const previous = session('previous-before-extra', '2026-09-26', 0, 27)
-  const data = { ...canonicalData(), sessions: [previous] }
+  const data = { ...canonicalWriteFixture(), sessions: [previous] }
   await seedCanonicalAndReload(page, data)
   const legacy = await readStoredState(page)
-  await page.getByRole('button', { name: /^胸 / }).click()
+  await focusedChest(page)
   await assertFocusedMarkers(page, ['2026-09-26'])
   await top(page)
   await page.getByRole('button', { name: '＋ 追加トレーニングを登録' }).click()
@@ -110,18 +116,19 @@ test('H-03 focused 4/5 + H06 A5: UI Extra completion has own actual and visible 
   expect((added[1] as typeof added[number] & { menuEntryId?: string }).menuEntryId).toBeUndefined()
   expect({ ...saved, sessions: data.sessions }).toEqual(data)
   await page.getByRole('button', { name: '推奨曜日', exact: true }).click()
-  const actualRow = page.locator('.item-density').filter({ hasText: '追加実施　2026-10-03' })
+  const actualRow = page.locator(`[data-session-id="${added[1].id}"]`)
   await expect(actualRow).toHaveCount(0)
   await page.getByLabel('実施済も表示').check()
   await expect(actualRow).toHaveCount(1)
   await expect(actualRow).toContainText('正規テストプレス')
+  await expect(actualRow).toContainText('追加実施　2026-10-03')
   await assertFocusedMarkers(page, ['2026-09-26', '2026-10-03'])
-  await page.getByRole('button', { name: 'カテゴリ表示', exact: true }).click()
-  await page.getByRole('button', { name: /^胸 / }).click()
-  await expect(page.getByRole('button', { name: /^正規テストプレス / })).toHaveCount(0)
+  await focusedChest(page)
+  await expect(actualRow).toHaveCount(0)
   await page.getByLabel('実施済も表示').check()
   // H09: Extra owns one row; planned Entries do not borrow its actual.
-  await expect(page.getByRole('button', { name: /^正規テストプレス / })).toHaveCount(1)
+  await expect(actualRow).toHaveCount(1)
+  await expect(page.locator('[data-menu-entry-id]')).toHaveCount(0)
   await assertFocusedMarkers(page, ['2026-09-26', '2026-10-03'])
   await top(page)
   await page.getByRole('button', { name: '＋ 追加トレーニングを登録' }).click()
@@ -133,11 +140,12 @@ test('H-03 focused 4/5 + H06 A5: UI Extra completion has own actual and visible 
   await page.getByRole('button', { name: '推奨曜日', exact: true }).click()
   await page.getByLabel('実施済も表示').check()
   await actualRow.click()
-  const actualPanel = page.getByRole('region', { name: '当該実績' })
-  await expect(actualPanel).toContainText('2026-10-03')
-  await expect(actualPanel).toContainText('21 kg × 11 回 × 3 セット')
-  await expect(actualPanel).toContainText('H03-extra-seat')
-  await expect(actualPanel).not.toContainText('27 kg')
+  await expect(page.getByText('今週実施済み（2026-10-03）', { exact: true })).toBeVisible()
+  await expect(page.getByText('21.00 kg', { exact: true })).toBeVisible()
+  await expect(page.locator('.run-slot').filter({ hasText: '回数' }).locator('b')).toHaveText('11 回')
+  await expect(page.locator('.run-slot').filter({ hasText: '実施セット数' }).locator('b')).toHaveText('3')
+  await expect(page.getByLabel('シート位置')).toHaveValue('H03-extra-seat')
+  await expect(page.getByText('27.00 kg', { exact: true })).toHaveCount(0)
   expect(await readCanonicalState(page)).toEqual(saved)
   expect(await readStoredState(page)).toEqual(legacy)
   await page.reload()
@@ -424,19 +432,20 @@ for (const boundary of ['2026-10-04T23:59:59+09:00', '2026-10-05T00:00:00+09:00'
     await seedCanonicalAndReload(page, data); await expect(page.getByText('今日の実施総数')).toContainText('1/0')
     await page.clock.setFixedTime(new Date(boundary)); await page.reload(); await expect(page.getByText('今日の実施総数')).toContainText('0/')
     expect(await readCanonicalState(page)).toEqual(data)
-    const expected = boundary.startsWith('2026-10-04') ? '2/2' : '0/2'
+    // TOP T-08 counts one Session against the two active Entries.
+    const expected = boundary.startsWith('2026-10-04') ? '1/2' : '0/2'
     await expect(page.getByText('今週の実施総数')).toContainText(expected)
   })
 }
 
 test('OIC-015: all seven week starts warn/cancel, persist exact setting without rewriting historical facts', async ({ page }) => {
-  await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant); const data = canonicalData(); data.sessions = [session('fact', '2026-09-27')]; await seedCanonicalAndReload(page, data)
+  await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant); const data = { ...canonicalWriteFixture(), sessions: [session('fact', '2026-09-27')] }; await seedCanonicalAndReload(page, data)
   await open(page, 'プロフィール')
   const select = page.getByRole('combobox', { name: '週開始曜日', exact: true })
   page.once('dialog', d => d.dismiss()); await select.selectOption('6'); expect(await readCanonicalState(page)).toEqual(data)
   for (const day of [1, 2, 3, 4, 5, 6, 0]) {
     page.once('dialog', d => { expect(d.message()).toContain('過去を含む週集計'); d.accept() }); await select.selectOption(String(day))
-    const saved = await readCanonicalState(page); expect(saved.weekStartsOn).toBe(day); expect(saved.sessions).toEqual(data.sessions); expect(saved.trainingItems).toEqual(data.trainingItems)
+    await expect.poll(() => readCanonicalState(page)).toEqual({ ...data, weekStartsOn: day })
   }
   await page.reload(); expect(await readCanonicalState(page)).toEqual(data)
 })

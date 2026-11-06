@@ -11,6 +11,6 @@ QA #6685782787. The table records observations and next decision owners. It does
 | UI-03 | Cancel and injected failure unchanged, confirmed TRAINER→MAN, two original Sessions/snapshots and memo preserved. section7-boundaries, section7-app | Confirm identity and full read-back scope | — | — |
 | F-5 | Synthetic A linked to raw Context hash, ID arrays and dates. section7-closeout | Confirm synthetic projection only | Real A operational approval is separate | Next Trainer BODY private read, actual A operations |
 | ENV-04/05 | Unit-only SW guard and historical fixed-root BLOCK record | Preserve limited unit verdict and existing record | Existing Chrome/Edge separation applies | Browser guard verification during V1.3→V1.4 |
-| E2E regression | CI totals and case-by-case delta plus same-condition Windows base/head observation; local targeted fixes | Review remaining failures, V12-07 uncertainty, and any subsequent CI | — | No change to the existing release authorization boundary |
+| E2E regression | CI #42227764758: 88/119 ordinary, 21/46 release. H09 four and H-03 cancellation three confirmed in CI. See ci-42227764758-cases.json and the new targeted logs. | Review remaining failures, V12-07 uncertainty, and any subsequent CI | — | No change to the existing release authorization boundary |
 
 No QA PASS or Gate closure is asserted by Codex.

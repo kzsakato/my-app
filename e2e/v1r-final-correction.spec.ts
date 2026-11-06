@@ -2,6 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 import { canonicalData, seedCanonicalAndReload, readCanonicalState, readStoredState } from './helpers/state'
 import { createCanonicalSession } from '../src/canonical/runtime'
 import { addTrainingItem } from '../src/canonical/operations'
+import { defaultDisplayPreferences } from '../src/canonical/displayPreferences'
 import { validateCanonical } from '../src/canonical/validate'
 import type { CanonicalAppData, Session } from '../src/canonical/types'
 
@@ -22,7 +23,8 @@ async function actuals(page: Page) {
 }
 async function ownActual(page: Page, session: Session) {
   await page.locator(`[data-session-id="${session.id}"]`).first().click()
-  await expect(page.getByRole('region', { name: '当該実績' })).toContainText(`${session.weight} kg × ${session.reps} 回 × ${session.sets} セット`)
+  await expect(page.locator('.run-slot').filter({ hasText: '回数' }).locator('b')).toHaveText(`${session.reps} 回`)
+  await expect(page.locator('.run-slot').filter({ hasText: '実施セット数' }).locator('b')).toHaveText(String(session.sets))
   await expect(page.getByLabel('シート位置')).toHaveValue(session.seat!)
   await expect(page.getByLabel('今回メモ')).toHaveValue(session.memo!)
   await expect(page.getByText(`${session.weight!.toFixed(2)} kg`, { exact: true })).toBeVisible()
@@ -30,8 +32,8 @@ async function ownActual(page: Page, session: Session) {
   await expect(page.getByRole('region', { name: '前回実績' })).toHaveCount(0)
 }
 async function projections(page: Page, remaining: Session[], entryCount: number) {
-  await expect(page.getByText('今日の実施総数')).toContainText(`${remaining.length ? 1 : 0}/1`)
-  await expect(page.getByText('今週の実施総数')).toContainText(`${remaining.length ? entryCount : 0}/${entryCount}`)
+  await expect(page.getByText('今日の実施総数').locator('b')).toHaveText(`${remaining.length}/1`)
+  await expect(page.getByText('今週の実施総数').locator('b')).toHaveText(`${remaining.length}/${entryCount}`)
   // Independent 14-day oracle: all three actuals are on Oct 3. No product helper.
   const expected = `${'○'.repeat(13)}${remaining.length ? '●' : '○'}`
   for (const marker of await page.locator('.item-history').all()) {
@@ -45,6 +47,10 @@ for (const membership of ['same-item-two-entries', 'same-item-same-entry', 'two-
     test.setTimeout(60000)
     await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
     let data = canonicalData() as unknown as CanonicalAppData
+    data.trainingItems[0].managementMode = 'MAN'
+    data.menus[0].managementMode = 'MAN'
+    data.displayPreferences = structuredClone(defaultDisplayPreferences)
+    data.appliedProposalIds = []
     if (membership === 'two-items-same-exercise') {
       data = addTrainingItem(data, { ...data.trainingItems[0], id: 'item-b', displayName: '別設定プレス', reps: 15 }, { newId: () => 'change-b', now: () => '2026-10-01T00:00:00Z' })
       data.menuEntries[1].trainingItemId = 'item-b'
