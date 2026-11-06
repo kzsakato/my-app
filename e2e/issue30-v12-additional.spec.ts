@@ -5,6 +5,8 @@ import { mkdirSync, writeFileSync } from 'node:fs'
 import { canonicalFixture } from '../src/canonical/fixtures'
 import type { CanonicalAppData } from '../src/canonical/types'
 
+test.use({ baseURL: 'http://127.0.0.1:4177' })
+
 const directory = 'evidence/issue30-v12/qa-additional'
 const now = new Date('2026-10-24T12:00:00+09:00')
 // Literal expected values from formal 05 §7.1 / 05_JSON §3.1, not the implementation normalizer.

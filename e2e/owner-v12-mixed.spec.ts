@@ -4,6 +4,8 @@ import {mkdirSync,writeFileSync} from 'node:fs'
 import {fixture,A,B,C,D} from './mixedSortFixtures'
 import {defaultDisplayPreferences,type SortPreference} from '../src/canonical/displayPreferences'
 import type {CanonicalAppData} from '../src/canonical/types'
+
+test.use({ baseURL: 'http://127.0.0.1:4177' })
 const dir=process.env.V12_MIXED_EVIDENCE??'evidence/issue30-v12/mixed-sort-fix';mkdirSync(dir,{recursive:true})
 const priorities:SortPreference['priority'][]=[['completion','recommendedDay','bodyRegion'],['recommendedDay','completion','bodyRegion'],['recommendedDay','bodyRegion','completion']]
 const orders=[[['E-A','E-B','S-A','S-B'],['S-A','S-B','E-A','E-B']],[['E-A','S-A','E-B','S-B'],['S-A','E-A','S-B','E-B']],[['E-A','S-A','S-B','E-B'],['E-A','S-A','S-B','E-B']]]

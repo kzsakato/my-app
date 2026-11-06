@@ -1,3 +1,5 @@
+import { projectAnalysisV13 } from './canonical/analysisV13';
+import { contributionLabels } from './canonical/contributions';
 import { DisplayPreferencesEditor, DisplayPreferencesSummary, OptionSort } from "./DisplayPreferencesEditor";
 import { bodyRegions, compareBodyRegions, compareNames, effectiveDisplayPreferences, exerciseBodyRegion, recentlyPerformedExercises, sortDisplayRows } from "./canonical/displayPreferences";
 import { compareInstants } from "./canonical/instant";
@@ -7,7 +9,7 @@ import { completedEntryIds, completedSessionRows, displayedSessionOrder, sortMix
 import { cancelSession } from "./canonical/cancelSession";
 import { itemValidationMessages } from "./itemValidation";
 import { applyCanonicalRestore, createCanonicalBackup, previewCanonicalRestore, type BackupPreview } from "./canonical/backup";
-import { canonicalStorage, commitOwnerCanonical } from "./data";
+import { canonicalStorage, commitOwnerCanonical, readV13Canonical } from "./data";
 import { TrainerPanel, TrainerManagementOff } from "./TrainerPanel";
 import { buildIdentifier } from "./buildInfo";
 import {
@@ -171,6 +173,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   const [viewSessionId, setViewSessionId] = useState<string>();
   const [notice, setNotice] = useState("");
   const [needsRecovery, setNeedsRecovery] = useState(false);
+  const [trainerStandardUnknown, setTrainerStandardUnknown] = useState(false);
   const [listPreferences, setListPreferences] = useState<ListPreferences>({ exercise: { filter: "", hidden: false }, item: { filter: "", hidden: false } });
   const [topPreferences, setTopPreferences] = useState<TopPreferences>({ mode: "recommended", days: [dayOf(localDate())], showCompleted: false });
   const [itemEditId, setItemEditId] = useState<string | null>();
@@ -179,7 +182,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   const [menuToInspectId, setMenuToInspectId] = useState<string>();
   const [itemPresetExerciseId, setItemPresetExerciseId] = useState<string>();
   const writeBusy = useRef(false);
-  const commit = async (next: CanonicalAppData) => {
+  const commit = async (next: CanonicalAppData, trainerStandardEntryId?: string) => {
     if (writeBusy.current || needsRecovery) return false;
     const checked = validateCanonical(next);
     if (checked.errors.length) {
@@ -191,14 +194,17 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
     writeBusy.current = true;
     let persisted = false;
     try {
-      const saved = await commitOwnerCanonical(data, next);
+      const saved = await commitOwnerCanonical(data, next, trainerStandardEntryId);
       persisted = true;
       setData(saved);
       setNotice("");
       return true;
     } catch (error) {
       setNotice(`保存に失敗しました: ${String(error)}`);
-      if (persisted || (error as {canonicalUnknown?:boolean}).canonicalUnknown) setNeedsRecovery(true);
+      if (persisted || (error as {canonicalUnknown?:boolean}).canonicalUnknown) {
+        if (trainerStandardEntryId) setTrainerStandardUnknown(true);
+        setNeedsRecovery(true);
+      }
       return false;
     } finally { writeBusy.current = false; }
   };
@@ -229,7 +235,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   const editExercise = (id: string) => { openSettings("exercise"); setExerciseEditId(id); };
   const header = { onSettings: () => openSettings(), onTop: toTop };
   if (needsRecovery) return <Frame title="保存状態の確認" onTop={() => {}}>
-    <p role="alert">保存の成功を確認できません。保存状態を再読込するまで通常編集へ戻れません。</p><p role="status">{notice}</p>
+    <p role="alert">{trainerStandardUnknown ? "保存結果を確認できません。再実行せず、診断情報を保存してください。" : "保存の成功を確認できません。保存状態を再読込するまで通常編集へ戻れません。"}</p><p role="status">{notice}</p>
     <button className="primary" onClick={() => location.reload()}>保存状態を再読込</button>
   </Frame>;
   if (page === "run" && runEntryId) {
@@ -244,6 +250,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
           key={`entry:${entry.id}`}
           data={data}
           entry={entry}
+          planned
           item={item}
           exercise={exercise}
           onBack={() => selectedRegion ? setPage("cat") : toTop()}
@@ -292,7 +299,9 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   if (page === "history")
     return <HistoryPage data={data} onBack={toTop} {...header} />;
   if (page === "analysis")
-    return <AnalysisPage data={data} onBack={() => openSettings()} {...header} />;
+    return import.meta.env.VITE_V13_ISOLATED === "true"
+      ? <Frame title="分析" back={() => openSettings()} {...header}><AnalysisV13 data={data} /></Frame>
+      : <AnalysisPage data={data} onBack={() => openSettings()} {...header} />;
   if (page === "trainer") return (
     <Frame title="トレーナー連携" back={() => openSettings()} {...header}>
       <TrainerPanel data={data} onApplied={next => setData(next)} onPending={value => { writeBusy.current = value; }} />
@@ -645,6 +654,7 @@ function RunPage({
   data,
   commit,
   entry,
+  planned = false,
   item,
   exercise,
   onBack,
@@ -654,8 +664,9 @@ function RunPage({
 }: {
   completedSession?: Session;
   data: CanonicalAppData;
-  commit: (next: CanonicalAppData) => Promise<boolean>;
+  commit: (next: CanonicalAppData, trainerStandardEntryId?: string) => Promise<boolean>;
   entry?: MenuEntry;
+  planned?: boolean;
   item: TrainingItem;
   exercise: Exercise;
   onBack: () => void;
@@ -683,9 +694,14 @@ function RunPage({
     finally { busy.current = false; setPending(false); }
   };
   const saveStandard = () => runAction(async () => {
-    if (!confirm("この設定を標準設定として登録しますか？当回メモは標準設定へ保存しません。")) return;
+    const releaseTrainer = planned && entry && item.managementMode === "TRAINER" ? entry.id : undefined;
+    const confirmation = releaseTrainer
+      ? "この設定を標準設定として登録すると、トレーナー管理を解除します。当回メモは標準設定へ保存しません。登録しますか？"
+      : "この設定を標準設定として登録しますか？当回メモは標準設定へ保存しません。";
+    if (!confirm(confirmation)) return;
     const updated = { ...item, weight: exercise.usesWeight ? weight : undefined, reps: exercise.measureType === "reps" ? reps : undefined, seconds: exercise.measureType === "time" ? seconds : undefined, sets, seat: seat || undefined };
-    if (await commit(updateTrainingItem(data, updated, { newId: uid, now: () => new Date().toISOString() }))) {
+    if (releaseTrainer) updated.managementMode = "MAN";
+    if (await commit(updateTrainingItem(data, updated, { newId: uid, now: () => new Date().toISOString() }), releaseTrainer)) {
       setMessage("");
     } else setMessage("標準設定を保存できません。入力値を確認してください。");
   });
@@ -874,7 +890,7 @@ const analysisLabel = (start: string, period: AnalysisPeriod) => {
   return year;
 };
 
-function AnalysisChart({ series, labels, unit }: { series: AnalysisSeries[]; labels: string[]; unit: string }) {
+function AnalysisChart({ series, labels, unit }: { series: (AnalysisSeries & { color?: string })[]; labels: string[]; unit: string }) {
   const max = Math.max(1, ...series.flatMap((value) => value.values));
   const width = 640;
   const height = 300;
@@ -898,14 +914,70 @@ function AnalysisChart({ series, labels, unit }: { series: AnalysisSeries[]; lab
           <text key={`${label}-${index}`} className="axis" x={left + (innerWidth / Math.max(1, labels.length - 1)) * index} y={height - 16} textAnchor="middle">{label}</text>
         ))}
         {series.map((value, index) => (
-          <polyline key={value.id} points={value.values.map(point).join(" ")} fill="none" stroke={analysisColors[index % analysisColors.length]} strokeWidth="3" />
+          <polyline key={value.id} data-series={value.id} data-values={JSON.stringify(value.values)} points={value.values.map(point).join(" ")} fill="none" stroke={value.color ?? analysisColors[index % analysisColors.length]} strokeWidth="3" />
         ))}
       </svg>
       <div className="legend">
-        {series.map((value, index) => <span key={value.id} style={{ color: analysisColors[index % analysisColors.length] }}>● {value.name}</span>)}
+        {series.map((value, index) => <span key={value.id} style={{ color: value.color ?? analysisColors[index % analysisColors.length] }}>● {value.name}</span>)}
       </div>
     </section>
   );
+}
+
+function AnalysisV13({ data }: { data: CanonicalAppData }) {
+  const [period, setPeriod] = useState<AnalysisPeriod>("week");
+  const [selected, setSelected] = useState(0);
+  const [visible, setVisible] = useState(() => contributionLabels.map(() => true));
+  const value = projectAnalysisV13(data, period, localDate());
+  const periods = [...analysisPeriods.slice(0, 3), { value: "half" as const, label: "半年" }, analysisPeriods[3]];
+  return <>
+    <label>期間<select value={period} onChange={event => setPeriod(event.target.value as AnalysisPeriod)}>
+      {periods.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
+    </select></label>
+    {value.state === "UNAVAILABLE" ? <p role="status">分析データを表示できません。</p> : <>
+      <h2>総トレーニング負荷（参考）</h2>
+      <AnalysisChart series={[{ id: "pt", name: "全体", values: value.buckets.map(bucket => bucket.pt) }]}
+        labels={value.buckets.map((bucket, index) => index % 2 === 0 || index === 11 ? bucket.start.slice(2) : "")} unit="pt" />
+      <p className="meta">今期途中</p>
+      <h2>6部位の推移</h2>
+      <fieldset><legend>推定セット相当量</legend>
+        {contributionLabels.map((name, index) => <label className="check" key={name}>
+          <input type="checkbox" checked={visible[index]} onChange={event => {
+            const checked = event.target.checked;
+            setVisible(current => current.map((item, at) => at === index ? checked : item));
+          }} />{name}
+        </label>)}
+      </fieldset>
+      <AnalysisChart series={contributionLabels.map((name, index) => ({
+        id: name, name, color: analysisColors[index], values: value.buckets.map(bucket => bucket.regions[index]),
+      })).filter((_, index) => visible[index])}
+        labels={value.buckets.map((bucket, index) => index % 2 === 0 || index === 11 ? bucket.start.slice(2) : "")} unit="" />
+      {value.unallocated > 0 && <p role="status">寄与率未設定の種目があります。</p>}
+      <h2>トレーニング内容を検討する</h2>
+      <h3>部位別トレーニング量</h3>
+      {value.total === 0 && <p>実績なし</p>}
+      {contributionLabels.map((name, index) => <div className="v13-analysis-amount" key={name}>
+        <span>{name}</span><meter aria-label={name} max={Math.max(1, ...value.regions)} value={value.regions[index]} />
+        <span>{Number(value.regions[index].toFixed(2))}</span>
+      </div>)}
+      <h3>部位別配分</h3>
+      {value.shares && <>
+        <div className="v13-analysis-shares" aria-hidden="true">{value.shares.map((share, index) => <span key={index} style={{ width: `${share * 100}%`, background: analysisColors[index] }} />)}</div>
+        <ul>{value.shares.map((share, index) => <li key={index}>{contributionLabels[index]} {Number((share * 100).toFixed(1))}%</li>)}</ul>
+      </>}
+      {value.unallocated > 0 && <p>未配賦 {value.unallocated}</p>}
+      <h3>種目別内訳</h3>
+      <label>部位<select value={selected} onChange={event => setSelected(Number(event.target.value))}>
+        {contributionLabels.map((name, index) => <option key={name} value={index}>{name}</option>)}
+      </select></label>
+      {[...value.byExercise].filter(([, amounts]) => amounts[selected] > 0).map(([id, amounts]) =>
+        <div className="v13-analysis-amount" key={id} data-exercise-id={id}>
+          <span>{data.exercises.find(exercise => exercise.id === id)?.name}</span>
+          <meter aria-label={data.exercises.find(exercise => exercise.id === id)?.name} max={Math.max(1, value.regions[selected])} value={amounts[selected]} />
+          <span>{Number(amounts[selected].toFixed(2))}</span>
+        </div>)}
+    </>}
+  </>;
 }
 
 function AnalysisPage({ data, onBack, onSettings, onTop }: { data: CanonicalAppData; onBack: () => void; onSettings: () => void; onTop: () => void }) {
@@ -1742,16 +1814,23 @@ function BackupPage({ data, onApplied, onBack, onSettings, onTop }: {
       {!uncertain && <section className="card">
         <h2>正規データのバックアップ</h2>
         <p>プロフィール・種目・実施項目・メニュー・実施履歴・設定履歴を含む全データを保存します。</p>
-        <button className="primary" disabled={pending} onClick={() => {
-          try { downloadJson(`training-check-backup-${localDate()}.json`, createCanonicalBackup(data, new Date().toISOString())); setMessage("バックアップを作成しました。"); }
+        <button className="primary" disabled={pending} onClick={async () => {
+          try {
+            const isolated = import.meta.env.VITE_V13_ISOLATED === "true";
+            const latest = isolated ? await readV13Canonical() : data;
+            if (!latest) throw new Error("V13_CANONICAL_UNAVAILABLE");
+            const backup = createCanonicalBackup(latest, new Date().toISOString());
+            downloadJson(`training-check-backup-${localDate()}.json`, isolated ? { ...backup, schemaVersion: 2 } : backup);
+            setMessage("バックアップを作成しました。");
+          }
           catch (error) { setMessage(`出力できません: ${String(error)}`); }
         }}>バックアップを作成</button>
       </section>}
-      <section className="card">
+      {import.meta.env.VITE_V13_ISOLATED !== "true" && <section className="card">
         <h2>バックアップから復元</h2>
         <p>復元すると全データを置き換えます。メニュー提案・履歴出力・旧形式のJSONは復元できません。</p>
         <label>正規バックアップを選択<input disabled={pending} type="file" accept="application/json,.json" onChange={event => void read(event.target.files?.[0])} /></label>
-      </section>
+      </section>}
       {preview && preview.errors.length > 0 && <section className="card"><h2>復元できません</h2>{formatIssues(preview.errors)}</section>}
       {preview?.envelope && <section className="card">
         <h2>復元内容の確認</h2>

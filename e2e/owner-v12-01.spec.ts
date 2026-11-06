@@ -1,6 +1,8 @@
 import {test,expect} from '@playwright/test'
 import {canonicalFixture,canonicalBackupFixture} from '../src/canonical/fixtures'
 import {mkdirSync,writeFileSync} from 'node:fs'
+
+test.use({ baseURL: 'http://127.0.0.1:4177' })
 test('V12-01 799df27: normal Restore, completed planned rows hidden, actual IDs unique in TOP and REGION',async({page},info)=>{
  await page.clock.install({time:new Date('2026-09-24T12:00:00+09:00')})
  await page.goto('/')

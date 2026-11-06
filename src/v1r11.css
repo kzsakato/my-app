@@ -60,3 +60,6 @@
 .extra-item-row .extra-item-content{flex:1;min-width:0}
 .extra-item-details{display:flex;align-items:center;justify-content:space-between;gap:4px}
 .extra-item-details .item-history{flex:0 0 auto;white-space:nowrap;font-size:11px;color:#4d8459}
+.v13-analysis-amount{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) auto;align-items:center;gap:8px;overflow-wrap:anywhere}
+.v13-analysis-amount meter{width:100%}
+.v13-analysis-shares{display:flex;height:1.5rem}

@@ -3,6 +3,8 @@ import {test,expect} from '@playwright/test'
 import {canonicalFixture} from '../src/canonical/fixtures'
 import {defaultDisplayPreferences} from '../src/canonical/displayPreferences'
 import {mkdirSync,writeFileSync} from 'node:fs'
+
+test.use({ baseURL: 'http://127.0.0.1:4177' })
 for(const mode of ['Default','Option'])test(`V12-sort diagnosis: ${mode} completion first must put actual before uncompleted`,async({page},info)=>{
  await page.clock.install({time:new Date('2026-09-24T12:00:00+09:00')});await page.goto('/')
  const d=structuredClone(canonicalFixture);d.exercises.push({...d.exercises[0],id:'exercise-pending',name:'未実施種目'});d.trainingItems.push({...d.trainingItems[0],id:'item-pending',exerciseId:'exercise-pending',displayName:'未実施種目'});d.menuEntries.push({...d.menuEntries[0],id:'entry-pending',trainingItemId:'item-pending',order:1});d.trainingItemSettingChanges.push({...d.trainingItemSettingChanges[0],id:'change-pending',trainingItemId:'item-pending'});d.displayPreferences=structuredClone(defaultDisplayPreferences);const selected=mode==='Default'?d.displayPreferences.defaultSort:d.displayPreferences.optionSort;selected.priority=['completion','recommendedDay','bodyRegion'];selected.completionDirection='completeFirst'

@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test'
 
 test.use({ viewport: { width: 360, height: 800 } })
 
-async function seed(page: Page) {
+async function seed(page: Page, fixture = canonicalFixture) {
   await page.clock.setFixedTime(new Date('2026-09-24T12:00:00+09:00'))
   await page.goto('/')
   await page.evaluate(async data => {
@@ -20,7 +20,7 @@ async function seed(page: Page) {
       tx.onabort = () => reject(tx.error)
     })
     db.close()
-  }, canonicalFixture)
+  }, fixture)
   await page.reload()
   await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
 }
@@ -31,6 +31,8 @@ test('UI-01 and UI-02: independent sort drafts and fixed settings description', 
   await page.getByRole('button', { name: '設定', exact: true }).click()
   const display = page.getByRole('button', { name: /^表示設定/ })
   await expect(display.locator('small')).toHaveText('ソート順など、画面表示に関する設定')
+  await display.locator('small').evaluate(node => node.style.fontSize = '24px')
+  await expect.poll(() => display.evaluate(node => node.scrollWidth <= node.clientWidth)).toBe(true)
   await display.locator('small').click()
   const defaultSort = page.getByRole('region', { name: 'Default', exact: true })
   const optionSort = page.getByRole('region', { name: 'Option', exact: true })
@@ -39,6 +41,14 @@ test('UI-01 and UI-02: independent sort drafts and fixed settings description', 
   const original = await labels.allTextContents()
   const option = optionSort.locator('.sort-priority-row span:first-child')
   const originalOption = await option.allTextContents()
+  const moveOption = optionSort.getByRole('button', { name: /を上へ/ }).last()
+  await moveOption.focus()
+  await expect(moveOption).toBeFocused()
+  await page.keyboard.press('Enter')
+  await expect(option).toHaveText([originalOption[0], originalOption[2].replace(/^3/, '2'), originalOption[1].replace(/^2/, '3')])
+  await page.getByRole('button', { name: /戻る/ }).click()
+  await display.click()
+  await expect(option).toHaveText(originalOption)
   expect(original).toHaveLength(3)
   const handle = rows.last().locator('.sort-drag-handle')
   const destination = rows.first().locator('.sort-drag-handle')
@@ -74,4 +84,52 @@ test('UI-04: removes the decorative glyph while preserving history and Run entry
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBe(360)
   await row.click()
   await expect(page.getByRole('heading', { name: 'ダンベルプレス', exact: true })).toBeVisible()
+})
+
+test('UI-03: cancel preserves Trainer authority, confirmation saves standard and releases it', async ({ page }) => {
+  const fixture = structuredClone(canonicalFixture)
+  fixture.trainingItems[0].managementMode = 'TRAINER'
+  fixture.sessions[0].date = '2026-09-01'
+  fixture.sessions[0].performedAt = '2026-09-01T09:00:00+09:00'
+  await seed(page, fixture)
+  await page.locator('.weekday-dropdown-trigger').click()
+  await page.getByRole('button', { name: '全ON', exact: true }).click()
+  await page.locator('.weekday-dropdown-trigger').click()
+  await page.locator('[data-menu-entry-id="entry-1"]').click()
+  const save = page.getByRole('button', { name: 'この設定を登録' })
+  await page.getByRole('button', { name: '重量を1kg増やす' }).click()
+  const confirmation = 'この設定を標準設定として登録すると、トレーナー管理を解除します。当回メモは標準設定へ保存しません。登録しますか？'
+  const read = () => page.evaluate(async () => {
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open('training-check', 7)
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+    try {
+      return await new Promise<typeof canonicalFixture>((resolve, reject) => {
+        const request = db.transaction('canonical').objectStore('canonical').get('app')
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+    } finally { db.close() }
+  })
+  const click = async (accept: boolean) => {
+    const dialog = page.waitForEvent('dialog')
+    const action = save.click()
+    const prompt = await dialog
+    const message = prompt.message()
+    if (accept) await prompt.accept()
+    else await prompt.dismiss()
+    await action
+    expect(message).toBe(confirmation)
+  }
+  await click(false)
+  expect(await read()).toEqual(fixture)
+  await click(true)
+  await expect.poll(async () => (await read()).trainingItems[0]).toEqual({
+    ...fixture.trainingItems[0], managementMode: 'MAN', weight: 19,
+  })
+  const stored = await read()
+  expect(stored.sessions).toEqual(fixture.sessions)
+  expect(stored.trainingItemSettingChanges).toHaveLength(fixture.trainingItemSettingChanges.length + 1)
 })

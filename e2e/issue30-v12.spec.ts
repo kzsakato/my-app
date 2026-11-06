@@ -6,6 +6,8 @@ import { canonicalFixture } from '../src/canonical/fixtures'
 import { defaultDisplayPreferences } from '../src/canonical/displayPreferences'
 import type { CanonicalAppData } from '../src/canonical/types'
 
+test.use({ baseURL: 'http://127.0.0.1:4177' })
+
 const now = new Date('2026-10-24T12:00:00+09:00')
 function fixture() {
   const d = structuredClone(canonicalFixture)

@@ -6,6 +6,8 @@ import { createCanonicalSession } from '../src/canonical/runtime'
 import { validateCanonical } from '../src/canonical/validate'
 import type { CanonicalAppData } from '../src/canonical/types'
 
+test.use({ baseURL: 'http://127.0.0.1:4177' })
+
 const before = process.env.ISSUE28_BEFORE === '1'
 const evidence = process.env.ISSUE28_EVIDENCE_ROOT ?? `evidence/issue28/${before ? 'before' : 'after'}`
 const now = new Date('2026-10-20T12:00:00+09:00')
