@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { defaultDisplayPreferences } from '../src/canonical/displayPreferences'
 import { readFile, mkdir, writeFile } from 'node:fs/promises'
 import { canonicalData, seedCanonicalAndReload, readCanonicalState, readStoredState } from './helpers/state'
 
@@ -28,9 +29,9 @@ async function assertFocusedMarkers(page: Page, completedDates: string[]) {
 async function focusedActuals(page: Page) {
   await page.getByRole('button', { name: '推奨曜日', exact: true }).click()
   await page.getByLabel('実施済も表示').check()
-  await page.getByRole('button', { name: /表示する推奨曜日:/ }).click()
+  await page.getByRole('button', { name: /^曜日指定:/ }).click()
   for (const day of ['月', '火', '水', '木', '金', '土', '日']) await page.getByRole('checkbox', { name: day, exact: true }).check()
-  await page.getByRole('button', { name: /表示する推奨曜日:/ }).click()
+  await page.getByRole('button', { name: /^曜日指定:/ }).click()
 }
 
 for (const scenario of [
@@ -42,7 +43,15 @@ for (const scenario of [
     await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
     const untouched = session('non-target-outside-window', '2026-09-10')
     const targets = scenario.targets.map(value => ({ ...value, snapshot: { ...value.snapshot, trainingItemDisplayName: `取消対象-${value.id}` } }))
-    const data = { ...canonicalData(), sessions: [untouched, ...targets] }
+    const fixture = canonicalData()
+    const data = {
+      ...fixture,
+      trainingItems: (fixture.trainingItems as object[]).map(item => ({ ...item, managementMode: 'MAN' })),
+      menus: (fixture.menus as object[]).map(menu => ({ ...menu, managementMode: 'MAN' })),
+      displayPreferences: structuredClone(defaultDisplayPreferences),
+      appliedProposalIds: [],
+      sessions: [untouched, ...targets],
+    }
     await seedCanonicalAndReload(page, data)
     const legacy = await readStoredState(page)
     await focusedActuals(page)
@@ -51,8 +60,12 @@ for (const scenario of [
     const stages: unknown[] = [{ remaining, markers: await page.locator('.item-history').first().innerText() }]
     for (const target of targets) {
       // Actual rows carry their own Session identity; cancel oldest dates first.
-      await page.locator('.item-density').filter({ hasText: `追加実施　${target.date}` }).filter({ hasText: target.snapshot.trainingItemDisplayName }).click()
-      await expect(page.getByRole('region', { name: '当該実績' })).toContainText(target.date)
+      const row = page.locator(`[data-session-id="${target.id}"]`)
+      await expect(row).toContainText(`追加実施　${target.date}`)
+      await expect(row.locator('b')).toHaveText(target.snapshot.trainingItemDisplayName)
+      await row.click()
+      await expect(page.getByRole('heading', { name: target.snapshot.trainingItemDisplayName, exact: true })).toBeVisible()
+      await expect(page.getByText(`今週実施済み（${target.date}）`, { exact: true })).toBeVisible()
       page.once('dialog', dialog => dialog.accept())
       await page.getByRole('button', { name: `${Number(target.date.slice(5, 7))}/${Number(target.date.slice(8))}の実行を取り消す` }).click()
       remaining = remaining.filter(value => value.id !== target.id)
