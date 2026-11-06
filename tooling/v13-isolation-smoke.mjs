@@ -6,7 +6,21 @@ import { createHash } from 'node:crypto'
 import assert from 'node:assert/strict'
 
 const [primary, secondary, out] = process.argv.slice(2).map(path => resolve(path))
-const parentFirst = process.argv.includes('--parent-first')
+const siblings = process.argv.includes('--siblings')
+const legacyRoot = process.argv.includes('--legacy-root')
+const parentFirst = siblings || process.argv.includes('--parent-first')
+const rootPrefix = siblings ? '/my-app/' : '/'
+if (legacyRoot && !siblings) throw new Error('--legacy-root requires --siblings')
+if (siblings && process.argv.includes('--synthetic-parent-denylist')) throw new Error('Sibling proof requires unmodified bytes')
+const inventory = siblings && JSON.parse(await readFile(resolve(primary, '../manifest.json'), 'utf8'))
+if (inventory) {
+  assert.equal(inventory.productCommit, 'c4fe4514ab093a9e2084dc286310d46f81ab8864')
+  for (const entry of inventory.productFiles) {
+    const bytes = await readFile(resolve(primary, entry.path))
+    assert.equal(bytes.length, entry.bytes)
+    assert.equal(createHash('sha256').update(bytes).digest('hex'), entry.sha256)
+  }
+}
 const syntheticDenylist = process.argv.includes('--synthetic-parent-denylist')
 if (syntheticDenylist && !parentFirst) throw new Error('Comparison requires --parent-first')
 const rootWorker = await readFile(resolve(primary, 'sw.js'))
@@ -25,7 +39,9 @@ const server = createServer(async (request, response) => {
   const path = new URL(request.url, 'http://localhost').pathname
   const child = path.startsWith(prefix)
   const root = child ? secondary : primary
-  const file = resolve(root, (child ? path.slice(prefix.length) : path.slice(1)) || 'index.html')
+  if (!child && !path.startsWith(rootPrefix) && !legacyRoot) return response.writeHead(404).end()
+  const mount = child ? prefix : path.startsWith(rootPrefix) ? rootPrefix : '/'
+  const file = resolve(root, path.slice(mount.length) || 'index.html')
   try {
     if (!file.startsWith(root + sep)) throw new Error('path')
     const body = path === '/sw.js' ? servedRootWorker : await readFile(file)
@@ -37,28 +53,44 @@ const origin = `http://127.0.0.1:${server.address().port}`
 const browser = await chromium.launch()
 try {
   const context = await browser.newContext({ viewport: { width: 360, height: 800 }, timezoneId: 'Asia/Tokyo', acceptDownloads: true })
+  context.setDefaultTimeout(15000)
   const root = await context.newPage()
-  const openRoot = async () => {
+  if (legacyRoot) {
     await root.goto(origin)
+    await root.waitForFunction(() => navigator.serviceWorker.controller?.scriptURL === location.origin + '/sw.js')
+  }
+  const openRoot = async () => {
+    await root.goto(origin + rootPrefix)
     await root.evaluate(() => navigator.serviceWorker.ready.then(() => true))
     await root.reload()
   }
   if (parentFirst) await openRoot()
-  const child = await context.newPage()
-  await child.clock.setFixedTime(new Date('2026-11-06T12:00:00+09:00'))
-  const navigation = await child.goto(origin + prefix)
-  if (parentFirst && !(await navigation.text()).includes('/v13-test/assets/')) {
-    console.log(JSON.stringify({
-      result: 'FAIL_PARENT_FALLBACK', fixedRootWorkerSha256, servedRootWorkerSha256, chromium: browser.version(), url: child.url(),
-      navigationFromServiceWorker: navigation.fromServiceWorker(),
-      controller: await child.evaluate(() => navigator.serviceWorker.controller?.scriptURL),
-      databases: await child.evaluate(() => indexedDB.databases()),
-    }, null, 2))
-    process.exitCode = 1
-  } else {
-  await child.waitForFunction(() => navigator.serviceWorker.controller?.scriptURL.endsWith('/v13-test/v13-worker.js'))
-  await child.waitForFunction(async () => (await indexedDB.databases()).some(db => db.name === 'training-check-v13-test'))
-  if (!parentFirst) await openRoot()
+  const describePage = page => page.evaluate(async () => {
+    const cacheNames = (await caches.keys()).sort()
+    const cacheEntries = await Promise.all(cacheNames.map(async name => [
+      name, (await (await caches.open(name)).keys()).map(request => request.url).sort(),
+    ]))
+    const manifestUrl = document.querySelector('link[rel="manifest"]').href
+    const manifest = await fetch(manifestUrl).then(response => response.json())
+    return {
+      url: location.href,
+      manifestUrl, manifest,
+      manifestStart: new URL(manifest.start_url, manifestUrl).href,
+      manifestScope: new URL(manifest.scope ?? '.', manifestUrl).href,
+      scripts: [...document.scripts].filter(script => script.src).map(script => script.src),
+      controller: navigator.serviceWorker.controller?.scriptURL,
+      registrations: (await navigator.serviceWorker.getRegistrations()).map(reg => [reg.scope, reg.active?.scriptURL]).sort(),
+      caches: cacheNames, cacheEntries,
+    }
+  })
+  const rootPageBefore = siblings ? await describePage(root) : undefined
+  if (siblings) {
+    assert.equal(rootPageBefore.controller, origin + rootPrefix + 'sw.js')
+    assert.ok(rootPageBefore.registrations.some(([scope, script]) =>
+      scope === origin + rootPrefix && script === rootPageBefore.controller))
+    assert.equal(rootPageBefore.manifestStart, origin + rootPrefix)
+    assert.equal(rootPageBefore.manifestScope, origin + rootPrefix)
+  }
   const rootSnapshot = () => root.evaluate(async () => {
     const db = await new Promise((resolve, reject) => {
       const request = indexedDB.open('training-check', 7)
@@ -75,6 +107,61 @@ try {
       return await Promise.all(names.map(async name => [name, await read(tx.objectStore(name).getAllKeys()), await read(tx.objectStore(name).getAll())]))
     } finally { db.close() }
   })
+  const backupPath = 'evidence/issue35-v13/synthetic-initial-backup.json'
+  const backup = JSON.parse(await readFile(backupPath, 'utf8'))
+  if (siblings) {
+    await root.evaluate(async payload => {
+      const db = await new Promise((resolve, reject) => {
+        const request = indexedDB.open('training-check')
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+      try {
+        await new Promise((resolve, reject) => {
+          const tx = db.transaction(['canonical', 'recovery'], 'readwrite')
+          tx.oncomplete = resolve
+          tx.onabort = () => reject(tx.error)
+          tx.objectStore('canonical').put(payload, 'app')
+          tx.objectStore('recovery').put({ proof: 'plan-b', order: ['second', 'first'] }, 'plan-b-sentinel')
+        })
+      } finally { db.close() }
+    }, backup.payload)
+  }
+  const rootBefore = parentFirst ? await rootSnapshot() : undefined
+  if (siblings) {
+    const canonical = rootBefore.find(([name]) => name === 'canonical')
+    const recovery = rootBefore.find(([name]) => name === 'recovery')
+    assert.deepEqual(canonical[2][canonical[1].indexOf('app')], backup.payload)
+    assert.deepEqual(recovery[2][recovery[1].indexOf('plan-b-sentinel')], { proof: 'plan-b', order: ['second', 'first'] })
+    await writeFile(resolve(out, 'primary-before.json'), JSON.stringify(rootBefore, null, 2) + '\n')
+  }
+  const child = await context.newPage()
+  await child.clock.setFixedTime(new Date('2026-11-06T12:00:00+09:00'))
+  const scriptResponses = []
+  child.on('response', response => {
+    if (response.request().resourceType() === 'script') {
+      scriptResponses.push({ url: response.url(), status: response.status(), fromServiceWorker: response.fromServiceWorker() })
+    }
+  })
+  const navigation = await child.goto(origin + prefix)
+  const firstNavigation = { url: navigation.url(), status: navigation.status(), fromServiceWorker: navigation.fromServiceWorker() }
+  if (siblings && !legacyRoot) {
+    assert.equal(firstNavigation.status, 200)
+    assert.equal(firstNavigation.fromServiceWorker, false)
+  }
+  if (parentFirst && !(await navigation.text()).includes('/v13-test/assets/')) {
+    console.log(JSON.stringify({
+      result: legacyRoot ? 'FAIL_LEGACY_ROOT_VARIANT' : 'FAIL_PARENT_FALLBACK', rootPageBefore, firstNavigation, fixedRootWorkerSha256, servedRootWorkerSha256, chromium: browser.version(), url: child.url(),
+      navigationFromServiceWorker: navigation.fromServiceWorker(),
+      controller: await child.evaluate(() => navigator.serviceWorker.controller?.scriptURL),
+      databases: await child.evaluate(() => indexedDB.databases()),
+    }, null, 2))
+    process.exitCode = 1
+  } else {
+  await child.waitForFunction(() => navigator.serviceWorker.controller?.scriptURL.endsWith('/v13-test/v13-worker.js'))
+  await child.waitForFunction(async () => (await indexedDB.databases()).some(db => db.name === 'training-check-v13-test'))
+  if (!parentFirst) await openRoot()
+  const primaryBefore = rootBefore ?? await rootSnapshot()
   const readSecondary = () => child.evaluate(async () => {
     const db = await new Promise((resolve, reject) => {
       const request = indexedDB.open('training-check-v13-test', 7)
@@ -91,9 +178,6 @@ try {
       return await Promise.all([read('canonical', 'app'), read('cutover', 'state')])
     } finally { db.close() }
   })
-  const rootBefore = await rootSnapshot()
-  const backupPath = 'evidence/issue35-v13/synthetic-initial-backup.json'
-  const backup = JSON.parse(await readFile(backupPath, 'utf8'))
   const oldBackup = structuredClone(backup)
   oldBackup.schemaVersion = 1
   await child.getByLabel('正規バックアップを選択').setInputFiles({
@@ -197,7 +281,7 @@ try {
   await writeFile(resolve(out, 'analysis-plot-after.json'), JSON.stringify(afterPlot, null, 2) + '\n')
   await child.screenshot({ path: resolve(out, 'analysis-ax01b-360.png'), fullPage: true })
 
-  assert.deepEqual(await rootSnapshot(), rootBefore)
+  assert.deepEqual(await rootSnapshot(), primaryBefore)
   const evidence = await child.evaluate(async () => ({
     dbs: await indexedDB.databases(),
     caches: await caches.keys(),
@@ -209,11 +293,59 @@ try {
   assert.equal(evidence.manifest.start_url, prefix)
   assert.equal(evidence.manifest.scope, prefix)
   assert.equal(evidence.controller, origin + prefix + 'v13-worker.js')
-  assert.equal(await root.evaluate(() => navigator.serviceWorker.controller?.scriptURL), origin + '/sw.js')
+  assert.equal(await root.evaluate(() => navigator.serviceWorker.controller?.scriptURL), origin + rootPrefix + 'sw.js')
   assert.equal(evidence.caches.filter(key => key.includes('training-check-v13-test')).length, 1)
-  await context.setOffline(true)
-  await child.reload()
-  await child.waitForFunction(() => document.querySelector('main'))
+  let siblingEvidence
+  if (siblings) {
+    const childPage = await describePage(child)
+    assert.equal(childPage.manifestStart, origin + prefix)
+    assert.equal(childPage.manifestScope, origin + prefix)
+    assert.ok(childPage.scripts.some(url => url.startsWith(origin + prefix + 'assets/')))
+    assert.ok(scriptResponses.some(response => response.url.startsWith(origin + prefix + 'assets/') && response.status === 200 && !response.fromServiceWorker))
+    assert.deepEqual(childPage.registrations, [
+      [origin + rootPrefix, origin + rootPrefix + 'sw.js'],
+      [origin + prefix, origin + prefix + 'v13-worker.js'],
+    ])
+    assert.equal(rootPageBefore.caches.length, 1)
+    assert.equal(childPage.caches.length, 2)
+    assert.deepEqual(childPage.cacheEntries.find(([name]) => name === rootPageBefore.caches[0]), rootPageBefore.cacheEntries[0])
+    for (const [name, urls] of childPage.cacheEntries) {
+      assert.ok(urls.length > 0)
+      const mount = name === rootPageBefore.caches[0] ? rootPrefix : prefix
+      assert.ok(urls.every(url => url.startsWith(origin + mount)))
+    }
+    const servedRootWorker = await fetch(origin + rootPrefix + 'sw.js').then(response => response.arrayBuffer())
+    assert.equal(createHash('sha256').update(Buffer.from(servedRootWorker)).digest('hex'), fixedRootWorkerSha256)
+    const reopen = async (page, path, worker, offline) => {
+      const response = await page.reload()
+      assert.equal(response.status(), 200)
+      if (offline) assert.equal(response.fromServiceWorker(), true)
+      await page.waitForFunction(() => document.querySelector('main'))
+      const controller = await page.evaluate(() => navigator.serviceWorker.controller?.scriptURL)
+      assert.equal(controller, origin + path + worker)
+      return { url: response.url(), offline, controller, fromServiceWorker: response.fromServiceWorker() }
+    }
+    const reopens = []
+    for (const offline of [false, true]) {
+      await context.setOffline(offline)
+      const pages = [[root, rootPrefix, 'sw.js'], [child, prefix, 'v13-worker.js']]
+      if (offline) pages.reverse()
+      for (const [page, path, worker] of pages) reopens.push(await reopen(page, path, worker, offline))
+      assert.deepEqual(await readSecondary(), [afterC, marker])
+      const rootAfter = await rootSnapshot()
+      const snapshotFile = offline ? 'primary-after-offline.json' : 'primary-after-online.json'
+      await writeFile(resolve(out, snapshotFile), JSON.stringify(rootAfter, null, 2) + '\n')
+      assert.deepEqual(rootAfter, rootBefore)
+    }
+    const finalPage = await describePage(child)
+    assert.deepEqual(finalPage.cacheEntries, childPage.cacheEntries)
+    assert.deepEqual(finalPage.registrations, childPage.registrations)
+    siblingEvidence = { inventory, rootPageBefore, childPage, firstNavigation, scriptResponses, reopens, finalPage }
+  } else {
+    await context.setOffline(true)
+    await child.reload()
+    await child.waitForFunction(() => document.querySelector('main'))
+  }
   const faultContext = await browser.newContext()
   try {
     const fault = await faultContext.newPage()
@@ -243,7 +375,7 @@ try {
     await held.waitFor()
     assert.equal(await fault.getByLabel('正規バックアップを選択').count(), 0)
   } finally { await faultContext.close() }
-  console.log(JSON.stringify({ result: syntheticDenylist ? 'PASS_SYNTHETIC_PARENT_DENYLIST_ONLY' : 'PASS_CHILD_FIRST_LIMITED', fixedRootWorkerSha256, servedRootWorkerSha256, chromium: browser.version(), origin, rootCanonicalAndOtherStoresUnchanged: true, restoreReadbackFaultHeldAfterReload: true, exactRestoreReadback: true, exactProposalReadback: true, replayAndInvalidBatchUnchanged: true, ...evidence }, null, 2))
+  console.log(JSON.stringify({ result: siblings ? 'PASS_SYNTHETIC_SIBLINGS_ONLY' : syntheticDenylist ? 'PASS_SYNTHETIC_PARENT_DENYLIST_ONLY' : 'PASS_CHILD_FIRST_LIMITED', fixedRootWorkerSha256, servedRootWorkerSha256, chromium: browser.version(), origin, rootCanonicalAndOtherStoresUnchanged: true, restoreReadbackFaultHeldAfterReload: true, exactRestoreReadback: true, exactProposalReadback: true, replayAndInvalidBatchUnchanged: true, ...evidence, ...siblingEvidence }, null, 2))
   }
 } finally {
   await browser.close()
