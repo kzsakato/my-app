@@ -236,7 +236,7 @@ test('H12 restore read-back failure blocks stale editing and never declares succ
 })
 
 test('H12 Settings retains Trainer interfaces and hides MAN helpers in release', async ({ page }, testInfo) => {
-  await seedCanonicalAndReload(page, canonicalData())
+  await seedCanonicalAndReload(page, backupFixture())
   await settings(page)
   if (testInfo.project.name === 'release') await expect(page.getByRole('button', { name: 'MAN用マスターを投入' })).toHaveCount(0)
   else await expect(page.getByRole('button', { name: 'MAN用マスターを投入' })).toBeVisible()
@@ -244,8 +244,10 @@ test('H12 Settings retains Trainer interfaces and hides MAN helpers in release',
   // D-01/02: one Settings entrance, one dedicated screen, two sections.
   await page.getByRole('button', { name: /^トレーナー連携 / }).click()
   await expect(page.getByRole('heading', { name: 'トレーナー連携', exact: true })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'メニュー提案を取り込む', exact: true })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'トレーニング履歴を出力', exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '提案を受け取る', exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'トレーニング情報を渡す', exact: true })).toBeVisible()
+  await expect(page.getByLabel('提案ファイルを選ぶ')).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'トレーナー用ファイルを作る', exact: true })).toBeEnabled()
 
 })
 

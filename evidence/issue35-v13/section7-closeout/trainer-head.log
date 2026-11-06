@@ -1,0 +1,10 @@
+[WebServer] (node:55272) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:52992) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\grouped-baseline.spec.ts:238:1 › H12 Settings retains Trainer interfaces and hides MAN helpers in release (6.0s)
+
+  1 passed (10.6s)
