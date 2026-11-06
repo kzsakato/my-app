@@ -269,3 +269,87 @@ test('MIG-01: synthetic fixed-V1.2 export survives the one-time external upgrade
     contentType: 'application/json', body: JSON.stringify({ source, upgraded, restored, afterSecond }, null, 2),
   })
 })
+for (const operation of ['Restore', 'Proposal'] as const) {
+  for (const abortThrows of [false, true]) {
+    test(`V13 fault matrix: ${operation} / abort ${abortThrows ? 'throws' : 'returns'}`, async ({ page }, info) => {
+      await preview(page)
+      if (operation === 'Proposal') {
+        await page.getByRole('button', { name: '復元する' }).click()
+        await settings(page)
+        await page.getByRole('button', { name: /^トレーナー連携/ }).click()
+      }
+      const before = await readApp(page)
+      await page.evaluate(throws => {
+        const put = IDBObjectStore.prototype.put
+        const abort = IDBTransaction.prototype.abort
+        const injected = { canonicalPutSucceeded: false, markerPutFault: false, nativeAbortReturned: false, nativeAbortEvent: false, callerSawAbortThrow: false }
+        Object.defineProperty(window, '__abortEvidence', { value: injected })
+        let target: IDBTransaction | undefined
+        IDBObjectStore.prototype.put = function (value, key) {
+          if (this.name === 'canonical' && key === 'app') {
+            const request = put.call(this, value, key)
+            target = this.transaction
+            target.addEventListener('abort', () => { injected.nativeAbortEvent = true }, { once: true })
+            request.addEventListener('success', () => { injected.canonicalPutSucceeded = true })
+            return request
+          }
+          if (this.transaction === target && this.name === 'cutover' && value?.v13Pending) {
+            IDBObjectStore.prototype.put = put
+            injected.markerPutFault = true
+            throw new DOMException('Synthetic failure after canonical put', 'QuotaExceededError')
+          }
+          return put.call(this, value, key)
+        }
+        IDBTransaction.prototype.abort = function () {
+          if (this !== target) return abort.call(this)
+          IDBTransaction.prototype.abort = abort
+          abort.call(this)
+          injected.nativeAbortReturned = true
+          if (throws) {
+            // Keep test storage safe while hiding the native abort acknowledgement from the app.
+            injected.callerSawAbortThrow = true
+            throw new DOMException('Synthetic uncertain abort acknowledgement', 'InvalidStateError')
+          }
+        }
+      }, abortThrows)
+
+      if (operation === 'Restore') {
+        await page.getByRole('button', { name: '復元する' }).click()
+        await expect(page.getByRole('status')).toContainText('Synthetic failure after canonical put')
+        await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toHaveCount(0)
+      } else {
+        await page.getByLabel('提案ファイルを選ぶ').setInputFiles(proposalPath)
+        await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
+        await expect(page.getByText('初回寄与率を登録しました。', { exact: true })).toHaveCount(0)
+      }
+      const held = page.getByText('保存結果を確認できません。再実行せず、診断情報を保存してください。', { exact: true })
+      const picker = page.getByLabel(operation === 'Restore' ? '正規バックアップを選択' : '提案ファイルを選ぶ')
+      const expectedStatus = abortThrows ? 'UNKNOWN_HELD' : 'REJECTED_ZERO_MUTATION'
+      if (abortThrows) {
+        await expect(held).toBeVisible()
+        if (operation === 'Restore') await expect(picker).toHaveCount(0)
+        else await expect(picker).toBeDisabled()
+      } else {
+        await expect(held).toHaveCount(0)
+        await expect(picker).toBeEnabled()
+      }
+      let diagnostic: unknown
+      if (operation === 'Proposal' || abortThrows) {
+        const downloaded = page.waitForEvent('download')
+        await page.getByRole('button', { name: '診断情報を保存' }).click()
+        diagnostic = JSON.parse(readFileSync((await (await downloaded).path())!, 'utf8'))
+        expect(diagnostic).toMatchObject({ code: expectedStatus })
+      }
+      const injected = await page.evaluate(() => Reflect.get(window, '__abortEvidence'))
+      expect(injected).toEqual({
+        canonicalPutSucceeded: true, markerPutFault: true, nativeAbortReturned: true, nativeAbortEvent: true, callerSawAbortThrow: abortThrows,
+      })
+      const after = await readApp(page)
+      expect(after).toEqual(before)
+      await info.attach('abort-branch', {
+        contentType: 'application/json',
+        body: JSON.stringify({ operation, expectedStatus, injected, before, after, diagnostic }, null, 2),
+      })
+    })
+  }
+}
