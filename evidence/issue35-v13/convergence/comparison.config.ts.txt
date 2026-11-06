@@ -1,0 +1,17 @@
+import { defineConfig } from '@playwright/test'
+import { readFileSync } from 'node:fs'
+import normal from './playwright.config'
+import release from './playwright.release.config'
+
+const suite = process.env.CONVERGE_SUITE === 'release' ? 'release' : 'normal'
+const config = suite === 'release' ? release : normal
+const cases = JSON.parse(readFileSync('../converge-failures.json', 'utf8'))[suite]
+const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+export default defineConfig({
+  ...config,
+  grep: new RegExp(cases.map(({ title }: { title: string }) => escape(title) + '$').join('|')),
+  timeout: 9000,
+  expect: { timeout: 4000 },
+  reporter: [['json', { outputFile: '../converge-' + process.env.CONVERGE_SIDE + '-' + suite + '.json' }]],
+  use: { ...config.use, trace: 'off', screenshot: 'off', video: 'off' },
+})
