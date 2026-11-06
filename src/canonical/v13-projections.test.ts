@@ -1,3 +1,4 @@
+import { previewInitialV13Restore } from './backupV13'
 import { describe, expect, it } from 'vitest'
 import { canonicalFixture } from './fixtures'
 import { projectAnalysisV13 } from './analysisV13'
@@ -72,5 +73,43 @@ describe('V13 QA data projections', () => {
     const after = projectAnalysisV13(data, 'week', today)
     expect(after).toMatchObject({ allocated: 10, unallocated: 0, regions: [1.5, 2, 3, 1.5, 2, 0] })
     expect(data.sessions).toEqual(before)
+  })
+})
+
+describe('MIG-01 isolated initial Backup preview', () => {
+  const envelope = () => ({
+    format: 'training-check-backup', schemaVersion: 2, createdAt: '2026-11-06T09:00:00+09:00',
+    payload: { ...base(), trainerDataRevision: 0, contributions: { version: 1, byExerciseId: {} } },
+  })
+
+  it('preserves all existing facts, including replay IDs and array order', () => {
+    const input = envelope()
+    input.payload.appliedProposalIds = ['accepted-b', 'accepted-a']
+    const { candidate, warnings } = previewInitialV13Restore(JSON.stringify(input))
+    const { displayPreferences, ...facts } = candidate
+    expect(facts).toEqual(input.payload)
+    expect(displayPreferences?.defaultSort.priority).toEqual(['recommendedDay', 'completion', 'bodyRegion'])
+    expect(warnings.map(warning => warning.path)).toEqual([
+      'displayPreferences.defaultSort', 'displayPreferences.optionSort', 'displayPreferences.bodyRegionOrder',
+    ])
+  })
+
+  it.each([
+    ['old outer version', (input: ReturnType<typeof envelope>) => { input.schemaVersion = 1 }],
+    ['wrong inner version', (input: ReturnType<typeof envelope>) => { Object.assign(input.payload, { schemaVersion: 2 }) }],
+    ['noninitial revision', (input: ReturnType<typeof envelope>) => { input.payload.trainerDataRevision = 1 }],
+    ['duplicate replay ID', (input: ReturnType<typeof envelope>) => { input.payload.appliedProposalIds = ['same', 'same'] }],
+    ['pre-existing contribution', (input: ReturnType<typeof envelope>) => {
+      input.payload.contributions.byExerciseId = { 'exercise-1': { rates: chest, revision: 1 } }
+    }],
+  ] as const)('refuses %s before preview', (_, mutate) => {
+    const input = envelope()
+    mutate(input)
+    expect(() => previewInitialV13Restore(JSON.stringify(input))).toThrow()
+  })
+
+  it('refuses duplicate raw JSON keys before preview', () => {
+    const raw = JSON.stringify(envelope()).replace('"schemaVersion":2', '"schemaVersion":1,"schemaVersion":2')
+    expect(() => previewInitialV13Restore(raw)).toThrow()
   })
 })

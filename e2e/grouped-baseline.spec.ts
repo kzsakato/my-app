@@ -127,15 +127,18 @@ test('H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/
   expect(reloaded.trainingItemSettingChanges).toEqual(stored.trainingItemSettingChanges)
 })
 
-test('H12 canonical backup preview, invalid non-destructive restore, full replacement/read-back/reload', async ({ page }, testInfo) => {
-  await page.clock.install({ time: monday })
+function backupFixture() {
   const fixture = canonicalData()
-  const original = {
+  return {
     ...fixture,
-    appliedProposalIds: ['already-applied'],
     trainingItems: (fixture.trainingItems as object[]).map(item => ({ ...item, managementMode: 'MAN' })),
     menus: (fixture.menus as object[]).map(menu => ({ ...menu, managementMode: 'MAN' })),
   }
+}
+
+test('H12 canonical backup preview, invalid non-destructive restore, full replacement/read-back/reload', async ({ page }, testInfo) => {
+  await page.clock.install({ time: monday })
+  const original = { ...backupFixture(), appliedProposalIds: ['already-applied'] }
   await seedCanonicalAndReload(page, original)
   const storedBeforeExport = await readCanonicalState(page)
   expect(storedBeforeExport).toEqual(original)
@@ -203,12 +206,14 @@ test('H12 canonical backup preview, invalid non-destructive restore, full replac
 })
 
 test('H12 restore read-back failure blocks stale editing and never declares success or falls back', async ({ page }) => {
-  await seedCanonicalAndReload(page, canonicalData())
+  await seedCanonicalAndReload(page, backupFixture())
   await settings(page)
   await page.getByRole('button', { name: /^データ管理 / }).click()
-  const replacement = { ...canonicalData(), profile: { weight: 77 } }
+  const replacement = { ...backupFixture(), profile: { weight: 77 } }
   await upload(page, { format: 'training-check-backup', schemaVersion: 1, createdAt: '2026-09-30T01:00:00Z', payload: replacement })
   await expect(page.getByRole('heading', { name: '復元内容の確認' })).toBeVisible()
+  await expect(page.getByRole('button', { name: '全データを置き換えて復元' })).toBeDisabled()
+  await page.getByLabel('警告内容を確認しました').check()
   // Failure injection is scoped to this isolated browser context and the next canonical read.
   await page.evaluate(() => {
     const originalGet = IDBObjectStore.prototype.get
