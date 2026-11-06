@@ -133,3 +133,25 @@ test('UI-03: cancel preserves Trainer authority, confirmation saves standard and
   expect(stored.sessions).toEqual(fixture.sessions)
   expect(stored.trainingItemSettingChanges).toHaveLength(fixture.trainingItemSettingChanges.length + 1)
 })
+test('UI-01: touch drag reorders only its own section', async ({ browser }) => {
+  const context = await browser.newContext({ baseURL: 'http://127.0.0.1:4173', viewport: { width: 360, height: 620 }, hasTouch: true, isMobile: true, timezoneId: 'Asia/Tokyo' })
+  try {
+    const page = await context.newPage()
+    await seed(page)
+    await page.getByRole('button', { name: '共通メニュー' }).tap()
+    await page.getByRole('button', { name: '設定', exact: true }).tap()
+    await page.getByRole('button', { name: /^表示設定/ }).tap()
+    const handles = page.getByRole('region', { name: 'Default', exact: true }).locator('.sort-drag-handle')
+    const beforeOption = await page.getByRole('region', { name: 'Option', exact: true }).textContent()
+    const coordinates = async (index: number) => {
+      const box = await handles.nth(index).boundingBox()
+      return { x: box!.x + box!.width / 2, y: box!.y + box!.height / 2 }
+    }
+    const cdp = await context.newCDPSession(page)
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [await coordinates(2)] })
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [await coordinates(0)] })
+    await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+    await expect(handles.first().locator('..').locator('span:first-child')).toHaveText('1 部位')
+    expect(await page.getByRole('region', { name: 'Option', exact: true }).textContent()).toBe(beforeOption)
+  } finally { await context.close() }
+})

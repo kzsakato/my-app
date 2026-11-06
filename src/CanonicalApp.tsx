@@ -890,20 +890,20 @@ const analysisLabel = (start: string, period: AnalysisPeriod) => {
   return year;
 };
 
-function AnalysisChart({ series, labels, unit }: { series: (AnalysisSeries & { color?: string })[]; labels: string[]; unit: string }) {
+function AnalysisChart({ series, labels, unit, compact = false }: { series: (AnalysisSeries & { color?: string })[]; labels: string[]; unit: string; compact?: boolean }) {
   const max = Math.max(1, ...series.flatMap((value) => value.values));
-  const width = 640;
-  const height = 300;
-  const left = 54;
+  const width = compact ? 320 : 640;
+  const height = compact ? 188 : 300;
+  const left = compact ? 38 : 54;
   const top = 22;
-  const right = 10;
+  const right = compact ? 27 : 10;
   const bottom = 55;
   const innerWidth = width - left - right;
   const innerHeight = height - top - bottom;
   const point = (value: number, index: number) => `${left + (innerWidth / Math.max(1, labels.length - 1)) * index},${top + innerHeight - (value / max) * innerHeight}`;
   return (
     <section className="chart" aria-label="分析グラフ">
-      <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label="トレーニング推移グラフ">
+      <svg className={compact ? "v13-analysis-chart" : undefined} viewBox={`0 0 ${width} ${height}`} role="img" aria-label="トレーニング推移グラフ">
         {[0, 0.5, 1].map((ratio) => (
           <line key={ratio} x1={left} x2={width - right} y1={top + innerHeight * ratio} y2={top + innerHeight * ratio} className="grid" />
         ))}
@@ -937,7 +937,7 @@ function AnalysisV13({ data }: { data: CanonicalAppData }) {
     {value.state === "UNAVAILABLE" ? <p role="status">分析データを表示できません。</p> : <>
       <h2>総トレーニング負荷（参考）</h2>
       <AnalysisChart series={[{ id: "pt", name: "全体", values: value.buckets.map(bucket => bucket.pt) }]}
-        labels={value.buckets.map((bucket, index) => index % 2 === 0 || index === 11 ? bucket.start.slice(2) : "")} unit="pt" />
+        labels={value.buckets.map((bucket, index) => index % 4 === 0 || index === 11 ? bucket.start.slice(2) : "")} unit="pt" compact />
       <p className="meta">今期途中</p>
       <h2>6部位の推移</h2>
       <fieldset><legend>推定セット相当量</legend>
@@ -951,7 +951,7 @@ function AnalysisV13({ data }: { data: CanonicalAppData }) {
       <AnalysisChart series={contributionLabels.map((name, index) => ({
         id: name, name, color: analysisColors[index], values: value.buckets.map(bucket => bucket.regions[index]),
       })).filter((_, index) => visible[index])}
-        labels={value.buckets.map((bucket, index) => index % 2 === 0 || index === 11 ? bucket.start.slice(2) : "")} unit="" />
+        labels={value.buckets.map((bucket, index) => index % 4 === 0 || index === 11 ? bucket.start.slice(2) : "")} unit="" compact />
       {value.unallocated > 0 && <p role="status">寄与率未設定の種目があります。</p>}
       <h2>トレーニング内容を検討する</h2>
       <h3>部位別トレーニング量</h3>
@@ -967,7 +967,7 @@ function AnalysisV13({ data }: { data: CanonicalAppData }) {
       </>}
       {value.unallocated > 0 && <p>未配賦 {value.unallocated}</p>}
       <h3>種目別内訳</h3>
-      <label>部位<select value={selected} onChange={event => setSelected(Number(event.target.value))}>
+      <label>部位<select aria-label="部位" value={selected} onChange={event => setSelected(Number(event.target.value))}>
         {contributionLabels.map((name, index) => <option key={name} value={index}>{name}</option>)}
       </select></label>
       {[...value.byExercise].filter(([, amounts]) => amounts[selected] > 0).map(([id, amounts]) =>

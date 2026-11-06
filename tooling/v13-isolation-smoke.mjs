@@ -64,11 +64,40 @@ try {
       return await Promise.all(names.map(async name => [name, await read(tx.objectStore(name).getAllKeys()), await read(tx.objectStore(name).getAll())]))
     } finally { db.close() }
   })
+  const readSecondary = () => child.evaluate(async () => {
+    const db = await new Promise((resolve, reject) => {
+      const request = indexedDB.open('training-check-v13-test', 7)
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+    try {
+      const tx = db.transaction(['canonical', 'cutover'])
+      const read = (store, key) => new Promise((resolve, reject) => {
+        const request = tx.objectStore(store).get(key)
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+      return await Promise.all([read('canonical', 'app'), read('cutover', 'state')])
+    } finally { db.close() }
+  })
   const rootBefore = await rootSnapshot()
-  await child.getByLabel('正規バックアップを選択').setInputFiles('evidence/issue35-v13/synthetic-initial-backup.json')
+  const backupPath = 'evidence/issue35-v13/synthetic-initial-backup.json'
+  const backup = JSON.parse(await readFile(backupPath, 'utf8'))
+  const oldBackup = structuredClone(backup)
+  oldBackup.schemaVersion = 1
+  await child.getByLabel('正規バックアップを選択').setInputFiles({
+    name: 'outer1.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(oldBackup)),
+  })
+  await child.getByText('Error: V13_BACKUP_VERSION_REQUIRED', { exact: true }).waitFor()
+  assert.deepEqual(await readSecondary(), [undefined, undefined])
+  await child.getByLabel('正規バックアップを選択').setInputFiles(backupPath)
   await child.getByRole('heading', { name: '復元内容の確認' }).waitFor()
   await child.getByRole('button', { name: '復元する' }).click()
   await child.getByRole('heading', { name: '今週の実施メニュー' }).waitFor()
+  const [restored, marker] = await readSecondary()
+  assert.deepEqual(restored, backup.payload)
+  assert.ok(marker.v13InitialRestore)
+  assert.equal(marker.v13Pending, undefined)
   const settings = async () => {
     await child.getByRole('button', { name: '共通メニュー' }).click()
     await child.getByRole('button', { name: '設定', exact: true }).click()
@@ -78,6 +107,25 @@ try {
   const proposal = 'evidence/issue35-v13/synthetic-initial-proposal.json'
   await child.getByLabel('提案ファイルを選ぶ').setInputFiles(proposal)
   await child.getByText('初回寄与率を登録しました。', { exact: true }).waitFor()
+  const applied = await readSecondary()
+  const expected = structuredClone(backup.payload)
+  const parsed = JSON.parse(await readFile(proposal, 'utf8'))
+  expected.trainerDataRevision = 1
+  expected.appliedProposalIds.push(parsed.proposalId)
+  for (const operation of parsed.operations) expected.contributions.byExerciseId[operation.exerciseId] = { rates: operation.rates, revision: 1 }
+  assert.deepEqual(applied, [expected, marker])
+  await child.getByLabel('提案ファイルを選ぶ').setInputFiles(proposal)
+  await child.getByRole('button', { name: '診断情報を保存' }).waitFor()
+  assert.deepEqual(await readSecondary(), applied)
+  const badBatch = {
+    ...parsed, proposalId: 'synthetic-invalid-batch', baseRevision: 1,
+    operations: [{ ...parsed.operations[0], exerciseId: 'ex-C' }, parsed.operations[1]],
+  }
+  await child.getByLabel('提案ファイルを選ぶ').setInputFiles({
+    name: 'bad-batch.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(badBatch)),
+  })
+  await child.getByRole('button', { name: '診断情報を保存' }).waitFor()
+  assert.deepEqual(await readSecondary(), applied)
   const download = child.waitForEvent('download')
   await child.getByRole('button', { name: 'トレーナー用ファイルを作る' }).click()
   await (await download).saveAs(resolve(out, 'synthetic-context-v2.json'))
@@ -115,6 +163,29 @@ try {
   assert.equal(await child.getByText('未配賦 3', { exact: true }).count(), 1)
   await writeFile(resolve(out, 'analysis-plot.json'), JSON.stringify(plot, null, 2) + '\n')
   await child.screenshot({ path: resolve(out, 'analysis-ax01-360.png'), fullPage: true })
+  await settings()
+  await child.getByRole('button', { name: /^トレーナー連携/ }).click()
+  const registerC = {
+    ...parsed, proposalId: 'synthetic-ax01b', baseRevision: 1,
+    operations: [{ ...parsed.operations[0], exerciseId: 'ex-C', rates: { chest: 0, back: 0, arms: 100, shoulders: 0, lowerBody: 0, core: 0 } }],
+  }
+  await child.getByLabel('提案ファイルを選ぶ').setInputFiles({
+    name: 'ax01b.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(registerC)),
+  })
+  await child.getByText('初回寄与率を登録しました。', { exact: true }).waitFor()
+  const [afterC] = await readSecondary()
+  assert.deepEqual(afterC.sessions, backup.payload.sessions)
+  await settings()
+  await child.getByRole('button', { name: /^分析/ }).click()
+  await child.getByLabel('部位', { exact: true }).selectOption('2')
+  assert.equal(await child.getByText('未配賦 3', { exact: true }).count(), 0)
+  const afterPlot = await child.locator('svg polyline').evaluateAll(lines => Object.fromEntries(lines.map(line => [line.dataset.series, JSON.parse(line.dataset.values)])))
+  assert.deepEqual(afterPlot.pt, plot.pt)
+  assert.deepEqual(afterPlot['腕'].slice(-2), [0, 3])
+  assert.equal(await child.locator('[data-exercise-id="ex-C"] meter').getAttribute('value'), '3')
+  await writeFile(resolve(out, 'analysis-plot-after.json'), JSON.stringify(afterPlot, null, 2) + '\n')
+  await child.screenshot({ path: resolve(out, 'analysis-ax01b-360.png'), fullPage: true })
+
   assert.deepEqual(await rootSnapshot(), rootBefore)
   const evidence = await child.evaluate(async () => ({
     dbs: await indexedDB.databases(),
@@ -132,7 +203,7 @@ try {
   await context.setOffline(true)
   await child.reload()
   await child.waitForFunction(() => document.querySelector('main'))
-  console.log(JSON.stringify({ result: 'PASS_CHILD_FIRST_LIMITED', chromium: browser.version(), origin, rootCanonicalAndOtherStoresUnchanged: true, ...evidence }, null, 2))
+  console.log(JSON.stringify({ result: 'PASS_CHILD_FIRST_LIMITED', chromium: browser.version(), origin, rootCanonicalAndOtherStoresUnchanged: true, exactRestoreReadback: true, exactProposalReadback: true, replayAndInvalidBatchUnchanged: true, ...evidence }, null, 2))
   }
 } finally {
   await browser.close()

@@ -63,3 +63,5 @@
 .v13-analysis-amount{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) auto;align-items:center;gap:8px;overflow-wrap:anywhere}
 .v13-analysis-amount meter{width:100%}
 .v13-analysis-shares{display:flex;height:1.5rem}
+
+.chart .v13-analysis-chart text,.chart .v13-analysis-chart .axis{font-size:11px}
