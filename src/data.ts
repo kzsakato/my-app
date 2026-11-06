@@ -183,7 +183,10 @@ export async function restoreInitialV13(raw: string, approved: CanonicalAppData)
    await tx.objectStore('cutover').put({ authoritative: true, establishedAt: new Date().toISOString(), v13InitialRestore: marker, v13Pending: marker }, cutoverKey)
    await tx.done
   } catch (error) {
-   try { tx.abort() } catch { /* may already be settled */ }
+   try {
+    tx.abort()
+    started = false
+   } catch { /* The outcome is uncertain if the transaction cannot be aborted. */ }
    await tx.done.catch(() => {})
    throw error
   }
@@ -226,7 +229,10 @@ export async function applyInitialV13Proposal(raw: string): Promise<V13WriteResu
    await cutover.put({ ...state, v13Pending: marker }, cutoverKey)
    await tx.done
   } catch (error) {
-   try { tx.abort() } catch { /* may already be settled */ }
+   try {
+    tx.abort()
+    started = false
+   } catch { /* The outcome is uncertain if the transaction cannot be aborted. */ }
    await tx.done.catch(() => {})
    throw error
   }

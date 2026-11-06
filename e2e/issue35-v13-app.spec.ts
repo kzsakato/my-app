@@ -105,15 +105,83 @@ test('AN-G06: real-build plot and PNG for each selectable period', async ({ page
     const plot = await page.locator('svg polyline').evaluateAll(lines =>
       Object.fromEntries(lines.map(line => [line.getAttribute('data-series'), JSON.parse(line.getAttribute('data-values')!)])),
     )
-    const expected = period === 'week' || period === 'month' ? [...Array(10).fill(0), 36, 530] : [...Array(11).fill(0), 566]
-    expect(plot.pt).toEqual(expected)
-    expect(Object.keys(plot)).toHaveLength(7)
-    expect(plot['胸'].reduce((sum: number, value: number) => sum + value, 0)).toBe(1.5)
-    expect(plot['背中'].reduce((sum: number, value: number) => sum + value, 0)).toBe(2)
+    const separateBuckets = period === 'week' || period === 'month'
+    const series = (previous: number, current: number) => separateBuckets
+      ? [...Array(10).fill(0), previous, current]
+      : [...Array(11).fill(0), previous + current]
+    const expected = {
+      pt: series(36, 530),
+      '胸': series(0.5, 1),
+      '背中': series(0, 2),
+      '腕': series(0, 0),
+      '肩': series(0.5, 1),
+      '下半身': series(0, 2),
+      '体幹': series(0, 0),
+    }
+    expect(plot).toEqual(expected)
     await expect(page.getByText('未配賦 3', { exact: true })).toBeVisible()
     const screenshot = period + '-360.png'
     await page.screenshot({ path: info.outputPath(screenshot), fullPage: true })
-    evidence.push({ period, viewport: page.viewportSize(), screenshot, expectedPT: expected, plot })
+    evidence.push({ period, viewport: page.viewportSize(), screenshot, expected, plot })
   }
   await info.attach('AN-G06-periods', { contentType: 'application/json', body: JSON.stringify(evidence, null, 2) })
+})
+test('PR-05/06: confirmed pre-commit abort changes nothing; committed read-back fault stays held', async ({ page }, info) => {
+  await preview(page)
+  await page.getByRole('button', { name: '復元する' }).click()
+  await settings(page)
+  await page.getByRole('button', { name: /^トレーナー連携/ }).click()
+  const before = await readApp(page)
+  await page.evaluate(() => {
+    const put = IDBObjectStore.prototype.put
+    IDBObjectStore.prototype.put = function (...args) {
+      if (this.name === 'canonical' && args[1] === 'app') {
+        IDBObjectStore.prototype.put = put
+        throw new DOMException('Synthetic pre-commit Proposal fault', 'QuotaExceededError')
+      }
+      return put.apply(this, args)
+    }
+  })
+  await page.getByLabel('提案ファイルを選ぶ').setInputFiles(proposalPath)
+  await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
+  await expect(page.getByLabel('提案ファイルを選ぶ')).toBeEnabled()
+  const afterAbort = await readApp(page)
+  expect(afterAbort).toEqual(before)
+  await page.evaluate(() => {
+    const put = IDBObjectStore.prototype.put
+    const get = IDBObjectStore.prototype.get
+    let armed = false
+    IDBObjectStore.prototype.put = function (value, key) {
+      if (this.name === 'cutover' && value?.v13Pending) armed = true
+      return put.call(this, value, key)
+    }
+    IDBObjectStore.prototype.get = function (key) {
+      if (armed && this.name === 'cutover' && this.transaction.mode === 'readonly') {
+        IDBObjectStore.prototype.get = get
+        IDBObjectStore.prototype.put = put
+        throw new DOMException('Synthetic post-commit Proposal read-back fault', 'UnknownError')
+      }
+      return get.call(this, key)
+    }
+  })
+  await page.getByLabel('提案ファイルを選ぶ').setInputFiles(proposalPath)
+  const held = page.getByText('保存結果を確認できません。再実行せず、診断情報を保存してください。', { exact: true })
+  await expect(held).toBeVisible()
+  await expect(page.getByText('初回寄与率を登録しました。', { exact: true })).toHaveCount(0)
+  await expect(page.getByLabel('提案ファイルを選ぶ')).toBeDisabled()
+  const committed = await readApp(page)
+  const expected = structuredClone(backup.payload)
+  const proposal = JSON.parse(readFileSync(proposalPath, 'utf8'))
+  expected.trainerDataRevision = 1
+  expected.appliedProposalIds.push(proposal.proposalId)
+  for (const operation of proposal.operations) expected.contributions.byExerciseId[operation.exerciseId] = { rates: operation.rates, revision: 1 }
+  expect(committed[0]).toEqual(expected)
+  expect(committed[1]).toMatchObject({ v13Pending: expect.any(String) })
+  await page.reload()
+  await expect(held).toBeVisible()
+  expect(await readApp(page)).toEqual(committed)
+  await info.attach('PR-05-06-fault-readbacks', {
+    contentType: 'application/json',
+    body: JSON.stringify({ before, afterAbort, committed }, null, 2),
+  })
 })
