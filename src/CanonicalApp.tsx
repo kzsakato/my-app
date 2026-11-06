@@ -821,7 +821,7 @@ function ExtraPage({ data, onBack, onChoose, onEditExercise, onSettings, onTop }
     <div className="extra-filters"><select aria-label="部位" value={filter} onChange={event => setFilter(event.target.value)}><option value="">部位：すべて</option>{regions.map(value => <option key={value}>{value}</option>)}</select>
     <label>除外<select aria-label="除外" value={excludeDays} onChange={event => setExcludeDays(Number(event.target.value))}>{[0, 2, 4, 6, 10].map(value => <option key={value} value={value}>{value ? `直近${value}日` : "なし"}</option>)}</select></label></div>
     <OptionSort checked={option} onChange={setOption} />
-    {rows.map(item => { const exercise = data.exercises.find(value => value.id === item.exerciseId)!; return <div key={item.id} data-training-item-id={item.id}><button className="row extra-item-row" onClick={() => onChoose(item.id)}><span className="extra-item-content"><b>{exerciseBodyRegion(exercise) ?? ""}：{item.displayName}</b><span className="extra-item-details"><small>{exercise.measureType === "reps" ? `${exercise.usesWeight ? `${item.weight ?? 0} kg × ` : ""}${item.reps ?? 0} 回` : `${item.seconds ?? 0} 秒`} × {item.sets} セット</small><small className="item-history">{exerciseHistory(data.sessions, exercise.id, new Date(), data.weekStartsOn)}</small></span></span><span>›</span></button><RegionWarning exercise={exercise} onEdit={onEditExercise} /></div>; })}
+    {rows.map(item => { const exercise = data.exercises.find(value => value.id === item.exerciseId)!; return <div key={item.id} data-training-item-id={item.id}><button className="row extra-item-row" onClick={() => onChoose(item.id)}><span className="extra-item-content"><b>{exerciseBodyRegion(exercise) ?? ""}：{item.displayName}</b><span className="extra-item-details"><small>{exercise.measureType === "reps" ? `${exercise.usesWeight ? `${item.weight ?? 0} kg × ` : ""}${item.reps ?? 0} 回` : `${item.seconds ?? 0} 秒`} × {item.sets} セット</small><small className="item-history">{exerciseHistory(data.sessions, exercise.id, new Date(), data.weekStartsOn)}</small></span></span></button><RegionWarning exercise={exercise} onEdit={onEditExercise} /></div>; })}
   </Frame>;
 }
 
@@ -1069,7 +1069,7 @@ function SettingsPage(props: SettingsPageProps) {
       {row("種目", "種目名・部位・回数／時間・重量の扱い", () => navigate("exercise"))}
       {row("実施項目", "重量・回数／時間・セット数などの標準設定", () => navigate("item"))}
       {row("週メニュー", "実施項目と推奨曜日の組み合わせ", () => navigate("menu"))}
-      {row("表示設定", "", () => navigate("displayPreferences"))}
+      {row("表示設定", "ソート順など、画面表示に関する設定", () => navigate("displayPreferences"))}
       {row("分析", "トレーニング負荷の推移", onAnalysis)}
       {row("設定履歴", "実施項目ごとの過去設定", () => navigate("settingHistory"))}
       {row("データ管理", "バックアップ作成・復元", onBackup)}
