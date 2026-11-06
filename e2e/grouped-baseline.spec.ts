@@ -251,7 +251,7 @@ test('H12 Settings retains Trainer interfaces and hides MAN helpers in release',
 
 test('H13 Top displays 260 average and 2.50 ACWR from canonical snapshots, not current Master', async ({ page }) => {
   await page.clock.install({ time: new Date('2026-09-30T12:00:00+09:00') })
-  const value = canonicalData()
+  const value = backupFixture()
   value.sessions = [['2026-08-24', 100], ['2026-09-07', 300], ['2026-09-14', 400], ['2026-09-21', 500], ['2026-09-29', 9000]].map(([date, weight]) => ({
     id: String(date), trainingItemId: 'canonical-item', date, performedAt: `${date}T12:00:00+09:00`, performedOrder: 0, weight, reps: 1, sets: 1,
     snapshot: { exerciseId: 'canonical-exercise', exerciseName: '保存時の種目名', trainingItemDisplayName: '保存時の項目名', measureType: 'reps', weightMode: 'total' },
@@ -263,7 +263,9 @@ test('H13 Top displays 260 average and 2.50 ACWR from canonical snapshots, not c
   await expect(summary.getByText('9,000 pt', { exact: true })).toBeVisible()
   await settings(page)
   await page.getByRole('button', { name: /^種目 / }).click()
-  await page.getByRole('button', { name: /^正規テストプレス / }).click()
+  await page.getByRole('button').filter({
+    has: page.locator('b').getByText('正規テストプレス', { exact: true }),
+  }).click()
   await page.getByLabel('重量の扱い').selectOption('perSide')
   await page.getByRole('button', { name: '保存', exact: true }).click()
   await top(page)
@@ -273,26 +275,28 @@ test('H13 Top displays 260 average and 2.50 ACWR from canonical snapshots, not c
 
 test('H12 Run history is item-scoped and completed status resets at the configured week boundary', async ({ page }) => {
   await page.clock.install({ time: monday })
-  const value = canonicalData()
+  const value = backupFixture()
   const items = value.trainingItems as Array<Record<string, unknown>>
   items.push({ ...items[0], id: 'other-item', displayName: '別項目', standardMemo: '別メモ' })
   const changes = value.trainingItemSettingChanges as Array<Record<string, unknown>>
   changes.push({ ...changes[0], id: 'other-change', trainingItemId: 'other-item', changeReason: '別項目の変更理由' })
   await seedCanonicalAndReload(page, value)
-  await page.getByRole('button', { name: /^胸 / }).click()
-  await page.getByRole('button', { name: /^正規テストプレス / }).first().click()
+  await page.getByRole('button', { name: '部位表示', exact: true }).click()
+  await page.getByRole('button').filter({ has: page.locator('b').getByText('胸', { exact: true }) }).click()
+  await page.locator('[data-menu-entry-id="canonical-entry-a"]').click()
   await page.getByRole('button', { name: /この実施項目の設定履歴を見る/ }).click()
   await expect(page.getByText('初回設定（削除できません）')).toHaveCount(1)
   await expect(page.getByText('変更理由: 別項目の変更理由')).toHaveCount(0)
   await page.getByRole('button', { name: '‹ 戻る' }).click()
   await page.getByRole('button', { name: '種目を完了' }).click()
   await top(page)
-  await expect(page.getByText('今週の実施総数')).toContainText('2/2')
+  await expect(page.getByText('今週の実施総数')).toContainText('1/2')
   await page.clock.setFixedTime(new Date('2026-09-28T10:00:00+09:00'))
   await page.reload()
   await expect(page.getByText('今週の実施総数')).toContainText('0/2')
-  await page.getByRole('button', { name: /^胸 / }).click()
-  await page.getByRole('button', { name: /^正規テストプレス / }).first().click()
+  await page.getByRole('button', { name: '部位表示', exact: true }).click()
+  await page.getByRole('button').filter({ has: page.locator('b').getByText('胸', { exact: true }) }).click()
+  await page.locator('[data-menu-entry-id="canonical-entry-a"]').click()
   await expect(page.getByRole('button', { name: '種目を完了' })).toBeVisible()
   await expect(page.getByRole('button', { name: /の実行を取り消す/ })).toHaveCount(0)
 })

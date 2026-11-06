@@ -151,18 +151,26 @@ async function verifyV13Commit(db: Awaited<typeof dbPromise>, candidate: Canonic
      validateCanonicalDomain(actual).errors.length || contributionError(candidate)) throw new Error('V13_READBACK_MISMATCH')
 
  const finish = db.transaction(['canonical', 'cutover'], 'readwrite')
- const store = finish.objectStore('cutover')
- const current = await store.get(cutoverKey) as CutoverState
- const latest = await finish.objectStore('canonical').get(canonicalKey)
- if (current?.v13Pending !== marker || JSON.stringify(latest) !== JSON.stringify(candidate)) {
-  finish.abort()
+ try {
+  const store = finish.objectStore('cutover')
+  const current = await store.get(cutoverKey) as CutoverState
+  const latest = await finish.objectStore('canonical').get(canonicalKey)
+  if (current?.v13Pending !== marker || JSON.stringify(latest) !== JSON.stringify(candidate)) {
+   throw new Error('V13_MARKER_MISMATCH')
+  }
+  const { v13Pending: _, ...verified } = current
+  await store.put(verified, cutoverKey)
+  // Verify the clear before releasing the write lock. A read failure must
+  // abort this transaction so the persisted pending marker stays in place.
+  if (JSON.stringify(await store.get(cutoverKey)) !== JSON.stringify(verified)) {
+   throw new Error('V13_MARKER_CLEAR_UNCONFIRMED')
+  }
+  await finish.done
+ } catch (error) {
+  try { finish.abort() } catch { /* Already settled. */ }
   await finish.done.catch(() => {})
-  throw new Error('V13_MARKER_MISMATCH')
+  throw error
  }
- const { v13Pending: _, ...verified } = current
- await store.put(verified, cutoverKey)
- await finish.done
- if (JSON.stringify(await db.get('cutover', cutoverKey)) !== JSON.stringify(verified)) throw new Error('V13_MARKER_CLEAR_UNCONFIRMED')
 }
 
 export async function restoreInitialV13(raw: string, approved: CanonicalAppData): Promise<V13WriteResult> {
