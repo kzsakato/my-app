@@ -1,0 +1,9 @@
+e2e-chromium	Run pnpm test:e2e	2026-11-06T11:30:21.5200846Z   ✓    3 [chromium] › e2e/grouped-baseline.spec.ts:208:1 › H12 restore read-back failure blocks stale editing and never declares success or falls back (1.2s)
+e2e-chromium	Run pnpm test:e2e	2026-11-06T11:43:10.1574661Z   ✓  119 [chromium] › e2e/worker-restore.spec.ts:5:1 › canonical V1.1 Backup normal Restore stays local, preserves confirmation and persists offline (960ms)
+e2e-chromium	Run pnpm test:e2e	2026-11-06T11:43:10.2538762Z     Expected: 57
+e2e-chromium	Run pnpm test:e2e	2026-11-06T11:43:10.2538974Z     Received: 58
+e2e-chromium	Run pnpm test:e2e	2026-11-06T11:43:10.3321108Z   41 failed
+e2e-chromium	Run pnpm test:e2e	2026-11-06T11:43:10.3346278Z   78 passed (14.1m)
+e2e-chromium	Run pnpm exec playwright test --config playwright.release.config.ts	2026-11-06T11:44:23.0340551Z   ✓   3 [release] › e2e/grouped-baseline.spec.ts:208:1 › H12 restore read-back failure blocks stale editing and never declares success or falls back (815ms)
+e2e-chromium	Run pnpm exec playwright test --config playwright.release.config.ts	2026-11-06T11:53:45.0711348Z   35 failed
+e2e-chromium	Run pnpm exec playwright test --config playwright.release.config.ts	2026-11-06T11:53:45.0758075Z   11 passed (10.4m)
