@@ -130,6 +130,19 @@ test('UI-03: cancel preserves Trainer authority, confirmation saves standard and
   }
   await click(false)
   expect(await read()).toEqual(fixture)
+  await page.evaluate(() => {
+    const original = IDBObjectStore.prototype.put
+    IDBObjectStore.prototype.put = function (...args) {
+      if (this.name === 'canonical' && args[1] === 'app') {
+        IDBObjectStore.prototype.put = original
+        throw new DOMException('Synthetic pre-commit failure', 'QuotaExceededError')
+      }
+      return original.apply(this, args)
+    }
+  })
+  await click(true)
+  await expect(page.getByText('標準設定を保存できません。入力値を確認してください。')).toBeVisible()
+  expect(await read()).toEqual(fixture)
   await click(true)
   await expect.poll(async () => (await read()).trainingItems[0]).toEqual({
     ...fixture.trainingItems[0], managementMode: 'MAN', weight: 19,

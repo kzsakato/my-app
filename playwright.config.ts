@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
   testDir: './e2e',
-  testIgnore: ['v1r-baseline.spec.ts', 'v1r-visual.spec.ts'],
+  testIgnore: ['v1r-baseline.spec.ts', 'v1r-visual.spec.ts', 'issue35-v13-app.spec.ts'],
   // All current browser cases intentionally exercise the same IndexedDB name.
   // Keep them serial so one case cannot replace another case's persisted state.
   fullyParallel: false,

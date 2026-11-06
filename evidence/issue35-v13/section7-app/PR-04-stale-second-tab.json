@@ -1,0 +1,688 @@
+{
+  "stale": {
+    "format": "training-project.trainer-proposal",
+    "version": 2,
+    "proposalId": "synthetic-second-tab-stale",
+    "baseRevision": 0,
+    "operations": [
+      {
+        "type": "setInitialContribution",
+        "exerciseId": "ex-C",
+        "expectedState": "NO_ENTRY",
+        "reason": "Synthetic AX-01 setup",
+        "rates": {
+          "chest": 50,
+          "back": 0,
+          "arms": 0,
+          "shoulders": 50,
+          "lowerBody": 0,
+          "core": 0
+        }
+      }
+    ]
+  },
+  "applied": [
+    {
+      "schemaVersion": 1,
+      "weekStartsOn": 0,
+      "profile": {
+        "weight": 60
+      },
+      "exercises": [
+        {
+          "id": "ex-A",
+          "lifecycle": "active",
+          "name": "合成種目 A",
+          "measureType": "reps",
+          "usesWeight": true,
+          "weightMode": "total",
+          "classifications": [
+            {
+              "kind": "bodyRegion",
+              "label": "胸"
+            }
+          ]
+        },
+        {
+          "id": "ex-B",
+          "lifecycle": "active",
+          "name": "合成種目 B",
+          "measureType": "reps",
+          "usesWeight": true,
+          "weightMode": "total",
+          "classifications": [
+            {
+              "kind": "bodyRegion",
+              "label": "胸"
+            }
+          ]
+        },
+        {
+          "id": "ex-C",
+          "lifecycle": "active",
+          "name": "合成種目 C",
+          "measureType": "reps",
+          "usesWeight": true,
+          "weightMode": "total",
+          "classifications": [
+            {
+              "kind": "bodyRegion",
+              "label": "胸"
+            }
+          ]
+        },
+        {
+          "id": "ex-Z",
+          "lifecycle": "active",
+          "name": "合成種目 Z",
+          "measureType": "reps",
+          "usesWeight": true,
+          "weightMode": "total",
+          "classifications": [
+            {
+              "kind": "bodyRegion",
+              "label": "胸"
+            }
+          ]
+        }
+      ],
+      "trainingItems": [
+        {
+          "id": "ti-A",
+          "lifecycle": "active",
+          "managementMode": "MAN",
+          "exerciseId": "ex-A",
+          "displayName": "合成種目 A",
+          "sets": 1,
+          "reps": 5,
+          "weight": 10
+        },
+        {
+          "id": "ti-B",
+          "lifecycle": "active",
+          "managementMode": "MAN",
+          "exerciseId": "ex-B",
+          "displayName": "合成種目 B",
+          "sets": 1,
+          "reps": 5,
+          "weight": 10
+        },
+        {
+          "id": "ti-C",
+          "lifecycle": "active",
+          "managementMode": "MAN",
+          "exerciseId": "ex-C",
+          "displayName": "合成種目 C",
+          "sets": 1,
+          "reps": 5,
+          "weight": 10
+        },
+        {
+          "id": "ti-Z",
+          "lifecycle": "active",
+          "managementMode": "MAN",
+          "exerciseId": "ex-Z",
+          "displayName": "合成種目 Z",
+          "sets": 1,
+          "reps": 5,
+          "weight": 10
+        }
+      ],
+      "menus": [],
+      "menuEntries": [],
+      "sessions": [
+        {
+          "id": "S-A1",
+          "trainingItemId": "ti-A",
+          "date": "2026-11-02",
+          "performedAt": "2026-11-02T09:00:00+09:00",
+          "performedOrder": 0,
+          "sets": 2,
+          "bodyWeight": 60,
+          "snapshot": {
+            "exerciseId": "ex-A",
+            "exerciseName": "合成種目 A",
+            "trainingItemDisplayName": "合成種目 A",
+            "measureType": "reps",
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ],
+            "selfWeightRatio": 10
+          },
+          "weight": 10,
+          "reps": 5
+        },
+        {
+          "id": "S-B1",
+          "trainingItemId": "ti-B",
+          "date": "2026-11-03",
+          "performedAt": "2026-11-03T09:00:00+09:00",
+          "performedOrder": 0,
+          "sets": 4,
+          "bodyWeight": 60,
+          "snapshot": {
+            "exerciseId": "ex-B",
+            "exerciseName": "合成種目 B",
+            "trainingItemDisplayName": "合成種目 B",
+            "measureType": "reps",
+            "weightMode": "total",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ],
+            "selfWeightRatio": 5
+          },
+          "weight": 0,
+          "reps": 10
+        },
+        {
+          "id": "S-C1",
+          "trainingItemId": "ti-C",
+          "date": "2026-11-04",
+          "performedAt": "2026-11-04T09:00:00+09:00",
+          "performedOrder": 0,
+          "sets": 3,
+          "bodyWeight": 0,
+          "snapshot": {
+            "exerciseId": "ex-C",
+            "exerciseName": "合成種目 C",
+            "trainingItemDisplayName": "合成種目 C",
+            "measureType": "reps",
+            "weightMode": "total",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ],
+            "selfWeightRatio": 0
+          },
+          "weight": 5,
+          "reps": 10
+        },
+        {
+          "id": "S-A0",
+          "trainingItemId": "ti-A",
+          "date": "2026-10-26",
+          "performedAt": "2026-10-26T09:00:00+09:00",
+          "performedOrder": 0,
+          "sets": 1,
+          "bodyWeight": 60,
+          "snapshot": {
+            "exerciseId": "ex-A",
+            "exerciseName": "合成種目 A",
+            "trainingItemDisplayName": "合成種目 A",
+            "measureType": "time",
+            "weightMode": "total",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ],
+            "secondsLoadRatio": 2
+          },
+          "seconds": 30
+        }
+      ],
+      "trainingItemSettingChanges": [
+        {
+          "id": "change-A",
+          "trainingItemId": "ti-A",
+          "changedAt": "2026-10-01T09:00:00+09:00",
+          "isInitial": true,
+          "snapshot": {
+            "sets": 1,
+            "reps": 5,
+            "weight": 10
+          }
+        },
+        {
+          "id": "change-B",
+          "trainingItemId": "ti-B",
+          "changedAt": "2026-10-01T09:00:00+09:00",
+          "isInitial": true,
+          "snapshot": {
+            "sets": 1,
+            "reps": 5,
+            "weight": 10
+          }
+        },
+        {
+          "id": "change-C",
+          "trainingItemId": "ti-C",
+          "changedAt": "2026-10-01T09:00:00+09:00",
+          "isInitial": true,
+          "snapshot": {
+            "sets": 1,
+            "reps": 5,
+            "weight": 10
+          }
+        },
+        {
+          "id": "change-Z",
+          "trainingItemId": "ti-Z",
+          "changedAt": "2026-10-01T09:00:00+09:00",
+          "isInitial": true,
+          "snapshot": {
+            "sets": 1,
+            "reps": 5,
+            "weight": 10
+          }
+        }
+      ],
+      "appliedProposalIds": [
+        "synthetic-ax01-setup"
+      ],
+      "trainerDataRevision": 1,
+      "contributions": {
+        "version": 1,
+        "byExerciseId": {
+          "ex-A": {
+            "rates": {
+              "chest": 50,
+              "back": 0,
+              "arms": 0,
+              "shoulders": 50,
+              "lowerBody": 0,
+              "core": 0
+            },
+            "revision": 1
+          },
+          "ex-B": {
+            "rates": {
+              "chest": 0,
+              "back": 50,
+              "arms": 0,
+              "shoulders": 0,
+              "lowerBody": 50,
+              "core": 0
+            },
+            "revision": 1
+          },
+          "ex-Z": {
+            "rates": {
+              "chest": 100,
+              "back": 0,
+              "arms": 0,
+              "shoulders": 0,
+              "lowerBody": 0,
+              "core": 0
+            },
+            "revision": 1
+          }
+        }
+      },
+      "displayPreferences": {
+        "defaultSort": {
+          "priority": [
+            "recommendedDay",
+            "completion",
+            "bodyRegion"
+          ],
+          "completionDirection": "incompleteFirst"
+        },
+        "optionSort": {
+          "priority": [
+            "completion",
+            "recommendedDay",
+            "bodyRegion"
+          ],
+          "completionDirection": "incompleteFirst"
+        },
+        "bodyRegionOrder": [
+          "胸",
+          "背中",
+          "腕",
+          "肩",
+          "下半身",
+          "体幹",
+          "その他"
+        ]
+      }
+    },
+    {
+      "authoritative": true,
+      "establishedAt": "2026-11-06T03:00:00.000Z",
+      "v13InitialRestore": "32de15cc-aad6-4e1e-940a-49bcd4eb81e0"
+    }
+  ],
+  "afterStale": [
+    {
+      "schemaVersion": 1,
+      "weekStartsOn": 0,
+      "profile": {
+        "weight": 60
+      },
+      "exercises": [
+        {
+          "id": "ex-A",
+          "lifecycle": "active",
+          "name": "合成種目 A",
+          "measureType": "reps",
+          "usesWeight": true,
+          "weightMode": "total",
+          "classifications": [
+            {
+              "kind": "bodyRegion",
+              "label": "胸"
+            }
+          ]
+        },
+        {
+          "id": "ex-B",
+          "lifecycle": "active",
+          "name": "合成種目 B",
+          "measureType": "reps",
+          "usesWeight": true,
+          "weightMode": "total",
+          "classifications": [
+            {
+              "kind": "bodyRegion",
+              "label": "胸"
+            }
+          ]
+        },
+        {
+          "id": "ex-C",
+          "lifecycle": "active",
+          "name": "合成種目 C",
+          "measureType": "reps",
+          "usesWeight": true,
+          "weightMode": "total",
+          "classifications": [
+            {
+              "kind": "bodyRegion",
+              "label": "胸"
+            }
+          ]
+        },
+        {
+          "id": "ex-Z",
+          "lifecycle": "active",
+          "name": "合成種目 Z",
+          "measureType": "reps",
+          "usesWeight": true,
+          "weightMode": "total",
+          "classifications": [
+            {
+              "kind": "bodyRegion",
+              "label": "胸"
+            }
+          ]
+        }
+      ],
+      "trainingItems": [
+        {
+          "id": "ti-A",
+          "lifecycle": "active",
+          "managementMode": "MAN",
+          "exerciseId": "ex-A",
+          "displayName": "合成種目 A",
+          "sets": 1,
+          "reps": 5,
+          "weight": 10
+        },
+        {
+          "id": "ti-B",
+          "lifecycle": "active",
+          "managementMode": "MAN",
+          "exerciseId": "ex-B",
+          "displayName": "合成種目 B",
+          "sets": 1,
+          "reps": 5,
+          "weight": 10
+        },
+        {
+          "id": "ti-C",
+          "lifecycle": "active",
+          "managementMode": "MAN",
+          "exerciseId": "ex-C",
+          "displayName": "合成種目 C",
+          "sets": 1,
+          "reps": 5,
+          "weight": 10
+        },
+        {
+          "id": "ti-Z",
+          "lifecycle": "active",
+          "managementMode": "MAN",
+          "exerciseId": "ex-Z",
+          "displayName": "合成種目 Z",
+          "sets": 1,
+          "reps": 5,
+          "weight": 10
+        }
+      ],
+      "menus": [],
+      "menuEntries": [],
+      "sessions": [
+        {
+          "id": "S-A1",
+          "trainingItemId": "ti-A",
+          "date": "2026-11-02",
+          "performedAt": "2026-11-02T09:00:00+09:00",
+          "performedOrder": 0,
+          "sets": 2,
+          "bodyWeight": 60,
+          "snapshot": {
+            "exerciseId": "ex-A",
+            "exerciseName": "合成種目 A",
+            "trainingItemDisplayName": "合成種目 A",
+            "measureType": "reps",
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ],
+            "selfWeightRatio": 10
+          },
+          "weight": 10,
+          "reps": 5
+        },
+        {
+          "id": "S-B1",
+          "trainingItemId": "ti-B",
+          "date": "2026-11-03",
+          "performedAt": "2026-11-03T09:00:00+09:00",
+          "performedOrder": 0,
+          "sets": 4,
+          "bodyWeight": 60,
+          "snapshot": {
+            "exerciseId": "ex-B",
+            "exerciseName": "合成種目 B",
+            "trainingItemDisplayName": "合成種目 B",
+            "measureType": "reps",
+            "weightMode": "total",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ],
+            "selfWeightRatio": 5
+          },
+          "weight": 0,
+          "reps": 10
+        },
+        {
+          "id": "S-C1",
+          "trainingItemId": "ti-C",
+          "date": "2026-11-04",
+          "performedAt": "2026-11-04T09:00:00+09:00",
+          "performedOrder": 0,
+          "sets": 3,
+          "bodyWeight": 0,
+          "snapshot": {
+            "exerciseId": "ex-C",
+            "exerciseName": "合成種目 C",
+            "trainingItemDisplayName": "合成種目 C",
+            "measureType": "reps",
+            "weightMode": "total",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ],
+            "selfWeightRatio": 0
+          },
+          "weight": 5,
+          "reps": 10
+        },
+        {
+          "id": "S-A0",
+          "trainingItemId": "ti-A",
+          "date": "2026-10-26",
+          "performedAt": "2026-10-26T09:00:00+09:00",
+          "performedOrder": 0,
+          "sets": 1,
+          "bodyWeight": 60,
+          "snapshot": {
+            "exerciseId": "ex-A",
+            "exerciseName": "合成種目 A",
+            "trainingItemDisplayName": "合成種目 A",
+            "measureType": "time",
+            "weightMode": "total",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ],
+            "secondsLoadRatio": 2
+          },
+          "seconds": 30
+        }
+      ],
+      "trainingItemSettingChanges": [
+        {
+          "id": "change-A",
+          "trainingItemId": "ti-A",
+          "changedAt": "2026-10-01T09:00:00+09:00",
+          "isInitial": true,
+          "snapshot": {
+            "sets": 1,
+            "reps": 5,
+            "weight": 10
+          }
+        },
+        {
+          "id": "change-B",
+          "trainingItemId": "ti-B",
+          "changedAt": "2026-10-01T09:00:00+09:00",
+          "isInitial": true,
+          "snapshot": {
+            "sets": 1,
+            "reps": 5,
+            "weight": 10
+          }
+        },
+        {
+          "id": "change-C",
+          "trainingItemId": "ti-C",
+          "changedAt": "2026-10-01T09:00:00+09:00",
+          "isInitial": true,
+          "snapshot": {
+            "sets": 1,
+            "reps": 5,
+            "weight": 10
+          }
+        },
+        {
+          "id": "change-Z",
+          "trainingItemId": "ti-Z",
+          "changedAt": "2026-10-01T09:00:00+09:00",
+          "isInitial": true,
+          "snapshot": {
+            "sets": 1,
+            "reps": 5,
+            "weight": 10
+          }
+        }
+      ],
+      "appliedProposalIds": [
+        "synthetic-ax01-setup"
+      ],
+      "trainerDataRevision": 1,
+      "contributions": {
+        "version": 1,
+        "byExerciseId": {
+          "ex-A": {
+            "rates": {
+              "chest": 50,
+              "back": 0,
+              "arms": 0,
+              "shoulders": 50,
+              "lowerBody": 0,
+              "core": 0
+            },
+            "revision": 1
+          },
+          "ex-B": {
+            "rates": {
+              "chest": 0,
+              "back": 50,
+              "arms": 0,
+              "shoulders": 0,
+              "lowerBody": 50,
+              "core": 0
+            },
+            "revision": 1
+          },
+          "ex-Z": {
+            "rates": {
+              "chest": 100,
+              "back": 0,
+              "arms": 0,
+              "shoulders": 0,
+              "lowerBody": 0,
+              "core": 0
+            },
+            "revision": 1
+          }
+        }
+      },
+      "displayPreferences": {
+        "defaultSort": {
+          "priority": [
+            "recommendedDay",
+            "completion",
+            "bodyRegion"
+          ],
+          "completionDirection": "incompleteFirst"
+        },
+        "optionSort": {
+          "priority": [
+            "completion",
+            "recommendedDay",
+            "bodyRegion"
+          ],
+          "completionDirection": "incompleteFirst"
+        },
+        "bodyRegionOrder": [
+          "胸",
+          "背中",
+          "腕",
+          "肩",
+          "下半身",
+          "体幹",
+          "その他"
+        ]
+      }
+    },
+    {
+      "authoritative": true,
+      "establishedAt": "2026-11-06T03:00:00.000Z",
+      "v13InitialRestore": "32de15cc-aad6-4e1e-940a-49bcd4eb81e0"
+    }
+  ]
+}
