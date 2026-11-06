@@ -113,3 +113,60 @@ describe('MIG-01 isolated initial Backup preview', () => {
     expect(() => previewInitialV13Restore(raw)).toThrow()
   })
 })
+describe('V1.3 analysis and Context calendar boundaries', () => {
+  const dates = [
+    ['week', '2026-08-17', '2026-08-16', '2026-11-02'],
+    ['month', '2025-12-01', '2025-11-30', '2026-11-01'],
+    ['quarter', '2024-01-01', '2023-12-31', '2026-10-01'],
+    ['half', '2021-01-01', '2020-12-31', '2026-07-01'],
+    ['year', '2015-01-01', '2014-12-31', '2026-01-01'],
+  ] as const
+
+  it.each(dates)('AN-G06 %s includes the left edge and today, excludes adjacent dates', (period, first, before, last) => {
+    const data = base()
+    const original = data.sessions[0]
+    data.sessions = [before, first, today, '2026-11-07'].map((date, i) => ({
+      ...original, id: 'edge-' + i, date, performedAt: date + 'T12:00:00+09:00',
+      weight: 2, reps: 3, sets: 1,
+    }))
+    const projection = projectAnalysisV13(data, period, today)
+    if (projection.state !== 'AVAILABLE') throw new Error(projection.reason)
+    expect(projection.buckets).toHaveLength(12)
+    expect(projection.buckets[0].start).toBe(first)
+    expect(projection.buckets[11].start).toBe(last)
+    // 2 kg × two sides × 3 reps × one set per included record.
+    expect(projection.buckets.map(bucket => bucket.pt)).toEqual([12, ...Array(10).fill(0), 12])
+    expect(projection.regions).toEqual([2, 0, 0, 0, 0, 0])
+    expect(projection.shares).toEqual([1, 0, 0, 0, 0, 0])
+    expect(projection.byExercise.get('exercise-1')).toEqual([2, 0, 0, 0, 0, 0])
+    expect([projection.allocated, projection.unallocated, projection.total]).toEqual([2, 0, 2])
+  })
+
+  it('AN-G05 keeps legal zero, unallocated records and invalid rates distinct', () => {
+    const data = base()
+    const session = data.sessions[0]
+    data.sessions = []
+    expect(projectAnalysisV13(data, 'week', today)).toMatchObject({
+      state: 'AVAILABLE', allocated: 0, unallocated: 0, total: 0, shares: undefined,
+    })
+    data.sessions = [{ ...session, date: today }]
+    delete data.contributions.byExerciseId['exercise-1']
+    expect(projectAnalysisV13(data, 'week', today)).toMatchObject({
+      state: 'AVAILABLE', allocated: 0, unallocated: 5, total: 5, shares: undefined,
+    })
+    data.contributions.byExerciseId['exercise-1'] = { rates: zero, revision: 1 }
+    expect(projectAnalysisV13(data, 'week', today)).toEqual({ state: 'UNAVAILABLE', reason: 'INVALID_ENTRY' })
+  })
+
+  it('CTX-01 exports both ends of the inclusive 100-day history window in source order', () => {
+    const data = base()
+    const original = data.sessions[0]
+    data.sessions = ['2026-11-06', '2026-07-29', '2026-07-30', '2026-11-07'].map((date, i) => ({
+      ...original, id: 'ctx-edge-' + i, date, performedAt: date + 'T12:00:00+09:00',
+    }))
+    const output = createTrainerContextV2(data, now, true)
+    expect(output.history.map(row => [row.id, row.date])).toEqual([
+      ['ctx-edge-0', '2026-11-06'], ['ctx-edge-2', '2026-07-30'],
+    ])
+  })
+})
