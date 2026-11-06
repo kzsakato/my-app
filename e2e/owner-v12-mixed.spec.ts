@@ -19,7 +19,7 @@ for(const mode of ['Default','Option']as const)for(const[p,priority]of prioritie
  const d=fixture(A);d.displayPreferences=structuredClone(defaultDisplayPreferences);writeFileSync(`${dir}/fixture-A.json`,JSON.stringify(d));await seed(page,d)
  await page.getByRole('button',{name:'共通メニュー'}).click();await page.getByRole('button',{name:'設定',exact:true}).click();await page.getByRole('button',{name:/^表示設定/}).click()
  const section=page.getByRole('region',{name:mode,exact:true}),labels={recommendedDay:'推奨曜日',completion:'実施状況',bodyRegion:'部位'}
- for(const [target,key]of priority.entries()){const texts=await section.locator('.sort-priority-row>span').allTextContents();for(let n=texts.findIndex(x=>x.endsWith(labels[key]))-target;n>0;n--)await section.getByRole('button',{name:`${labels[key]}を上へ`}).click()}
+ for(const [target,key]of priority.entries()){const texts=await section.locator('.sort-priority-row>span:first-child').allTextContents();for(let n=texts.findIndex(x=>x.endsWith(labels[key]))-target;n>0;n--)await section.getByRole('button',{name:`${labels[key]}を上へ`}).click()}
  await section.getByLabel(direction==='incompleteFirst'?'未実施先':'実施済先',{exact:true}).check();await page.getByRole('button',{name:'設定を保存',exact:true}).click();await expect(page.getByRole('heading',{name:'設定',exact:true})).toBeVisible()
  const expected=structuredClone(d);expected.displayPreferences![mode==='Default'?'defaultSort':'optionSort']={priority,completionDirection:direction};expect(await read(page)).toEqual(expected)
  await page.reload();expect(await read(page)).toEqual(expected);await expect(page.getByLabel('Optionソート')).not.toBeChecked();await allDays(page);await page.getByLabel('実施済も表示').check();if(mode==='Option')await page.getByLabel('Optionソート').check()

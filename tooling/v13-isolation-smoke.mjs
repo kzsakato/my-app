@@ -7,6 +7,17 @@ import assert from 'node:assert/strict'
 
 const [primary, secondary, out] = process.argv.slice(2).map(path => resolve(path))
 const parentFirst = process.argv.includes('--parent-first')
+const syntheticDenylist = process.argv.includes('--synthetic-parent-denylist')
+if (syntheticDenylist && !parentFirst) throw new Error('Comparison requires --parent-first')
+const rootWorker = await readFile(resolve(primary, 'sw.js'))
+const route = 'new e.NavigationRoute(e.createHandlerBoundToURL("index.html"))'
+const rootWorkerText = rootWorker.toString('utf8')
+const fixedRootWorkerSha256 = createHash('sha256').update(rootWorker).digest('hex')
+if (syntheticDenylist && rootWorkerText.split(route).length !== 2) throw new Error('Fixed worker route mismatch')
+const diagnosticWorker = rootWorkerText.replace(route,
+  'new e.NavigationRoute(e.createHandlerBoundToURL("index.html"),{denylist:[/^\\/v13-test\\//]})')
+const servedRootWorker = syntheticDenylist ? diagnosticWorker : rootWorker
+const servedRootWorkerSha256 = createHash('sha256').update(servedRootWorker).digest('hex')
 await mkdir(out, { recursive: true })
 const prefix = '/v13-test/'
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.webmanifest': 'application/manifest+json' }
@@ -17,7 +28,7 @@ const server = createServer(async (request, response) => {
   const file = resolve(root, (child ? path.slice(prefix.length) : path.slice(1)) || 'index.html')
   try {
     if (!file.startsWith(root + sep)) throw new Error('path')
-    const body = await readFile(file)
+    const body = path === '/sw.js' ? servedRootWorker : await readFile(file)
     response.writeHead(200, { 'Content-Type': types[extname(file)] ?? 'application/octet-stream' }).end(body)
   } catch { response.writeHead(404).end() }
 })
@@ -38,7 +49,7 @@ try {
   const navigation = await child.goto(origin + prefix)
   if (parentFirst && !(await navigation.text()).includes('/v13-test/assets/')) {
     console.log(JSON.stringify({
-      result: 'FAIL_PARENT_FALLBACK', chromium: browser.version(), url: child.url(),
+      result: 'FAIL_PARENT_FALLBACK', fixedRootWorkerSha256, servedRootWorkerSha256, chromium: browser.version(), url: child.url(),
       navigationFromServiceWorker: navigation.fromServiceWorker(),
       controller: await child.evaluate(() => navigator.serviceWorker.controller?.scriptURL),
       databases: await child.evaluate(() => indexedDB.databases()),
@@ -232,7 +243,7 @@ try {
     await held.waitFor()
     assert.equal(await fault.getByLabel('正規バックアップを選択').count(), 0)
   } finally { await faultContext.close() }
-  console.log(JSON.stringify({ result: 'PASS_CHILD_FIRST_LIMITED', chromium: browser.version(), origin, rootCanonicalAndOtherStoresUnchanged: true, restoreReadbackFaultHeldAfterReload: true, exactRestoreReadback: true, exactProposalReadback: true, replayAndInvalidBatchUnchanged: true, ...evidence }, null, 2))
+  console.log(JSON.stringify({ result: syntheticDenylist ? 'PASS_SYNTHETIC_PARENT_DENYLIST_ONLY' : 'PASS_CHILD_FIRST_LIMITED', fixedRootWorkerSha256, servedRootWorkerSha256, chromium: browser.version(), origin, rootCanonicalAndOtherStoresUnchanged: true, restoreReadbackFaultHeldAfterReload: true, exactRestoreReadback: true, exactProposalReadback: true, replayAndInvalidBatchUnchanged: true, ...evidence }, null, 2))
   }
 } finally {
   await browser.close()

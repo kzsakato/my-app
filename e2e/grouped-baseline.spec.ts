@@ -129,17 +129,31 @@ test('H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/
 
 test('H12 canonical backup preview, invalid non-destructive restore, full replacement/read-back/reload', async ({ page }, testInfo) => {
   await page.clock.install({ time: monday })
-  const original = canonicalData()
-  original.appliedProposalIds = ['already-applied']
+  const fixture = canonicalData()
+  const original = {
+    ...fixture,
+    appliedProposalIds: ['already-applied'],
+    trainingItems: (fixture.trainingItems as object[]).map(item => ({ ...item, managementMode: 'MAN' })),
+    menus: (fixture.menus as object[]).map(menu => ({ ...menu, managementMode: 'MAN' })),
+  }
   await seedCanonicalAndReload(page, original)
+  const storedBeforeExport = await readCanonicalState(page)
+  expect(storedBeforeExport).toEqual(original)
   await settings(page)
   await page.getByRole('button', { name: /^データ管理 / }).click()
   const downloadEvent = page.waitForEvent('download')
   await page.getByRole('button', { name: 'バックアップを作成' }).click()
   const download = await downloadEvent
   const exported = JSON.parse(await readFile((await download.path())!, 'utf8'))
-  expect(exported.payload).toEqual(original)
-  expect(await readCanonicalState(page)).toEqual(original)
+  const displayPreferences = {
+    defaultSort: { priority: ['recommendedDay', 'completion', 'bodyRegion'], completionDirection: 'incompleteFirst' },
+    optionSort: { priority: ['completion', 'recommendedDay', 'bodyRegion'], completionDirection: 'incompleteFirst' },
+    bodyRegionOrder: ['胸', '背中', '腕', '肩', '下半身', '体幹', 'その他'],
+  }
+  const normalized = { ...original, displayPreferences }
+  expect(exported.payload).toEqual(normalized)
+  const storedAfterExport = await readCanonicalState(page)
+  expect(storedAfterExport).toEqual(storedBeforeExport)
   const legacyBefore = await readStoredState(page)
   await page.getByRole('button', { name: '‹ 戻る' }).click()
   await page.getByRole('button', { name: /^プロフィール / }).click()
@@ -149,7 +163,8 @@ test('H12 canonical backup preview, invalid non-destructive restore, full replac
   await page.getByRole('button', { name: '＋ 追加トレーニングを登録', exact: true }).click()
   await page.getByRole('button', { name: /正規テストプレス/ }).click()
   await page.getByRole('button', { name: '種目を完了' }).click()
-  await expect(page.getByText('今週の実施総数')).toContainText('2/2')
+  // TOP T-08 counts one Session against the two active MenuEntries.
+  await expect(page.getByText('今週の実施総数')).toContainText('1/2')
   await settings(page)
   const modified = await readCanonicalState(page)
   expect(modified.sessions).toHaveLength(1)
@@ -160,18 +175,27 @@ test('H12 canonical backup preview, invalid non-destructive restore, full replac
     await expect(page.getByRole('button', { name: '全データを置き換えて復元' })).toHaveCount(0)
     expect(await readCanonicalState(page)).toEqual(modified)
   }
-  await upload(page, exported)
+  const oldBackup = { ...exported, payload: original }
+  await upload(page, oldBackup)
   await expect(page.getByRole('heading', { name: '復元内容の確認' })).toBeVisible()
   expect(await readCanonicalState(page)).toEqual(modified)
   await page.screenshot({ path: testInfo.outputPath('backup-preview.png'), fullPage: true })
+  await expect(page.getByText('displayPreferences.defaultSort:', { exact: false })).toBeVisible()
+  await expect(page.getByRole('button', { name: '全データを置き換えて復元' })).toBeDisabled()
+  await page.getByLabel('警告内容を確認しました').check()
   page.once('dialog', dialog => dialog.dismiss())
   await page.getByRole('button', { name: '全データを置き換えて復元' }).click()
   expect(await readCanonicalState(page)).toEqual(modified)
   page.once('dialog', dialog => dialog.accept())
   await page.getByRole('button', { name: '全データを置き換えて復元' }).click()
   await expect(page.getByRole('status')).toHaveText('復元しました。保存後の読み戻し一致を確認しました。')
-  expect(await readCanonicalState(page)).toEqual(original)
+  const restored = await readCanonicalState(page)
+  expect(restored).toEqual(normalized)
   expect(await readStoredState(page)).toEqual(legacyBefore)
+  await testInfo.attach('H12-snapshots', {
+    contentType: 'application/json',
+    body: JSON.stringify({ rawSeed: original, storedBeforeExport, storedAfterExport, exported, oldBackup, expectedNormalizedCandidate: normalized, restored }, null, 2),
+  })
   await page.reload()
   await settings(page)
   await page.getByRole('button', { name: /^プロフィール / }).click()
