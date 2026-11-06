@@ -190,7 +190,7 @@ test('TOP weekday all ON/OFF preserves completed flag; approved +1pt status and 
   await screenshot(page, info.project.name, 'top-partial')
   await page.locator('[data-menu-entry-id="entry-0"]').click()
   const weight = await page.locator('.run-weight .weight-controls b').evaluate(el => parseFloat(getComputedStyle(el).fontSize))
-  expect(weight).toBeCloseTo((info.project.name === 'pc' ? 14 : 13) + 96/72, 3)
+  expect(weight).toBeCloseTo((page.viewportSize()!.width <= 360 ? 13 : 14) + 96/72, 3)
   expect(await read(page)).toEqual(d)
 })
 

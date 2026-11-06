@@ -259,7 +259,7 @@ test('OIC-002: Menu add/remove confirmations and unsaved back have zero canonica
 
 test('OIC-013: item-scoped history deletion cancel, exact selected delete and reload never reconstruct initial/current/Session', async ({ page }) => {
   await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
-  const data = canonicalData(); data.sessions = [session('preserved', '2026-10-03')]
+  const data = { ...canonicalWriteFixture(), sessions: [session('preserved', '2026-10-03')] }
   const changes = data.trainingItemSettingChanges as Record<string, unknown>[]
   changes.push({ ...changes[0], id: 'change-remove', isInitial: false, changedAt: '2026-10-02T00:00:00Z', changeReason: '削除対象' })
   await seedCanonicalAndReload(page, data)
@@ -318,13 +318,13 @@ for (const failure of ['none', 'write', 'read-back'] as const) {
     await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
     const other = session('non-target-previous-week', '2026-09-20')
     const target = session('cancel-target', '2026-10-03')
-    const data = { ...canonicalData(), sessions: [other, target] }
+    const data = { ...canonicalWriteFixture(), sessions: [other, target] }
     await seedCanonicalAndReload(page, data)
     const legacy = await readStoredState(page)
-    await expect(page.getByText('今週の実施総数')).toContainText('2/2')
-    await page.getByRole('button', { name: /^胸 / }).click()
+    await expect(page.getByText('今週の実施総数')).toContainText('1/2')
+    await focusedChest(page)
     await page.getByLabel('実施済も表示').check()
-    await page.getByRole('button', { name: /^正規テストプレス / }).first().click()
+    await page.locator('[data-session-id="cancel-target"]').click()
     await page.evaluate(mode => {
       const probe = { writes: 0, reads: 0 }
       Object.assign(window, { cancellationProbe: probe })
@@ -373,7 +373,7 @@ for (const failure of ['none', 'write', 'read-back'] as const) {
     await info.attach('cancellation-boundary', { body: JSON.stringify({ failure, probe: await probe(), before: data, after: await readCanonicalState(page) }, null, 2), contentType: 'application/json' })
     expect(await readStoredState(page)).toEqual(legacy)
     await page.reload()
-    await expect(page.getByText('今週の実施総数')).toContainText(failure === 'write' ? '2/2' : '0/2')
+    await expect(page.getByText('今週の実施総数')).toContainText(failure === 'write' ? '1/2' : '0/2')
     expect(await readCanonicalState(page)).toEqual(failure === 'write' ? data : cancelled)
     expect(await readStoredState(page)).toEqual(legacy)
   })
