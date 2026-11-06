@@ -203,7 +203,36 @@ try {
   await context.setOffline(true)
   await child.reload()
   await child.waitForFunction(() => document.querySelector('main'))
-  console.log(JSON.stringify({ result: 'PASS_CHILD_FIRST_LIMITED', chromium: browser.version(), origin, rootCanonicalAndOtherStoresUnchanged: true, exactRestoreReadback: true, exactProposalReadback: true, replayAndInvalidBatchUnchanged: true, ...evidence }, null, 2))
+  const faultContext = await browser.newContext()
+  try {
+    const fault = await faultContext.newPage()
+    await fault.goto(origin + prefix)
+    await fault.getByLabel('正規バックアップを選択').setInputFiles(backupPath)
+    await fault.getByRole('heading', { name: '復元内容の確認' }).waitFor()
+    await fault.evaluate(() => {
+      const put = IDBObjectStore.prototype.put
+      const get = IDBObjectStore.prototype.get
+      let armed = false
+      IDBObjectStore.prototype.put = function(value, key) {
+        if (this.name === 'cutover' && value?.v13Pending) armed = true
+        return put.call(this, value, key)
+      }
+      IDBObjectStore.prototype.get = function(key) {
+        if (armed && this.name === 'cutover' && this.transaction.mode === 'readonly') {
+          armed = false
+          throw new DOMException('Synthetic read-back fault', 'UnknownError')
+        }
+        return get.call(this, key)
+      }
+    })
+    await fault.getByRole('button', { name: '復元する' }).click()
+    const held = fault.getByText('保存結果を確認できません。再実行せず、診断情報を保存してください。', { exact: true })
+    await held.waitFor()
+    await fault.reload()
+    await held.waitFor()
+    assert.equal(await fault.getByLabel('正規バックアップを選択').count(), 0)
+  } finally { await faultContext.close() }
+  console.log(JSON.stringify({ result: 'PASS_CHILD_FIRST_LIMITED', chromium: browser.version(), origin, rootCanonicalAndOtherStoresUnchanged: true, restoreReadbackFaultHeldAfterReload: true, exactRestoreReadback: true, exactProposalReadback: true, replayAndInvalidBatchUnchanged: true, ...evidence }, null, 2))
   }
 } finally {
   await browser.close()

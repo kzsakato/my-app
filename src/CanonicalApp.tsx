@@ -236,6 +236,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   const header = { onSettings: () => openSettings(), onTop: toTop };
   if (needsRecovery) return <Frame title="保存状態の確認" onTop={() => {}}>
     <p role="alert">{trainerStandardUnknown ? "保存結果を確認できません。再実行せず、診断情報を保存してください。" : "保存の成功を確認できません。保存状態を再読込するまで通常編集へ戻れません。"}</p><p role="status">{notice}</p>
+    {trainerStandardUnknown && <button className="save-setting" onClick={() => downloadJson("trainer-standard-diagnostic.json", { stage: "standard-setting", code: "UNKNOWN_HELD", notice })}>診断情報を保存</button>}
     <button className="primary" onClick={() => location.reload()}>保存状態を再読込</button>
   </Frame>;
   if (page === "run" && runEntryId) {
@@ -1853,7 +1854,7 @@ function BackupPage({ data, onApplied, onBack, onSettings, onTop }: {
   );
 }
 
-function downloadJson(filename: string, value: unknown) {
+export function downloadJson(filename: string, value: unknown) {
   const blob = new Blob([JSON.stringify(value, null, 2)], { type: "application/json;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");

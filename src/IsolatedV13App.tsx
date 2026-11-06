@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CanonicalApp } from './CanonicalApp'
+import { CanonicalApp, downloadJson } from './CanonicalApp'
 import { previewInitialV13Restore } from './canonical/backupV13'
 import { readV13Canonical, restoreInitialV13 } from './data'
 import type { CanonicalAppData } from './canonical/types'
@@ -21,7 +21,10 @@ export function IsolatedV13App() {
   if (data) return <CanonicalApp initial={data} />
   return <main className="app">
     <h1>データ管理</h1>
-    {held ? <p role="alert">{v13UnknownMessage}</p> : ready && <>
+    {held ? <>
+      <p role="alert">{v13UnknownMessage}</p>
+      <button className="save-setting" onClick={() => downloadJson('v13-restore-diagnostic.json', { stage: 'initial-restore', code: 'UNKNOWN_HELD', message })}>診断情報を保存</button>
+    </> : ready && <>
       <label>正規バックアップを選択<input type="file" accept=".json,application/json" disabled={busy} onChange={async event => {
         const file = event.target.files?.[0]
         event.target.value = ''
