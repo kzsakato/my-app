@@ -462,7 +462,7 @@ test('canonical write read-back failure prevents stale editing; reload preserves
 
 test('H-09 startup/Restore reject unsupported old canonical without repair, Session drop or legacy fallback', async ({ page }) => {
   await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
-  const current = { ...canonicalData(), sessions: [session('fact', '2026-10-03')] }
+  const current = { ...canonicalWriteFixture(), sessions: [session('fact', '2026-10-03')] }
   const old = structuredClone(current); delete (old.sessions[0] as Record<string, unknown>).performedOrder
   await seedCanonicalAndReload(page, old)
   await expect(page.getByText(/正規データを読み込めません/)).toBeVisible()
