@@ -1,3 +1,6 @@
+import { defaultDisplayPreferences } from '../src/canonical/displayPreferences'
+import { readFileSync } from 'node:fs'
+import { readCanonicalState } from './helpers/state'
 import { canonicalFixture } from '../src/canonical/fixtures'
 import { expect, test, type Page } from '@playwright/test'
 
@@ -26,7 +29,14 @@ async function seed(page: Page, fixture = canonicalFixture) {
 }
 
 test('UI-01 and UI-02: independent sort drafts and fixed settings description', async ({ page }) => {
-  await seed(page)
+  const fixture = {
+    ...structuredClone(canonicalFixture),
+    trainingItems: canonicalFixture.trainingItems.map(item => ({ ...item, managementMode: 'MAN' as const })),
+    menus: canonicalFixture.menus.map(menu => ({ ...menu, managementMode: 'MAN' as const })),
+    displayPreferences: structuredClone(defaultDisplayPreferences),
+    appliedProposalIds: [],
+  }
+  await seed(page, fixture)
   await page.getByRole('button', { name: '共通メニュー' }).click()
   await page.getByRole('button', { name: '設定', exact: true }).click()
   const display = page.getByRole('button', { name: /^表示設定/ })
@@ -73,17 +83,29 @@ test('UI-01 and UI-02: independent sort drafts and fixed settings description', 
   await display.click()
   await expect(labels).toHaveText(reordered)
   await expect(option).toHaveText(originalOption)
+  const saved = {
+    ...fixture, displayPreferences: { ...fixture.displayPreferences, defaultSort: {
+      ...fixture.displayPreferences.defaultSort, priority: ['bodyRegion', 'recommendedDay', 'completion'],
+    } },
+  }
+  expect(await readCanonicalState(page)).toEqual(saved)
+  await page.reload()
+  expect(await readCanonicalState(page)).toEqual(saved)
 })
 
 test('UI-04: removes the decorative glyph while preserving history and Run entry', async ({ page }) => {
   await seed(page)
   await page.getByRole('button', { name: '＋ 追加トレーニングを登録' }).click()
+  const before = await readCanonicalState(page)
+  await page.getByRole('combobox', { name: '部位' }).selectOption('胸')
+  await page.getByRole('checkbox', { name: 'Optionソート' }).check()
   const row = page.locator('[data-training-item-id="item-1"] > button')
   await expect(row).not.toContainText('›')
   await expect(row.locator('.item-history')).toHaveText(/^(?:[●○]｜?){14}$/)
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBe(360)
   await row.click()
   await expect(page.getByRole('heading', { name: 'ダンベルプレス', exact: true })).toBeVisible()
+  expect(await readCanonicalState(page)).toEqual(before)
 })
 
 test('UI-03: cancel preserves Trainer authority, confirmation saves standard and releases it', async ({ page }) => {
@@ -174,4 +196,56 @@ test('UI-01: touch drag reorders only its own section', async ({ browser }) => {
     await expect(handles.first().locator('..').locator('span:first-child')).toHaveText('1 部位')
     expect(await page.getByRole('region', { name: 'Option', exact: true }).textContent()).toBe(beforeOption)
   } finally { await context.close() }
+})
+
+test('UI-03: post-commit read-back fault blocks Trainer standard retry and preserves Session', async ({ page }, info) => {
+  const fixture = structuredClone(canonicalFixture)
+  fixture.trainingItems[0].managementMode = 'TRAINER'
+  fixture.sessions[0].date = '2026-09-01'
+  fixture.sessions[0].performedAt = '2026-09-01T09:00:00+09:00'
+  await seed(page, fixture)
+  await page.locator('.weekday-dropdown-trigger').click()
+  await page.getByRole('button', { name: '全ON', exact: true }).click()
+  await page.locator('.weekday-dropdown-trigger').click()
+  await page.locator('[data-menu-entry-id="entry-1"]').click()
+  await page.getByRole('button', { name: '重量を1kg増やす' }).click()
+  await page.evaluate(() => {
+    const probe = { writes: 0, committed: false, injected: false }
+    Object.assign(window, { trainerStandardProbe: probe })
+    const put = IDBObjectStore.prototype.put
+    const get = IDBObjectStore.prototype.get
+    IDBObjectStore.prototype.put = function (...args) {
+      if (this.name === 'canonical') {
+        probe.writes++
+        this.transaction.addEventListener('complete', () => { probe.committed = true }, { once: true })
+      }
+      return put.apply(this, args)
+    }
+    IDBObjectStore.prototype.get = function (...args) {
+      if (this.name === 'canonical' && this.transaction.mode === 'readonly' && probe.writes === 1 && !probe.injected) {
+        probe.injected = true
+        throw new Error('synthetic Trainer standard independent read-back fault')
+      }
+      return get.apply(this, args)
+    }
+  })
+  page.once('dialog', dialog => dialog.accept())
+  await page.getByRole('button', { name: 'この設定を登録' }).click()
+  await expect(page.getByRole('alert')).toContainText('保存結果を確認できません。再実行せず')
+  await expect(page.getByRole('button', { name: 'この設定を登録' })).toHaveCount(0)
+  await expect(page.getByText('標準設定を保存しました。', { exact: true })).toHaveCount(0)
+  const probe = await page.evaluate(() => Reflect.get(window, 'trainerStandardProbe'))
+  expect(probe).toEqual({ writes: 1, committed: true, injected: true })
+  const saved = await readCanonicalState(page)
+  expect(saved.trainingItems).toEqual([{ ...fixture.trainingItems[0], managementMode: 'MAN', weight: 19 }, ...fixture.trainingItems.slice(1)])
+  expect(saved.sessions).toEqual(fixture.sessions)
+  expect(saved.trainingItemSettingChanges).toHaveLength(fixture.trainingItemSettingChanges.length + 1)
+  const event = page.waitForEvent('download')
+  await page.getByRole('button', { name: '診断情報を保存' }).click()
+  const diagnostic = JSON.parse(readFileSync((await (await event).path())!, 'utf8'))
+  expect(diagnostic).toMatchObject({ stage: 'standard-setting', code: 'UNKNOWN_HELD' })
+  await page.getByRole('button', { name: '保存状態を再読込' }).click()
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+  expect(await readCanonicalState(page)).toEqual(saved)
+  await info.attach('trainer-standard-unknown', { body: JSON.stringify({ probe, diagnostic, before: fixture, saved }), contentType: 'application/json' })
 })

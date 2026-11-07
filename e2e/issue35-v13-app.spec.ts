@@ -573,3 +573,105 @@ test('AN-01/G02-G05: isolated AX-01 plot, allocation and exercise breakdown befo
   }
   await info.attach('ax01-analysis-rendering', { body: JSON.stringify(evidence, null, 2), contentType: 'application/json' })
 })
+
+test.describe('CTX-01 Pacific local-day export', () => {
+  test.use({ timezoneId: 'America/Los_Angeles' })
+
+  test('exports archived TI and legal ZERO with the local-day window', async ({ page }, info) => {
+    await page.clock.setFixedTime(new Date('2026-11-06T01:00:00Z'))
+    const fixture = structuredClone(backup)
+    const source = fixture.payload
+    source.trainingItems.find((row: { id: string }) => row.id === 'ti-Z').lifecycle = 'archived'
+    const rates = { chest: 100, back: 0, arms: 0, shoulders: 0, lowerBody: 0, core: 0 }
+    const anchor = source.sessions[0]
+    for (const [id, date, offset] of [['early', '2026-07-28', '-07:00'], ['left', '2026-07-29', '-07:00'], ['today', '2026-11-05', '-08:00'], ['future', '2026-11-06', '-08:00']]) {
+      source.sessions.push({ ...anchor, id, date, performedAt: `${date}T00:00:00${offset}` })
+    }
+    await page.goto('/v13-test/')
+    await page.getByLabel('正規バックアップを選択').setInputFiles({ name: 'pacific.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(fixture)) })
+    await page.getByRole('button', { name: '復元する' }).click()
+    await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+    expect((await readApp(page))[0]).toEqual(source)
+    await settings(page)
+    await page.getByRole('button', { name: /^トレーナー連携/ }).click()
+    const seed = JSON.parse(readFileSync(proposalPath, 'utf8'))
+    await page.getByLabel('提案ファイルを選ぶ').setInputFiles({
+      name: 'zero.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({ ...seed, operations: [seed.operations[2]] })),
+    })
+    await expect(page.getByText('初回寄与率を登録しました。', { exact: true })).toBeVisible()
+    const before = await readApp(page)
+    const event = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'トレーナー用ファイルを作る' }).click()
+    const bytes = readFileSync((await (await event).path())!)
+    const actual = JSON.parse(bytes.toString('utf8'))
+    expect(actual).toMatchObject({ version: 2, fromDate: '2026-07-29', toDate: '2026-11-05' })
+    expect(actual.trainingContext.trainingItems.find((row: { id: string }) => row.id === 'ti-Z')).toMatchObject({ lifecycle: 'archived', exerciseId: 'ex-Z' })
+    expect(actual.trainingContext.contributionStates).toContainEqual({ exerciseId: 'ex-Z', state: 'VALID_ENTRY', rates })
+    expect(actual.trainingContext.contributionStates).toContainEqual({ exerciseId: 'ex-C', state: 'NO_ENTRY' })
+    expect(actual.history.map((row: { id: string }) => row.id)).toEqual(source.sessions.filter((row: { id: string }) => !['early', 'future'].includes(row.id)).map((row: { id: string }) => row.id))
+    expect(actual.history.some((row: { snapshot: { exerciseId: string } }) => row.snapshot.exerciseId === 'ex-Z')).toBe(false)
+    expect(await readApp(page)).toEqual(before)
+    await info.attach('pacific-context-v2', { body: bytes, contentType: 'application/json' })
+  })
+})
+
+test('PR-04: Owner write advances revision and stale Trainer tab cannot mutate the ledger', async ({ page, context }, info) => {
+  await preview(page)
+  await page.getByRole('button', { name: '復元する' }).click()
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+  const trainer = await context.newPage()
+  await trainer.goto('/v13-test/')
+  await settings(trainer)
+  await trainer.getByRole('button', { name: /^トレーナー連携/ }).click()
+  await expect(trainer.getByLabel('提案ファイルを選ぶ')).toBeEnabled()
+  const before = await readApp(page)
+  await settings(page)
+  await page.getByRole('button', { name: /^プロフィール/ }).click()
+  await page.getByRole('spinbutton', { name: /体重/ }).fill('67.5')
+  await page.getByRole('button', { name: '保存', exact: true }).click()
+  const expected = structuredClone(backup.payload)
+  expected.profile.weight = 67.5
+  expected.trainerDataRevision = 1
+  await expect.poll(() => readApp(page)).toEqual([expected, before[1]])
+  await trainer.getByLabel('提案ファイルを選ぶ').setInputFiles(proposalPath)
+  await expect(trainer.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
+  await expect(trainer.getByText('初回寄与率を登録しました。', { exact: true })).toHaveCount(0)
+  const after = await readApp(trainer)
+  expect(after).toEqual([expected, before[1]])
+  await info.attach('owner-write-stale-trainer', { contentType: 'application/json', body: JSON.stringify({ before, after }) })
+})
+
+test('AN-G05/G07: legal ZERO at 360px with enlarged text', async ({ page }, info) => {
+  await page.clock.setFixedTime(new Date('2026-11-06T12:00:00+09:00'))
+  const fixture = structuredClone(backup)
+  fixture.payload.sessions = []
+  await page.goto('/v13-test/')
+  await page.getByLabel('正規バックアップを選択').setInputFiles({
+    name: 'zero-backup.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(fixture)),
+  })
+  await page.getByRole('button', { name: '復元する' }).click()
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+  await settings(page)
+  await page.getByRole('button', { name: /^トレーナー連携/ }).click()
+  await page.getByLabel('提案ファイルを選ぶ').setInputFiles(proposalPath)
+  await expect(page.getByText('初回寄与率を登録しました。', { exact: true })).toBeVisible()
+  const before = await readApp(page)
+  await settings(page)
+  await page.getByRole('button', { name: /^分析/ }).click()
+  await page.addStyleTag({ content: 'html { font-size: 150%; }' })
+  await expect(page.getByText('実績なし', { exact: true })).toBeVisible()
+  await expect(page.getByText('寄与率未設定の種目があります。')).toHaveCount(0)
+  await expect(page.getByText('分析データを表示できません。')).toHaveCount(0)
+  await expect(page.locator('.v13-analysis-shares')).toHaveCount(0)
+  const plot = await page.locator('svg polyline').evaluateAll(lines =>
+    Object.fromEntries(lines.map(line => [line.getAttribute('data-series'), JSON.parse(line.getAttribute('data-values')!)])),
+  )
+  expect(Object.keys(plot)).toHaveLength(7)
+  expect(Object.values(plot)).toEqual(Array.from({ length: 7 }, () => Array(12).fill(0)))
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBe(360)
+  await page.getByRole('heading', { name: '種目別内訳' }).scrollIntoViewIfNeeded()
+  expect(await readApp(page)).toEqual(before)
+  const png = await page.screenshot({ fullPage: true })
+  await info.attach('AN-G05-zero-360', { body: png, contentType: 'image/png' })
+  await info.attach('AN-G05-zero-plot', { body: JSON.stringify({ plot, viewport: page.viewportSize(), textScale: 1.5 }), contentType: 'application/json' })
+})
