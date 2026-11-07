@@ -159,6 +159,8 @@ for (const weekStartsOn of [0, 6]) {
 test('H06 A6/A7/A8 zero defaults, canonical save blocking and form-local error lifecycle', async ({ page }, info) => {
   await page.clock.install({ time: instant })
   const data = canonicalData() as unknown as CanonicalAppData
+  data.trainingItems[0].managementMode = 'MAN'
+  data.menus[0].managementMode = 'MAN'
   data.exercises.push({ id: 'time-exercise', lifecycle: 'active', name: '時間テスト', measureType: 'time', usesWeight: false, classifications: [{ kind: 'bodyRegion', label: '体幹' }] })
   await seedCanonicalAndReload(page, data as unknown as Record<string, unknown>)
   await items(page)
@@ -179,7 +181,7 @@ test('H06 A6/A7/A8 zero defaults, canonical save blocking and form-local error l
   await expect(page.getByRole('alert')).not.toContainText('回数')
   await page.getByRole('button', { name: '‹ 戻る' }).click()
   await expect(page.getByRole('alert')).toHaveCount(0)
-  await page.getByRole('button', { name: /^正規テストプレス / }).click()
+  await page.getByRole('button').filter({ has: page.locator('b').getByText('正規テストプレス', { exact: true }) }).click()
   await expect(page.getByRole('alert')).toHaveCount(0)
   await expect(page.getByLabel('回数', { exact: true })).toHaveValue('10')
   await expect(page.getByLabel('セット数', { exact: true })).toHaveValue('3')

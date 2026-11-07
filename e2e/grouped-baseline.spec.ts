@@ -66,15 +66,23 @@ test('H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/
   await page.locator('[data-menu-entry-id]').filter({ hasText: '復旧ルートプレス' }).click()
   await expect(page.getByText('肩を下げる', { exact: true })).toBeVisible()
   await page.getByLabel('今回メモ').fill('当回だけの記録')
-  await page.getByRole('button', { name: '回数を増やす' }).click({ clickCount: 2 })
+  await page.getByRole('button', { name: '回数を増やす' }).click()
+  await page.getByRole('button', { name: '回数を増やす' }).click()
   // H-20261005-06 A1 explicitly removes Run's reason input; explicit standard save remains.
   await expect(page.getByLabel('変更理由（任意）')).toHaveCount(0)
   page.once('dialog', dialog => dialog.dismiss())
   await page.getByRole('button', { name: 'この設定を登録' }).click()
   expect((await readCanonicalState(page)).trainingItemSettingChanges).toHaveLength(1)
+  const beforeStandard = await readCanonicalState(page)
   page.once('dialog', dialog => dialog.accept())
   await page.getByRole('button', { name: 'この設定を登録' }).click()
-  await expect(page.getByText('標準設定を保存しました。', { exact: true })).toBeVisible()
+  await expect.poll(async () => (await readCanonicalState(page)).trainingItemSettingChanges).toHaveLength(2)
+  const afterStandard = await readCanonicalState(page)
+  expect(afterStandard.trainingItems).toEqual([
+    expect.objectContaining({ reps: 12, standardMemo: '肩を下げる' }),
+  ])
+  expect(afterStandard.sessions).toEqual(beforeStandard.sessions)
+  await expect(page.getByText('標準設定を保存しました。', { exact: true })).toHaveCount(0)
   await page.getByRole('button', { name: /この実施項目の設定履歴を見る/ }).click()
   expect((await readCanonicalState(page)).trainingItemSettingChanges).toEqual([
     expect.objectContaining({ isInitial: true }),
@@ -89,8 +97,8 @@ test('H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/
   await page.getByRole('button', { name: 'この設定を登録' }).click()
   expect((await readCanonicalState(page)).trainingItemSettingChanges).toHaveLength(2)
   await page.getByRole('button', { name: '種目を完了' }).click()
-  // OIC-001: both MenuEntries refer to one completed Exercise.
-  await expect(page.getByText('今週の実施総数')).toContainText('2/2')
+  // T-08 counts one Session across two active Entries.
+  await expect(page.getByText('今週の実施総数')).toContainText('1/2')
   const stored = await readCanonicalState(page)
   expect(stored.sessions).toEqual([expect.objectContaining({ memo: '当回だけの記録', reps: 12, seat: '4', performedAt: expect.any(String), performedOrder: 0 })])
   expect(stored.trainingItems).toEqual([expect.objectContaining({ standardMemo: '肩を下げる', reps: 12 })])

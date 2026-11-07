@@ -187,7 +187,12 @@ test('OIC-003/006/007 + H06 A5: Session-only seat, controls, persist failure/ret
   await focusedChest(page)
   await page.getByLabel('実施済も表示').check()
   await page.locator(`[data-session-id="${sessions[2].id}"]`).click()
-  await expect(page.getByRole('region', { name: '当該実績' })).toContainText('session-only')
+  await expect(page.getByRole('region', { name: '当該実績' })).toHaveCount(0)
+  await expect(page.getByText('20.00 kg', { exact: true })).toBeVisible()
+  await expect(page.getByText('10 回', { exact: true })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'セット数を増やす' })).toBeDisabled()
+  await expect(page.getByLabel('シート位置')).toBeDisabled()
+  expect(await readCanonicalState(page)).toEqual(saved)
   await expect(page.getByLabel('シート位置')).toHaveValue('session-only')
   await expect(page.getByText('やり残し')).toHaveCount(0)
 })
@@ -386,7 +391,7 @@ test('D-03/OIC-016: baseline settings/list/edit/custom required label and hide/s
   await expect(page.getByLabel('ビルド識別子')).toHaveText(/^Build /)
   await expect(page.getByRole('button', { name: /^カテゴリ / })).toHaveCount(0)
   await page.getByRole('button', { name: /^種目 / }).click()
-  await page.getByRole('button', { name: /^正規テストプレス / }).click()
+  await page.getByRole('button').filter({ has: page.locator('b').getByText('正規テストプレス', { exact: true }) }).click()
   await expect(page.getByRole('combobox', { name: '部位', exact: true })).toHaveValue('custom')
   await expect(page.getByLabel('カスタム部位')).toHaveValue('前腕（補助）')
   await page.getByLabel('カスタム部位').fill('   '); await expect(page.getByRole('button', { name: '保存', exact: true })).toBeDisabled()
@@ -396,13 +401,13 @@ test('D-03/OIC-016: baseline settings/list/edit/custom required label and hide/s
   await page.getByLabel('種目名').fill('カスタム追加')
   await expect(page.getByRole('button', { name: '種目だけ保存' })).toBeDisabled()
   const select = page.getByRole('combobox', { name: '部位', exact: true })
-  await expect(select.locator('option')).toHaveText(['選択してください', '胸', '肩', '腕', '背中', '体幹', '下半身', 'その他 / カスタム'])
+  await expect(select.locator('option')).toHaveText(['選択してください', '胸', '背中', '腕', '肩', '下半身', '体幹', 'その他 / カスタム'])
   await select.selectOption('custom'); await page.getByLabel('カスタム部位').fill('運動群'); await page.getByRole('button', { name: '種目だけ保存' }).click()
-  await page.getByRole('button', { name: /^カスタム追加 / }).click()
+  await page.getByRole('button').filter({ has: page.locator('b').getByText('カスタム追加', { exact: true }) }).click()
   page.once('dialog', d => d.dismiss()); await page.getByRole('button', { name: 'この種目を非表示にする' }).click()
   await expect(page.getByLabel('種目名')).toHaveValue('カスタム追加')
   page.once('dialog', d => d.accept()); await page.getByRole('button', { name: 'この種目を非表示にする' }).click()
-  await page.getByLabel('非表示データを表示').check(); await page.getByRole('button', { name: /^カスタム追加 / }).click(); await page.getByRole('button', { name: '再表示する' }).click()
+  await page.getByLabel('非表示データを表示').check(); await page.getByRole('button').filter({ has: page.locator('b').getByText('カスタム追加', { exact: true }) }).click(); await page.getByRole('button', { name: '再表示する' }).click()
   await page.reload(); expect((await readCanonicalState(page)).exercises).toHaveLength(2)
 })
 
@@ -452,8 +457,30 @@ test('OIC-015: all seven week starts warn/cancel, persist exact setting without 
 
 test('canonical write read-back failure prevents stale editing; reload preserves original logical Session pair', async ({ page }) => {
   await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant); await seedCanonicalAndReload(page, canonicalWriteFixture()); await run(page)
-  await page.evaluate(() => { const get = IDBObjectStore.prototype.get; IDBObjectStore.prototype.get = function (...args) { if (this.name === 'canonical') { IDBObjectStore.prototype.get = get; throw new Error('injected read-back failure') } return get.apply(this, args) } })
+  await page.evaluate(() => {
+    const put = IDBObjectStore.prototype.put
+    const get = IDBObjectStore.prototype.get
+    const probe = { writes: 0, committed: false, injected: false }
+    Object.assign(window, { runReadBackProbe: probe })
+    IDBObjectStore.prototype.put = function (...args) {
+      if (this.name === 'canonical') {
+        probe.writes++
+        this.transaction.addEventListener('complete', () => { probe.committed = true }, { once: true })
+        IDBObjectStore.prototype.put = put
+      }
+      return put.apply(this, args)
+    }
+    IDBObjectStore.prototype.get = function (...args) {
+      if (this.name === 'canonical' && this.transaction.mode === 'readonly' && probe.writes === 1) {
+        probe.injected = true
+        IDBObjectStore.prototype.get = get
+        throw new Error('injected independent Run read-back failure')
+      }
+      return get.apply(this, args)
+    }
+  })
   await page.getByRole('button', { name: '種目を完了' }).click()
+  await expect.poll(() => page.evaluate(() => Reflect.get(window, 'runReadBackProbe'))).toEqual({ writes: 1, committed: true, injected: true })
   await expect(page.getByRole('alert')).toContainText('通常編集へ戻れません')
   await expect(page.getByRole('button', { name: '種目を完了' })).toHaveCount(0)
   const saved = await readCanonicalState(page); expect(saved.sessions).toHaveLength(1)
@@ -484,13 +511,14 @@ test('PRESERVE Profile all fields and standard-setting failure/retry create exac
   await page.getByRole('spinbutton', { name: /体重/ }).fill('67.5'); await page.getByLabel('身長（cm）').fill('171'); await page.getByLabel('年齢').fill('42'); await page.getByLabel('性別').fill('male')
   await page.getByRole('button', { name: '保存', exact: true }).click()
   expect((await readCanonicalState(page)).profile).toEqual({ weight: 67.5, height: 171, age: 42, sex: 'male' })
-  await open(page, '実施項目'); await page.getByRole('button', { name: /^正規テストプレス / }).click()
+  await open(page, '実施項目'); await page.getByRole('button').filter({ has: page.locator('b').getByText('正規テストプレス', { exact: true }) }).click()
   await page.getByLabel('回数', { exact: true }).fill('12'); await page.getByLabel('変更理由（任意）').fill('更新確認')
   const before = await readCanonicalState(page)
   await injectWriteFailure(page); await page.getByRole('button', { name: '保存', exact: true }).click()
   await expect(page.getByRole('alert')).toContainText('保存に失敗しました'); expect(await readCanonicalState(page)).toEqual(before)
   await page.getByRole('button', { name: '保存', exact: true }).dblclick()
-  const after = await readCanonicalState(page); expect(after.trainingItemSettingChanges).toHaveLength(2); expect((after.trainingItems as { reps: number }[])[0].reps).toBe(12)
+  await expect.poll(async () => (await readCanonicalState(page)).trainingItemSettingChanges).toHaveLength(2)
+  const after = await readCanonicalState(page); expect((after.trainingItems as { reps: number }[])[0].reps).toBe(12)
   await page.reload(); expect(await readCanonicalState(page)).toEqual(after)
 })
 
@@ -547,13 +575,13 @@ test('PRESERVE time Exercise → Item setup → Run slots → Extra completion a
 })
 
 test('PRESERVE list filter/hidden state, Item hide/show, Menu active guard/confirmation and unsaved cancel', async ({ page }) => {
-  await seedCanonicalAndReload(page, canonicalData()); const original = await readCanonicalState(page)
-  await open(page, '実施項目'); await page.getByRole('combobox', { name: '部位', exact: true }).selectOption('胸'); await page.getByRole('button', { name: /^正規テストプレス / }).click()
+  await seedCanonicalAndReload(page, canonicalWriteFixture()); const original = await readCanonicalState(page)
+  await open(page, '実施項目'); await page.getByRole('combobox', { name: '部位', exact: true }).selectOption('胸'); await page.getByRole('button').filter({ has: page.locator('b').getByText('正規テストプレス', { exact: true }) }).click()
   page.once('dialog', d => d.dismiss()); await page.getByRole('button', { name: 'この実施項目を非表示にする' }).click(); expect(await readCanonicalState(page)).toEqual(original)
   page.once('dialog', d => d.accept()); await page.getByRole('button', { name: 'この実施項目を非表示にする' }).click()
-  await expect(page.getByRole('combobox', { name: '部位', exact: true })).toHaveValue('胸'); await page.getByLabel('非表示データを表示').check(); await page.getByRole('button', { name: /^正規テストプレス / }).click(); await page.getByRole('button', { name: '‹ 戻る' }).click(); await expect(page.getByLabel('非表示データを表示')).toBeChecked()
+  await expect(page.getByRole('combobox', { name: '部位', exact: true })).toHaveValue('胸'); await page.getByLabel('非表示データを表示').check(); await page.getByRole('button').filter({ has: page.locator('b').getByText('正規テストプレス', { exact: true }) }).click(); await page.getByRole('button', { name: '‹ 戻る' }).click(); await expect(page.getByLabel('非表示データを表示')).toBeChecked()
   await open(page, '分析'); await open(page, '実施項目'); await expect(page.getByLabel('非表示データを表示')).toBeChecked(); await expect(page.getByRole('combobox', { name: '部位', exact: true })).toHaveValue('胸')
-  await page.getByRole('button', { name: /^正規テストプレス / }).click(); await page.getByRole('button', { name: '再表示する' }).click(); expect(await readCanonicalState(page)).toEqual(original)
+  await page.getByRole('button').filter({ has: page.locator('b').getByText('正規テストプレス', { exact: true }) }).click(); await page.getByRole('button', { name: '再表示する' }).click(); expect(await readCanonicalState(page)).toEqual(original)
   await open(page, '週メニュー'); await page.getByRole('button', { name: /^正規E2Eメニュー/ }).click(); await expect(page.getByRole('button', { name: '使用中の週メニューは非表示にできません' })).toBeDisabled()
   await page.getByRole('button', { name: '‹ 戻る' }).click(); await page.getByRole('button', { name: '＋ 週メニューを登録' }).click(); await page.getByLabel('週メニュー名').fill('追加メニュー'); await page.getByRole('button', { name: '保存', exact: true }).click()
   await page.getByRole('button', { name: /^追加メニュー / }).click(); page.once('dialog', d => d.dismiss()); await page.getByRole('button', { name: 'この週メニューを非表示にする' }).click(); await expect(page.getByLabel('週メニュー名')).toHaveValue('追加メニュー')
