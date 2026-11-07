@@ -765,21 +765,47 @@ test('Trainer v1 TRO-02/03: Master, standards, wash and MAN rejection', async ({
     ],
   }
   const upload = (value: unknown) => input.setInputFiles({ name: 'scope.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(value)) })
-  await upload({ ...proposal, trainingItemChanges: [{ ...proposal.trainingItemChanges[0], targetTrainingItemId: 'canonical-item' }] })
-  await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: '取り込む内容' })).toHaveCount(0)
-  await expect(input).toBeEnabled()
-  await expect(page.getByRole('button', { name: 'トレーナー用ファイルを作る' })).toBeEnabled()
-  expect(await readCanonicalState(page)).toEqual(before)
+  const rejected = [
+    { ...proposal, trainingItemChanges: [{ ...proposal.trainingItemChanges[0], targetTrainingItemId: 'canonical-item' }] },
+    { ...proposal, washRequests: [{ operation: 'MENU_ENTRY_REMOVE', targetMenuId: 'canonical-menu', entryId: 'canonical-entry-a' }, proposal.washRequests[1]] },
+    { ...proposal, washRequests: [proposal.washRequests[0], { ...proposal.washRequests[1], targetMenuId: 'canonical-menu' }] },
+  ]
+  for (const invalid of rejected) {
+    await page.reload()
+    await open(page, 'トレーナー連携')
+    await expect(input).toBeEnabled()
+    await upload(invalid)
+    await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: '取り込む内容' })).toHaveCount(0)
+    await expect(input).toBeEnabled()
+    await expect(page.getByRole('button', { name: 'トレーナー用ファイルを作る' })).toBeEnabled()
+    expect(await readCanonicalState(page)).toEqual(before)
+  }
   await upload(proposal)
   await expect(page.getByRole('heading', { name: '取り込む内容' })).toBeVisible()
-  await injectWriteFailure(page)
+  await page.evaluate(() => {
+    const probe = { canonicalAttempts: 0, nativeCanonicalPuts: 0, cutoverPuts: 0, aborted: false }
+    Object.assign(window, { trainerPreWriteProbe: probe })
+    const put = IDBObjectStore.prototype.put
+    IDBObjectStore.prototype.put = function (...args) {
+      if (this.name === 'canonical' && probe.canonicalAttempts++ === 0) {
+        this.transaction.addEventListener('abort', () => { probe.aborted = true }, { once: true })
+        throw new Error('injected before native canonical put')
+      }
+      if (this.name === 'canonical') probe.nativeCanonicalPuts++
+      if (this.name === 'cutover') probe.cutoverPuts++
+      return put.apply(this, args)
+    }
+  })
   page.once('dialog', dialog => dialog.accept())
   await page.getByRole('button', { name: 'この内容を取り込む' }).click()
   await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
   await expect(input).toBeEnabled()
   await expect(page.getByRole('button', { name: 'トレーナー用ファイルを作る' })).toBeEnabled()
   expect(await readCanonicalState(page)).toEqual(before)
+  await expect.poll(() => page.evaluate(() => Reflect.get(window, 'trainerPreWriteProbe'))).toEqual({
+    canonicalAttempts: 1, nativeCanonicalPuts: 0, cutoverPuts: 0, aborted: true,
+  })
   const diagnosticEvent = page.waitForEvent('download')
   await page.getByRole('button', { name: '診断情報を保存' }).click()
   const diagnostic = await diagnosticEvent
