@@ -675,3 +675,87 @@ test('AN-G05/G07: legal ZERO at 360px with enlarged text', async ({ page }, info
   await info.attach('AN-G05-zero-360', { body: png, contentType: 'image/png' })
   await info.attach('AN-G05-zero-plot', { body: JSON.stringify({ plot, viewport: page.viewportSize(), textScale: 1.5 }), contentType: 'application/json' })
 })
+
+for (const weekStartsOn of [0, 1]) {
+  test(`AN-G05/06/07: year-boundary unallocated plot with weekStartsOn=${weekStartsOn}`, async ({ page }, info) => {
+    await page.clock.setFixedTime(new Date('2027-01-03T12:00:00+09:00'))
+    const fixture = structuredClone(backup)
+    fixture.payload.weekStartsOn = weekStartsOn
+    const anchor = fixture.payload.sessions.find((row: { id: string }) => row.id === 'S-C1')
+    fixture.payload.sessions = ['2015-12-31', '2026-12-27', '2026-12-28', '2027-01-03', '2027-01-04'].map(date => ({
+      ...anchor, id: `year-${date}`, date, performedAt: `${date}T09:00:00+09:00`, sets: 1,
+    }))
+    await page.goto('/v13-test/')
+    await page.getByLabel('正規バックアップを選択').setInputFiles({
+      name: 'year-boundary.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(fixture)),
+    })
+    await page.getByRole('button', { name: '復元する' }).click()
+    await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+    const before = await readApp(page)
+    expect(before[0]).toEqual(fixture.payload)
+    await settings(page)
+    await page.getByRole('button', { name: /^分析/ }).click()
+    const periods = ['week', 'month', 'quarter', 'half', 'year']
+    const observed = []
+    for (const period of periods) {
+      await page.getByRole('combobox', { name: '期間' }).selectOption(period)
+      // Each included Session is 5 kg × 10 reps × one set. Dec 27 is
+      // in the prior Monday week; both December dates precede January.
+      const tail = period === 'week' && weekStartsOn === 0 ? [50, 100] : [100, 50]
+      const expected = {
+        pt: [...Array(10).fill(0), ...tail],
+        '胸': Array(12).fill(0), '背中': Array(12).fill(0), '腕': Array(12).fill(0),
+        '肩': Array(12).fill(0), '下半身': Array(12).fill(0), '体幹': Array(12).fill(0),
+      }
+      const plot = await page.locator('svg polyline').evaluateAll(lines =>
+        Object.fromEntries(lines.map(line => [line.getAttribute('data-series'), JSON.parse(line.getAttribute('data-values')!)])),
+      )
+      expect(plot).toEqual(expected)
+      await expect(page.getByText('未配賦 3', { exact: true })).toBeVisible()
+      await expect(page.getByText('寄与率未設定の種目があります。')).toBeVisible()
+      await expect(page.getByText('実績なし', { exact: true })).toHaveCount(0)
+      await expect(page.locator('.v13-analysis-shares')).toHaveCount(0)
+      await expect(page.getByText('今期途中', { exact: true })).toBeVisible()
+      const svg = page.getByRole('img', { name: 'トレーニング推移グラフ' }).first()
+      const labels = (await svg.locator('text.axis').allTextContents()).filter(Boolean)
+      expect(labels).toHaveLength(4)
+      const points = (await svg.locator('polyline').getAttribute('points'))!.split(' ').map(point => point.split(',').map(Number))
+      expect(points).toHaveLength(12)
+      expect(points[0]).toEqual([38, 133])
+      expect(points[11][0]).toBe(293)
+      expect(points[tail[0] === 100 ? 10 : 11][1]).toBe(22)
+      expect(points[tail[0] === 50 ? 10 : 11][1]).toBe(77.5)
+      const legend = await page.locator('.chart .legend').allTextContents()
+      expect(legend.join(' ')).toContain('● 胸')
+      observed.push({ period, expected, plot, labels, points, legend })
+    }
+    expect(await readApp(page)).toEqual(before)
+    if (weekStartsOn === 0) await info.attach('AN-G05-unallocated-360', { body: await page.screenshot({ fullPage: true }), contentType: 'image/png' })
+    await info.attach(`AN-year-boundary-${weekStartsOn}`, { body: JSON.stringify({ weekStartsOn, fixture: fixture.payload.sessions, observed }), contentType: 'application/json' })
+  })
+}
+
+test('CTX-02: a Context v1 payload relabeled version 2 is rejected at the browser file boundary', async ({ page }, info) => {
+  await preview(page)
+  await page.getByRole('button', { name: '復元する' }).click()
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+  await settings(page)
+  await page.getByRole('button', { name: /^トレーナー連携/ }).click()
+  const before = await readApp(page)
+  const file = {
+    format: 'training-project.trainer-context', version: 2, exportedLocalDate: '2026-11-06',
+    fromDate: '2026-07-30', toDate: '2026-11-06', history: [],
+    trainingContext: { contractVersion: 1, exercises: [], trainingItems: [], menus: [], menuEntries: [] },
+  }
+  const downloads: string[] = []
+  page.on('download', download => downloads.push(download.suggestedFilename()))
+  await page.getByLabel('提案ファイルを選ぶ').setInputFiles({
+    name: 'spoofed-context.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(file)),
+  })
+  await expect(page.getByRole('status')).toContainText('トレーナーからの提案ファイルではありません。')
+  await expect(page.getByRole('heading', { name: '取り込む内容' })).toHaveCount(0)
+  expect(downloads).toEqual([])
+  const after = await readApp(page)
+  expect(after).toEqual(before)
+  await info.attach('spoofed-context-rejection', { body: JSON.stringify({ file, downloads, before, after }), contentType: 'application/json' })
+})
