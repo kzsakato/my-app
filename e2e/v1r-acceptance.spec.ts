@@ -732,3 +732,90 @@ for (const fault of ['read-back', 'marker-clear'] as const) {
     await info.attach('trainer-v1-hold', { body: JSON.stringify({ fault, probe, marker: await readMarker(), canonical: saved }), contentType: 'application/json' })
   })
 }
+
+test('Trainer v1 TRO-02/03: Master, standards, wash and MAN rejection', async ({ page }) => {
+  await page.clock.setFixedTime(instant)
+  const base = canonicalWriteFixture()
+  const before = {
+    ...base,
+    trainingItemSettingChanges: [...base.trainingItemSettingChanges as object[], {
+      id: 'trainer-initial', trainingItemId: 'trainer-item', changedAt: '2026-09-21T10:00:00+09:00',
+      isInitial: true, snapshot: { reps: 6, sets: 2, weight: 10 },
+    }],
+    sessions: [session('unchanged-session', '2026-10-03')],
+    trainingItems: [...base.trainingItems, { id: 'trainer-item', lifecycle: 'active', managementMode: 'TRAINER', exerciseId: 'canonical-exercise', displayName: 'Trainer item', reps: 6, sets: 2, weight: 10 }],
+    menus: [...base.menus, ...['remove-menu', 'replace-menu'].map(id => ({ id, name: id, lifecycle: 'active', managementMode: 'TRAINER' }))],
+    menuEntries: [...base.menuEntries as object[], ...['remove-menu', 'replace-menu'].map(id => ({ id: id + '-entry', menuId: id, trainingItemId: 'canonical-item', lifecycle: 'active', order: 0 }))],
+  }
+  await seedCanonicalAndReload(page, before)
+  await open(page, 'トレーナー連携')
+  const input = page.getByLabel('提案ファイルを選ぶ')
+  await expect(input).toBeEnabled()
+  const proposal = {
+    format: 'training-project.trainer-proposal', version: 1, proposalId: 'qa-full-scope', baseRevision: 'synthetic',
+    masterSuggestions: {
+      exercises: [{ candidateId: 'new-ex', name: '合成新種目', bodyRegion: '胸', measureType: 'reps', usesWeight: false, selfWeightRatio: 0, secondsLoadRatio: 0 }],
+      trainingItems: [{ candidateId: 'new-ti', name: '合成新項目', exerciseRef: { kind: 'candidate', candidateId: 'new-ex' }, reps: 8, sets: 2 }],
+    },
+    trainingItemChanges: [{ operation: 'TRAINER_TI_SETTINGS_UPDATE', targetTrainingItemId: 'trainer-item', settings: { reps: 9, sets: 2, weight: 10 } }],
+    menuProposals: [],
+    washRequests: [
+      { operation: 'MENU_ENTRY_REMOVE', targetMenuId: 'remove-menu', entryId: 'remove-menu-entry' },
+      { operation: 'MENU_ENTRY_REPLACE', targetMenuId: 'replace-menu', entries: [{ kind: 'candidate', candidateId: 'new-entry', trainingItemRef: { kind: 'candidate', candidateId: 'new-ti' }, order: 0 }] },
+    ],
+  }
+  const upload = (value: unknown) => input.setInputFiles({ name: 'scope.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(value)) })
+  await upload({ ...proposal, trainingItemChanges: [{ ...proposal.trainingItemChanges[0], targetTrainingItemId: 'canonical-item' }] })
+  await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '取り込む内容' })).toHaveCount(0)
+  await expect(input).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'トレーナー用ファイルを作る' })).toBeEnabled()
+  expect(await readCanonicalState(page)).toEqual(before)
+  await upload(proposal)
+  await expect(page.getByRole('heading', { name: '取り込む内容' })).toBeVisible()
+  await injectWriteFailure(page)
+  page.once('dialog', dialog => dialog.accept())
+  await page.getByRole('button', { name: 'この内容を取り込む' }).click()
+  await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
+  await expect(input).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'トレーナー用ファイルを作る' })).toBeEnabled()
+  expect(await readCanonicalState(page)).toEqual(before)
+  const diagnosticEvent = page.waitForEvent('download')
+  await page.getByRole('button', { name: '診断情報を保存' }).click()
+  const diagnostic = await diagnosticEvent
+  expect(JSON.parse(await readFile((await diagnostic.path())!, 'utf8'))).toMatchObject({
+    stage: 'apply', code: 'REJECTED_ZERO_MUTATION', proposalId: proposal.proposalId,
+  })
+  await page.reload()
+  await open(page, 'トレーナー連携')
+  await expect(input).toBeEnabled()
+  await upload(proposal)
+  await expect(page.getByRole('heading', { name: '取り込む内容' })).toBeVisible()
+  page.once('dialog', dialog => dialog.accept())
+  await page.getByRole('button', { name: 'この内容を取り込む' }).click()
+  await expect(page.getByText('トレーナーからの提案を取り込みました。', { exact: true })).toBeVisible()
+  const saved = await readCanonicalState(page)
+  const exercise = (saved.exercises as { id: string }[]).at(-1)!
+  const item = (saved.trainingItems as { id: string }[]).at(-1)!
+  const entry = (saved.menuEntries as { id: string }[]).at(-1)!
+  expect(new Set([exercise.id, item.id, entry.id]).size).toBe(3)
+  expect(saved.exercises).toEqual([...before.exercises as object[], { id: exercise.id, lifecycle: 'active', name: '合成新種目', measureType: 'reps', usesWeight: false, selfWeightRatio: 0, secondsLoadRatio: 0, classifications: [{ kind: 'bodyRegion', label: '胸' }] }])
+  expect(saved.trainingItems).toEqual([before.trainingItems[0], { ...before.trainingItems[1], reps: 9 }, { id: item.id, lifecycle: 'active', managementMode: 'TRAINER', exerciseId: exercise.id, displayName: '合成新項目', reps: 8, sets: 2 }])
+  expect(saved.menuEntries).toEqual([
+    ...base.menuEntries as object[],
+    ...['remove-menu', 'replace-menu'].map(id => ({ id: id + '-entry', menuId: id, trainingItemId: 'canonical-item', lifecycle: 'archived', order: 0 })),
+    { id: entry.id, menuId: 'replace-menu', trainingItemId: item.id, lifecycle: 'active', order: 0 },
+  ])
+  expect(saved.trainingItemSettingChanges).toEqual([
+    ...before.trainingItemSettingChanges as object[],
+    expect.objectContaining({ trainingItemId: item.id, isInitial: true, snapshot: { reps: 8, sets: 2 } }),
+    expect.objectContaining({ trainingItemId: 'trainer-item', snapshot: { reps: 9, sets: 2, weight: 10 } }),
+  ])
+  expect(saved).toMatchObject({ sessions: before.sessions, activeMenuId: before.activeMenuId, menus: before.menus, profile: before.profile, appliedProposalIds: [proposal.proposalId] })
+  await page.getByText('保存結果を確認', { exact: true }).click()
+  for (const [candidate, id] of [['new-ex', exercise.id], ['new-ti', item.id], ['new-entry', entry.id]]) {
+    await expect(page.getByText(`${candidate} → ${id}`, { exact: true })).toBeVisible()
+  }
+  await page.reload()
+  expect(await readCanonicalState(page)).toEqual(saved)
+})
