@@ -589,62 +589,146 @@ test('PRESERVE list filter/hidden state, Item hide/show, Menu active guard/confi
   await expect(page.getByLabel('非表示データを表示')).not.toBeChecked(); expect((await readCanonicalState(page)).activeMenuId).toBe(original.activeMenuId)
 })
 
-test('Trainer v1 TR-02/TR-04: preview, cancel, apply, replay rejection and 100-day Context', async ({ page }, info) => {
-  await page.clock.setFixedTime(instant)
-  const before = { ...canonicalWriteFixture(), sessions: [
-    session('outside-context', '2026-06-25'),
-    session('first-context-day', '2026-06-26'),
-    session('last-context-day', '2026-10-03'),
-  ] }
-  await seedCanonicalAndReload(page, before)
-  await open(page, 'トレーナー連携')
-  const input = page.getByLabel('提案ファイルを選ぶ')
-  await expect(input).toBeEnabled()
-  const proposal = {
-    format: 'training-project.trainer-proposal', version: 1, proposalId: 'qa-trainer-v1', baseRevision: 'synthetic',
-    masterSuggestions: { exercises: [], trainingItems: [] }, trainingItemChanges: [], washRequests: [],
-    menuProposals: [{ candidateId: 'qa-menu', name: 'Owner確認候補 (ByAI)', entries: [
-      { candidateId: 'qa-entry', trainingItemRef: { kind: 'existing', trainingItemId: 'canonical-item' }, order: 0 },
-    ] }],
-  }
-  const upload = (value: unknown) => input.setInputFiles({ name: 'trainer.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(value)) })
-  await upload({ ...proposal, unexpected: true })
-  await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
-  await expect(page.getByRole('heading', { name: '取り込む内容' })).toHaveCount(0)
-  expect(await readCanonicalState(page)).toEqual(before)
-  await upload(proposal)
-  await expect(page.getByRole('heading', { name: '取り込む内容' })).toBeVisible()
-  await expect(page.getByText('Owner確認候補 (ByAI)', { exact: true })).toBeVisible()
-  const apply = page.getByRole('button', { name: 'この内容を取り込む' })
-  page.once('dialog', dialog => dialog.dismiss())
-  await apply.click()
-  await expect(apply).toBeVisible()
-  expect(await readCanonicalState(page)).toEqual(before)
-  page.once('dialog', dialog => dialog.accept())
-  await apply.click()
-  await expect(page.getByText('トレーナーからの提案を取り込みました。', { exact: true })).toBeVisible()
-  const saved = await readCanonicalState(page)
-  const menus = saved.menus as { id: string }[]
-  const added = menus[menus.length - 1]
-  expect(added.id).toBeTruthy()
-  expect(saved).toEqual({
-    ...before,
-    appliedProposalIds: [proposal.proposalId],
-    menus: [...before.menus, { id: added.id, name: 'Owner確認候補 (ByAI)', lifecycle: 'active', managementMode: 'TRAINER' }],
-    menuEntries: [...before.menuEntries as object[], { id: expect.any(String), menuId: added.id, lifecycle: 'active', trainingItemId: 'canonical-item', order: 0 }],
+for (const name of ['Owner確認候補', 'Owner確認候補 (ByAI)']) {
+  test(`Trainer v1 TR-02/TR-04: ${name}, preview, cancel, apply, replay rejection and 100-day Context`, async ({ page }, info) => {
+    await page.clock.setFixedTime(instant)
+    const before = { ...canonicalWriteFixture(), sessions: [
+      session('outside-context', '2026-06-25'),
+      session('first-context-day', '2026-06-26'),
+      session('last-context-day', '2026-10-03'),
+    ] }
+    await seedCanonicalAndReload(page, before)
+    await open(page, 'トレーナー連携')
+    const input = page.getByLabel('提案ファイルを選ぶ')
+    await expect(input).toBeEnabled()
+    const proposal = {
+      format: 'training-project.trainer-proposal', version: 1, proposalId: `qa-trainer-v1-${name}`, baseRevision: 'synthetic',
+      masterSuggestions: { exercises: [], trainingItems: [] }, trainingItemChanges: [], washRequests: [],
+      menuProposals: [{ candidateId: 'qa-menu', name, entries: [
+        { candidateId: 'qa-entry', trainingItemRef: { kind: 'existing', trainingItemId: 'canonical-item' }, order: 0 },
+      ] }],
+    }
+    const upload = (value: unknown) => input.setInputFiles({ name: 'trainer.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(value)) })
+    await upload({ ...proposal, unexpected: true })
+    await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
+    await expect(page.getByRole('heading', { name: '取り込む内容' })).toHaveCount(0)
+    expect(await readCanonicalState(page)).toEqual(before)
+    await upload(proposal)
+    await expect(page.getByRole('heading', { name: '取り込む内容' })).toBeVisible()
+    await expect(page.getByText(name, { exact: true })).toBeVisible()
+    const apply = page.getByRole('button', { name: 'この内容を取り込む' })
+    page.once('dialog', dialog => dialog.dismiss())
+    await apply.click()
+    await expect(apply).toBeVisible()
+    expect(await readCanonicalState(page)).toEqual(before)
+    page.once('dialog', dialog => dialog.accept())
+    await apply.click()
+    await expect(page.getByText('トレーナーからの提案を取り込みました。', { exact: true })).toBeVisible()
+    const saved = await readCanonicalState(page)
+    const menus = saved.menus as { id: string }[]
+    const added = menus[menus.length - 1]
+    expect(added.id).toBeTruthy()
+    expect(saved).toEqual({
+      ...before,
+      appliedProposalIds: [proposal.proposalId],
+      menus: [...before.menus, { id: added.id, name, lifecycle: 'active', managementMode: 'TRAINER' }],
+      menuEntries: [...before.menuEntries as object[], { id: expect.any(String), menuId: added.id, lifecycle: 'active', trainingItemId: 'canonical-item', order: 0 }],
+    })
+    await page.reload()
+    await open(page, 'トレーナー連携')
+    await expect(input).toBeEnabled()
+    await upload(proposal)
+    await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
+    expect(await readCanonicalState(page)).toEqual(saved)
+    const downloadEvent = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'トレーナー用ファイルを作る' }).click()
+    const download = await downloadEvent
+    const context = JSON.parse(await readFile((await download.path())!, 'utf8'))
+    expect(context).toMatchObject({ version: 1, fromDate: '2026-06-26', toDate: '2026-10-03' })
+    expect(context.history.map((row: { id: string }) => row.id)).toEqual(['first-context-day', 'last-context-day'])
+    expect(await readCanonicalState(page)).toEqual(saved)
+    await info.attach('trainer-v1-context-boundary', { body: JSON.stringify({ fromDate: context.fromDate, toDate: context.toDate, historyIds: context.history.map((row: { id: string }) => row.id) }), contentType: 'application/json' })
   })
-  await page.reload()
-  await open(page, 'トレーナー連携')
-  await expect(input).toBeEnabled()
-  await upload(proposal)
-  await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
-  expect(await readCanonicalState(page)).toEqual(saved)
-  const downloadEvent = page.waitForEvent('download')
-  await page.getByRole('button', { name: 'トレーナー用ファイルを作る' }).click()
-  const download = await downloadEvent
-  const context = JSON.parse(await readFile((await download.path())!, 'utf8'))
-  expect(context).toMatchObject({ version: 1, fromDate: '2026-06-26', toDate: '2026-10-03' })
-  expect(context.history.map((row: { id: string }) => row.id)).toEqual(['first-context-day', 'last-context-day'])
-  expect(await readCanonicalState(page)).toEqual(saved)
-  await info.attach('trainer-v1-context-boundary', { body: JSON.stringify({ fromDate: context.fromDate, toDate: context.toDate, historyIds: context.history.map((row: { id: string }) => row.id) }), contentType: 'application/json' })
-})
+}
+
+for (const fault of ['read-back', 'marker-clear'] as const) {
+  test(`Trainer v1 TRO-03: ${fault} failure retains committed data and holds after reload`, async ({ page }, info) => {
+    const before = canonicalWriteFixture()
+    await seedCanonicalAndReload(page, before)
+    await open(page, 'トレーナー連携')
+    const input = page.getByLabel('提案ファイルを選ぶ')
+    await expect(input).toBeEnabled()
+    const proposalId = `trainer-v1-held-${fault}`
+    const proposal = {
+      format: 'training-project.trainer-proposal', version: 1, proposalId, baseRevision: 'synthetic',
+      masterSuggestions: { exercises: [], trainingItems: [] }, trainingItemChanges: [], washRequests: [],
+      menuProposals: [{ candidateId: 'held-menu', name: '保留確認メニュー', entries: [] }],
+    }
+    await input.setInputFiles({ name: 'trainer.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(proposal)) })
+    await expect(page.getByRole('heading', { name: '取り込む内容' })).toBeVisible()
+    await page.evaluate(fault => {
+      const put = IDBObjectStore.prototype.put
+      const get = IDBObjectStore.prototype.get
+      const probe = { writes: 0, committed: false, independentReads: 0, injected: false }
+      Object.assign(window, { trainerHoldProbe: probe })
+      IDBObjectStore.prototype.put = function (...args) {
+        if (this.name === 'canonical') {
+          probe.writes++
+          this.transaction.addEventListener('complete', () => { probe.committed = true }, { once: true })
+          IDBObjectStore.prototype.put = put
+        }
+        return put.apply(this, args)
+      }
+      IDBObjectStore.prototype.get = function (...args) {
+        if (probe.writes === 1 && this.name === 'canonical' && this.transaction.mode === 'readonly') {
+          probe.independentReads++
+          if (fault !== 'read-back') return get.apply(this, args)
+        } else if (!(fault === 'marker-clear' && probe.independentReads === 1 && this.name === 'cutover' && this.transaction.mode === 'readwrite')) {
+          return get.apply(this, args)
+        }
+        probe.injected = true
+        IDBObjectStore.prototype.get = get
+        throw new Error(`injected Trainer v1 ${fault} fault`)
+      }
+    }, fault)
+    page.once('dialog', dialog => dialog.accept())
+    await page.getByRole('button', { name: 'この内容を取り込む' }).click()
+    const readProbe = () => page.evaluate(() => Reflect.get(window, 'trainerHoldProbe'))
+    await expect.poll(readProbe).toEqual({ writes: 1, committed: true, independentReads: 1, injected: true })
+    const probe = await readProbe()
+    const saved = await readCanonicalState(page)
+    const menus = saved.menus as { id: string }[]
+    expect(saved).toEqual({
+      ...before, appliedProposalIds: [proposalId],
+      menus: [...before.menus, { id: menus[menus.length - 1].id, lifecycle: 'active', managementMode: 'TRAINER', name: '保留確認メニュー' }],
+    })
+    const readMarker = () => page.evaluate(async () => {
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open('training-check', 7)
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+      try {
+        return await new Promise<string | undefined>((resolve, reject) => {
+          const request = db.transaction('cutover').objectStore('cutover').get('state')
+          request.onsuccess = () => resolve(request.result.trainerPendingProposalId)
+          request.onerror = () => reject(request.error)
+        })
+      } finally { db.close() }
+    })
+    const assertHeld = async () => {
+      await expect(input).toBeDisabled()
+      await expect(page.getByRole('button', { name: 'トレーナー用ファイルを作る' })).toBeDisabled()
+      await expect(page.getByRole('button', { name: 'この内容を取り込む' })).toHaveCount(0)
+      await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeEnabled()
+      await expect(page.getByText('トレーナーからの提案を取り込みました。', { exact: true })).toHaveCount(0)
+      expect(await readMarker()).toBe(proposalId)
+      expect(await readCanonicalState(page)).toEqual(saved)
+    }
+    await assertHeld()
+    await page.reload()
+    await open(page, 'トレーナー連携')
+    await assertHeld()
+    await info.attach('trainer-v1-hold', { body: JSON.stringify({ fault, probe, marker: await readMarker(), canonical: saved }), contentType: 'application/json' })
+  })
+}
