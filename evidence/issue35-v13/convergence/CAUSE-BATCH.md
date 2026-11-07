@@ -23,3 +23,16 @@ Earlier Windows comparisons reproduce 24 ordinary and 19 release failures at the
 - Full-suite run #42315361871 covers the ten-case first commit 1e7aaf4; the recovery fixture follow-up triggers the final full-suite run.
 
 The per-case list gives the next investigation owner. The existing Gate handoff still distinguishes QA independent verdict, Owner observation and operational verification. No old root/Chrome, real data, merge, deploy or QA acceptance.
+
+## Completed before/after suite verification
+
+| CI | Normal E2E | Release E2E |
+|---|---|---|
+| #42313993157 at 998c7bb, before this batch | 94/119 PASS, 25 FAIL | 27/46 PASS, 19 FAIL |
+| #42315361871 at 1e7aaf4, initial ten cases | 104/119 PASS, 15 FAIL | 33/46 PASS, 13 FAIL |
+| #42316438802 at 1726d8d, with recovery fixture | 105/119 PASS, 14 FAIL | 34/46 PASS, 12 FAIL |
+
+Unit and build passed in all three. No added failing title; the final reduction is 11 normal and 7 release. See batch-ci-before-after.json for titles and the remaining per-case disposition. The final remaining first-stage categories are normal/release locator/UI 11/10, formal expectation mismatch 1/1, environment candidate 1/0, DEV producer/consumer suspicion 1/0, fixture 0/0, unclassified first stage 0/0. Underlying causes for downstream steps and the Linux row-height observation remain unresolved.
+
+Final run: https://github.com/kzsakato/my-app/actions/runs/42316438802
+Final artifact: https://github.com/kzsakato/my-app/actions/runs/42316438802/artifacts/13551742318
