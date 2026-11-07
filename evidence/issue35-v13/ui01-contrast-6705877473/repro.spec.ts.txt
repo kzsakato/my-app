@@ -1,0 +1,167 @@
+import { defaultDisplayPreferences } from '../src/canonical/displayPreferences'
+import { readFileSync } from 'node:fs'
+import { readCanonicalState } from './helpers/state'
+import { canonicalFixture } from '../src/canonical/fixtures'
+import { expect, test, type Page } from '@playwright/test'
+
+test.use({ viewport: { width: 360, height: 800 } })
+
+async function seed(page: Page, fixture = canonicalFixture) {
+  await page.clock.setFixedTime(new Date('2026-09-24T12:00:00+09:00'))
+  await page.goto('/')
+  await page.evaluate(async data => {
+    const db = await new Promise<IDBDatabase>((resolve, reject) => {
+      const request = indexedDB.open('training-check', 7)
+      request.onsuccess = () => resolve(request.result)
+      request.onerror = () => reject(request.error)
+    })
+    await new Promise<void>((resolve, reject) => {
+      const tx = db.transaction(['canonical', 'cutover'], 'readwrite')
+      tx.objectStore('canonical').put(data, 'app')
+      tx.objectStore('cutover').put({ authoritative: true, establishedAt: '2026-09-24T00:00:00+09:00' }, 'state')
+      tx.oncomplete = () => resolve()
+      tx.onabort = () => reject(tx.error)
+    })
+    db.close()
+  }, fixture)
+  await page.reload()
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+}
+
+
+test('UI-01 T0/T1 isolated tap contrasts', async ({ browser, baseURL }, info) => {
+  const results: any[] = []
+  const execute = async (name: string, drag: boolean, save: boolean) => {
+    const context = await browser.newContext({ baseURL, viewport: { width: 360, height: 400 }, hasTouch: true, isMobile: true, timezoneId: 'Asia/Tokyo' })
+    const row: any = { name, drag, save, messages: [] }
+    results.push(row)
+    try {
+      const page = await context.newPage()
+      page.on('pageerror', error => row.messages.push({ type: 'pageerror', text: error.message }))
+      page.on('console', message => row.messages.push({ type: message.type(), text: message.text() }))
+      const fixture = {
+        ...structuredClone(canonicalFixture),
+        trainingItems: canonicalFixture.trainingItems.map(item => ({ ...item, managementMode: 'MAN' as const })),
+        menus: canonicalFixture.menus.map(menu => ({ ...menu, managementMode: 'MAN' as const })),
+        displayPreferences: structuredClone(defaultDisplayPreferences), appliedProposalIds: [],
+      }
+      await seed(page, fixture)
+      await page.getByRole('button', { name: '共通メニュー' }).tap()
+      await page.getByRole('button', { name: '設定', exact: true }).tap()
+      await page.getByRole('button', { name: /^表示設定/ }).tap()
+      const group = page.getByRole('region', { name: 'Default', exact: true })
+      const option = page.getByRole('region', { name: 'Option', exact: true })
+      const handles = group.locator('.sort-drag-handle')
+      await expect(handles).toHaveCount(3)
+      const optionBefore = await option.textContent()
+      row.before = await readCanonicalState(page)
+      await page.evaluate(() => {
+        const events: object[] = [], idb: object[] = []
+        Object.assign(window, { contrastProbe: { events, idb } })
+        const types = ['pointerdown','pointermove','pointerup','pointercancel','gotpointercapture','lostpointercapture','touchstart','touchmove','touchend','touchcancel','mousedown','mouseup','click']
+        const tag = (node: EventTarget | null) => node instanceof Element ? { tag: node.tagName, text: node.textContent?.trim().slice(0, 70) } : null
+        for (const type of types) for (const capture of [true, false]) document.addEventListener(type, event => {
+          const pointer = event as PointerEvent & { changedTouches?: TouchList }
+          const touch = pointer.changedTouches?.[0]
+          const x = touch?.clientX ?? pointer.clientX, y = touch?.clientY ?? pointer.clientY
+          const target = event.target as Element
+          const record = {
+            type, capture, time: event.timeStamp, trusted: event.isTrusted, pointerId: pointer.pointerId,
+            target: tag(target), currentTarget: 'document', hit: tag(document.elementFromPoint(x, y)), x, y,
+            prevented: event.defaultPrevented, preventedAfter: false, scroll: window.scrollY,
+            touchAction: target instanceof Element ? getComputedStyle(target).touchAction : null,
+            pointerCaptured: target instanceof Element && Number.isInteger(pointer.pointerId) ? target.hasPointerCapture(pointer.pointerId) : null,
+          }
+          events.push(record)
+          queueMicrotask(() => { record.preventedAfter = event.defaultPrevented })
+        }, { capture, passive: true })
+        const get = IDBObjectStore.prototype.get, put = IDBObjectStore.prototype.put
+        IDBObjectStore.prototype.get = function (...args) {
+          idb.push({ action: 'get', store: this.name, mode: this.transaction.mode })
+          return get.apply(this, args)
+        }
+        IDBObjectStore.prototype.put = function (...args) {
+          idb.push({ action: 'put', store: this.name, mode: this.transaction.mode })
+          for (const type of ['complete', 'abort']) this.transaction.addEventListener(type, () => idb.push({ action: type }), { once: true })
+          return put.apply(this, args)
+        }
+      })
+      const snapshot = () => page.evaluate(() => ({
+        heading: document.querySelector('h1')?.textContent,
+        alerts: [...document.querySelectorAll('[role=status],[role=alert]')].map(node => node.textContent),
+        scroll: window.scrollY, probe: Reflect.get(window, 'contrastProbe'),
+      }))
+      const tap = async (button: ReturnType<Page['getByRole']>) => {
+        await button.scrollIntoViewIfNeeded()
+        row.target = await button.evaluate(node => {
+          const rect = node.getBoundingClientRect()
+          const hit = document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2)
+          return { rect: rect.toJSON(), hit: hit?.textContent?.trim(), match: node.contains(hit), disabled: (node as HTMLButtonElement).disabled, scroll: window.scrollY }
+        })
+        expect(row.target.match).toBe(true)
+        expect(row.target.disabled).toBe(false)
+        await button.tap()
+      }
+      await handles.last().scrollIntoViewIfNeeded()
+      if (drag) {
+        const cdp = await context.newCDPSession(page)
+        const center = async (index: number) => {
+          const rect = (await handles.nth(index).boundingBox())!
+          return { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 }
+        }
+        const scroll = await page.evaluate(() => window.scrollY)
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [await center(2)] })
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [await center(0)] })
+        await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
+        await expect(group.locator('.sort-priority-row span:first-child').first()).toHaveText('1 部位')
+        await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
+        expect(await page.evaluate(() => window.scrollY)).toBe(scroll)
+      } else if (save) {
+        const up = group.getByRole('button', { name: '部位を上へ', exact: true })
+        await tap(up)
+        await expect(group.locator('.sort-priority-row span:first-child').nth(1)).toHaveText('2 部位', { timeout: 3000 })
+        await tap(up)
+      }
+      if (drag || save) await expect(group.locator('.sort-priority-row span:first-child')).toHaveText(['1 部位', '2 推奨曜日', '3 実施状況'])
+      expect(await option.textContent()).toBe(optionBefore)
+      row.draft = await page.locator('.display-preference-section').evaluateAll(sections => sections.map(section => ({
+        priorities: [...section.querySelectorAll('.sort-priority-row span:first-child')].map(node => node.textContent),
+        direction: section.querySelector('input:checked')?.parentElement?.textContent,
+        pending: [...section.querySelectorAll('fieldset')].some(node => node.disabled),
+      })))
+      await tap(page.getByRole('button', { name: save ? '設定を保存' : /戻る/ }))
+      try { await expect(page.getByRole('heading', { name: '設定', exact: true })).toBeVisible({ timeout: 3000 }) }
+      catch { row.routeTimeout = true }
+      row.after = await readCanonicalState(page)
+      row.state = await snapshot()
+      row.expected = save ? {
+        ...fixture, displayPreferences: { ...fixture.displayPreferences, defaultSort: {
+          ...fixture.displayPreferences.defaultSort, priority: ['bodyRegion', 'recommendedDay', 'completion'],
+        } },
+      } : fixture
+      if (save) {
+        await page.reload()
+        row.reloaded = await readCanonicalState(page)
+      }
+      row.passed = !row.routeTimeout && JSON.stringify(row.after) === JSON.stringify(row.expected)
+        && (!save || JSON.stringify(row.reloaded) === JSON.stringify(row.expected))
+    } catch (error) {
+      row.passed = false
+      row.error = String(error)
+      const page = context.pages()[0]
+      if (page) {
+        row.stopped = await page.evaluate(() => ({ heading: document.querySelector('h1')?.textContent, probe: Reflect.get(window, 'contrastProbe') }))
+        row.after = await readCanonicalState(page)
+      }
+    } finally { await context.close() }
+    return row.passed
+  }
+  const back = await execute('T0 back', false, false)
+  const save = await execute('T0 changed save', false, true)
+  if (back && save) {
+    const dragSave = await execute('T1 drag then save', true, true)
+    const dragBack = await execute('T1 drag then back', true, false)
+    if (dragSave && dragBack) await execute('T1 bounded confirmation', true, true)
+  }
+  await info.attach('ui01-tap-contrast', { body: JSON.stringify(results), contentType: 'application/json' })
+})
