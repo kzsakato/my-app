@@ -1,0 +1,4987 @@
+{
+  "source": "cfe668b8903ad9e41c2b4e7189762cdcb73e09c3",
+  "runHead": "1bd2a3877256c393f08466961afaad6f61fbbf0c",
+  "environment": "Windows Chromium / Playwright 1.63.0 / Asia-Tokyo / 360x400 touch",
+  "cases": [
+    {
+      "name": "T0 back",
+      "drag": false,
+      "save": false,
+      "messages": [
+        {
+          "type": "debug",
+          "text": "[vite] connecting..."
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connected."
+        },
+        {
+          "type": "info",
+          "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connecting..."
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connected."
+        },
+        {
+          "type": "info",
+          "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+        }
+      ],
+      "before": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "recommendedDay",
+              "completion",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "draft": [
+        {
+          "priorities": [
+            "1 推奨曜日",
+            "2 実施状況",
+            "3 部位"
+          ],
+          "direction": "未実施先",
+          "pending": false
+        },
+        {
+          "priorities": [
+            "1 実施状況",
+            "2 推奨曜日",
+            "3 部位"
+          ],
+          "direction": "未実施先",
+          "pending": false
+        }
+      ],
+      "target": {
+        "rect": {
+          "x": 0,
+          "y": -0.5,
+          "width": 54,
+          "height": 36,
+          "top": -0.5,
+          "right": 54,
+          "bottom": 35.5,
+          "left": 0
+        },
+        "hit": "‹ 戻る",
+        "match": true,
+        "disabled": false,
+        "scroll": 13
+      },
+      "after": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "recommendedDay",
+              "completion",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "state": {
+        "heading": "設定",
+        "alerts": [],
+        "scroll": 13,
+        "probe": {
+          "events": [
+            {
+              "type": "pointerdown",
+              "capture": true,
+              "time": 5909,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerdown",
+              "capture": false,
+              "time": 5909,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "touchstart",
+              "capture": true,
+              "time": 5911,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchstart",
+              "capture": false,
+              "time": 5911,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": true,
+              "time": 5911,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": false,
+              "time": 5911,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": true,
+              "time": 5911,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": false,
+              "time": 5911,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": true,
+              "time": 5911,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": false,
+              "time": 5911,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "touchend",
+              "capture": true,
+              "time": 5911,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchend",
+              "capture": false,
+              "time": 5911,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mousedown",
+              "capture": true,
+              "time": 5912,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 18,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mousedown",
+              "capture": false,
+              "time": 5912,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 18,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mouseup",
+              "capture": true,
+              "time": 5912,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 18,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mouseup",
+              "capture": false,
+              "time": 5912,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 18,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "click",
+              "capture": true,
+              "time": 5912,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 18,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "click",
+              "capture": false,
+              "time": 5912,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "HEADER",
+                "text": "‹ 戻る設定≡"
+              },
+              "x": 27,
+              "y": 18,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "",
+              "pointerCaptured": false
+            }
+          ],
+          "idb": [
+            {
+              "action": "get",
+              "store": "canonical",
+              "mode": "readonly"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "recommendedDay",
+              "completion",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "name": "T0 changed save",
+      "drag": false,
+      "save": true,
+      "messages": [
+        {
+          "type": "debug",
+          "text": "[vite] connecting..."
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connected."
+        },
+        {
+          "type": "info",
+          "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connecting..."
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connected."
+        },
+        {
+          "type": "info",
+          "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connecting..."
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connected."
+        },
+        {
+          "type": "info",
+          "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+        }
+      ],
+      "before": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "recommendedDay",
+              "completion",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "target": {
+        "rect": {
+          "x": 16,
+          "y": 322,
+          "width": 328,
+          "height": 50,
+          "top": 322,
+          "right": 344,
+          "bottom": 372,
+          "left": 16
+        },
+        "hit": "設定を保存",
+        "match": true,
+        "disabled": false,
+        "scroll": 494
+      },
+      "draft": [
+        {
+          "priorities": [
+            "1 部位",
+            "2 推奨曜日",
+            "3 実施状況"
+          ],
+          "direction": "未実施先",
+          "pending": false
+        },
+        {
+          "priorities": [
+            "1 実施状況",
+            "2 推奨曜日",
+            "3 部位"
+          ],
+          "direction": "未実施先",
+          "pending": false
+        }
+      ],
+      "after": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "bodyRegion",
+              "recommendedDay",
+              "completion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "state": {
+        "heading": "設定",
+        "alerts": [],
+        "scroll": 403,
+        "probe": {
+          "events": [
+            {
+              "type": "pointerdown",
+              "capture": true,
+              "time": 1074,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerdown",
+              "capture": false,
+              "time": 1074,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "touchstart",
+              "capture": true,
+              "time": 1074,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchstart",
+              "capture": false,
+              "time": 1074,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": true,
+              "time": 1075,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": false,
+              "time": 1075,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": true,
+              "time": 1075,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": false,
+              "time": 1075,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": true,
+              "time": 1075,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": false,
+              "time": 1075,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "touchend",
+              "capture": true,
+              "time": 1075,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchend",
+              "capture": false,
+              "time": 1075,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mousedown",
+              "capture": true,
+              "time": 1075,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mousedown",
+              "capture": false,
+              "time": 1075,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mouseup",
+              "capture": true,
+              "time": 1076,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mouseup",
+              "capture": false,
+              "time": 1076,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "click",
+              "capture": true,
+              "time": 1076,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "click",
+              "capture": false,
+              "time": 1076,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "pointerdown",
+              "capture": true,
+              "time": 1208,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerdown",
+              "capture": false,
+              "time": 1208,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "touchstart",
+              "capture": true,
+              "time": 1208,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchstart",
+              "capture": false,
+              "time": 1208,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": true,
+              "time": 1208,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": false,
+              "time": 1208,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": true,
+              "time": 1208,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": false,
+              "time": 1208,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": true,
+              "time": 1208,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": false,
+              "time": 1208,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "touchend",
+              "capture": true,
+              "time": 1208,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchend",
+              "capture": false,
+              "time": 1208,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mousedown",
+              "capture": true,
+              "time": 1209,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mousedown",
+              "capture": false,
+              "time": 1209,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mouseup",
+              "capture": true,
+              "time": 1209,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mouseup",
+              "capture": false,
+              "time": 1209,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "click",
+              "capture": true,
+              "time": 1209,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "click",
+              "capture": false,
+              "time": 1209,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "↑"
+              },
+              "x": 248,
+              "y": 193,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "pointerdown",
+              "capture": true,
+              "time": 1341,
+              "trusted": true,
+              "pointerId": 7,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerdown",
+              "capture": false,
+              "time": 1341,
+              "trusted": true,
+              "pointerId": 7,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "touchstart",
+              "capture": true,
+              "time": 1341,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchstart",
+              "capture": false,
+              "time": 1341,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": true,
+              "time": 1341,
+              "trusted": true,
+              "pointerId": 7,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": false,
+              "time": 1341,
+              "trusted": true,
+              "pointerId": 7,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": true,
+              "time": 1341,
+              "trusted": true,
+              "pointerId": 7,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": false,
+              "time": 1341,
+              "trusted": true,
+              "pointerId": 7,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": true,
+              "time": 1341,
+              "trusted": true,
+              "pointerId": 7,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": false,
+              "time": 1341,
+              "trusted": true,
+              "pointerId": 7,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "touchend",
+              "capture": true,
+              "time": 1341,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchend",
+              "capture": false,
+              "time": 1341,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mousedown",
+              "capture": true,
+              "time": 1342,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mousedown",
+              "capture": false,
+              "time": 1342,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mouseup",
+              "capture": true,
+              "time": 1342,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "mouseup",
+              "capture": false,
+              "time": 1342,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "click",
+              "capture": true,
+              "time": 1342,
+              "trusted": true,
+              "pointerId": 7,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "click",
+              "capture": false,
+              "time": 1342,
+              "trusted": true,
+              "pointerId": 7,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            }
+          ],
+          "idb": [
+            {
+              "action": "get",
+              "store": "canonical",
+              "mode": "readwrite"
+            },
+            {
+              "action": "put",
+              "store": "canonical",
+              "mode": "readwrite"
+            },
+            {
+              "action": "get",
+              "store": "canonical",
+              "mode": "readonly"
+            },
+            {
+              "action": "complete"
+            },
+            {
+              "action": "get",
+              "store": "canonical",
+              "mode": "readonly"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "bodyRegion",
+              "recommendedDay",
+              "completion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "reloaded": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "bodyRegion",
+              "recommendedDay",
+              "completion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "passed": true
+    },
+    {
+      "name": "T1 drag then save",
+      "drag": true,
+      "save": true,
+      "messages": [
+        {
+          "type": "debug",
+          "text": "[vite] connecting..."
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connected."
+        },
+        {
+          "type": "info",
+          "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connecting..."
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connected."
+        },
+        {
+          "type": "info",
+          "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connecting..."
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connected."
+        },
+        {
+          "type": "info",
+          "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+        }
+      ],
+      "before": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "recommendedDay",
+              "completion",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "draft": [
+        {
+          "priorities": [
+            "1 部位",
+            "2 推奨曜日",
+            "3 実施状況"
+          ],
+          "direction": "未実施先",
+          "pending": false
+        },
+        {
+          "priorities": [
+            "1 実施状況",
+            "2 推奨曜日",
+            "3 部位"
+          ],
+          "direction": "未実施先",
+          "pending": false
+        }
+      ],
+      "target": {
+        "rect": {
+          "x": 16,
+          "y": 322,
+          "width": 328,
+          "height": 50,
+          "top": 322,
+          "right": 344,
+          "bottom": 372,
+          "left": 16
+        },
+        "hit": "設定を保存",
+        "match": true,
+        "disabled": false,
+        "scroll": 494
+      },
+      "routeTimeout": true,
+      "after": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "recommendedDay",
+              "completion",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "state": {
+        "heading": "表示設定",
+        "alerts": [],
+        "scroll": 494,
+        "probe": {
+          "events": [
+            {
+              "type": "pointerdown",
+              "capture": true,
+              "time": 922,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerdown",
+              "capture": false,
+              "time": 922,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "touchstart",
+              "capture": true,
+              "time": 923,
+              "trusted": true,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchstart",
+              "capture": false,
+              "time": 923,
+              "trusted": true,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": null
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": true,
+              "time": 956,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": false,
+              "time": 956,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointermove",
+              "capture": true,
+              "time": 956,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointermove",
+              "capture": false,
+              "time": 956,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "touchmove",
+              "capture": true,
+              "time": 956,
+              "trusted": true,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchmove",
+              "capture": false,
+              "time": 956,
+              "trusted": true,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": null
+            },
+            {
+              "type": "pointerup",
+              "capture": true,
+              "time": 972,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": false,
+              "time": 972,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": true,
+              "time": 977,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": false
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": false,
+              "time": 977,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": false
+            },
+            {
+              "type": "touchend",
+              "capture": true,
+              "time": 977,
+              "trusted": true,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchend",
+              "capture": false,
+              "time": 977,
+              "trusted": true,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": null
+            },
+            {
+              "type": "pointerdown",
+              "capture": true,
+              "time": 1138,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerdown",
+              "capture": false,
+              "time": 1138,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "touchstart",
+              "capture": true,
+              "time": 1138,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchstart",
+              "capture": false,
+              "time": 1138,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": true,
+              "time": 1138,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": false,
+              "time": 1138,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": true,
+              "time": 1138,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": false,
+              "time": 1138,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": true,
+              "time": 1138,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": false,
+              "time": 1138,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "touchend",
+              "capture": true,
+              "time": 1138,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchend",
+              "capture": false,
+              "time": 1138,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "設定を保存"
+              },
+              "x": 180,
+              "y": 347,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 494,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            }
+          ],
+          "idb": [
+            {
+              "action": "get",
+              "store": "canonical",
+              "mode": "readonly"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "bodyRegion",
+              "recommendedDay",
+              "completion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "reloaded": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "recommendedDay",
+              "completion",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "passed": false
+    },
+    {
+      "name": "T1 drag then back",
+      "drag": true,
+      "save": false,
+      "messages": [
+        {
+          "type": "debug",
+          "text": "[vite] connecting..."
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connected."
+        },
+        {
+          "type": "info",
+          "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connecting..."
+        },
+        {
+          "type": "debug",
+          "text": "[vite] connected."
+        },
+        {
+          "type": "info",
+          "text": "%cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold"
+        }
+      ],
+      "before": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "recommendedDay",
+              "completion",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "draft": [
+        {
+          "priorities": [
+            "1 部位",
+            "2 推奨曜日",
+            "3 実施状況"
+          ],
+          "direction": "未実施先",
+          "pending": false
+        },
+        {
+          "priorities": [
+            "1 実施状況",
+            "2 推奨曜日",
+            "3 部位"
+          ],
+          "direction": "未実施先",
+          "pending": false
+        }
+      ],
+      "target": {
+        "rect": {
+          "x": 0,
+          "y": -0.5,
+          "width": 54,
+          "height": 36,
+          "top": -0.5,
+          "right": 54,
+          "bottom": 35.5,
+          "left": 0
+        },
+        "hit": "‹ 戻る",
+        "match": true,
+        "disabled": false,
+        "scroll": 13
+      },
+      "routeTimeout": true,
+      "after": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "recommendedDay",
+              "completion",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "state": {
+        "heading": "表示設定",
+        "alerts": [],
+        "scroll": 13,
+        "probe": {
+          "events": [
+            {
+              "type": "pointerdown",
+              "capture": true,
+              "time": 959,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerdown",
+              "capture": false,
+              "time": 959,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "touchstart",
+              "capture": true,
+              "time": 959,
+              "trusted": true,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchstart",
+              "capture": false,
+              "time": 959,
+              "trusted": true,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 237,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": null
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": true,
+              "time": 992,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": false,
+              "time": 992,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointermove",
+              "capture": true,
+              "time": 992,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointermove",
+              "capture": false,
+              "time": 992,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "touchmove",
+              "capture": true,
+              "time": 992,
+              "trusted": true,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchmove",
+              "capture": false,
+              "time": 992,
+              "trusted": true,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": null
+            },
+            {
+              "type": "pointerup",
+              "capture": true,
+              "time": 1008,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": false,
+              "time": 1008,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": true
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": true,
+              "time": 1013,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": false
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": false,
+              "time": 1013,
+              "trusted": true,
+              "pointerId": 5,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": false
+            },
+            {
+              "type": "touchend",
+              "capture": true,
+              "time": 1013,
+              "trusted": true,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchend",
+              "capture": false,
+              "time": 1013,
+              "trusted": true,
+              "target": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "SPAN",
+                "text": "≡"
+              },
+              "x": 188,
+              "y": 149,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 41,
+              "touchAction": "none",
+              "pointerCaptured": null
+            },
+            {
+              "type": "pointerdown",
+              "capture": true,
+              "time": 1210,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerdown",
+              "capture": false,
+              "time": 1210,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "touchstart",
+              "capture": true,
+              "time": 1210,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchstart",
+              "capture": false,
+              "time": 1210,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": true,
+              "time": 1210,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "gotpointercapture",
+              "capture": false,
+              "time": 1210,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": true,
+              "time": 1210,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "pointerup",
+              "capture": false,
+              "time": 1210,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": true
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": true,
+              "time": 1210,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "lostpointercapture",
+              "capture": false,
+              "time": 1210,
+              "trusted": true,
+              "pointerId": 6,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": false
+            },
+            {
+              "type": "touchend",
+              "capture": true,
+              "time": 1210,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            },
+            {
+              "type": "touchend",
+              "capture": false,
+              "time": 1210,
+              "trusted": true,
+              "target": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "currentTarget": "document",
+              "hit": {
+                "tag": "BUTTON",
+                "text": "‹ 戻る"
+              },
+              "x": 27,
+              "y": 17.75,
+              "prevented": false,
+              "preventedAfter": false,
+              "scroll": 13,
+              "touchAction": "auto",
+              "pointerCaptured": null
+            }
+          ],
+          "idb": [
+            {
+              "action": "get",
+              "store": "canonical",
+              "mode": "readonly"
+            }
+          ]
+        }
+      },
+      "expected": {
+        "schemaVersion": 1,
+        "weekStartsOn": 0,
+        "activeMenuId": "menu-1",
+        "profile": {
+          "weight": 66
+        },
+        "exercises": [
+          {
+            "id": "exercise-1",
+            "lifecycle": "active",
+            "name": "ダンベルプレス",
+            "measureType": "reps",
+            "usesWeight": true,
+            "weightMode": "perSide",
+            "classifications": [
+              {
+                "kind": "bodyRegion",
+                "label": "胸"
+              }
+            ]
+          }
+        ],
+        "trainingItems": [
+          {
+            "id": "item-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "exerciseId": "exercise-1",
+            "displayName": "ダンベルプレス",
+            "weight": 18,
+            "reps": 15,
+            "sets": 5
+          }
+        ],
+        "menus": [
+          {
+            "id": "menu-1",
+            "lifecycle": "active",
+            "managementMode": "MAN",
+            "name": "通常メニュー"
+          }
+        ],
+        "menuEntries": [
+          {
+            "id": "entry-1",
+            "lifecycle": "active",
+            "menuId": "menu-1",
+            "trainingItemId": "item-1",
+            "recommendedDay": 1,
+            "order": 0
+          }
+        ],
+        "sessions": [
+          {
+            "id": "session-1",
+            "trainingItemId": "item-1",
+            "menuEntryId": "entry-1",
+            "date": "2026-09-24",
+            "performedAt": "2026-09-24T09:00:00+09:00",
+            "performedOrder": 0,
+            "weight": 18,
+            "reps": 15,
+            "sets": 5,
+            "bodyWeight": 66,
+            "snapshot": {
+              "exerciseId": "exercise-1",
+              "exerciseName": "ダンベルプレス",
+              "trainingItemDisplayName": "ダンベルプレス",
+              "measureType": "reps",
+              "weightMode": "perSide",
+              "classifications": [
+                {
+                  "kind": "bodyRegion",
+                  "label": "胸"
+                }
+              ]
+            }
+          }
+        ],
+        "trainingItemSettingChanges": [
+          {
+            "id": "change-1",
+            "trainingItemId": "item-1",
+            "changedAt": "2026-09-24T09:00:00+09:00",
+            "isInitial": true,
+            "snapshot": {
+              "weight": 18,
+              "reps": 15,
+              "sets": 5
+            }
+          }
+        ],
+        "appliedProposalIds": [],
+        "displayPreferences": {
+          "defaultSort": {
+            "priority": [
+              "recommendedDay",
+              "completion",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "optionSort": {
+            "priority": [
+              "completion",
+              "recommendedDay",
+              "bodyRegion"
+            ],
+            "completionDirection": "incompleteFirst"
+          },
+          "bodyRegionOrder": [
+            "胸",
+            "背中",
+            "腕",
+            "肩",
+            "下半身",
+            "体幹",
+            "その他"
+          ]
+        }
+      },
+      "passed": false
+    }
+  ]
+}

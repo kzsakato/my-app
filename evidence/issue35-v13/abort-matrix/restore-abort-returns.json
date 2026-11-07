@@ -1,0 +1,19 @@
+{
+  "operation": "Restore",
+  "expectedStatus": "REJECTED_ZERO_MUTATION",
+  "injected": {
+    "canonicalPutSucceeded": true,
+    "markerPutFault": true,
+    "nativeAbortReturned": true,
+    "nativeAbortEvent": true,
+    "callerSawAbortThrow": false
+  },
+  "before": [
+    null,
+    null
+  ],
+  "after": [
+    null,
+    null
+  ]
+}

@@ -1,0 +1,648 @@
+{
+  "normal": {
+    "specifiedFailureCount": 25,
+    "firstBatchFailureCount": 15,
+    "finalFailureCount": 14,
+    "firstBatchResolved": [
+      {
+        "file": "issue28.spec.ts",
+        "title": "2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence"
+      },
+      {
+        "file": "issue30-v12-additional.spec.ts",
+        "title": "Q10/Q15 ambiguous classification across current-Exercise UI routes never picks the first label"
+      },
+      {
+        "file": "issue30-v12-additional.spec.ts",
+        "title": "Q14/Q15/Q16 target screen visible/accessible wording, geometry and CSS, including warning/edit routes"
+      },
+      {
+        "file": "issue30-v12.spec.ts",
+        "title": "TOP weekday all ON/OFF preserves completed flag; approved +1pt status and unchanged run weight"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "OIC-013: item-scoped history deletion cancel, exact selected delete and reload never reconstruct initial/current/Session"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C02 cancellation completion/non-target/reload with none failure"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C02 cancellation completion/non-target/reload with read-back failure"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C02 cancellation completion/non-target/reload with write failure"
+      },
+      {
+        "file": "v1r-final-correction.spec.ts",
+        "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=0)"
+      },
+      {
+        "file": "v1r-final-correction.spec.ts",
+        "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=6)"
+      }
+    ],
+    "firstBatchAdded": [],
+    "finalResolved": [
+      {
+        "file": "issue28.spec.ts",
+        "title": "2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence"
+      },
+      {
+        "file": "issue30-v12-additional.spec.ts",
+        "title": "Q10/Q15 ambiguous classification across current-Exercise UI routes never picks the first label"
+      },
+      {
+        "file": "issue30-v12-additional.spec.ts",
+        "title": "Q14/Q15/Q16 target screen visible/accessible wording, geometry and CSS, including warning/edit routes"
+      },
+      {
+        "file": "issue30-v12.spec.ts",
+        "title": "TOP weekday all ON/OFF preserves completed flag; approved +1pt status and unchanged run weight"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "H-09 startup/Restore reject unsupported old canonical without repair, Session drop or legacy fallback"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "OIC-013: item-scoped history deletion cancel, exact selected delete and reload never reconstruct initial/current/Session"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C02 cancellation completion/non-target/reload with none failure"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C02 cancellation completion/non-target/reload with read-back failure"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C02 cancellation completion/non-target/reload with write failure"
+      },
+      {
+        "file": "v1r-final-correction.spec.ts",
+        "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=0)"
+      },
+      {
+        "file": "v1r-final-correction.spec.ts",
+        "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=6)"
+      }
+    ],
+    "finalAdded": [],
+    "remainingCauses": {
+      "locator・UI操作の不一致": 11,
+      "製品不具合の疑い": 1,
+      "実行環境差の候補": 1,
+      "正式仕様とテスト期待値の不一致": 1
+    },
+    "remainingCases": [
+      {
+        "file": "grouped-baseline.spec.ts",
+        "title": "H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/history/standard/complete/cancel/reload",
+        "line": 18,
+        "ciObservation": [
+          "Test timeout of 60000ms exceeded.",
+          "Error: locator.click: Test timeout of 60000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^復旧ルートプレス / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^復旧ルートプレス / })",
+          "head": "- waiting for getByRole('button', { name: /^復旧ルートプレス / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "owner-v12-07.spec.ts",
+        "title": "V12-07: existing row height preserved, fourteen days right aligned, data unchanged",
+        "line": 8,
+        "ciObservation": [
+          "Error: expect(received).toBe(expected) // Object.is equality",
+          "Expected: 57",
+          "Received: 58"
+        ],
+        "fixedVsV13": {
+          "classification": "not-reproduced-on-local-windows",
+          "base": "PASS",
+          "head": "PASS"
+        },
+        "category": "実行環境差の候補",
+        "confidence": "observed-platform-split-cause-unconfirmed",
+        "disposition": "Tech: replay fixed and PR builds on the same Linux Chromium/font image and compare row boxes and computed line metrics before deciding any fix."
+      },
+      {
+        "file": "training-check.spec.ts",
+        "title": "canonical MAN bootstrap downloads an H-07 MenuProposal that imports without changing the active menu",
+        "line": 141,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.setInputFiles: Test timeout of 30000ms exceeded.",
+          "- waiting for getByLabel('提案ファイルを選択')"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByLabel('提案ファイルを選択')",
+          "head": "- waiting for getByLabel('提案ファイルを選択')"
+        },
+        "category": "製品不具合の疑い",
+        "confidence": "producer-consumer-mismatch-observed-on-both; authority-needed",
+        "disposition": "Tech: decide supported DEV-only H-07 producer / current Trainer consumer contract. Scratch browser probe on both fixed V1.2 and PR rejects the actual generated contractVersion 1.0 file with no format. No product edit."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "D-01 Warning requires acknowledgment and rollback uncertainty blocks edits until reload",
+        "line": 497,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.setInputFiles: Test timeout of 30000ms exceeded.",
+          "- waiting for getByLabel('提案ファイルを選択')"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByLabel('提案ファイルを選択')",
+          "head": "- waiting for getByLabel('提案ファイルを選択')"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "QA/Tech: confirm which current Trainer contract and warning flow replaces the legacy entry and payload in these cases; a selector-only rename cannot establish equivalence."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "D-03/OIC-016: baseline settings/list/edit/custom required label and hide/show preserve IDs",
+        "line": 382,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.click: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^正規テストプレス / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^正規テストプレス / })",
+          "head": "- waiting for getByRole('button', { name: /^正規テストプレス / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "OIC-003/006/007 + H06 A5: Session-only seat, controls, persist failure/retry/reload preserve identity",
+        "line": 156,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.click: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^胸 / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^胸 / })",
+          "head": "- waiting for getByRole('button', { name: /^胸 / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "OIC-008/009/010/012: temporary weekday filter, distinct today including Extra, actual-date visibility, two-line execution lists",
+        "line": 208,
+        "ciObservation": [
+          "Error: expect(locator).toContainText(expected) failed",
+          "Locator: getByText('今日の実施総数')",
+          "Expected substring: \"1/1\"",
+          "Received string:    \"今日の実施総数2/1\"",
+          "Timeout: 5000ms",
+          "- waiting for getByText('今日の実施総数')"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "Locator: getByText('今日の実施総数') | Expected substring: \"1/1\" | Received string:    \"今日の実施総数2/1\" | - waiting for getByText('今日の実施総数')",
+          "head": "Locator: getByText('今日の実施総数') | Expected substring: \"1/1\" | Received string:    \"今日の実施総数2/1\" | - waiting for getByText('今日の実施総数')"
+        },
+        "category": "正式仕様とテスト期待値の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: T-07 first count uses Session rows, and confirm remaining legacy weekday/display expectations as one scenario before editing."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "OIC-011 / PRESERVE: full screen population back/menu, Profile and Analysis original controls including half-year",
+        "line": 409,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.click: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^胸 / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^胸 / })",
+          "head": "- waiting for getByRole('button', { name: /^胸 / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "PRESERVE Profile all fields and standard-setting failure/retry create exactly one event",
+        "line": 481,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.click: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^正規テストプレス / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^正規テストプレス / })",
+          "head": "- waiting for getByRole('button', { name: /^正規テストプレス / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "PRESERVE list filter/hidden state, Item hide/show, Menu active guard/confirmation and unsaved cancel",
+        "line": 549,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.selectOption: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('combobox', { name: 'カテゴリ', exact: true })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('combobox', { name: 'カテゴリ', exact: true })",
+          "head": "- waiting for getByRole('combobox', { name: 'カテゴリ', exact: true })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C01 D-01/02: exact upstream name Owner確認候補 (ByAI), preview/cancel/failure/idempotence/read-back/export",
+        "line": 281,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.setInputFiles: Test timeout of 30000ms exceeded.",
+          "- waiting for getByLabel('提案ファイルを選択')"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByLabel('提案ファイルを選択')",
+          "head": "- waiting for getByLabel('提案ファイルを選択')"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "QA/Tech: confirm which current Trainer contract and warning flow replaces the legacy entry and payload in these cases; a selector-only rename cannot establish equivalence."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C01 D-01/02: exact upstream name Owner確認候補, preview/cancel/failure/idempotence/read-back/export",
+        "line": 281,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.setInputFiles: Test timeout of 30000ms exceeded.",
+          "- waiting for getByLabel('提案ファイルを選択')"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByLabel('提案ファイルを選択')",
+          "head": "- waiting for getByLabel('提案ファイルを選択')"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "QA/Tech: confirm which current Trainer contract and warning flow replaces the legacy entry and payload in these cases; a selector-only rename cannot establish equivalence."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "canonical write read-back failure prevents stale editing; reload preserves original logical Session pair",
+        "line": 453,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.click: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^胸 / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^胸 / })",
+          "head": "- waiting for getByRole('button', { name: /^胸 / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "v1r-final-correction.spec.ts",
+        "title": "H06 A6/A7/A8 zero defaults, canonical save blocking and form-local error lifecycle",
+        "line": 156,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.click: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^正規テストプレス / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^正規テストプレス / })",
+          "head": "- waiting for getByRole('button', { name: /^正規テストプレス / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      }
+    ]
+  },
+  "release": {
+    "specifiedFailureCount": 19,
+    "firstBatchFailureCount": 13,
+    "finalFailureCount": 12,
+    "firstBatchResolved": [
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "OIC-013: item-scoped history deletion cancel, exact selected delete and reload never reconstruct initial/current/Session"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C02 cancellation completion/non-target/reload with none failure"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C02 cancellation completion/non-target/reload with read-back failure"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C02 cancellation completion/non-target/reload with write failure"
+      },
+      {
+        "file": "v1r-final-correction.spec.ts",
+        "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=0)"
+      },
+      {
+        "file": "v1r-final-correction.spec.ts",
+        "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=6)"
+      }
+    ],
+    "firstBatchAdded": [],
+    "finalResolved": [
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "H-09 startup/Restore reject unsupported old canonical without repair, Session drop or legacy fallback"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "OIC-013: item-scoped history deletion cancel, exact selected delete and reload never reconstruct initial/current/Session"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C02 cancellation completion/non-target/reload with none failure"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C02 cancellation completion/non-target/reload with read-back failure"
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C02 cancellation completion/non-target/reload with write failure"
+      },
+      {
+        "file": "v1r-final-correction.spec.ts",
+        "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=0)"
+      },
+      {
+        "file": "v1r-final-correction.spec.ts",
+        "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=6)"
+      }
+    ],
+    "finalAdded": [],
+    "remainingCauses": {
+      "locator・UI操作の不一致": 11,
+      "正式仕様とテスト期待値の不一致": 1
+    },
+    "remainingCases": [
+      {
+        "file": "grouped-baseline.spec.ts",
+        "title": "H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/history/standard/complete/cancel/reload",
+        "line": 18,
+        "ciObservation": [
+          "Test timeout of 60000ms exceeded.",
+          "Error: locator.click: Test timeout of 60000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^復旧ルートプレス / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^復旧ルートプレス / })",
+          "head": "- waiting for getByRole('button', { name: /^復旧ルートプレス / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "D-01 Warning requires acknowledgment and rollback uncertainty blocks edits until reload",
+        "line": 497,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.setInputFiles: Test timeout of 30000ms exceeded.",
+          "- waiting for getByLabel('提案ファイルを選択')"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByLabel('提案ファイルを選択')",
+          "head": "- waiting for getByLabel('提案ファイルを選択')"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "QA/Tech: confirm which current Trainer contract and warning flow replaces the legacy entry and payload in these cases; a selector-only rename cannot establish equivalence."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "D-03/OIC-016: baseline settings/list/edit/custom required label and hide/show preserve IDs",
+        "line": 382,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.click: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^正規テストプレス / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^正規テストプレス / })",
+          "head": "- waiting for getByRole('button', { name: /^正規テストプレス / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "OIC-003/006/007 + H06 A5: Session-only seat, controls, persist failure/retry/reload preserve identity",
+        "line": 156,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.click: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^胸 / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^胸 / })",
+          "head": "- waiting for getByRole('button', { name: /^胸 / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "OIC-008/009/010/012: temporary weekday filter, distinct today including Extra, actual-date visibility, two-line execution lists",
+        "line": 208,
+        "ciObservation": [
+          "Error: expect(locator).toContainText(expected) failed",
+          "Locator: getByText('今日の実施総数')",
+          "Expected substring: \"1/1\"",
+          "Received string:    \"今日の実施総数2/1\"",
+          "Timeout: 5000ms",
+          "- waiting for getByText('今日の実施総数')"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "Locator: getByText('今日の実施総数') | Expected substring: \"1/1\" | Received string:    \"今日の実施総数2/1\" | - waiting for getByText('今日の実施総数')",
+          "head": "Locator: getByText('今日の実施総数') | Expected substring: \"1/1\" | Received string:    \"今日の実施総数2/1\" | - waiting for getByText('今日の実施総数')"
+        },
+        "category": "正式仕様とテスト期待値の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: T-07 first count uses Session rows, and confirm remaining legacy weekday/display expectations as one scenario before editing."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "OIC-011 / PRESERVE: full screen population back/menu, Profile and Analysis original controls including half-year",
+        "line": 409,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.click: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^胸 / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^胸 / })",
+          "head": "- waiting for getByRole('button', { name: /^胸 / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "PRESERVE Profile all fields and standard-setting failure/retry create exactly one event",
+        "line": 481,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.click: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^正規テストプレス / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^正規テストプレス / })",
+          "head": "- waiting for getByRole('button', { name: /^正規テストプレス / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "PRESERVE list filter/hidden state, Item hide/show, Menu active guard/confirmation and unsaved cancel",
+        "line": 549,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.selectOption: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('combobox', { name: 'カテゴリ', exact: true })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('combobox', { name: 'カテゴリ', exact: true })",
+          "head": "- waiting for getByRole('combobox', { name: 'カテゴリ', exact: true })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C01 D-01/02: exact upstream name Owner確認候補 (ByAI), preview/cancel/failure/idempotence/read-back/export",
+        "line": 281,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.setInputFiles: Test timeout of 30000ms exceeded.",
+          "- waiting for getByLabel('提案ファイルを選択')"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByLabel('提案ファイルを選択')",
+          "head": "- waiting for getByLabel('提案ファイルを選択')"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "QA/Tech: confirm which current Trainer contract and warning flow replaces the legacy entry and payload in these cases; a selector-only rename cannot establish equivalence."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "QA-C01 D-01/02: exact upstream name Owner確認候補, preview/cancel/failure/idempotence/read-back/export",
+        "line": 281,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.setInputFiles: Test timeout of 30000ms exceeded.",
+          "- waiting for getByLabel('提案ファイルを選択')"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByLabel('提案ファイルを選択')",
+          "head": "- waiting for getByLabel('提案ファイルを選択')"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "QA/Tech: confirm which current Trainer contract and warning flow replaces the legacy entry and payload in these cases; a selector-only rename cannot establish equivalence."
+      },
+      {
+        "file": "v1r-acceptance.spec.ts",
+        "title": "canonical write read-back failure prevents stale editing; reload preserves original logical Session pair",
+        "line": 453,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.click: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^胸 / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^胸 / })",
+          "head": "- waiting for getByRole('button', { name: /^胸 / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      },
+      {
+        "file": "v1r-final-correction.spec.ts",
+        "title": "H06 A6/A7/A8 zero defaults, canonical save blocking and form-local error lifecycle",
+        "line": 156,
+        "ciObservation": [
+          "Test timeout of 30000ms exceeded.",
+          "Error: locator.click: Test timeout of 30000ms exceeded.",
+          "- waiting for getByRole('button', { name: /^正規テストプレス / })"
+        ],
+        "fixedVsV13": {
+          "classification": "baseline-common-same-observed-failure",
+          "base": "- waiting for getByRole('button', { name: /^正規テストプレス / })",
+          "head": "- waiting for getByRole('button', { name: /^正規テストプレス / })"
+        },
+        "category": "locator・UI操作の不一致",
+        "confidence": "first-mismatch-confirmed-downstream-unverified",
+        "disposition": "Codex/QA: map stale route/selector to formal screen and keep later assertions; reproduce subsequent failure before broader changes."
+      }
+    ]
+  }
+}

@@ -1,6 +1,8 @@
 import {test,expect} from '@playwright/test'
 import {canonicalFixture} from '../src/canonical/fixtures'
 import {mkdirSync,writeFileSync} from 'node:fs'
+
+test.use({ baseURL: 'http://127.0.0.1:4177' })
 test('V12-04: actions after weekdays, minus 1pt, one line; filter semantics unchanged',async({page},info)=>{
  await page.goto('/')
  await page.evaluate(async data=>{const db=await new Promise<IDBDatabase>(ok=>{const r=indexedDB.open('training-check-v1r11-candidate',7);r.onsuccess=()=>ok(r.result)});await new Promise<void>(ok=>{const tx=db.transaction(['canonical','cutover'],'readwrite');tx.objectStore('canonical').put(data,'app');tx.objectStore('cutover').put({authoritative:true,establishedAt:'2026-10-27T00:00:00+09:00'},'state');tx.oncomplete=()=>ok()});db.close()},canonicalFixture)

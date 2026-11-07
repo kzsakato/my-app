@@ -1,0 +1,19 @@
+[WebServer] (node:50028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:55416) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:42496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:55988) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:42312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\issue28.spec.ts:64:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence (4.0s)
+  ok 2 [chromium] › e2e\issue30-v12-additional.spec.ts:173:1 › Q14/Q15/Q16 target screen visible/accessible wording, geometry and CSS, including warning/edit routes (6.8s)
+  ok 3 [chromium] › e2e\issue30-v12-additional.spec.ts:206:1 › Q10/Q15 ambiguous classification across current-Exercise UI routes never picks the first label (3.9s)
+  ok 4 [chromium] › e2e\issue30-v12.spec.ts:178:1 › TOP weekday all ON/OFF preserves completed flag; approved +1pt status and unchanged run weight (1.8s)
+
+  4 passed (37.5s)

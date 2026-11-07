@@ -2,6 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 import { canonicalData, seedCanonicalAndReload, readCanonicalState, readStoredState } from './helpers/state'
 import { createCanonicalSession } from '../src/canonical/runtime'
 import { addTrainingItem } from '../src/canonical/operations'
+import { defaultDisplayPreferences } from '../src/canonical/displayPreferences'
 import { validateCanonical } from '../src/canonical/validate'
 import type { CanonicalAppData, Session } from '../src/canonical/types'
 
@@ -12,8 +13,10 @@ async function top(page: Page) {
 }
 async function list(page: Page, mode: 'category' | 'recommended', region = '胸') {
   await top(page)
-  await page.getByRole('button', { name: mode === 'category' ? 'カテゴリ表示' : '推奨曜日', exact: true }).click()
-  if (mode === 'category') await page.getByRole('button', { name: new RegExp(`^${region} `) }).click()
+  await page.getByRole('button', { name: mode === 'category' ? '部位表示' : '推奨曜日', exact: true }).click()
+  if (mode === 'category') {
+    await page.getByRole('button').filter({ has: page.locator('b').getByText(region, { exact: true }) }).click()
+  }
   await page.getByLabel('実施済も表示').check()
 }
 async function assertRows(page: Page, sessions: Session[]) {
@@ -32,11 +35,17 @@ async function actual(page: Page, session: Session) {
   await expect(row.locator('b')).toHaveText(session.snapshot.trainingItemDisplayName)
   await row.click()
   await expect(page.getByRole('heading', { name: session.snapshot.trainingItemDisplayName, exact: true })).toBeVisible()
-  await expect(page.getByRole('region', { name: '当該実績' })).toContainText(`${session.weight} kg × ${session.reps} 回 × ${session.sets} セット`)
+  await expect(page.getByText(`${session.weight!.toFixed(2)} kg`, { exact: true })).toBeVisible()
+  await expect(page.locator('.run-slot').filter({ hasText: '回数' }).locator('b')).toHaveText(`${session.reps} 回`)
+  await expect(page.locator('.run-slot').filter({ hasText: '実施セット数' }).locator('b')).toHaveText(String(session.sets))
   await expect(page.getByLabel('今回メモ')).toHaveValue(session.memo!)
 }
 function fixture(shape: string) {
   let data = canonicalData() as unknown as CanonicalAppData
+  data.trainingItems[0].managementMode = 'MAN'
+  data.menus[0].managementMode = 'MAN'
+  data.displayPreferences = structuredClone(defaultDisplayPreferences)
+  data.appliedProposalIds = []
   data.trainingItems[0].displayName = 'プレス重'
   data.menuEntries.forEach(entry => { entry.recommendedDay = 1 })
   data = addTrainingItem(data, { ...data.trainingItems[0], id: 'light', displayName: 'プレス軽', weight: 20 }, { newId: () => 'light-setting', now: () => instant.toISOString() })
@@ -63,8 +72,8 @@ for (const shape of ['different-items-extra', 'different-entries', 'same-members
     const evidence: unknown[] = []
     for (const target of [...data.sessions, undefined]) {
       await top(page)
-      await expect(page.getByText('今日の実施総数')).toContainText(`${remaining.length ? 1 : 0}/1`)
-      await expect(page.getByText('今週の実施総数')).toContainText(`${remaining.length ? data.menuEntries.length : 0}/${data.menuEntries.length}`)
+      await expect(page.getByText('今日の実施総数').locator('b')).toHaveText(`${remaining.length}/1`)
+      await expect(page.getByText('今週の実施総数').locator('b')).toHaveText(`${remaining.length}/${data.menuEntries.length}`)
       for (const mode of ['category', 'recommended'] as const) {
         await list(page, mode)
         await assertRows(page, remaining)

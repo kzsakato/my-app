@@ -5,6 +5,8 @@ import { mkdirSync, writeFileSync } from 'node:fs'
 import { canonicalFixture } from '../src/canonical/fixtures'
 import type { CanonicalAppData } from '../src/canonical/types'
 
+test.use({ baseURL: 'http://127.0.0.1:4177' })
+
 const directory = 'evidence/issue30-v12/qa-additional'
 const now = new Date('2026-10-24T12:00:00+09:00')
 // Literal expected values from formal 05 §7.1 / 05_JSON §3.1, not the implementation normalizer.
@@ -169,14 +171,18 @@ for(const shape of ['missing','multiple','invalid-trim'] as const)test(`Q10 clas
 })
 
 test('Q14/Q15/Q16 target screen visible/accessible wording, geometry and CSS, including warning/edit routes',async({page},info)=>{
-  const d=await seed(page)
+  const data = fixture()
+  data.sessions[0].snapshot.classifications = [{ kind: 'bodyRegion', label: '胸' }]
+  const d=await seed(page, data)
+  await page.getByLabel('実施済も表示').check()
   const statusSize=async()=>parseFloat(await page.locator('.item-status').first().evaluate(el=>getComputedStyle(el).fontSize))
   const topFont=await statusSize(); expect(topFont).toBeCloseTo(12+96/72,3); await inspect(page,info,'TOP')
   await page.getByRole('button',{name:'部位表示',exact:true}).click(); await page.getByRole('button').filter({has:page.locator('b',{hasText:/^胸$/})}).click()
+  await page.getByLabel('実施済も表示').check()
   const regionFont=await statusSize(); expect(regionFont).toBeCloseTo(12+96/72,3); await inspect(page,info,'REGION')
-  await page.locator('[data-menu-entry-id="entry-1"]').click()
+  await page.locator('[data-session-id="session-1"]').click()
   const runFont=parseFloat(await page.locator('.run-weight .weight-controls b').evaluate(el=>getComputedStyle(el).fontSize))
-  expect(runFont).toBeCloseTo((info.project.name==='pc'?14:13)+96/72,3); await inspect(page,info,'RUN')
+  expect(runFont).toBeCloseTo((page.viewportSize()!.width <= 360 ? 13 : 14) + 96/72,3); await inspect(page,info,'RUN')
   await top(page); await page.getByRole('button',{name:'＋ 追加トレーニングを登録'}).click()
   await expect(page.getByRole('combobox',{name:'部位',exact:true})).toBeVisible(); await inspect(page,info,'EXTRA-LIST')
   await settings(page); await page.getByRole('button',{name:/^設定履歴 /}).click()
@@ -199,6 +205,9 @@ test('Q14/Q15/Q16 target screen visible/accessible wording, geometry and CSS, in
 
 test('Q10/Q15 ambiguous classification across current-Exercise UI routes never picks the first label',async({page},info)=>{
   const data=fixture(); data.exercises[0].classifications=[{kind:'bodyRegion',label:'胸'},{kind:'bodyRegion',label:'腕'}]
+  // Exercise classification is tested on the planned row. Keep the original
+  // snapshot, but place the Session in the previous week so it cannot hide it.
+  data.sessions[0] = { ...data.sessions[0], date: '2026-10-17', performedAt: '2026-10-17T09:00:00+09:00' }
   const d=await seed(page,data)
   const entry=page.locator('[data-menu-entry-id="entry-1"]')
   await expect(entry.locator('small').first()).not.toContainText('胸'); await expect(entry.locator('..').getByRole('alert')).toBeVisible()

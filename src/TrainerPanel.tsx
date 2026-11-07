@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { CanonicalAppData } from './canonical/types'
-import { canonicalStorage, applyTrainerCanonical } from './data'
+import { canonicalStorage, applyTrainerCanonical, applyInitialV13Proposal, readV13Canonical } from './data'
+import { createTrainerContextV2 } from './canonical/trainerV13'
 import { createTrainerContextV11, parseUniqueJson, previewTrainerProposal, trainerDiagnosticCategory, trainerMessages as messages, type TrainerProposalPreview } from './canonical/trainerV11'
 
 function download(name: string, value: unknown) {
@@ -8,6 +9,8 @@ function download(name: string, value: unknown) {
   const link = document.createElement('a'); link.href = url; link.download = name
   document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
+const isolated = import.meta.env.VITE_V13_ISOLATED === 'true'
+
 type Props = { data: CanonicalAppData; onApplied: (data: CanonicalAppData) => void; onPending: (pending: boolean) => void }
 
 export function TrainerPanel({ data, onApplied, onPending }: Props) {
@@ -20,7 +23,7 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
     let live = true
     canonicalStorage.readCutoverState().then(state => {
       if (!live) return
-      if (state.trainerPendingProposalId) { setHeld(true); setImportMessage(messages.inconsistent); setDiagnostic({ stage: 'startup', code: 'UNRESOLVED_AI_APPLY', proposalId: state.trainerPendingProposalId }) }
+      if (state.trainerPendingProposalId || state.v13Pending) { setHeld(true); setImportMessage(messages.inconsistent); setDiagnostic({ stage: 'startup', code: 'UNRESOLVED_AI_APPLY', proposalId: state.trainerPendingProposalId }) }
       setReady(true)
     }).catch(() => { if (live) { setHeld(true); setReady(true); setImportMessage(messages.inconsistent); setDiagnostic({ stage: 'startup', code: 'STORAGE_READ_FAILED' }) } })
     return () => { live = false; generation.current++ }
@@ -32,10 +35,27 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
     try {
       const state = await canonicalStorage.readCutoverState()
       if (current !== generation.current) return
-      if (state.trainerPendingProposalId) { setHeld(true); setImportMessage(messages.inconsistent); setDiagnostic({ stage: 'preview', code: 'UNRESOLVED_AI_APPLY', proposalId: state.trainerPendingProposalId }); return }
-      const value = parseUniqueJson(await file.text())
+      if (state.trainerPendingProposalId || state.v13Pending) { setHeld(true); setImportMessage(messages.inconsistent); setDiagnostic({ stage: 'preview', code: 'UNRESOLVED_AI_APPLY', proposalId: state.trainerPendingProposalId }); return }
+      const raw = await file.text()
+      const value = parseUniqueJson(raw)
       if (current !== generation.current) return
       if (!value || typeof value !== 'object' || (value as { format?: unknown }).format !== 'training-project.trainer-proposal') { setImportMessage(messages.wrongFormat); return }
+      if (isolated && (value as { version?: unknown }).version === 2) {
+        busy.current = true; setPending(true); onPending(true)
+        try {
+          const result = await applyInitialV13Proposal(raw)
+          if (result.status === 'SUCCESS') {
+            onApplied(result.value)
+            setImportMessage('初回寄与率を登録しました。')
+          } else {
+            const unknown = result.status === 'UNKNOWN_HELD'
+            setHeld(unknown)
+            setImportMessage(unknown ? '保存結果を確認できません。再実行せず、診断情報を保存してください。' : messages.inconsistent)
+            setDiagnostic({ stage: 'apply', code: result.status, reason: result.reason })
+          }
+        } finally { busy.current = false; setPending(false); onPending(false) }
+        return
+      }
       const checked = previewTrainerProposal(value, data)
       setInput(value); setPreview(checked); setImportMessage('')
     } catch (error) {
@@ -67,10 +87,10 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
     busy.current = true; setPending(true); onPending(true)
     try {
       const state = await canonicalStorage.readCutoverState()
-      if (state.trainerPendingProposalId) { setHeld(true); setImportMessage(messages.inconsistent); setDiagnostic({ stage: 'export', code: 'UNRESOLVED_AI_APPLY', proposalId: state.trainerPendingProposalId }); return }
-      const latest = await canonicalStorage.readCanonical()
+      if (state.trainerPendingProposalId || state.v13Pending) { setHeld(true); setImportMessage(messages.inconsistent); setDiagnostic({ stage: 'export', code: 'UNRESOLVED_AI_APPLY', proposalId: state.trainerPendingProposalId }); return }
+      const latest = isolated ? await readV13Canonical() : await canonicalStorage.readCanonical()
       if (!latest) throw new Error('Missing canonical')
-      const value = createTrainerContextV11(latest, new Date())
+      const value = isolated ? createTrainerContextV2(latest, new Date(), true) : createTrainerContextV11(latest, new Date())
       download(`trainer-context-${value.exportedLocalDate}.json`, value)
       setExportMessage(`${value.history.length === 0 ? messages.empty + '\n' : ''}${messages.exported}`)
     } catch (error) {
@@ -82,7 +102,11 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
     <section className="card">
       <h2>提案を受け取る</h2>
       <p>トレーナーから受け取った提案ファイルを選びます。</p>
-      <label>提案ファイルを選ぶ<input type="file" accept="application/json,.json" disabled={!ready || pending || held} onChange={event => void read(event.target.files?.[0])} /></label>
+      <label>提案ファイルを選ぶ<input type="file" accept="application/json,.json" disabled={!ready || pending || held} onChange={event => {
+        const file = event.target.files?.[0]
+        if (isolated) event.target.value = ''
+        void read(file)
+      }} /></label>
       {importMessage && <p role="status">{importMessage}</p>}
       {preview && <section className="trainer-preview">
         <h3>取り込む内容</h3>

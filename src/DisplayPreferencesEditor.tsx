@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type PointerEvent } from 'react'
 import { effectiveDisplayPreferences, validSort, type SortKey, type SortPreference } from './canonical/displayPreferences'
 import type { CanonicalAppData } from './canonical/types'
 
@@ -9,10 +9,22 @@ const labels: Record<SortKey, string> = { recommendedDay: '推奨曜日', comple
 export function DisplayPreferencesEditor({ data, commit, onSaved }: { data: CanonicalAppData; commit: (next: CanonicalAppData) => Promise<boolean>; onSaved: () => void }) {
   const [draft, setDraft] = useState(() => effectiveDisplayPreferences(data))
   const [pending, setPending] = useState(false)
-  const move = (section: 'defaultSort' | 'optionSort', index: number, delta: number) => {
-    const priority = [...draft[section].priority] as SortPreference['priority']
-    ;[priority[index], priority[index + delta]] = [priority[index + delta], priority[index]]
-    setDraft({ ...draft, [section]: { ...draft[section], priority } })
+  const move = (section: 'defaultSort' | 'optionSort', from: number, to: number) => {
+    setDraft(current => {
+      const priority = [...current[section].priority] as SortPreference['priority']
+      const [key] = priority.splice(from, 1)
+      priority.splice(to, 0, key)
+      return { ...current, [section]: { ...current[section], priority } }
+    })
+  }
+  const drop = (event: PointerEvent<HTMLSpanElement>, section: 'defaultSort' | 'optionSort', from: number) => {
+    const handle = event.currentTarget
+    if (!handle.hasPointerCapture(event.pointerId)) return
+    const group = handle.closest('fieldset')
+    const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('.sort-priority-row')
+    if (!group || !target || target.closest('fieldset') !== group) return
+    const to = [...group.querySelectorAll('.sort-priority-row')].indexOf(target)
+    if (to !== from && to >= 0) move(section, from, to)
   }
   return <>
     {(['defaultSort', 'optionSort'] as const).map(section => <section className="card display-preference-section" key={section} aria-label={section === 'defaultSort' ? 'Default' : 'Option'}>
@@ -20,8 +32,13 @@ export function DisplayPreferencesEditor({ data, commit, onSaved }: { data: Cano
       <fieldset disabled={pending}><legend>ソート優先順位</legend>
         {draft[section].priority.map((key, index) => <div className="sort-priority-row" key={key}>
           <span>{index + 1} {labels[key]}</span>
-          <button className="small" aria-label={`${labels[key]}を上へ`} disabled={index === 0} onClick={() => move(section, index, -1)}>↑</button>
-          <button className="small" aria-label={`${labels[key]}を下へ`} disabled={index === 2} onClick={() => move(section, index, 1)}>↓</button>
+          <span className="sort-drag-handle" aria-hidden="true"
+            onPointerDown={event => {
+              if (!pending && event.isPrimary && event.button === 0) event.currentTarget.setPointerCapture(event.pointerId)
+            }}
+            onPointerUp={event => drop(event, section, index)}>≡</span>
+          <button className="small" aria-label={`${labels[key]}を上へ`} disabled={index === 0} onClick={() => move(section, index, index - 1)}>↑</button>
+          <button className="small" aria-label={`${labels[key]}を下へ`} disabled={index === 2} onClick={() => move(section, index, index + 1)}>↓</button>
         </div>)}
       </fieldset>
       <fieldset disabled={pending}><legend>実施状況</legend>

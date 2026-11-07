@@ -1,0 +1,46 @@
+{
+  "result": "PASS_CHILD_FIRST_LIMITED",
+  "chromium": "153.0.8010.12",
+  "origin": "http://127.0.0.1:56085",
+  "rootCanonicalAndOtherStoresUnchanged": true,
+  "restoreReadbackFaultHeldAfterReload": true,
+  "exactRestoreReadback": true,
+  "exactProposalReadback": true,
+  "replayAndInvalidBatchUnchanged": true,
+  "dbs": [
+    {
+      "name": "training-check",
+      "version": 7
+    },
+    {
+      "name": "training-check-v13-test",
+      "version": 7
+    }
+  ],
+  "caches": [
+    "training-check-v13-test-static:cc8536dbb2ea488c573440b5938c90c1:c1f780962a4a2507d9f1bb266f3a4e4c:70a3614905cdd480cc0708feec3bd129:assets/index-DIXRco9J.css:assets/index-CZSDj7s-.js:cc8536dbb2ea488c573440b5938c90c1",
+    "workbox-precache-v2-http://127.0.0.1:56085/"
+  ],
+  "registrations": [
+    [
+      "http://127.0.0.1:56085/v13-test/",
+      "http://127.0.0.1:56085/v13-test/v13-worker.js"
+    ],
+    [
+      "http://127.0.0.1:56085/",
+      "http://127.0.0.1:56085/sw.js"
+    ]
+  ],
+  "controller": "http://127.0.0.1:56085/v13-test/v13-worker.js",
+  "manifest": {
+    "name": "筋トレ消化チェック V1.3 検証",
+    "short_name": "V1.3 検証",
+    "start_url": "/v13-test/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#42b883",
+    "lang": "ja",
+    "scope": "/v13-test/",
+    "id": "/v13-test/"
+  }
+}

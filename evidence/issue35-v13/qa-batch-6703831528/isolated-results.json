@@ -1,0 +1,152 @@
+{
+  "productSourceSha": "f9006d0321a1d38ac250aa462db9db9ce4d22947",
+  "environment": "Windows / isolated V1.3 Vite production build / Chromium / Asia/Tokyo",
+  "stats": {
+    "startTime": "2026-11-07T07:33:02.550Z",
+    "duration": 22332.525,
+    "expected": 15,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "cases": [
+    {
+      "test": "MIG-01: initial restore wins, stale second preview cannot replace canonical",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 39,
+      "status": "passed",
+      "durationMs": 1529
+    },
+    {
+      "test": "AN-G06: real-build plot and PNG for each selectable period",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 92,
+      "status": "passed",
+      "durationMs": 1587
+    },
+    {
+      "test": "PR-05/06: confirmed pre-commit abort changes nothing; committed read-back fault stays held",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 129,
+      "status": "passed",
+      "durationMs": 896
+    },
+    {
+      "test": "PR-06: failed marker-clear read aborts the clear and keeps the durable hold",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 188,
+      "status": "passed",
+      "durationMs": 738
+    },
+    {
+      "test": "MIG-01: synthetic fixed-V1.2 export survives the one-time external upgrade and restore",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 230,
+      "status": "passed",
+      "durationMs": 877
+    },
+    {
+      "test": "V13 fault matrix: Restore / abort returns",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 274,
+      "status": "passed",
+      "durationMs": 485
+    },
+    {
+      "test": "V13 fault matrix: Restore / abort throws",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 274,
+      "status": "passed",
+      "durationMs": 821
+    },
+    {
+      "test": "V13 fault matrix: Proposal / abort returns",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 274,
+      "status": "passed",
+      "durationMs": 781
+    },
+    {
+      "test": "V13 fault matrix: Proposal / abort throws",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 274,
+      "status": "passed",
+      "durationMs": 816
+    },
+    {
+      "test": "PR-02/03: isolated v2 chooser and rejection matrix leave canonical and cutover unchanged",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 357,
+      "status": "passed",
+      "durationMs": 6160,
+      "artifacts": [
+        "357-9-raw-duplicate-key.json",
+        "357-9-unsupported-version.json",
+        "357-9-missing-rate.json",
+        "357-9-fractional-rate.json",
+        "357-9-non-five-step.json",
+        "357-9-wrong-total.json",
+        "357-9-all-zero-rates.json",
+        "357-9-duplicate-target.json",
+        "357-9-existing-valid.json",
+        "357-9-orphan-target.json",
+        "357-9-unsupported-operation.json",
+        "357-9-reused-proposal-id.json",
+        "357-9-stale-revision.json"
+      ]
+    },
+    {
+      "test": "CTX-01: Context v2 bytes match isolated canonical, activeMenuId absent",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 425,
+      "status": "passed",
+      "durationMs": 778,
+      "artifacts": [
+        "425-10-context-v2-export.json"
+      ]
+    },
+    {
+      "test": "CTX-01: Context v2 bytes match isolated canonical, activeMenuId present",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 425,
+      "status": "passed",
+      "durationMs": 962,
+      "artifacts": [
+        "425-11-context-v2-export.json"
+      ]
+    },
+    {
+      "test": "CTX-02: broken-canonical refuses Context export without writes",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 471,
+      "status": "passed",
+      "durationMs": 902,
+      "artifacts": [
+        "471-12-broken-canonical.json",
+        "471-12-export-diagnostic.json"
+      ]
+    },
+    {
+      "test": "CTX-02: orphan-item refuses Context export without writes",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 471,
+      "status": "passed",
+      "durationMs": 892,
+      "artifacts": [
+        "471-13-orphan-item.json",
+        "471-13-export-diagnostic.json"
+      ]
+    },
+    {
+      "test": "CTX-02: all-zero-existing-rates refuses Context export without writes",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 471,
+      "status": "passed",
+      "durationMs": 811,
+      "artifacts": [
+        "471-14-all-zero-existing-rates.json",
+        "471-14-export-diagnostic.json"
+      ]
+    }
+  ]
+}

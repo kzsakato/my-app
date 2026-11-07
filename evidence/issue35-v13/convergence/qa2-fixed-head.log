@@ -1,0 +1,20 @@
+[WebServer] (node:37040) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 11 tests using 1 worker
+
+(node:30128) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [chromium] › e2e\v1r-acceptance.spec.ts:56:3 › H-03 focused 1 same-day multiple Sessions retain marker until last cancellation (14.5s)
+  ok  2 [chromium] › e2e\v1r-acceptance.spec.ts:56:3 › H-03 focused 2 single Session cancellation clears its date marker (5.7s)
+  ok  3 [chromium] › e2e\v1r-acceptance.spec.ts:56:3 › H-03 focused 3 past-first consecutive cancellations change only the target date (8.6s)
+  ok  4 [chromium] › e2e\v1r-acceptance.spec.ts:93:1 › H-03 focused 4/5 + H06 A5: UI Extra completion has own actual and visible completed Exercise (6.5s)
+  ok  5 [chromium] › e2e\v1r-acceptance.spec.ts:429:3 › Clock local midnight/week/month/year boundary 2026-10-04T23:59:59+09:00 (2.3s)
+  ok  6 [chromium] › e2e\v1r-acceptance.spec.ts:429:3 › Clock local midnight/week/month/year boundary 2026-10-05T00:00:00+09:00 (2.2s)
+  ok  7 [chromium] › e2e\v1r-acceptance.spec.ts:429:3 › Clock local midnight/week/month/year boundary 2026-12-31T23:59:59+09:00 (2.3s)
+  ok  8 [chromium] › e2e\v1r-acceptance.spec.ts:429:3 › Clock local midnight/week/month/year boundary 2027-01-01T00:00:00+09:00 (2.3s)
+  ok  9 [chromium] › e2e\v1r-acceptance.spec.ts:429:3 › Clock local midnight/week/month/year boundary 2026-10-31T23:59:59+09:00 (2.9s)
+  ok 10 [chromium] › e2e\v1r-acceptance.spec.ts:429:3 › Clock local midnight/week/month/year boundary 2026-11-01T00:00:00+09:00 (2.8s)
+  ok 11 [chromium] › e2e\v1r-acceptance.spec.ts:441:1 › OIC-015: all seven week starts warn/cancel, persist exact setting without rewriting historical facts (3.3s)
+
+  11 passed (1.0m)

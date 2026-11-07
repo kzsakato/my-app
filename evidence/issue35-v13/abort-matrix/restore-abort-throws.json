@@ -1,0 +1,24 @@
+{
+  "operation": "Restore",
+  "expectedStatus": "UNKNOWN_HELD",
+  "injected": {
+    "canonicalPutSucceeded": true,
+    "markerPutFault": true,
+    "nativeAbortReturned": true,
+    "nativeAbortEvent": true,
+    "callerSawAbortThrow": true
+  },
+  "before": [
+    null,
+    null
+  ],
+  "after": [
+    null,
+    null
+  ],
+  "diagnostic": {
+    "stage": "initial-restore",
+    "code": "UNKNOWN_HELD",
+    "message": "QuotaExceededError: Synthetic failure after canonical put"
+  }
+}

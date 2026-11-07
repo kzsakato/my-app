@@ -1,0 +1,30 @@
+$ vitest run
+
+ RUN  v3.2.7 C:/Users/kzsak/Documents/Codex/2026-11-06/training-project-app-development-test-execution/work/my-app
+
+ ✓ src/v13-worker.test.ts (15 tests) 200ms
+ ✓ src/canonical/analysis.test.ts (4 tests) 88ms
+ ✓ src/canonical/v1r-calendar.test.ts (17 tests) 57ms
+ ✓ src/canonical/baseline.test.ts (7 tests) 51ms
+ ✓ src/canonical/runtime.test.ts (3 tests) 33ms
+ ✓ src/canonical/trainer.test.ts (8 tests) 71ms
+ ✓ src/canonical/canonical.test.ts (17 tests) 90ms
+ ✓ src/canonical/mixedTopSort.test.ts (19 tests) 145ms
+ ✓ src/canonical/masterBootstrap.test.ts (5 tests) 69ms
+ ✓ src/canonical/manMenuProposal.test.ts (4 tests) 49ms
+ ✓ src/canonical/cutover.test.ts (11 tests) 111ms
+ ✓ src/canonical/v1r-ordering.test.ts (15 tests) 163ms
+ ✓ src/canonical/backup.test.ts (8 tests) 221ms
+ ✓ src/canonical/displayPreferences.test.ts (19 tests) 176ms
+ ✓ src/canonical/v13-projections.test.ts (10 tests) 128ms
+ ✓ src/canonical/topProjection.test.ts (4 tests) 55ms
+ ✓ src/canonical/legacy.test.ts (5 tests) 30ms
+ ✓ src/history.test.ts (5 tests) 26ms
+ ✓ src/itemValidation.test.ts (2 tests) 18ms
+ ✓ src/canonical/history.test.ts (9 tests) 32ms
+ ✓ src/canonical/cancelSession.test.ts (1 test) 19ms
+
+ Test Files  21 passed (21)
+      Tests  188 passed (188)
+   Start at  20:27:05
+   Duration  9.09s (transform 8.75s, setup 0ms, collect 25.35s, tests 1.83s, environment 23ms, prepare 33.64s)

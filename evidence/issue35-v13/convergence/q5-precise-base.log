@@ -1,0 +1,12 @@
+[WebServer] (node:47772) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:28968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\v1r-q5-identity.spec.ts:65:3 › H09 independent Session identity, both modes and cancellation: different-items-extra (19.8s)
+  ok 2 [chromium] › e2e\v1r-q5-identity.spec.ts:65:3 › H09 independent Session identity, both modes and cancellation: different-entries (11.7s)
+  ok 3 [chromium] › e2e\v1r-q5-identity.spec.ts:65:3 › H09 independent Session identity, both modes and cancellation: same-membership (8.5s)
+
+  3 passed (45.7s)

@@ -1,0 +1,102 @@
+{
+  "sourceSha": "cfe668b8903ad9e41c2b4e7189762cdcb73e09c3",
+  "status": "timedOut",
+  "durationMs": 30058,
+  "errors": [
+    {
+      "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+    },
+    {
+      "location": {
+        "file": "C:\\Users\\kzsak\\Documents\\Codex\\2026-11-06\\training-project-app-development-test-execution\\work\\my-app\\e2e\\issue35-ui01-diagnostic.local.spec.ts",
+        "column": 15,
+        "line": 364
+      },
+      "message": "Error: browserContext.close: Target page, context or browser has been closed\n\n  362 |     expect(after).toEqual(expected)\n  363 |     expect(reloaded).toEqual(expected)\n> 364 |   } finally { await context.close() }\n      |               ^\n  365 | })\n  366 |\n    at C:\\Users\\kzsak\\Documents\\Codex\\2026-11-06\\training-project-app-development-test-execution\\work\\my-app\\e2e\\issue35-ui01-diagnostic.local.spec.ts:364:15"
+    }
+  ],
+  "traceExtract": [
+    {
+      "type": "log",
+      "callId": "call@25",
+      "message": "waiting for getByRole('button', { name: /^表示設定/ })"
+    },
+    {
+      "type": "before",
+      "callId": "call@57",
+      "method": "tap"
+    },
+    {
+      "type": "log",
+      "callId": "call@57",
+      "message": "waiting for getByRole('button', { name: /戻る/ })"
+    },
+    {
+      "type": "log",
+      "callId": "call@57",
+      "message": "  locator resolved to <button class=\"header-back \">‹ 戻る</button>"
+    },
+    {
+      "type": "log",
+      "callId": "call@57",
+      "message": "attempting tap action"
+    },
+    {
+      "type": "log",
+      "callId": "call@57",
+      "message": "  waiting for element to be visible, enabled and stable"
+    },
+    {
+      "type": "log",
+      "callId": "call@57",
+      "message": "  element is visible, enabled and stable"
+    },
+    {
+      "type": "log",
+      "callId": "call@57",
+      "message": "  scrolling into view if needed"
+    },
+    {
+      "type": "log",
+      "callId": "call@57",
+      "message": "  done scrolling"
+    },
+    {
+      "type": "input",
+      "callId": "call@57",
+      "point": {
+        "x": 27,
+        "y": 17.75
+      }
+    },
+    {
+      "type": "log",
+      "callId": "call@57",
+      "message": "  performing tap action"
+    },
+    {
+      "type": "log",
+      "callId": "call@57",
+      "message": "  tap action done"
+    },
+    {
+      "type": "log",
+      "callId": "call@57",
+      "message": "  waiting for scheduled navigations to finish"
+    },
+    {
+      "type": "log",
+      "callId": "call@57",
+      "message": "  navigations have finished"
+    },
+    {
+      "type": "after",
+      "callId": "call@57"
+    },
+    {
+      "type": "log",
+      "callId": "call@61",
+      "message": "waiting for getByRole('button', { name: /^表示設定/ })"
+    }
+  ]
+}

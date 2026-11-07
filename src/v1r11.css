@@ -44,6 +44,7 @@
 .display-preference-section fieldset{border:0;padding:0;margin:12px 0;min-width:0}
 .sort-priority-row{display:flex;align-items:center;gap:8px;min-height:44px}
 .sort-priority-row>span{flex:1;min-width:0}
+.sort-priority-row>.sort-drag-handle{flex:0 0 44px;min-height:44px;display:grid;place-items:center;touch-action:none;user-select:none;cursor:grab}
 .sort-priority-row .small{width:44px;min-height:44px;flex-shrink:0}
 .region-warning{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;color:#8a4900;font-size:13px}
 .region-warning .small{min-height:44px;width:auto}
@@ -59,3 +60,8 @@
 .extra-item-row .extra-item-content{flex:1;min-width:0}
 .extra-item-details{display:flex;align-items:center;justify-content:space-between;gap:4px}
 .extra-item-details .item-history{flex:0 0 auto;white-space:nowrap;font-size:11px;color:#4d8459}
+.v13-analysis-amount{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) auto;align-items:center;gap:8px;overflow-wrap:anywhere}
+.v13-analysis-amount meter{width:100%}
+.v13-analysis-shares{display:flex;height:1.5rem}
+
+.chart .v13-analysis-chart text,.chart .v13-analysis-chart .axis{font-size:11px}
