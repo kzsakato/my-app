@@ -8,7 +8,10 @@ const instant = new Date('2026-10-03T12:00:00+09:00')
 async function settings(page: Page) { await page.getByRole('button', { name: '共通メニュー' }).click(); await page.getByRole('button', { name: '設定', exact: true }).click() }
 async function top(page: Page) { await page.getByRole('button', { name: '共通メニュー' }).click(); await page.getByRole('button', { name: '実施メニュー', exact: true }).click() }
 async function open(page: Page, name: string) { await settings(page); await page.getByRole('button', { name: new RegExp(`^${name} `) }).click() }
-async function run(page: Page) { await page.getByRole('button', { name: /^胸 / }).click(); await page.getByRole('button', { name: /^正規テストプレス / }).first().click() }
+async function run(page: Page) {
+  await focusedChest(page)
+  await page.locator('[data-menu-entry-id="canonical-entry-a"]').click()
+}
 function session(id: string, date: string, order = 0, weight = 27) {
   return { id, trainingItemId: 'canonical-item', date, performedAt: `${date}T12:00:00+09:00`, performedOrder: order, weight, reps: 8, sets: 2, seat: 'actual-seat', snapshot: { exerciseId: 'canonical-exercise', exerciseName: '記録時の名称', trainingItemDisplayName: '正規テストプレス', measureType: 'reps', weightMode: 'total', classifications: [{ kind: 'bodyRegion', label: '胸' }] } }
 }
@@ -155,7 +158,7 @@ test('H-03 focused 4/5 + H06 A5: UI Extra completion has own actual and visible 
 
 test('OIC-003/006/007 + H06 A5: Session-only seat, controls, persist failure/retry/reload preserve identity', async ({ page }) => {
   await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
-  const data = canonicalData(); data.sessions = [session('z-older', '2026-09-26', 0, 99), session('a-later', '2026-09-26', 1, 27)]
+  const data = canonicalWriteFixture(); data.sessions = [session('z-older', '2026-09-26', 0, 99), session('a-later', '2026-09-26', 1, 27)]
   await seedCanonicalAndReload(page, data)
   const legacy = await readStoredState(page)
   await run(page)
@@ -181,9 +184,9 @@ test('OIC-003/006/007 + H06 A5: Session-only seat, controls, persist failure/ret
   expect(await readStoredState(page)).toEqual(legacy)
   await page.reload()
   expect((await readCanonicalState(page)).sessions).toEqual(sessions)
-  await page.getByRole('button', { name: /^胸 / }).click()
+  await focusedChest(page)
   await page.getByLabel('実施済も表示').check()
-  await page.getByRole('button', { name: /^正規テストプレス / }).first().click()
+  await page.locator(`[data-session-id="${sessions[2].id}"]`).click()
   await expect(page.getByRole('region', { name: '当該実績' })).toContainText('session-only')
   await expect(page.getByLabel('シート位置')).toHaveValue('session-only')
   await expect(page.getByText('やり残し')).toHaveCount(0)
@@ -222,11 +225,8 @@ test('OIC-008/009/010/012: temporary weekday filter, distinct today including Ex
   await page.getByRole('button', { name: /曜日指定:/ }).click()
   await page.getByRole('checkbox', { name: '月', exact: true }).check()
   await page.getByRole('checkbox', { name: '土', exact: true }).uncheck()
-  // H06 A3 supersedes OIC-010's actual-date filter: both completed Extras
-  // remain discoverable while their day is unselected; OFF restores filtering.
-  await expect(rows).toHaveCount(2)
-  await expect(rows.first()).toContainText('追加実施　2026-10-03')
-  await expect(rows.last()).toContainText('追加実施　2026-10-03')
+  // TOP T-14/T-16/TO-04: Extra Sessions follow their actual weekday.
+  await expect(rows).toHaveCount(0)
   await page.getByLabel('実施済も表示').uncheck()
   await expect(rows).toHaveCount(0)
   await expect(page.getByText('今日の実施総数')).toContainText('2/1')
@@ -411,7 +411,7 @@ test('OIC-011 / PRESERVE: full screen population back/menu, Profile and Analysis
   const root = info.outputPath('population'); await mkdir(root, { recursive: true })
   const inventory: unknown[] = []
   const record = async (id: string) => { await page.evaluate(async () => document.fonts.ready); inventory.push({ id, text: await page.locator('main').innerText(), controls: await page.locator('button,input,select,textarea').evaluateAll(nodes => nodes.map(node => ({ tag: node.tagName, text: node.textContent, label: node.getAttribute('aria-label') }))) }); await expect(page.getByRole('button', { name: '共通メニュー' })).toBeVisible(); await expect(page.locator('nav')).toHaveCount(0); await page.screenshot({ path: `${root}/${id}.png`, fullPage: true, animations: 'disabled' }) }
-  await record('top'); await page.getByRole('button', { name: /^胸 / }).click(); await record('category'); await page.getByLabel('実施済も表示').check(); await page.getByRole('button', { name: /^正規テストプレス / }).first().click(); await record('run-completed'); await page.getByRole('button', { name: /この実施項目の設定履歴を見る/ }).click(); await record('history-from-run')
+  await record('top'); await focusedChest(page); await record('category'); await page.getByLabel('実施済も表示').check(); await page.locator('[data-session-id="one"]').click(); await record('run-completed'); await page.getByRole('button', { name: /この実施項目の設定履歴を見る/ }).click(); await record('history-from-run')
   for (const name of ['プロフィール', '種目', '実施項目', '週メニュー', '設定履歴', '分析', 'データ管理', 'トレーナー連携']) {
     await open(page, name); await record(name)
     if (name === '分析') {
@@ -419,9 +419,9 @@ test('OIC-011 / PRESERVE: full screen population back/menu, Profile and Analysis
       await expect(page.getByRole('combobox', { name: '期間', exact: true }).locator('option')).toHaveText(['週', '月', '四半期', '半年', '年'])
       await page.getByRole('combobox', { name: '表示', exact: true }).selectOption('detail'); await page.getByRole('combobox', { name: '内訳', exact: true }).selectOption('exercise'); await expect(page.getByRole('img', { name: 'トレーニング推移グラフ' })).toBeVisible(); await expect(page.getByText('● 記録時の名称')).toBeVisible()
     }
-    if (['種目', '実施項目', '週メニュー'].includes(name)) { await page.getByRole('button', { name: name === '週メニュー' ? /^正規E2Eメニュー/ : /^正規テストプレス / }).click(); await record(`${name}-edit`); await page.getByRole('button', { name: '‹ 戻る' }).click(); await expect(page.getByRole('heading', { name, exact: true })).toBeVisible() }
+    if (['種目', '実施項目', '週メニュー'].includes(name)) { await page.getByRole('button', { name: name === '週メニュー' ? /^正規E2Eメニュー/ : /正規テストプレス/ }).click(); await record(`${name}-edit`); await page.getByRole('button', { name: '‹ 戻る' }).click(); await expect(page.getByRole('heading', { name, exact: true })).toBeVisible() }
   }
-  await top(page); await page.getByRole('button', { name: '＋ 追加トレーニングを登録' }).click(); await record('extra-list'); await expect(page.getByRole('combobox', { name: 'カテゴリ', exact: true })).toBeVisible(); await expect(page.getByRole('button', { name: /正規テストプレス/ })).toContainText('20 kg × 10 回 × 3 セット')
+  await top(page); await page.getByRole('button', { name: '＋ 追加トレーニングを登録' }).click(); await record('extra-list'); await expect(page.getByRole('combobox', { name: '部位', exact: true })).toBeVisible(); await expect(page.getByRole('button', { name: /正規テストプレス/ })).toContainText('20 kg × 10 回 × 3 セット')
   await writeFile(`${root}/inventory.json`, JSON.stringify(inventory, null, 2))
 })
 
@@ -451,7 +451,7 @@ test('OIC-015: all seven week starts warn/cancel, persist exact setting without 
 })
 
 test('canonical write read-back failure prevents stale editing; reload preserves original logical Session pair', async ({ page }) => {
-  await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant); await seedCanonicalAndReload(page, canonicalData()); await run(page)
+  await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant); await seedCanonicalAndReload(page, canonicalWriteFixture()); await run(page)
   await page.evaluate(() => { const get = IDBObjectStore.prototype.get; IDBObjectStore.prototype.get = function (...args) { if (this.name === 'canonical') { IDBObjectStore.prototype.get = get; throw new Error('injected read-back failure') } return get.apply(this, args) } })
   await page.getByRole('button', { name: '種目を完了' }).click()
   await expect(page.getByRole('alert')).toContainText('通常編集へ戻れません')
@@ -548,11 +548,11 @@ test('PRESERVE time Exercise → Item setup → Run slots → Extra completion a
 
 test('PRESERVE list filter/hidden state, Item hide/show, Menu active guard/confirmation and unsaved cancel', async ({ page }) => {
   await seedCanonicalAndReload(page, canonicalData()); const original = await readCanonicalState(page)
-  await open(page, '実施項目'); await page.getByRole('combobox', { name: 'カテゴリ', exact: true }).selectOption('胸'); await page.getByRole('button', { name: /^正規テストプレス / }).click()
+  await open(page, '実施項目'); await page.getByRole('combobox', { name: '部位', exact: true }).selectOption('胸'); await page.getByRole('button', { name: /^正規テストプレス / }).click()
   page.once('dialog', d => d.dismiss()); await page.getByRole('button', { name: 'この実施項目を非表示にする' }).click(); expect(await readCanonicalState(page)).toEqual(original)
   page.once('dialog', d => d.accept()); await page.getByRole('button', { name: 'この実施項目を非表示にする' }).click()
-  await expect(page.getByRole('combobox', { name: 'カテゴリ', exact: true })).toHaveValue('胸'); await page.getByLabel('非表示データを表示').check(); await page.getByRole('button', { name: /^正規テストプレス / }).click(); await page.getByRole('button', { name: '‹ 戻る' }).click(); await expect(page.getByLabel('非表示データを表示')).toBeChecked()
-  await open(page, '分析'); await open(page, '実施項目'); await expect(page.getByLabel('非表示データを表示')).toBeChecked(); await expect(page.getByRole('combobox', { name: 'カテゴリ', exact: true })).toHaveValue('胸')
+  await expect(page.getByRole('combobox', { name: '部位', exact: true })).toHaveValue('胸'); await page.getByLabel('非表示データを表示').check(); await page.getByRole('button', { name: /^正規テストプレス / }).click(); await page.getByRole('button', { name: '‹ 戻る' }).click(); await expect(page.getByLabel('非表示データを表示')).toBeChecked()
+  await open(page, '分析'); await open(page, '実施項目'); await expect(page.getByLabel('非表示データを表示')).toBeChecked(); await expect(page.getByRole('combobox', { name: '部位', exact: true })).toHaveValue('胸')
   await page.getByRole('button', { name: /^正規テストプレス / }).click(); await page.getByRole('button', { name: '再表示する' }).click(); expect(await readCanonicalState(page)).toEqual(original)
   await open(page, '週メニュー'); await page.getByRole('button', { name: /^正規E2Eメニュー/ }).click(); await expect(page.getByRole('button', { name: '使用中の週メニューは非表示にできません' })).toBeDisabled()
   await page.getByRole('button', { name: '‹ 戻る' }).click(); await page.getByRole('button', { name: '＋ 週メニューを登録' }).click(); await page.getByLabel('週メニュー名').fill('追加メニュー'); await page.getByRole('button', { name: '保存', exact: true }).click()
