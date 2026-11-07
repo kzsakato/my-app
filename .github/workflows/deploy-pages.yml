@@ -1,11 +1,6 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'release/**'
-      - '.github/workflows/deploy-pages.yml'
   workflow_dispatch:
 
 permissions:
@@ -26,10 +21,33 @@ jobs:
         with:
           node-version: 24
       - run: node release/verify.mjs
+      - name: Verify live and staged production bytes
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs'
+          import assert from 'node:assert/strict'
+          import {createHash} from 'node:crypto'
+          const root = 'release/c4fe4514-v1.2-production'
+          const manifest = JSON.parse(fs.readFileSync(root + '/manifest.json'))
+          assert(!fs.existsSync(root + '/product/test'))
+          fs.cpSync(root + '/product', 'combined-pages', {recursive:true})
+          fs.cpSync('staging-v13-pages', 'combined-pages/test', {recursive:true})
+          for (const file of manifest.productFiles) {
+            const response = await fetch(manifest.target + file.path, {cache:'no-store'})
+            assert.equal(response.status, 200, file.path)
+            const live = Buffer.from(await response.arrayBuffer())
+            const candidate = fs.readFileSync('combined-pages/' + file.path)
+            for (const bytes of [live, candidate]) {
+              assert.equal(bytes.length, file.bytes, file.path)
+              assert.equal(createHash('sha256').update(bytes).digest('hex'), file.sha256, file.path)
+            }
+            console.log('MATCH ' + file.path + ' ' + file.sha256)
+          }
+          JS
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: release/c4fe4514-v1.2-production/product
+          path: combined-pages
 
   deploy:
     needs: artifact
