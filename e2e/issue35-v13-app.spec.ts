@@ -353,3 +353,165 @@ for (const operation of ['Restore', 'Proposal'] as const) {
     })
   }
 }
+
+test('PR-02/03: isolated v2 chooser and rejection matrix leave canonical and cutover unchanged', async ({ page }, info) => {
+  await preview(page)
+  await page.getByRole('button', { name: '復元する' }).click()
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+  const openTrainer = async () => {
+    await settings(page)
+    await page.getByRole('button', { name: /^トレーナー連携/ }).click()
+    await expect(page.getByLabel('提案ファイルを選ぶ')).toBeEnabled()
+  }
+  await openTrainer()
+  const input = page.getByLabel('提案ファイルを選ぶ')
+  const initial = await readApp(page)
+  const chooserEvent = page.waitForEvent('filechooser')
+  await input.click()
+  const chooser = await chooserEvent
+  await chooser.setFiles([])
+  expect(await readApp(page)).toEqual(initial)
+  await expect(page.getByRole('button', { name: 'この内容を取り込む' })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: '診断情報を保存' })).toHaveCount(0)
+
+  const seed = JSON.parse(readFileSync(proposalPath, 'utf8'))
+  const upload = (raw: string) => input.setInputFiles({ name: 'proposal.json', mimeType: 'application/json', buffer: Buffer.from(raw) })
+  await upload(JSON.stringify({ ...seed, operations: [seed.operations[2]] }))
+  await expect(page.getByText('初回寄与率を登録しました。', { exact: true })).toBeVisible()
+  const before = await readApp(page)
+  expect(before[0]).toMatchObject({ trainerDataRevision: 1, appliedProposalIds: [seed.proposalId] })
+  expect(before[1]).toEqual(initial[1])
+  const [a, b, existing] = seed.operations
+  const valid = { ...seed, proposalId: 'negative-fixture', baseRevision: 1, operations: [a, b] }
+  const withOperation = (operation: object) => ({ ...valid, operations: [a, operation] })
+  const ratesWithoutCore = { ...b.rates }
+  delete ratesWithoutCore.core
+  const variants = [
+    ['raw-duplicate-key', JSON.stringify(valid).replace('"version":2', '"version":2,"version":2')],
+    ['unsupported-version', JSON.stringify({ ...valid, version: 3 })],
+    ['missing-rate', JSON.stringify(withOperation({ ...b, rates: ratesWithoutCore }))],
+    ['fractional-rate', JSON.stringify(withOperation({ ...b, rates: { ...b.rates, back: 49.5, lowerBody: 50.5 } }))],
+    ['non-five-step', JSON.stringify(withOperation({ ...b, rates: { ...b.rates, back: 49, lowerBody: 51 } }))],
+    ['wrong-total', JSON.stringify(withOperation({ ...b, rates: { ...b.rates, back: 45 } }))],
+    ['all-zero-rates', JSON.stringify(withOperation({ ...b, rates: { chest: 0, back: 0, arms: 0, shoulders: 0, lowerBody: 0, core: 0 } }))],
+    ['duplicate-target', JSON.stringify(withOperation(a))],
+    ['existing-valid', JSON.stringify(withOperation(existing))],
+    ['orphan-target', JSON.stringify(withOperation({ ...b, exerciseId: 'absent-exercise' }))],
+    ['unsupported-operation', JSON.stringify(withOperation({ ...b, type: 'replaceContribution' }))],
+    ['reused-proposal-id', JSON.stringify({ ...valid, proposalId: seed.proposalId })],
+    ['stale-revision', JSON.stringify({ ...valid, baseRevision: 0 })],
+  ]
+  for (const [variant, raw] of variants) {
+    await test.step(variant, async () => {
+      await page.reload()
+      await openTrainer()
+      await upload(raw)
+      await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
+      await expect(page.getByText('初回寄与率を登録しました。', { exact: true })).toHaveCount(0)
+      await expect(input).toBeEnabled()
+      const after = await readApp(page)
+      expect(after).toEqual(before)
+      const downloadEvent = page.waitForEvent('download')
+      await page.getByRole('button', { name: '診断情報を保存' }).click()
+      const download = await downloadEvent
+      const diagnostic = JSON.parse(readFileSync((await download.path())!, 'utf8'))
+      expect(diagnostic.code).not.toBe('UNKNOWN_HELD')
+      await info.attach(variant, { contentType: 'application/json', body: JSON.stringify({ raw, diagnostic, before, after }) })
+    })
+  }
+})
+
+for (const activeMenu of [false, true]) {
+  test(`CTX-01: Context v2 bytes match isolated canonical, activeMenuId ${activeMenu ? 'present' : 'absent'}`, async ({ page }, info) => {
+    await page.clock.setFixedTime(new Date('2026-11-06T12:00:00+09:00'))
+    const fixture = structuredClone(backup)
+    const source = fixture.payload
+    source.exercises.find((row: { id: string }) => row.id === 'ex-Z').lifecycle = 'archived'
+    source.menus = [{ id: 'context-menu', name: 'Context fixture menu', lifecycle: 'active', managementMode: 'MAN' }]
+    source.menuEntries = [{ id: 'context-entry', menuId: 'context-menu', trainingItemId: 'ti-A', lifecycle: 'active', order: 0 }]
+    if (activeMenu) source.activeMenuId = 'context-menu'
+    const anchor = source.sessions[0]
+    for (const [id, date] of [['before-window', '2026-07-29'], ['first-day', '2026-07-30'], ['last-day', '2026-11-06'], ['after-window', '2026-11-07']]) {
+      source.sessions.push({ ...anchor, id, date, performedAt: `${date}T00:00:00+09:00` })
+    }
+    await page.goto('/v13-test/')
+    await page.getByLabel('正規バックアップを選択').setInputFiles({
+      name: 'context-backup.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(fixture)),
+    })
+    await page.getByRole('button', { name: '復元する' }).click()
+    await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+    const before = await readApp(page)
+    expect(before[0]).toEqual(source)
+    await settings(page)
+    await page.getByRole('button', { name: /^トレーナー連携/ }).click()
+    const downloadEvent = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'トレーナー用ファイルを作る' }).click()
+    const download = await downloadEvent
+    const bytes = readFileSync((await download.path())!)
+    const result = JSON.parse(bytes.toString('utf8'))
+    expect(result).toMatchObject({ format: 'training-project.trainer-context', version: 2, fromDate: '2026-07-30', toDate: '2026-11-06' })
+    const context = result.trainingContext
+    const identity = (rows: { id: string; lifecycle: string }[]) => rows.map(({ id, lifecycle }) => ({ id, lifecycle }))
+    expect(identity(context.exercises)).toEqual(identity(source.exercises))
+    expect(identity(context.trainingItems)).toEqual(identity(source.trainingItems))
+    expect(Object.hasOwn(context, 'activeMenuId')).toBe(activeMenu)
+    expect(context.activeMenuId).toBe(source.activeMenuId)
+    expect(context.menus).toEqual([{ id: 'context-menu', name: 'Context fixture menu', authority: 'MAN' }])
+    expect(context.menuEntries).toEqual([{ id: 'context-entry', menuId: 'context-menu', trainingItemId: 'ti-A', order: 0, authority: 'MAN' }])
+    expect(result.history.map(({ id, date }: { id: string; date: string }) => ({ id, date }))).toEqual(
+      source.sessions.filter(({ id }: { id: string }) => id !== 'before-window' && id !== 'after-window').map(({ id, date }: { id: string; date: string }) => ({ id, date })),
+    )
+    expect(context.contributionStates).toEqual(source.exercises.map(({ id }: { id: string }) => ({ exerciseId: id, state: 'NO_ENTRY' })))
+    expect(await readApp(page)).toEqual(before)
+    await info.attach('context-v2-export', { body: bytes, contentType: 'application/json' })
+  })
+}
+
+for (const variant of ['broken-canonical', 'orphan-item', 'all-zero-existing-rates'] as const) {
+  test(`CTX-02: ${variant} refuses Context export without writes`, async ({ page }, info) => {
+    await preview(page)
+    await page.getByRole('button', { name: '復元する' }).click()
+    await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+    await settings(page)
+    await page.getByRole('button', { name: /^トレーナー連携/ }).click()
+    const exportButton = page.getByRole('button', { name: 'トレーナー用ファイルを作る' })
+    await expect(exportButton).toBeEnabled()
+    const source = structuredClone(backup.payload)
+    if (variant === 'broken-canonical') source.schemaVersion = 99
+    if (variant === 'orphan-item') source.trainingItems[0].exerciseId = 'absent-exercise'
+    if (variant === 'all-zero-existing-rates') source.contributions.byExerciseId['ex-A'] = {
+      revision: 1, rates: { chest: 0, back: 0, arms: 0, shoulders: 0, lowerBody: 0, core: 0 },
+    }
+    await page.evaluate(async value => {
+      const db = await new Promise<IDBDatabase>((resolve, reject) => {
+        const request = indexedDB.open('training-check-v13-test', 7)
+        request.onsuccess = () => resolve(request.result)
+        request.onerror = () => reject(request.error)
+      })
+      try {
+        await new Promise<void>((resolve, reject) => {
+          const tx = db.transaction('canonical', 'readwrite')
+          tx.oncomplete = () => resolve()
+          tx.onabort = () => reject(tx.error)
+          tx.objectStore('canonical').put(value, 'app')
+        })
+      } finally { db.close() }
+    }, source)
+    const before = await readApp(page)
+    expect(before[0]).toEqual(source)
+    const downloads: string[] = []
+    page.on('download', download => downloads.push(download.suggestedFilename()))
+    await exportButton.click()
+    await expect(page.getByRole('status').filter({ hasText: 'トレーナー用ファイル作成失敗' })).toBeVisible()
+    expect(downloads).toEqual([])
+    expect(await readApp(page)).toEqual(before)
+    const diagnosticEvent = page.waitForEvent('download')
+    await page.getByRole('button', { name: '診断情報を保存' }).click()
+    const diagnostic = await diagnosticEvent
+    const bytes = readFileSync((await diagnostic.path())!)
+    expect(JSON.parse(bytes.toString('utf8'))).toMatchObject({ stage: 'export', code: 'CONTEXT_VALIDATION_OR_DOWNLOAD_FAILED' })
+    expect(downloads).toEqual(['trainer-diagnostic.json'])
+    await info.attach(variant, { body: JSON.stringify({ before, after: await readApp(page), downloads }), contentType: 'application/json' })
+    await info.attach('export-diagnostic', { body: bytes, contentType: 'application/json' })
+  })
+}
