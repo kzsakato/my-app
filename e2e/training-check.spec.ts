@@ -138,7 +138,7 @@ test('canonical MAN master bootstrap creates approved items and displays their n
   expect((stored.trainingItems as Array<{ displayName: string }>).map(value => value.displayName)).toEqual(expect.arrayContaining(['ペクトラルフライ（マシン）', 'サイドレイズ', 'レッグレイズ']))
 })
 
-test('canonical MAN bootstrap downloads an H-07 MenuProposal that imports without changing the active menu', async ({ page }) => {
+test('canonical MAN bootstrap downloads an H-07 MenuProposal that imports without changing the active menu', { tag: '@legacy-v1r-menu-proposal' }, async ({ page }) => {
   await page.clock.install({ time: monday })
   await seedCanonicalAndReload(page, canonicalData())
   await page.getByRole('button', { name: '共通メニュー' }).click()

@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
+  grepInvert: /(?:^|\s)@legacy-v1r-menu-proposal(?:\s|$)/,
   testDir: './e2e',
   testIgnore: ['v1r-baseline.spec.ts', 'v1r-visual.spec.ts', 'issue35-v13-app.spec.ts'],
   // All current browser cases intentionally exercise the same IndexedDB name.

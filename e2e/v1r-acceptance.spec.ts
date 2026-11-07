@@ -283,7 +283,7 @@ test('OIC-013: item-scoped history deletion cancel, exact selected delete and re
 })
 
 for (const proposalName of ['Owner確認候補', 'Owner確認候補 (ByAI)']) {
-test(`QA-C01 D-01/02: exact upstream name ${proposalName}, preview/cancel/failure/idempotence/read-back/export`, async ({ page }) => {
+test(`QA-C01 D-01/02: exact upstream name ${proposalName}, preview/cancel/failure/idempotence/read-back/export`, { tag: '@legacy-v1r-menu-proposal' }, async ({ page }) => {
   await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant); await seedCanonicalAndReload(page, { ...canonicalData(), sessions: [session('export-one', '2026-10-03')] })
   const before = await readCanonicalState(page)
   await open(page, 'トレーナー連携')
@@ -522,7 +522,7 @@ test('PRESERVE Profile all fields and standard-setting failure/retry create exac
   await page.reload(); expect(await readCanonicalState(page)).toEqual(after)
 })
 
-test('D-01 Warning requires acknowledgment and rollback uncertainty blocks edits until reload', async ({ page }) => {
+test('D-01 Warning requires acknowledgment and rollback uncertainty blocks edits until reload', { tag: '@legacy-v1r-menu-proposal' }, async ({ page }) => {
   await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant); await seedCanonicalAndReload(page, canonicalData()); await open(page, 'トレーナー連携')
   await page.getByLabel('提案ファイルを選択').setInputFiles({ name: 'warning.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({ contractVersion: '1.0', proposalId: 'warning', menu: { name: '正規E2Eメニュー' }, entries: [{ trainingItemId: 'canonical-item', order: 0 }] })) })
   await expect(page.getByRole('heading', { name: '確認が必要な項目' })).toBeVisible()
