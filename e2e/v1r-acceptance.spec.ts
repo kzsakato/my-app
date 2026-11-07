@@ -210,16 +210,16 @@ test('OIC-008/009/010/012: temporary weekday filter, distinct today including Ex
   const data = canonicalData(); data.sessions = [session('extra-1', '2026-10-03'), session('extra-2', '2026-10-03', 1)]
   const entries = data.menuEntries as Record<string, unknown>[]; entries[0].recommendedDay = 5; entries[1].recommendedDay = 5
   await seedCanonicalAndReload(page, data)
-  await expect(page.getByText('今日の実施総数')).toContainText('1/1')
+  await expect(page.getByText('今日の実施総数')).toContainText('2/1')
   await page.getByRole('button', { name: '推奨曜日', exact: true }).click()
-  await expect(page.getByRole('button', { name: /表示する推奨曜日: 土/ })).toBeVisible()
+  await expect(page.getByRole('button', { name: /曜日指定: 土/ })).toBeVisible()
   await page.getByLabel('実施済も表示').check()
   const rows = page.locator('.item-density')
   // H09: two individual Extra Sessions, without two planned aliases.
   await expect(rows).toHaveCount(2)
   await expect(rows.first()).not.toContainText('kg')
   await expect(rows.first().locator('.item-detail-line')).toHaveCount(1)
-  await page.getByRole('button', { name: /表示する推奨曜日:/ }).click()
+  await page.getByRole('button', { name: /曜日指定:/ }).click()
   await page.getByRole('checkbox', { name: '月', exact: true }).check()
   await page.getByRole('checkbox', { name: '土', exact: true }).uncheck()
   // H06 A3 supersedes OIC-010's actual-date filter: both completed Extras
@@ -229,11 +229,11 @@ test('OIC-008/009/010/012: temporary weekday filter, distinct today including Ex
   await expect(rows.last()).toContainText('追加実施　2026-10-03')
   await page.getByLabel('実施済も表示').uncheck()
   await expect(rows).toHaveCount(0)
-  await expect(page.getByText('今日の実施総数')).toContainText('1/1')
+  await expect(page.getByText('今日の実施総数')).toContainText('2/1')
   expect(await readCanonicalState(page)).toEqual(data)
   await page.reload()
   await page.getByRole('button', { name: '推奨曜日', exact: true }).click()
-  await expect(page.getByRole('button', { name: /表示する推奨曜日: 土/ })).toBeVisible()
+  await expect(page.getByRole('button', { name: /曜日指定: 土/ })).toBeVisible()
 })
 
 test('OIC-002: Menu add/remove confirmations and unsaved back have zero canonical writes', async ({ page }) => {

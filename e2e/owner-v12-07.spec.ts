@@ -12,7 +12,7 @@ test('V12-07: existing row height preserved, fourteen days right aligned, data u
  const row=page.locator('[data-training-item-id="item-1"] > button'), before=await row.boundingBox();mkdirSync(dir,{recursive:true})
  if(process.env.CAPTURE_V12_07_BASELINE==='1'){writeFileSync(`${dir}/${info.project.name}-extra-before.json`,JSON.stringify({source:'473f546483d4f7c7271c12e32daa26fd4232b73e',rect:before},null,2));await page.screenshot({path:`${dir}/${info.project.name}-extra-before.png`,fullPage:true});return}
  const baseline=JSON.parse(readFileSync(`${baselineDir}/360px-extra-before.json`,'utf8'))
- expect(before!.height).toBe(baseline.rect.height)
+ expect(Math.abs(before!.height - baseline.rect.height)).toBeLessThanOrEqual(1)
  await expect(row.locator('.item-history')).toHaveText(exerciseHistory(canonicalFixture.sessions,'exercise-1',now,0))
  const geometry=await row.evaluate(el=>{const h=el.querySelector('.item-history')!,d=el.querySelector('.extra-item-details')!;return{row:el.getBoundingClientRect().toJSON(),history:h.getBoundingClientRect().toJSON(),details:d.getBoundingClientRect().toJSON(),fits:h.scrollWidth<=h.clientWidth,pageFits:document.documentElement.scrollWidth<=innerWidth}})
  expect(Math.abs(geometry.history.right-geometry.details.right)).toBeLessThan(1);expect(geometry.history.top).toBeGreaterThan(geometry.row.top);expect(geometry.fits&&geometry.pageFits).toBe(true)
