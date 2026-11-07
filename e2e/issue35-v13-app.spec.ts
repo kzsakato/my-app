@@ -515,3 +515,61 @@ for (const variant of ['broken-canonical', 'orphan-item', 'all-zero-existing-rat
     await info.attach('export-diagnostic', { body: bytes, contentType: 'application/json' })
   })
 }
+
+test('AN-01/G02-G05: isolated AX-01 plot, allocation and exercise breakdown before and after initial rates', async ({ page }, info) => {
+  await preview(page)
+  await page.getByRole('button', { name: '復元する' }).click()
+  await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+  const openRoute = async (name: RegExp) => {
+    await settings(page)
+    await page.getByRole('button', { name }).click()
+  }
+  await openRoute(/^トレーナー連携/)
+  await page.getByLabel('提案ファイルを選ぶ').setInputFiles(proposalPath)
+  await expect(page.getByText('初回寄与率を登録しました。', { exact: true })).toBeVisible()
+  const before = await readApp(page)
+  const evidence = []
+  for (const stage of ['AX-01', 'AX-01b']) {
+    await openRoute(/^分析/)
+    await expect(page.getByRole('combobox', { name: '期間' })).toHaveValue('week')
+    const expectedAmounts = stage === 'AX-01' ? [1.5, 2, 0, 1.5, 2, 0] : [1.5, 2, 3, 1.5, 2, 0]
+    const expectedShares = stage === 'AX-01'
+      ? ['胸 21.4%', '背中 28.6%', '腕 0%', '肩 21.4%', '下半身 28.6%', '体幹 0%']
+      : ['胸 15%', '背中 20%', '腕 30%', '肩 15%', '下半身 20%', '体幹 0%']
+    const amounts = await page.locator('.v13-analysis-amount:not([data-exercise-id]) meter').evaluateAll(nodes => nodes.map(node => (node as HTMLMeterElement).value))
+    expect(amounts).toEqual(expectedAmounts)
+    await expect(page.locator('.v13-analysis-shares + ul li')).toHaveText(expectedShares)
+    await expect(page.getByText('未配賦 3', { exact: true })).toHaveCount(stage === 'AX-01' ? 1 : 0)
+    const pt = await page.locator('polyline[data-series="pt"]').getAttribute('data-values')
+    expect(JSON.parse(pt!)).toEqual([...Array(10).fill(0), 36, 530])
+    await page.getByRole('checkbox', { name: '胸', exact: true }).uncheck()
+    await expect(page.locator('polyline[data-series="胸"]')).toHaveCount(0)
+    await page.getByRole('checkbox', { name: '胸', exact: true }).check()
+    await expect(page.locator('polyline[data-series="胸"]')).toHaveCount(1)
+    const selected = stage === 'AX-01' ? '胸' : '腕'
+    await page.getByRole('combobox', { name: '部位' }).selectOption({ label: selected })
+    const details = await page.locator('[data-exercise-id]').evaluateAll(nodes => nodes.map(node => ({
+      id: node.getAttribute('data-exercise-id'), amount: node.querySelector('meter')?.value,
+    })))
+    expect(details).toEqual(stage === 'AX-01' ? [{ id: 'ex-A', amount: 1.5 }] : [{ id: 'ex-C', amount: 3 }])
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBe(360)
+    const screenshot = info.outputPath(`${stage}-360.png`)
+    await page.screenshot({ path: screenshot, fullPage: true })
+    const observed = await readApp(page)
+    expect((observed[0] as { sessions: unknown }).sessions).toEqual((before[0] as { sessions: unknown }).sessions)
+    if (stage === 'AX-01') expect(observed).toEqual(before)
+    evidence.push({ stage, amounts, shares: expectedShares, pt: JSON.parse(pt!), selected, details, screenshot, viewport: page.viewportSize() })
+    if (stage === 'AX-01') {
+      const seed = JSON.parse(readFileSync(proposalPath, 'utf8'))
+      const proposal = { ...seed, proposalId: 'ax01b-initial', baseRevision: 1, operations: [{
+        ...seed.operations[0], exerciseId: 'ex-C', rates: { chest: 0, back: 0, arms: 100, shoulders: 0, lowerBody: 0, core: 0 },
+      }] }
+      await openRoute(/^トレーナー連携/)
+      await page.getByLabel('提案ファイルを選ぶ').setInputFiles({
+        name: 'ax01b.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(proposal)),
+      })
+      await expect(page.getByText('初回寄与率を登録しました。', { exact: true })).toBeVisible()
+    }
+  }
+  await info.attach('ax01-analysis-rendering', { body: JSON.stringify(evidence, null, 2), contentType: 'application/json' })
+})
