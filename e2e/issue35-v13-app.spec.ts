@@ -759,3 +759,80 @@ test('CTX-02: a Context v1 payload relabeled version 2 is rejected at the browse
   expect(after).toEqual(before)
   await info.attach('spoofed-context-rejection', { body: JSON.stringify({ file, downloads, before, after }), contentType: 'application/json' })
 })
+
+for (const state of ['ZERO', 'NO_ENTRY', 'UNAVAILABLE'] as const) {
+  test(`AN-G05 closeout: ${state} stays distinct in the isolated build`, async ({ page }, info) => {
+    await page.clock.setFixedTime(new Date('2026-11-06T12:00:00+09:00'))
+    const fixture = structuredClone(backup)
+    fixture.payload.sessions = state === 'ZERO' ? [] : fixture.payload.sessions.filter((row: { id: string }) => row.id === 'S-C1')
+    await page.goto('/v13-test/')
+    await page.getByLabel('正規バックアップを選択').setInputFiles({
+      name: 'g05-synthetic.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(fixture)),
+    })
+    await page.getByRole('button', { name: '復元する' }).click()
+    await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toBeVisible()
+    let diagnostic: unknown
+    if (state === 'ZERO') {
+      await settings(page)
+      await page.getByRole('button', { name: /^トレーナー連携/ }).click()
+      const proposal = JSON.parse(readFileSync(proposalPath, 'utf8'))
+      proposal.operations = [proposal.operations[2]]
+      await page.getByLabel('提案ファイルを選ぶ').setInputFiles({
+        name: 'g05-valid-rates.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(proposal)),
+      })
+      await expect(page.getByText('初回寄与率を登録しました。', { exact: true })).toBeVisible()
+      const [canonical] = await readApp(page)
+      expect(canonical).toMatchObject({ sessions: [], contributions: { byExerciseId: { 'ex-Z': { rates: proposal.operations[0].rates, revision: 1 } } } })
+    }
+    if (state === 'UNAVAILABLE') {
+      const source = structuredClone(fixture.payload)
+      source.contributions.byExerciseId['ex-C'] = {
+        revision: 1, rates: { chest: 0, back: 0, arms: 0, shoulders: 0, lowerBody: 0, core: 0 },
+      }
+      await page.evaluate(async value => {
+        const db = await new Promise<IDBDatabase>((resolve, reject) => {
+          const request = indexedDB.open('training-check-v13-test', 7)
+          request.onsuccess = () => resolve(request.result)
+          request.onerror = () => reject(request.error)
+        })
+        try {
+          await new Promise<void>((resolve, reject) => {
+            const tx = db.transaction('canonical', 'readwrite')
+            tx.oncomplete = () => resolve()
+            tx.onabort = () => reject(tx.error)
+            tx.objectStore('canonical').put(value, 'app')
+          })
+        } finally { db.close() }
+      }, source)
+      expect((await readApp(page))[0]).toEqual(source)
+    }
+    const before = await readApp(page)
+    const chart = page.getByRole('img', { name: 'トレーニング推移グラフ' })
+    if (state === 'UNAVAILABLE') {
+      await page.reload()
+      await expect(page.getByRole('alert')).toContainText('保存結果を確認できません。再実行せず')
+      await expect(page.getByRole('button', { name: '共通メニュー' })).toHaveCount(0)
+      await expect(page.getByRole('heading', { name: '今週の実施メニュー' })).toHaveCount(0)
+      await expect(chart).toHaveCount(0)
+      await expect(page.getByText('実績なし', { exact: true })).toHaveCount(0)
+      const event = page.waitForEvent('download')
+      await page.getByRole('button', { name: '診断情報を保存' }).click()
+      diagnostic = JSON.parse(readFileSync((await (await event).path())!, 'utf8'))
+      expect(diagnostic).toMatchObject({ code: 'UNKNOWN_HELD', message: 'Error: INVALID_V13_CANONICAL' })
+    } else {
+      await settings(page)
+      await page.getByRole('button', { name: /^分析/ }).click()
+      await expect(chart).toHaveCount(2)
+      await expect(page.getByText('実績なし', { exact: true })).toHaveCount(state === 'ZERO' ? 1 : 0)
+      await expect(page.getByText('未配賦 3', { exact: true })).toHaveCount(state === 'NO_ENTRY' ? 1 : 0)
+      await expect(page.getByText('寄与率未設定の種目があります。')).toHaveCount(state === 'NO_ENTRY' ? 1 : 0)
+      await expect(page.locator('.v13-analysis-shares')).toHaveCount(0)
+      const expectedPt = [...Array(11).fill(0), state === 'ZERO' ? 0 : 150]
+      expect(JSON.parse((await page.locator('polyline[data-series="pt"]').getAttribute('data-values'))!)).toEqual(expectedPt)
+    }
+    const after = await readApp(page)
+    expect(after).toEqual(before)
+    await info.attach(state, { body: JSON.stringify({ state, diagnostic, before, after, dom: await page.locator('main').innerText() }), contentType: 'application/json' })
+    await info.attach(state + '-screen', { body: await page.screenshot({ fullPage: true }), contentType: 'image/png' })
+  })
+}
