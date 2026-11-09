@@ -1,9 +1,8 @@
 name: Legacy MenuProposal E2E
 
 on:
-  push:
-    branches: [main]
-  pull_request:
+  # Historical MenuProposal contract. Run only on explicit request.
+  workflow_dispatch:
 
 jobs:
   legacy-menu-proposal:
