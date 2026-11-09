@@ -284,36 +284,46 @@ test('OIC-013: item-scoped history deletion cancel, exact selected delete and re
 
 for (const proposalName of ['Owner確認候補', 'Owner確認候補 (ByAI)']) {
 test(`QA-C01 D-01/02: exact upstream name ${proposalName}, preview/cancel/failure/idempotence/read-back/export`, { tag: '@legacy-v1r-menu-proposal' }, async ({ page }) => {
-  await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant); await seedCanonicalAndReload(page, { ...canonicalData(), sessions: [session('export-one', '2026-10-03')] })
+  await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant); await seedCanonicalAndReload(page, { ...canonicalWriteFixture(), sessions: [session('export-one', '2026-10-03')] })
   const before = await readCanonicalState(page)
   await open(page, 'トレーナー連携')
-  const file = page.getByLabel('提案ファイルを選択')
+  const file = page.getByLabel('提案ファイルを選ぶ')
+  await expect(file).toBeEnabled()
   await file.setInputFiles({ name: 'invalid.json', mimeType: 'application/json', buffer: Buffer.from('{') })
-  await expect(page.getByRole('heading', { name: '投入できません' })).toBeVisible()
-  await expect(page.getByRole('button', { name: '新しい週メニューを作成' })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'この内容を取り込む' })).toHaveCount(0)
   const proposal = { contractVersion: '1.0', proposalId: 'v1r-one', menu: { name: proposalName }, entries: [{ trainingItemId: 'canonical-item', recommendedDay: 5, order: 0 }] }
   const upload = () => file.setInputFiles({ name: 'proposal.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(proposal)) })
   await upload(); await expect(page.getByText(proposalName, { exact: true })).toBeVisible()
-  page.once('dialog', d => d.dismiss()); await page.getByRole('button', { name: '新しい週メニューを作成' }).click()
+  page.once('dialog', d => d.dismiss()); await page.getByRole('button', { name: 'この内容を取り込む' }).click()
   expect(await readCanonicalState(page)).toEqual(before)
   await injectWriteFailure(page)
-  page.once('dialog', d => d.accept()); await page.getByRole('button', { name: '新しい週メニューを作成' }).click()
-  await expect(page.getByText(/投入に失敗しました/)).toBeVisible()
+  page.once('dialog', d => d.accept()); await page.getByRole('button', { name: 'この内容を取り込む' }).click()
+  await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
   expect(await readCanonicalState(page)).toEqual(before)
-  page.once('dialog', d => d.accept()); await page.getByRole('button', { name: '新しい週メニューを作成' }).dblclick()
-  await expect(page.getByRole('heading', { name: 'メニューを作成しました' })).toBeVisible()
+  await upload(); await expect(page.getByText(proposalName, { exact: true })).toBeVisible()
+  page.once('dialog', d => d.accept()); await page.getByRole('button', { name: 'この内容を取り込む' }).click()
+  await expect(page.getByText('トレーナーからの提案を取り込みました。', { exact: true })).toBeVisible()
   const applied = await readCanonicalState(page)
   expect((applied.menus as { name: string }[]).map(value => value.name)).toEqual(['正規E2Eメニュー', proposalName])
   expect((applied.menus as unknown[]).slice(0, -1)).toEqual(before.menus)
   expect(applied.activeMenuId).toBe(before.activeMenuId); expect(applied.trainingItems).toEqual(before.trainingItems); expect(applied.sessions).toEqual(before.sessions)
-  await upload(); await expect(page.getByRole('heading', { name: '投入できません' })).toBeVisible()
+  expect(applied.appliedProposalIds).toEqual([proposal.proposalId])
+  expect(applied.exercises).toEqual(before.exercises)
+  expect(applied.menuEntries).toEqual([
+    ...before.menuEntries, { id: expect.any(String), menuId: (applied.menus as { id: string }[]).at(-1)!.id,
+      lifecycle: 'active', trainingItemId: 'canonical-item', order: 0, recommendedDay: 5 },
+  ])
+  await upload()
+  await expect(page.getByText(/このproposalIdは既に適用済みです/)).toBeVisible()
+  await expect(page.getByRole('button', { name: 'この内容を取り込む' })).toHaveCount(0)
   expect(await readCanonicalState(page)).toEqual(applied)
-  const download = page.waitForEvent('download'); await page.getByRole('button', { name: 'JSONを出力' }).click()
+  // Export remains the existing TrainerContext route, separate from MenuProposal.
+  const download = page.waitForEvent('download')
+  await page.getByRole('button', { name: 'トレーナー用ファイルを作る' }).click()
   const payload = JSON.parse(await readFile((await (await download).path())!, 'utf8'))
-  expect(payload.range).toEqual({ kind: 'range', fromDate: '2026-10-03', toDate: '2026-10-03', inclusive: true }); expect(payload.sessions).toEqual(before.sessions)
-  expect(payload.format).toBeUndefined(); expect(await readCanonicalState(page)).toEqual(applied)
-  await page.getByLabel('開始日').fill('2026-10-04'); await page.getByLabel('終了日').fill('2026-10-04')
-  await expect(page.getByText('対象期間に履歴がありません。0件')).toBeVisible(); await expect(page.getByRole('button', { name: 'JSONを出力' })).toBeDisabled()
+  expect(payload).toMatchObject({ format: 'training-project.trainer-context', version: 1, history: [{ id: 'export-one' }] })
+  expect(await readCanonicalState(page)).toEqual(applied)
   await page.reload(); expect(await readCanonicalState(page)).toEqual(applied)
 })
 }
@@ -522,30 +532,45 @@ test('PRESERVE Profile all fields and standard-setting failure/retry create exac
   await page.reload(); expect(await readCanonicalState(page)).toEqual(after)
 })
 
-test('D-01 Warning requires acknowledgment and rollback uncertainty blocks edits until reload', { tag: '@legacy-v1r-menu-proposal' }, async ({ page }) => {
-  await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant); await seedCanonicalAndReload(page, canonicalData()); await open(page, 'トレーナー連携')
-  await page.getByLabel('提案ファイルを選択').setInputFiles({ name: 'warning.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({ contractVersion: '1.0', proposalId: 'warning', menu: { name: '正規E2Eメニュー' }, entries: [{ trainingItemId: 'canonical-item', order: 0 }] })) })
-  await expect(page.getByRole('heading', { name: '確認が必要な項目' })).toBeVisible()
-  await expect(page.getByRole('button', { name: '新しい週メニューを作成' })).toBeDisabled()
+test('D-01 Warning requires acknowledgment and a post-commit read-back fault stays held', { tag: '@legacy-v1r-menu-proposal' }, async ({ page }) => {
+  await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant); await seedCanonicalAndReload(page, canonicalWriteFixture()); await open(page, 'トレーナー連携')
+  const input = page.getByLabel('提案ファイルを選ぶ')
+  await expect(input).toBeEnabled()
+  await input.setInputFiles({ name: 'warning.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify({ contractVersion: '1.0', proposalId: 'warning', menu: { name: '正規E2Eメニュー' }, entries: [{ trainingItemId: 'canonical-item', order: 0 }] })) })
+  await expect(page.getByText(/推奨曜日が未指定です/)).toBeVisible()
+  await expect(page.getByRole('button', { name: 'この内容を取り込む' })).toBeDisabled()
   await page.getByLabel('内容を確認しました').check()
   const before = await readCanonicalState(page)
   await page.evaluate(() => {
     const get = IDBObjectStore.prototype.get, put = IDBObjectStore.prototype.put
-    let candidatePersisted = false
+    let wrote = false
     IDBObjectStore.prototype.put = function (...args) {
-      if (this.name === 'canonical') {
-        if (candidatePersisted) { IDBObjectStore.prototype.put = put; throw new Error('injected rollback write failure') }
-        candidatePersisted = true
-      }
+      if (this.name === 'canonical') wrote = true
       return put.apply(this, args)
     }
-    IDBObjectStore.prototype.get = function (...args) { if (this.name === 'canonical') { IDBObjectStore.prototype.get = get; throw new Error('injected candidate read failure') } return get.apply(this, args) }
+    IDBObjectStore.prototype.get = function (...args) {
+      if (wrote && this.name === 'canonical' && this.transaction.mode === 'readonly') {
+        IDBObjectStore.prototype.get = get
+        throw new Error('injected independent read-back failure')
+      }
+      return get.apply(this, args)
+    }
   })
-  page.once('dialog', d => d.accept()); await page.getByRole('button', { name: '新しい週メニューを作成' }).click()
-  await expect(page.getByRole('alert')).toContainText('通常編集へ戻れません')
-  await expect(page.getByRole('heading', { name: 'メニューを作成しました' })).toHaveCount(0)
-  const saved = await readCanonicalState(page); expect(saved.menus).toHaveLength(2); expect(saved.activeMenuId).toBe(before.activeMenuId)
-  await page.getByRole('button', { name: '保存状態を再読込' }).click(); expect(await readCanonicalState(page)).toEqual(saved)
+  page.once('dialog', d => d.accept())
+  await page.getByRole('button', { name: 'この内容を取り込む' }).click()
+  await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
+  await expect(input).toBeDisabled()
+  await expect(page.getByRole('button', { name: 'トレーナー用ファイルを作る' })).toBeDisabled()
+  await expect(page.getByText('トレーナーからの提案を取り込みました。', { exact: true })).toHaveCount(0)
+  const saved = await readCanonicalState(page)
+  expect(saved.menus).toHaveLength(2)
+  expect(saved.activeMenuId).toBe(before.activeMenuId)
+  expect(saved.appliedProposalIds).toEqual(['warning'])
+  await page.reload()
+  await open(page, 'トレーナー連携')
+  await expect(page.getByRole('button', { name: '診断情報を保存' })).toBeVisible()
+  await expect(input).toBeDisabled()
+  expect(await readCanonicalState(page)).toEqual(saved)
 })
 
 test('OIC-015 Analysis weekly rebuckets and month/quarter/half/year remain unchanged after week-setting change', async ({ page }) => {

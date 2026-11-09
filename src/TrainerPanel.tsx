@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { CanonicalAppData } from './canonical/types'
 import { canonicalStorage, applyTrainerCanonical, applyInitialV13Proposal, readV13Canonical } from './data'
+import { validateMenuProposal, type ProposalCheck } from './canonical/trainer'
 import { createTrainerContextV2 } from './canonical/trainerV13'
 import { createTrainerContextV11, parseUniqueJson, previewTrainerProposal, trainerDiagnosticCategory, trainerMessages as messages, type TrainerProposalPreview } from './canonical/trainerV11'
 
@@ -16,6 +17,8 @@ type Props = { data: CanonicalAppData; onApplied: (data: CanonicalAppData) => vo
 export function TrainerPanel({ data, onApplied, onPending }: Props) {
   const [ready, setReady] = useState(false), [held, setHeld] = useState(false), [pending, setPending] = useState(false)
   const [input, setInput] = useState<unknown>(), [preview, setPreview] = useState<TrainerProposalPreview>()
+  const [legacy, setLegacy] = useState<ProposalCheck>()
+  const [warningsAccepted, setWarningsAccepted] = useState(false)
   const [importMessage, setImportMessage] = useState<string>(messages.unselected), [exportMessage, setExportMessage] = useState('')
   const [diagnostic, setDiagnostic] = useState<object>(), [mapping, setMapping] = useState<Record<string, Record<string, string>>>()
   const generation = useRef(0), busy = useRef(false)
@@ -31,7 +34,7 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
   const read = async (file?: File) => {
     if (!file || held || busy.current || !ready) return
     const current = ++generation.current
-    setInput(undefined); setPreview(undefined); setMapping(undefined); setDiagnostic(undefined)
+    setInput(undefined); setPreview(undefined); setLegacy(undefined); setWarningsAccepted(false); setMapping(undefined); setDiagnostic(undefined)
     try {
       const state = await canonicalStorage.readCutoverState()
       if (current !== generation.current) return
@@ -39,6 +42,13 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
       const raw = await file.text()
       const value = parseUniqueJson(raw)
       if (current !== generation.current) return
+      if (value && typeof value === 'object' && Object.hasOwn(value, 'contractVersion') && !Object.hasOwn(value, 'format')) {
+        const checked = validateMenuProposal(value, data)
+        setLegacy(checked)
+        if (checked.proposal) setInput(value)
+        setImportMessage(checked.proposal ? '' : messages.inconsistent)
+        return
+      }
       if (!value || typeof value !== 'object' || (value as { format?: unknown }).format !== 'training-project.trainer-proposal') { setImportMessage(messages.wrongFormat); return }
       if (isolated && (value as { version?: unknown }).version === 2) {
         busy.current = true; setPending(true); onPending(true)
@@ -64,21 +74,21 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
     }
   }
   const apply = async () => {
-    if (busy.current || held || !ready || !preview || !input) return
+    if (busy.current || held || !ready || !input || (!preview && !legacy?.proposal) || (legacy?.warnings.length && !warningsAccepted)) return
     if (!confirm('この内容を取り込む')) return
     busy.current = true; setPending(true); onPending(true)
     try {
-      const result = await applyTrainerCanonical(input)
+      const result = await applyTrainerCanonical(input, legacy ? JSON.stringify(legacy.warnings) : undefined)
       if (result.ok) {
-        onApplied(result.value); setMapping(result.mapping); setImportMessage(messages.imported)
-        setPreview(undefined); setInput(undefined)
+        onApplied(result.value); setMapping(legacy ? undefined : result.mapping); setImportMessage(messages.imported)
+        setPreview(undefined); setLegacy(undefined); setInput(undefined)
       } else {
         setImportMessage(messages.inconsistent); setHeld(result.unknown)
-        setDiagnostic({ stage: 'apply', code: result.unknown ? 'UNKNOWN' : 'REJECTED_ZERO_MUTATION', category: trainerDiagnosticCategory(result.reason), proposalId: preview.proposalId, at: new Date().toISOString() })
-        setPreview(undefined); setInput(undefined)
+        setDiagnostic({ stage: 'apply', code: result.unknown ? 'UNKNOWN' : 'REJECTED_ZERO_MUTATION', category: trainerDiagnosticCategory(result.reason), proposalId: preview?.proposalId ?? legacy?.proposal?.proposalId, at: new Date().toISOString() })
+        setPreview(undefined); setLegacy(undefined); setInput(undefined)
       }
     } catch {
-      setImportMessage(messages.inconsistent); setHeld(true); setPreview(undefined); setInput(undefined)
+      setImportMessage(messages.inconsistent); setHeld(true); setPreview(undefined); setLegacy(undefined); setInput(undefined)
       setDiagnostic({ stage: 'apply', code: 'STORAGE_UNAVAILABLE_OR_UNKNOWN', at: new Date().toISOString() })
     } finally { busy.current = false; setPending(false); onPending(false) }
   }
@@ -104,7 +114,7 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
       <p>トレーナーから受け取った提案ファイルを選びます。</p>
       <label>提案ファイルを選ぶ<input type="file" accept="application/json,.json" disabled={!ready || pending || held} onChange={event => {
         const file = event.target.files?.[0]
-        if (isolated) event.target.value = ''
+        event.target.value = ''
         void read(file)
       }} /></label>
       {importMessage && <p role="status">{importMessage}</p>}
@@ -119,6 +129,21 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
         {preview.details.map((detail, index) => <section className="trainer-preview-detail" key={index}><h4>{detail.title}</h4><dl>{detail.values.map(([label, value], index) => <div key={index}><dt>{label}</dt><dd>{value}</dd></div>)}</dl></section>)}
         <p>使用中の週メニューは切り替わりません。</p>
         <button className="primary" disabled={pending || held} onClick={() => void apply()}>この内容を取り込む</button>
+      </section>}
+      {legacy?.errors.length ? <ul>{legacy.errors.map(({ path, message }, index) => <li key={index}>{path}: {message}</li>)}</ul> : null}
+      {legacy?.proposal && <section className="trainer-preview">
+        <h3>取り込む内容</h3>
+        <b>{legacy.proposal.menu.name}</b>
+        {legacy.proposal.menu.memo && <p>{legacy.proposal.menu.memo}</p>}
+        <ol>{[...legacy.proposal.entries].sort((a, b) => a.order - b.order).map(entry =>
+          <li key={entry.order}>{data.trainingItems.find(item => item.id === entry.trainingItemId)?.displayName}
+            {'（推奨：'}{entry.recommendedDay === undefined ? '任意' : ['月', '火', '水', '木', '金', '土', '日'][entry.recommendedDay]}）</li>)}</ol>
+        {legacy.warnings.length > 0 && <>
+          <ul>{legacy.warnings.map(({ path, message }, index) => <li key={index}>{path}: {message}</li>)}</ul>
+          <label><input type="checkbox" checked={warningsAccepted} onChange={event => setWarningsAccepted(event.target.checked)} />内容を確認しました</label>
+        </>}
+        <p>使用中の週メニューは切り替わりません。</p>
+        <button className="primary" disabled={pending || held || (legacy.warnings.length > 0 && !warningsAccepted)} onClick={() => void apply()}>この内容を取り込む</button>
       </section>}
       {mapping && <details><summary>保存結果を確認</summary>{Object.entries(mapping).map(([kind, values]) => <div key={kind}><b>{kind}</b>{Object.entries(values).map(([candidate, id]) => <p key={candidate}>{candidate} → {id}</p>)}</div>)}</details>}
     </section>

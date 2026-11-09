@@ -9,6 +9,7 @@ import type { CanonicalAppData } from './canonical/types'
 import { initializeOwnerManagement, rebaseOwnerChange } from './canonical/management'
 import { withDisplayPreferences } from './canonical/displayPreferences'
 import { createTrainerApplyCandidate, trainerReadbackMatches, type TrainerApplyCandidate } from './canonical/trainerV11'
+import { createMenuProposalCandidate, validateMenuProposal } from './canonical/trainer'
 import { validateCanonical as validateCanonicalDomain } from './canonical/validate'
 
 export type { AppData, Category, Exercise, Item, Menu, MenuItem, Profile, Session, SettingHistory } from './domain'
@@ -85,25 +86,35 @@ export async function commitOwnerCanonical(base: CanonicalAppData, next: Canonic
 
 export type TrainerStorageResult = {ok:true;value:CanonicalAppData;mapping:TrainerApplyCandidate['mapping']} | {ok:false;unknown:boolean;reason:string}
 /** Existing cutover record keeps only the one unresolved apply marker; no ledger/control store. */
-export async function applyTrainerCanonical(input: unknown): Promise<TrainerStorageResult> {
+export async function applyTrainerCanonical(input: unknown, legacyWarnings?: string): Promise<TrainerStorageResult> {
  if (isV13Isolated) assertIsolatedV13Controller()
  const db=await dbPromise, tx=db.transaction(['canonical','cutover'],'readwrite')
  let committed=false, unresolved=false
  let candidate:TrainerApplyCandidate|undefined
- const proposalId=String((input as {proposalId?:unknown})?.proposalId ?? '')
+ let proposalId=String((input as {proposalId?:unknown})?.proposalId ?? '')
  try {
   const state=(await tx.objectStore('cutover').get(cutoverKey)) as CutoverState|undefined
   if(!state?.authoritative)throw new Error('canonical authorityがありません')
-  if(state.trainerPendingProposalId){unresolved=true;throw new Error('先行するAI操作の結果が未確認です')}
+  if(state.trainerPendingProposalId || state.v13Pending){unresolved=true;throw new Error('先行するAI操作の結果が未確認です')}
   const stored=await tx.objectStore('canonical').get(canonicalKey) as CanonicalAppData|undefined
   if(!stored)throw new Error('canonical dataがありません')
-  candidate=createTrainerApplyCandidate(input,initializeOwnerManagement(stored),()=>crypto.randomUUID(),new Date().toISOString())
+  const latest = initializeOwnerManagement(stored)
+  if (legacyWarnings === undefined) {
+   candidate=createTrainerApplyCandidate(input,latest,()=>crypto.randomUUID(),new Date().toISOString())
+  } else {
+   const checked = validateMenuProposal(input, latest)
+   if (!checked.proposal || JSON.stringify(checked.warnings) !== legacyWarnings) throw new Error('MenuProposalの内容が変わりました。ファイルを選び直してください')
+   proposalId = checked.proposal.proposalId
+   const next = createMenuProposalCandidate(latest, checked.proposal, () => crypto.randomUUID())
+   candidate = { data: withDisplayPreferences(next.data), mapping: {}, touched: {} }
+   if (validateCanonicalDomain(candidate.data).errors.length) throw new Error('MenuProposalの保存候補が不正です')
+  }
   if (isV13Isolated) candidate.data.trainerDataRevision = nextV13Revision(stored, state)
   await tx.objectStore('canonical').put(candidate.data,canonicalKey)
   await tx.objectStore('cutover').put({...state,trainerPendingProposalId:proposalId},cutoverKey)
   await tx.done;committed=true
   const readback=await canonicalStorage.readCanonical()
-  if(!readback || !trainerReadbackMatches(candidate,readback,proposalId))throw new Error('独立readbackで適用結果を確認できません')
+  if(!readback || (legacyWarnings === undefined ? !trainerReadbackMatches(candidate,readback,proposalId) : JSON.stringify(readback) !== JSON.stringify(candidate.data)))throw new Error('独立readbackで適用結果を確認できません')
   const finish=db.transaction('cutover','readwrite')
   const current=await finish.store.get(cutoverKey) as CutoverState
   if(current.trainerPendingProposalId!==proposalId){finish.abort();await finish.done.catch(()=>{});throw new Error('AI操作の帰属を確認できません')}
