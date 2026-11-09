@@ -1,0 +1,42 @@
+{
+  "testedSource": "2427b4ae575352e297f1ee8ae3798be4e5400a0f",
+  "environment": "Windows Chromium / local isolated production build / JST",
+  "buildCommand": "pnpm exec vite build --config vite.v13-test.config.ts --configLoader runner",
+  "testCommand": "pnpm exec playwright test -c playwright.v13-app.config.ts --grep 'AN-G05 closeout:' --reporter=json",
+  "buildSha256": {
+    "index.html": "9c7830da35fcce69470c0a25cb8bbdb380728735cc95de95a036aa6ef5c68aa9",
+    "manifest.webmanifest": "fa57118708e6e2b88ad7bb4995cbb3109604787689284b5d2b2fbe8e74649834",
+    "v13-worker.js": "e7f7a558cd3db10e7eb43bb50e3995b0bbbeb0c2eaa3b6f56a87e311e31f13f8",
+    "assets/index-Cxbq1x8m.js": "cb1c50b302f99f99a934910eb8a1b4cecde22cb252573183cd4891ee81ceefa0",
+    "assets/index-DIXRco9J.css": "df190ac37917166f3f01c37dd903ebd34eed5e3b2c6f1aedbee3b91a22ce609b",
+    "prototypes/oic-012-density-prototype.html": "6732ad15481c821fe1abf83d27d87356b1a488dec91feefc31155c59d9305f8c"
+  },
+  "stats": {
+    "startTime": "2026-11-09T03:57:57.271Z",
+    "duration": 9589.234,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "cases": [
+    {
+      "title": "AN-G05 closeout: ZERO stays distinct in the isolated build",
+      "line": 764,
+      "status": "passed",
+      "durationMs": 1934
+    },
+    {
+      "title": "AN-G05 closeout: NO_ENTRY stays distinct in the isolated build",
+      "line": 764,
+      "status": "passed",
+      "durationMs": 890
+    },
+    {
+      "title": "AN-G05 closeout: UNAVAILABLE stays distinct in the isolated build",
+      "line": 764,
+      "status": "passed",
+      "durationMs": 2108
+    }
+  ]
+}

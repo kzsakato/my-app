@@ -1,0 +1,61 @@
+import { createHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
+import { previewCanonicalRestore } from './src/canonical/backup'
+import { previewInitialV13Restore } from './src/canonical/backupV13'
+
+const sourceCommit = 'cfe668b8903ad9e41c2b4e7189762cdcb73e09c3'
+const [mode, file, expectedSha, ...extra] = process.argv.slice(2)
+const emit = (value: object, status: number) => {
+  console.log(JSON.stringify({ sourceCommit, mode: mode === 'v12' || mode === 'v13' ? mode : null, ...value }))
+  process.exitCode = status
+}
+const categories = new Set([
+  'JSON', 'format/schema', 'format', 'schemaVersion', 'createdAt', 'payload',
+  'profile', 'exercises', 'trainingItems', 'trainingItemSettingChanges', 'menus',
+  'menuEntries', 'sessions', 'activeMenuId', 'weekStartsOn', 'displayPreferences',
+])
+const summarize = (issues: { path: string }[]) => {
+  const counts: Record<string, number> = Object.create(null)
+  for (const issue of issues) {
+    const field = issue.path.replace(/^payload\./, '').split(/[.\[]/, 1)[0]
+    const category = categories.has(field) ? field : 'OTHER_VALIDATION'
+    counts[category] = (counts[category] ?? 0) + 1
+  }
+  return { count: issues.length, categories: counts }
+}
+
+function run() {
+  if ((mode !== 'v12' && mode !== 'v13') || !file || extra.length || (expectedSha !== undefined && !/^[a-f0-9]{64}$/i.test(expectedSha))) {
+    return emit({ result: 'NOT_RUN', reason: 'USAGE: node validator.cjs <v12|v13> <local-backup-path> [expected-sha256]' }, 2)
+  }
+  let bytes: Buffer
+  try { bytes = readFileSync(file) }
+  catch { return emit({ result: 'NOT_RUN', reason: 'INPUT_READ_FAILED' }, 2) }
+  const inputSha256 = createHash('sha256').update(bytes).digest('hex')
+  if (expectedSha && inputSha256 !== expectedSha.toLowerCase()) {
+    return emit({ result: 'NOT_RUN', reason: 'INPUT_SHA256_MISMATCH', inputSha256 }, 2)
+  }
+  const raw = bytes.toString('utf8')
+  if (mode === 'v12') {
+    const checked = previewCanonicalRestore(raw)
+    const passed = checked.errors.length === 0 && !!checked.envelope
+    return emit({ result: passed ? 'PASS' : 'FAIL', inputSha256,
+      errors: summarize(checked.errors), warnings: summarize(checked.warnings) }, passed ? 0 : 1)
+  }
+  try {
+    const checked = previewInitialV13Restore(raw)
+    return emit({ result: 'PASS', inputSha256, errors: summarize([]), warnings: summarize(checked.warnings) }, 0)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : ''
+    const category = message === 'V13_BACKUP_VERSION_REQUIRED' || message === 'INVALID_INITIAL_V13_BACKUP'
+      ? message
+      : message.startsWith('$: duplicate key:') ? 'DUPLICATE_JSON_KEY'
+      : error instanceof SyntaxError || message.startsWith('$:') ? 'INVALID_JSON'
+      : 'UNEXPECTED_VALIDATOR_EXCEPTION'
+    if (category === 'UNEXPECTED_VALIDATOR_EXCEPTION') {
+      return emit({ result: 'NOT_RUN', reason: category, inputSha256, errors: null, warnings: null }, 2)
+    }
+    return emit({ result: 'FAIL', inputSha256, errors: { count: 1, categories: { [category]: 1 } }, warnings: null }, 1)
+  }
+}
+try { run() } catch { emit({ result: 'NOT_RUN', reason: 'UNEXPECTED_VALIDATOR_EXCEPTION', errors: null, warnings: null }, 2) }

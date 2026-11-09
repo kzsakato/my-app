@@ -1,0 +1,12 @@
+[WebServer] (node:40472) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:50104) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\v1r-acceptance.spec.ts:42:3 › H-03 focused 1 same-day multiple Sessions retain marker until last cancellation (18.8s)
+  ok 2 [chromium] › e2e\v1r-acceptance.spec.ts:42:3 › H-03 focused 2 single Session cancellation clears its date marker (5.9s)
+  ok 3 [chromium] › e2e\v1r-acceptance.spec.ts:42:3 › H-03 focused 3 past-first consecutive cancellations change only the target date (10.3s)
+
+  3 passed (41.0s)

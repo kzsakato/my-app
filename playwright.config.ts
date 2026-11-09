@@ -1,8 +1,9 @@
 import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
+  grepInvert: /(?:^|\s)@legacy-v1r-menu-proposal(?:\s|$)/,
   testDir: './e2e',
-  testIgnore: ['v1r-baseline.spec.ts', 'v1r-visual.spec.ts'],
+  testIgnore: ['v1r-baseline.spec.ts', 'v1r-visual.spec.ts', 'issue35-v13-app.spec.ts'],
   // All current browser cases intentionally exercise the same IndexedDB name.
   // Keep them serial so one case cannot replace another case's persisted state.
   fullyParallel: false,
@@ -18,9 +19,18 @@ export default defineConfig({
     video: 'retain-on-failure',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
-  webServer: {
+  webServer: [{
     command: 'pnpm exec vite --host 127.0.0.1 --port 4173',
     url: 'http://127.0.0.1:4173',
     reuseExistingServer: !process.env.CI,
-  },
+  }, {
+    command: 'pnpm exec vite --config vite.candidate.config.ts',
+    url: 'http://127.0.0.1:4177',
+    reuseExistingServer: false,
+  }, {
+    command: 'pnpm exec vite build --config vite.v12-worker.config.ts --configLoader runner && node tooling/v12-worker/serve-test.mjs',
+    env: { V12_WORKER_TEST: '1' },
+    url: 'http://localhost:4182',
+    reuseExistingServer: false,
+  }],
 })

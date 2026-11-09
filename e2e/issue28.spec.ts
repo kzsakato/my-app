@@ -6,6 +6,8 @@ import { createCanonicalSession } from '../src/canonical/runtime'
 import { validateCanonical } from '../src/canonical/validate'
 import type { CanonicalAppData } from '../src/canonical/types'
 
+test.use({ baseURL: 'http://127.0.0.1:4177' })
+
 const before = process.env.ISSUE28_BEFORE === '1'
 const evidence = process.env.ISSUE28_EVIDENCE_ROOT ?? `evidence/issue28/${before ? 'before' : 'after'}`
 const now = new Date('2026-10-20T12:00:00+09:00')
@@ -80,7 +82,7 @@ test('2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evi
   const inputsBefore = await page.locator('.run-weight,.run-slot-grid,.history-link,.run-meta,.seat-inline,textarea,.save-setting:not(.danger)').count()
   await page.screenshot({ path: `${evidence}/${info.project.name}-run-pending.png`, fullPage: true })
   if (!before) {
-    const oldFont = info.project.name === 'desktop' ? 14 : 13
+    const oldFont = page.viewportSize()!.width <= 360 ? 13 : 14
     expect(parseFloat(weight.font)).toBeCloseTo(oldFont + 4 / 3, 2)
     expect(weight.overflow).toBe(false)
     expect(Math.abs(seat!.x + seat!.width - seatLabel!.x - seatLabel!.width)).toBeLessThan(1)

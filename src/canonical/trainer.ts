@@ -86,7 +86,7 @@ export function validateMenuProposal(input: unknown, data: CanonicalAppData): Pr
     errors.push(issue(key, 'Ver1 MenuProposalでは未対応のフィールドです。Master更新や既存Menu更新は受け付けません')))
   if (input.contractVersion !== MENU_PROPOSAL_CONTRACT_VERSION) errors.push(issue('contractVersion', '対応していないMenuProposal contractVersionです'))
   if (!isText(input.proposalId)) errors.push(issue('proposalId', '空でない文字列が必要です'))
-  if (isText(input.proposalId) && (data.appliedProposalIds ?? []).includes(input.proposalId)) errors.push(issue('proposalId', 'このproposalIdは既に適用済みです'))
+  if (isText(input.proposalId) && (data.appliedProposalIds ?? []).includes(input.proposalId.trim())) errors.push(issue('proposalId', 'このproposalIdは既に適用済みです'))
   const menuInput = input.menu
   const menuName = isRecord(menuInput) && isText(menuInput.name) ? menuInput.name.trim() : undefined
   if (!isRecord(menuInput)) errors.push(issue('menu', 'オブジェクトが必要です'))

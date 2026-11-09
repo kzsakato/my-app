@@ -1,0 +1,286 @@
+{
+  "normal": [
+    {
+      "file": "grouped-baseline.spec.ts",
+      "title": "H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/history/standard/complete/cancel/reload"
+    },
+    {
+      "file": "issue28.spec.ts",
+      "title": "2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence"
+    },
+    {
+      "file": "issue30-v12-additional.spec.ts",
+      "title": "Q14/Q15/Q16 target screen visible/accessible wording, geometry and CSS, including warning/edit routes"
+    },
+    {
+      "file": "issue30-v12-additional.spec.ts",
+      "title": "Q10/Q15 ambiguous classification across current-Exercise UI routes never picks the first label"
+    },
+    {
+      "file": "issue30-v12.spec.ts",
+      "title": "TOP weekday all ON/OFF preserves completed flag; approved +1pt status and unchanged run weight"
+    },
+    {
+      "file": "owner-v12-07.spec.ts",
+      "title": "V12-07: existing row height preserved, fourteen days right aligned, data unchanged"
+    },
+    {
+      "file": "training-check.spec.ts",
+      "title": "canonical MAN bootstrap downloads an H-07 MenuProposal that imports without changing the active menu"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "H-03 focused 1 same-day multiple Sessions retain marker until last cancellation"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "H-03 focused 2 single Session cancellation clears its date marker"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "H-03 focused 3 past-first consecutive cancellations change only the target date"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "H-03 focused 4/5 + H06 A5: UI Extra completion has own actual and visible completed Exercise"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "OIC-003/006/007 + H06 A5: Session-only seat, controls, persist failure/retry/reload preserve identity"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "OIC-008/009/010/012: temporary weekday filter, distinct today including Extra, actual-date visibility, two-line execution lists"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "OIC-013: item-scoped history deletion cancel, exact selected delete and reload never reconstruct initial/current/Session"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "QA-C01 D-01/02: exact upstream name Owner確認候補, preview/cancel/failure/idempotence/read-back/export"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "QA-C01 D-01/02: exact upstream name Owner確認候補 (ByAI), preview/cancel/failure/idempotence/read-back/export"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "QA-C02 cancellation completion/non-target/reload with none failure"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "QA-C02 cancellation completion/non-target/reload with write failure"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "QA-C02 cancellation completion/non-target/reload with read-back failure"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "D-03/OIC-016: baseline settings/list/edit/custom required label and hide/show preserve IDs"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "OIC-011 / PRESERVE: full screen population back/menu, Profile and Analysis original controls including half-year"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "Clock local midnight/week/month/year boundary 2026-10-04T23:59:59+09:00"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "OIC-015: all seven week starts warn/cancel, persist exact setting without rewriting historical facts"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "canonical write read-back failure prevents stale editing; reload preserves original logical Session pair"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "H-09 startup/Restore reject unsupported old canonical without repair, Session drop or legacy fallback"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "PRESERVE Profile all fields and standard-setting failure/retry create exactly one event"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "D-01 Warning requires acknowledgment and rollback uncertainty blocks edits until reload"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "PRESERVE list filter/hidden state, Item hide/show, Menu active guard/confirmation and unsaved cancel"
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "title": "H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-two-entries"
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "title": "H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-same-entry"
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "title": "H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: two-items-same-exercise"
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=0)"
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=6)"
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "title": "H06 A6/A7/A8 zero defaults, canonical save blocking and form-local error lifecycle"
+    },
+    {
+      "file": "v1r-q5-identity.spec.ts",
+      "title": "H09 independent Session identity, both modes and cancellation: different-items-extra"
+    },
+    {
+      "file": "v1r-q5-identity.spec.ts",
+      "title": "H09 independent Session identity, both modes and cancellation: different-entries"
+    },
+    {
+      "file": "v1r-q5-identity.spec.ts",
+      "title": "H09 independent Session identity, both modes and cancellation: same-membership"
+    },
+    {
+      "file": "v1r-q5-identity.spec.ts",
+      "title": "H09 snapshot-only Category destination and unclassified compatibility in recommended"
+    }
+  ],
+  "release": [
+    {
+      "file": "grouped-baseline.spec.ts",
+      "title": "H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/history/standard/complete/cancel/reload"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "H-03 focused 1 same-day multiple Sessions retain marker until last cancellation"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "H-03 focused 2 single Session cancellation clears its date marker"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "H-03 focused 3 past-first consecutive cancellations change only the target date"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "H-03 focused 4/5 + H06 A5: UI Extra completion has own actual and visible completed Exercise"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "OIC-003/006/007 + H06 A5: Session-only seat, controls, persist failure/retry/reload preserve identity"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "OIC-008/009/010/012: temporary weekday filter, distinct today including Extra, actual-date visibility, two-line execution lists"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "OIC-013: item-scoped history deletion cancel, exact selected delete and reload never reconstruct initial/current/Session"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "QA-C01 D-01/02: exact upstream name Owner確認候補, preview/cancel/failure/idempotence/read-back/export"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "QA-C01 D-01/02: exact upstream name Owner確認候補 (ByAI), preview/cancel/failure/idempotence/read-back/export"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "QA-C02 cancellation completion/non-target/reload with none failure"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "QA-C02 cancellation completion/non-target/reload with write failure"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "QA-C02 cancellation completion/non-target/reload with read-back failure"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "D-03/OIC-016: baseline settings/list/edit/custom required label and hide/show preserve IDs"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "OIC-011 / PRESERVE: full screen population back/menu, Profile and Analysis original controls including half-year"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "Clock local midnight/week/month/year boundary 2026-10-04T23:59:59+09:00"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "OIC-015: all seven week starts warn/cancel, persist exact setting without rewriting historical facts"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "canonical write read-back failure prevents stale editing; reload preserves original logical Session pair"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "H-09 startup/Restore reject unsupported old canonical without repair, Session drop or legacy fallback"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "PRESERVE Profile all fields and standard-setting failure/retry create exactly one event"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "D-01 Warning requires acknowledgment and rollback uncertainty blocks edits until reload"
+    },
+    {
+      "file": "v1r-acceptance.spec.ts",
+      "title": "PRESERVE list filter/hidden state, Item hide/show, Menu active guard/confirmation and unsaved cancel"
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "title": "H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-two-entries"
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "title": "H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-same-entry"
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "title": "H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: two-items-same-exercise"
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=0)"
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "title": "H06 A2/A3 fixed weekday order and completed future-day discovery (weekStartsOn=6)"
+    },
+    {
+      "file": "v1r-final-correction.spec.ts",
+      "title": "H06 A6/A7/A8 zero defaults, canonical save blocking and form-local error lifecycle"
+    },
+    {
+      "file": "v1r-q5-identity.spec.ts",
+      "title": "H09 independent Session identity, both modes and cancellation: different-items-extra"
+    },
+    {
+      "file": "v1r-q5-identity.spec.ts",
+      "title": "H09 independent Session identity, both modes and cancellation: different-entries"
+    },
+    {
+      "file": "v1r-q5-identity.spec.ts",
+      "title": "H09 independent Session identity, both modes and cancellation: same-membership"
+    },
+    {
+      "file": "v1r-q5-identity.spec.ts",
+      "title": "H09 snapshot-only Category destination and unclassified compatibility in recommended"
+    }
+  ]
+}

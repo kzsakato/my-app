@@ -288,6 +288,10 @@ function bodyRegion(values: ClassificationMeaning[] | undefined, path: string): 
 
 /** Exact 100-local-calendar-day context projection; never writes or repairs canonical input. */
 export function createTrainerContextV11(data: CanonicalAppData, now: Date) {
+  return projectTrainerContext(data, now, false)
+}
+
+export function projectTrainerContext(data: CanonicalAppData, now: Date, includeArchived: boolean) {
   const checked = validateCanonical(data)
   if (checked.errors.length) fail('canonical', checked.errors.map(value => `${value.path}: ${value.message}`).join('; '))
   const toDate = localDate(now), fromDate = shiftLocalDate(toDate, -99)
@@ -299,7 +303,7 @@ export function createTrainerContextV11(data: CanonicalAppData, now: Date) {
     return { id: value.id, trainingItemId: value.trainingItemId, menuEntryId: value.menuEntryId, date: value.date, performedAt: value.performedAt, performedOrder: value.performedOrder, sets: value.sets, reps: value.reps, seconds: value.seconds, weight: value.weight, bodyWeight: value.bodyWeight, seat: value.seat, memo: value.memo,
       snapshot: { exerciseId: snapshot.exerciseId, exerciseName: snapshot.exerciseName, trainingItemDisplayName: snapshot.trainingItemDisplayName, measureType: snapshot.measureType, weightMode: snapshot.weightMode, selfWeightRatio: snapshot.selfWeightRatio, secondsLoadRatio: snapshot.secondsLoadRatio, ...(region === undefined ? {} : { bodyRegion: region }) } }
   })
-  const relevant = new Set([...data.trainingItems.filter(value => value.lifecycle === 'active').map(value => value.id), ...history.map(value => value.trainingItemId)])
+  const relevant = new Set([...data.trainingItems.filter(value => includeArchived || value.lifecycle === 'active').map(value => value.id), ...history.map(value => value.trainingItemId)])
   const baseline = new Map<string, CanonicalAppData['trainingItemSettingChanges'][number]>()
   const inWindow = data.trainingItemSettingChanges.filter(value => relevant.has(value.trainingItemId) && compareInstants(value.changedAt, start) >= 0 && compareInstants(value.changedAt, endExclusive) < 0)
   const orderedChanges = new Map<string, Set<string>>()
@@ -311,14 +315,14 @@ export function createTrainerContextV11(data: CanonicalAppData, now: Date) {
     const previous = baseline.get(value.trainingItemId)
     if (!previous || compareInstants(value.changedAt, previous.changedAt) > 0) baseline.set(value.trainingItemId, value)
   })
-  const items = data.trainingItems.filter(value => value.lifecycle === 'active')
+  const items = data.trainingItems.filter(value => includeArchived || value.lifecycle === 'active')
   const menus = data.menus.filter(value => value.lifecycle === 'active')
   const menuEntries = data.menuEntries.filter(value => value.lifecycle === 'active' && menus.some(menu => menu.id === value.menuId))
   return {
     format: 'training-project.trainer-context', version: 1, exportedLocalDate: toDate, fromDate, toDate, history,
     trainingContext: {
       contractVersion: 1, generatedAt: now.toISOString(), profile: { weight: data.profile.weight },
-      exercises: data.exercises.filter(value => value.lifecycle === 'active').map(value => {
+      exercises: data.exercises.filter(value => includeArchived || value.lifecycle === 'active').map(value => {
         const region = bodyRegion(value.classifications, `Exercise.${value.id}`)
         if (region === undefined) fail(`Exercise.${value.id}`, 'missing bodyRegion')
         return { id: value.id, name: value.name, bodyRegion: region, measureType: value.measureType, usesWeight: value.usesWeight, weightMode: value.weightMode, selfWeightRatio: value.selfWeightRatio, secondsLoadRatio: value.secondsLoadRatio }
