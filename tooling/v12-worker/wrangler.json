@@ -1,0 +1,9 @@
+{
+  "name": "my-app-staging-v1r",
+  "account_id": "3185994b9e184d33b828a7aa4ecff9df",
+  "compatibility_date": "2026-10-04",
+  "workers_dev": true,
+  "preview_urls": false,
+  "keep_vars": false,
+  "assets": { "directory": "../../dist-v12-worker", "not_found_handling": "none" }
+}

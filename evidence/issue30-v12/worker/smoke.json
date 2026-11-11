@@ -1,0 +1,73 @@
+{
+  "atUTC": "2026-10-26T03:23:20.618Z",
+  "runtime": "153.0.8010.12",
+  "platform": "win32",
+  "tests": [
+    {
+      "name": "fresh DB canonical startup / secure context / scoped SW",
+      "state": {
+        "secure": true,
+        "origin": "http://localhost:4182",
+        "dbs": [
+          {
+            "name": "training-check-v12-local-man",
+            "version": 7
+          }
+        ],
+        "scope": "http://localhost:4182/"
+      }
+    },
+    {
+      "name": "reload and new tab preserve canonical/authority; SW controls page",
+      "pass": true,
+      "caches": [
+        "v12-local-man-precache-v2-http://localhost:4182/"
+      ]
+    },
+    {
+      "name": "dedicated manifest",
+      "manifest": {
+        "name": "V1.2 MAN候補・ダミー専用",
+        "short_name": "V12ダミー",
+        "start_url": "/",
+        "display": "standalone",
+        "background_color": "#f4f7f2",
+        "theme_color": "#326a41",
+        "lang": "ja",
+        "scope": "/",
+        "id": "/v12-local-man",
+        "icons": [
+          {
+            "src": "/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+          },
+          {
+            "src": "/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+          }
+        ]
+      }
+    },
+    {
+      "name": "dummy malformed preferences Backup preview only; restore disabled and data unchanged",
+      "pass": true
+    },
+    {
+      "name": "HTTP wrong Host rejected",
+      "status": 403
+    },
+    {
+      "name": "wrong-origin artifact execution fails before any DB access",
+      "pass": true
+    },
+    {
+      "name": "occupied non-authoritative DB fails closed; no seed/clear; other dummy DB sentinels unchanged",
+      "pass": true
+    }
+  ],
+  "result": "PASS"
+}

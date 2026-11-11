@@ -1,0 +1,50 @@
+{
+  "format": "training-project.trainer-proposal",
+  "version": 2,
+  "proposalId": "synthetic-ax01-setup",
+  "baseRevision": 0,
+  "operations": [
+    {
+      "type": "setInitialContribution",
+      "exerciseId": "ex-A",
+      "expectedState": "NO_ENTRY",
+      "reason": "Synthetic AX-01 setup",
+      "rates": {
+        "chest": 50,
+        "back": 0,
+        "arms": 0,
+        "shoulders": 50,
+        "lowerBody": 0,
+        "core": 0
+      }
+    },
+    {
+      "type": "setInitialContribution",
+      "exerciseId": "ex-B",
+      "expectedState": "NO_ENTRY",
+      "reason": "Synthetic AX-01 setup",
+      "rates": {
+        "chest": 0,
+        "back": 50,
+        "arms": 0,
+        "shoulders": 0,
+        "lowerBody": 50,
+        "core": 0
+      }
+    },
+    {
+      "type": "setInitialContribution",
+      "exerciseId": "ex-Z",
+      "expectedState": "NO_ENTRY",
+      "reason": "Synthetic AX-01 setup",
+      "rates": {
+        "chest": 100,
+        "back": 0,
+        "arms": 0,
+        "shoulders": 0,
+        "lowerBody": 0,
+        "core": 0
+      }
+    }
+  ]
+}

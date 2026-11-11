@@ -138,7 +138,7 @@ test('canonical MAN master bootstrap creates approved items and displays their n
   expect((stored.trainingItems as Array<{ displayName: string }>).map(value => value.displayName)).toEqual(expect.arrayContaining(['ペクトラルフライ（マシン）', 'サイドレイズ', 'レッグレイズ']))
 })
 
-test('canonical MAN bootstrap downloads an H-07 MenuProposal that imports without changing the active menu', async ({ page }) => {
+test('canonical MAN bootstrap downloads an H-07 MenuProposal that imports without changing the active menu', { tag: '@legacy-v1r-menu-proposal' }, async ({ page }) => {
   await page.clock.install({ time: monday })
   await seedCanonicalAndReload(page, canonicalData())
   await page.getByRole('button', { name: '共通メニュー' }).click()
@@ -157,17 +157,24 @@ test('canonical MAN bootstrap downloads an H-07 MenuProposal that imports withou
 
   await page.getByRole('button', { name: '設定へ戻る' }).click()
   await page.getByRole('button', { name: /^トレーナー連携 / }).click()
-  await page.getByLabel('提案ファイルを選択').setInputFiles({ name: 'android-man-menu.json', mimeType: 'application/json', buffer: proposalFile })
-  await expect(page.getByRole('heading', { name: '内容確認' })).toBeVisible()
+  const before = await readCanonicalState(page)
+  const file = page.getByLabel('提案ファイルを選ぶ')
+  await expect(file).toBeEnabled()
+  await file.setInputFiles({ name: 'android-man-menu.json', mimeType: 'application/json', buffer: proposalFile })
+  await expect(page.getByRole('heading', { name: '取り込む内容' })).toBeVisible()
   await page.getByLabel('内容を確認しました').check()
   page.once('dialog', dialog => dialog.accept())
-  await page.getByRole('button', { name: '新しい週メニューを作成' }).click()
-  await expect(page.getByRole('heading', { name: 'メニューを作成しました' })).toBeVisible()
+  await page.getByRole('button', { name: 'この内容を取り込む' }).click()
+  await expect(page.getByText('トレーナーからの提案を取り込みました。', { exact: true })).toBeVisible()
   const stored = await readCanonicalState(page)
   // QA-C01: importer preserves the upstream helper's name, without appending a marker.
   const createdMenu = (stored.menus as Array<{ id: string; name: string }>).find(menu => menu.name === proposal.menu.name)
   expect(createdMenu).toBeDefined()
   expect(stored.activeMenuId).toBe('canonical-menu')
+  expect(stored.exercises).toEqual(before.exercises)
+  expect(stored.trainingItems).toEqual(before.trainingItems)
+  expect(stored.sessions).toEqual(before.sessions)
+  expect(stored.appliedProposalIds).toEqual([proposal.proposalId])
   expect((stored.menuEntries as Array<{ menuId: string; trainingItemId: string; order: number }>)
     .filter(entry => entry.menuId === createdMenu!.id)
     .map(entry => entry.order)).toEqual([0, 1, 2])

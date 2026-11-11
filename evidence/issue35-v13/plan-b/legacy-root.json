@@ -1,0 +1,79 @@
+{
+  "result": "FAIL_LEGACY_ROOT_VARIANT",
+  "rootPageBefore": {
+    "url": "http://127.0.0.1:53984/my-app/",
+    "manifestUrl": "http://127.0.0.1:53984/my-app/manifest.webmanifest",
+    "manifest": {
+      "name": "筋トレ消化チェック",
+      "short_name": "筋トレチェック",
+      "start_url": ".",
+      "display": "standalone",
+      "background_color": "#f4f7f2",
+      "theme_color": "#326a41",
+      "lang": "ja",
+      "scope": "./"
+    },
+    "manifestStart": "http://127.0.0.1:53984/my-app/",
+    "manifestScope": "http://127.0.0.1:53984/my-app/",
+    "scripts": [
+      "http://127.0.0.1:53984/my-app/assets/index-Dvu4JjdW.js",
+      "http://127.0.0.1:53984/my-app/registerSW.js"
+    ],
+    "controller": "http://127.0.0.1:53984/my-app/sw.js",
+    "registrations": [
+      [
+        "http://127.0.0.1:53984/",
+        "http://127.0.0.1:53984/sw.js"
+      ],
+      [
+        "http://127.0.0.1:53984/my-app/",
+        "http://127.0.0.1:53984/my-app/sw.js"
+      ]
+    ],
+    "caches": [
+      "workbox-precache-v2-http://127.0.0.1:53984/",
+      "workbox-precache-v2-http://127.0.0.1:53984/my-app/"
+    ],
+    "cacheEntries": [
+      [
+        "workbox-precache-v2-http://127.0.0.1:53984/",
+        [
+          "http://127.0.0.1:53984/assets/index-CVHoY4uC.css",
+          "http://127.0.0.1:53984/assets/index-Dvu4JjdW.js",
+          "http://127.0.0.1:53984/index.html?__WB_REVISION__=6b357303718a0601ce85362e433cbaf8",
+          "http://127.0.0.1:53984/manifest.webmanifest?__WB_REVISION__=ee3c2890cab558b5087ca2d2d44091bc",
+          "http://127.0.0.1:53984/prototypes/oic-012-density-prototype.html?__WB_REVISION__=70a3614905cdd480cc0708feec3bd129",
+          "http://127.0.0.1:53984/registerSW.js?__WB_REVISION__=402b66900e731ca748771b6fc5e7a068"
+        ]
+      ],
+      [
+        "workbox-precache-v2-http://127.0.0.1:53984/my-app/",
+        [
+          "http://127.0.0.1:53984/my-app/assets/index-CVHoY4uC.css",
+          "http://127.0.0.1:53984/my-app/assets/index-Dvu4JjdW.js",
+          "http://127.0.0.1:53984/my-app/index.html?__WB_REVISION__=6b357303718a0601ce85362e433cbaf8",
+          "http://127.0.0.1:53984/my-app/manifest.webmanifest?__WB_REVISION__=ee3c2890cab558b5087ca2d2d44091bc",
+          "http://127.0.0.1:53984/my-app/prototypes/oic-012-density-prototype.html?__WB_REVISION__=70a3614905cdd480cc0708feec3bd129",
+          "http://127.0.0.1:53984/my-app/registerSW.js?__WB_REVISION__=402b66900e731ca748771b6fc5e7a068"
+        ]
+      ]
+    ]
+  },
+  "firstNavigation": {
+    "url": "http://127.0.0.1:53984/v13-test/",
+    "status": 200,
+    "fromServiceWorker": true
+  },
+  "fixedRootWorkerSha256": "ea2611aad2dbac4e11add67e330c15d428f8dc8b110906d812ca15aa58536115",
+  "servedRootWorkerSha256": "ea2611aad2dbac4e11add67e330c15d428f8dc8b110906d812ca15aa58536115",
+  "chromium": "153.0.8010.12",
+  "url": "http://127.0.0.1:53984/v13-test/",
+  "navigationFromServiceWorker": true,
+  "controller": "http://127.0.0.1:53984/sw.js",
+  "databases": [
+    {
+      "name": "training-check",
+      "version": 7
+    }
+  ]
+}

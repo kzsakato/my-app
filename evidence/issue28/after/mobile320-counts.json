@@ -1,0 +1,14 @@
+{
+  "today": "2/2",
+  "week": "4/6",
+  "back": "3/6",
+  "monday": [
+    "mon-extra",
+    "mon-normal"
+  ],
+  "tuesday": [
+    "tue-extra-other",
+    "tue"
+  ],
+  "unchanged": true
+}

@@ -1,0 +1,58 @@
+{
+  "sourceSHA": "4d0392db63c0de9b8e8f32f8d72d04cd0919ef63",
+  "origin": "https://my-app-staging-v1r.kzsakato-lab.workers.dev",
+  "restoreEnabled": true,
+  "files": [
+    {
+      "path": "assets/index-BecfKSYu.js",
+      "bytes": 25891,
+      "sha256": "e0d928b68529cc9a0c60096124f46a80624b1c59107fe3aa113025f7693104e5"
+    },
+    {
+      "path": "assets/main-CnmrNIox.css",
+      "bytes": 13940,
+      "sha256": "5d0fa1b00e7ff2e5ab8344e062f6214f008b924a29bb9f39f9ee6eb5beca7433"
+    },
+    {
+      "path": "assets/main-DzhGgrlm.js",
+      "bytes": 347761,
+      "sha256": "2fd5958f310fcb206833510da64121a8ebd954c8e1258ecbfbf0572830e164c6"
+    },
+    {
+      "path": "candidate-build.json",
+      "bytes": 219,
+      "sha256": "006a8dab63bbee1939f1751d1b866d8d483d5229468024446325c338cc3bf5ee"
+    },
+    {
+      "path": "icon-192.png",
+      "bytes": 941,
+      "sha256": "f87e2cd16fa4b07a5fdcd2da3e5b4252118e8c3880adede47824f3b0d4965f9f"
+    },
+    {
+      "path": "icon-512.png",
+      "bytes": 5657,
+      "sha256": "35f7a0fbe56586ef90564c661ebda0522e447d00b16e0c8cb8dbef2f0fbd3c80"
+    },
+    {
+      "path": "index.html",
+      "bytes": 403,
+      "sha256": "002709ac61cd3c73c64a5dffe818c4e90c8ead4f36bbfdb68ff2ab7c32153e0a"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 369,
+      "sha256": "400d66d634614aca98c4154f3334017f48d4bf2615ed2b0b1e2390ef0b1311a7"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 1285,
+      "sha256": "3143f65e098b0d245f20505e39debb0f6ef3178ac1a1bb6dc06afb8060517960"
+    },
+    {
+      "path": "workbox-5bc3ec07.js",
+      "bytes": 14848,
+      "sha256": "95f6de361e1478054d96a198292198e6feee680dfc3d068420c77b46e73ee0ab"
+    }
+  ],
+  "inventorySHA256": "2f7b29380b31eb5912d73a05d656bdef1a2c05ec320d45bdab59fc83e64ec38c"
+}

@@ -1,0 +1,27 @@
+[WebServer] (node:10180) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:1068) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:23752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [desktop] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence (5.5s)
+  ok  2 [desktop] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries (3.0s)
+  ok  3 [desktop] › e2e\issue28.spec.ts:147:1 › 0 Sessions and non-Monday week start preserve planned filters and denominators (4.5s)
+  ok  4 [desktop] › e2e\issue28.spec.ts:165:1 › narrow long title and three-digit decimal weight remain visible (2.6s)
+(node:5836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  5 [mobile360] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence (4.3s)
+  ok  6 [mobile360] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries (2.7s)
+  ok  7 [mobile360] › e2e\issue28.spec.ts:147:1 › 0 Sessions and non-Monday week start preserve planned filters and denominators (3.5s)
+  ok  8 [mobile360] › e2e\issue28.spec.ts:165:1 › narrow long title and three-digit decimal weight remain visible (1.8s)
+(node:24496) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  9 [mobile320] › e2e\issue28.spec.ts:62:1 › 2-1/2-3/2-4/3-1..5/4-1 before-after UI and persistent standard-setting evidence (4.1s)
+  ok 10 [mobile320] › e2e\issue28.spec.ts:120:1 › 2-3/2-4/2-5 repeated Exercise, Extra, historical region and local day/week boundaries (3.1s)
+  ok 11 [mobile320] › e2e\issue28.spec.ts:147:1 › 0 Sessions and non-Monday week start preserve planned filters and denominators (3.1s)
+  ok 12 [mobile320] › e2e\issue28.spec.ts:165:1 › narrow long title and three-digit decimal weight remain visible (1.6s)
+
+  12 passed (47.7s)

@@ -1,0 +1,55 @@
+{
+  "androidMeasured": false,
+  "results": [
+    {
+      "width": 1280,
+      "sourceSHA": "71390afc2754e109d01b9c8c28d564a36c0e4883",
+      "result": "PASS",
+      "facts": {
+        "actionsLast": true,
+        "lastDayBottom": 558,
+        "buttons": [
+          {
+            "y": 564,
+            "font": 14.6667,
+            "parentFont": 16,
+            "nowrap": true,
+            "fits": true
+          },
+          {
+            "y": 564,
+            "font": 14.6667,
+            "parentFont": 16,
+            "nowrap": true,
+            "fits": true
+          }
+        ]
+      }
+    },
+    {
+      "width": 360,
+      "sourceSHA": "71390afc2754e109d01b9c8c28d564a36c0e4883",
+      "result": "PASS",
+      "facts": {
+        "actionsLast": true,
+        "lastDayBottom": 616,
+        "buttons": [
+          {
+            "y": 622,
+            "font": 14.6667,
+            "parentFont": 16,
+            "nowrap": true,
+            "fits": true
+          },
+          {
+            "y": 622,
+            "font": 14.6667,
+            "parentFont": 16,
+            "nowrap": true,
+            "fits": true
+          }
+        ]
+      }
+    }
+  ]
+}

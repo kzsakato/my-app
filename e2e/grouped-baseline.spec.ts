@@ -43,7 +43,7 @@ test('H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/
   await page.getByLabel('メモ1（長期用）').fill('肩を下げる')
   await page.getByRole('button', { name: '保存', exact: true }).click()
   await expect(page.getByRole('heading', { name: '実施項目', exact: true })).toBeVisible()
-  await page.getByRole('button', { name: /^復旧ルートプレス / }).click()
+  await page.getByRole('button').filter({ has: page.locator('b').getByText('復旧ルートプレス', { exact: true }) }).click()
   await expect(page.getByLabel('メモ1（長期用）')).toHaveValue('肩を下げる')
   await page.getByRole('button', { name: '‹ 戻る' }).click()
   await expect(page.getByRole('heading', { name: '実施項目', exact: true })).toBeVisible()
@@ -63,18 +63,26 @@ test('H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/
   await expect(page.getByText('今週の実施総数')).toContainText('0/2')
   await expect(page.getByText('今日の実施総数')).toContainText('0/1')
   await page.getByRole('button', { name: '推奨曜日', exact: true }).click()
-  await page.getByRole('button', { name: /^復旧ルートプレス / }).click()
+  await page.locator('[data-menu-entry-id]').filter({ hasText: '復旧ルートプレス' }).click()
   await expect(page.getByText('肩を下げる', { exact: true })).toBeVisible()
   await page.getByLabel('今回メモ').fill('当回だけの記録')
-  await page.getByRole('button', { name: '回数を増やす' }).click({ clickCount: 2 })
+  await page.getByRole('button', { name: '回数を増やす' }).click()
+  await page.getByRole('button', { name: '回数を増やす' }).click()
   // H-20261005-06 A1 explicitly removes Run's reason input; explicit standard save remains.
   await expect(page.getByLabel('変更理由（任意）')).toHaveCount(0)
   page.once('dialog', dialog => dialog.dismiss())
   await page.getByRole('button', { name: 'この設定を登録' }).click()
   expect((await readCanonicalState(page)).trainingItemSettingChanges).toHaveLength(1)
+  const beforeStandard = await readCanonicalState(page)
   page.once('dialog', dialog => dialog.accept())
   await page.getByRole('button', { name: 'この設定を登録' }).click()
-  await expect(page.getByText('標準設定を保存しました。', { exact: true })).toBeVisible()
+  await expect.poll(async () => (await readCanonicalState(page)).trainingItemSettingChanges).toHaveLength(2)
+  const afterStandard = await readCanonicalState(page)
+  expect(afterStandard.trainingItems).toEqual([
+    expect.objectContaining({ reps: 12, standardMemo: '肩を下げる' }),
+  ])
+  expect(afterStandard.sessions).toEqual(beforeStandard.sessions)
+  await expect(page.getByText('標準設定を保存しました。', { exact: true })).toHaveCount(0)
   await page.getByRole('button', { name: /この実施項目の設定履歴を見る/ }).click()
   expect((await readCanonicalState(page)).trainingItemSettingChanges).toEqual([
     expect.objectContaining({ isInitial: true }),
@@ -89,22 +97,24 @@ test('H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/
   await page.getByRole('button', { name: 'この設定を登録' }).click()
   expect((await readCanonicalState(page)).trainingItemSettingChanges).toHaveLength(2)
   await page.getByRole('button', { name: '種目を完了' }).click()
-  // OIC-001: both MenuEntries refer to one completed Exercise.
-  await expect(page.getByText('今週の実施総数')).toContainText('2/2')
+  // T-08 counts one Session across two active Entries.
+  await expect(page.getByText('今週の実施総数')).toContainText('1/2')
   const stored = await readCanonicalState(page)
   expect(stored.sessions).toEqual([expect.objectContaining({ memo: '当回だけの記録', reps: 12, seat: '4', performedAt: expect.any(String), performedOrder: 0 })])
   expect(stored.trainingItems).toEqual([expect.objectContaining({ standardMemo: '肩を下げる', reps: 12 })])
   await page.getByLabel('実施済も表示').check()
-  await page.getByRole('button', { name: /^復旧ルートプレス / }).click()
+  const sessionId = (stored.sessions as { id: string }[])[0].id
+  const actualRow = page.locator(`[data-session-id="${sessionId}"]`)
+  await actualRow.click()
   await expect(page.getByRole('button', { name: '種目を完了' })).toHaveCount(0)
   await page.getByRole('button', { name: '戻る', exact: true }).click()
   expect((await readCanonicalState(page)).sessions).toHaveLength(1)
-  await page.getByRole('button', { name: 'カテゴリ表示', exact: true }).click()
-  await page.getByRole('button', { name: /^肩 / }).click()
+  await page.getByRole('button', { name: '部位表示', exact: true }).click()
+  await page.getByRole('button').filter({ has: page.locator('b').getByText('肩', { exact: true }) }).click()
   await page.getByLabel('実施済も表示').check()
   // H09: one completed Session, not one alias per planned Entry.
-  await expect(page.getByRole('button', { name: /^復旧ルートプレス / })).toHaveCount(1)
-  await page.getByRole('button', { name: /^復旧ルートプレス / }).first().click()
+  await expect(page.locator('[data-session-id]')).toHaveCount(1)
+  await actualRow.click()
   page.once('dialog', dialog => dialog.dismiss())
   await page.getByRole('button', { name: '9/21の実行を取り消す' }).click()
   expect((await readCanonicalState(page)).sessions).toHaveLength(1)
@@ -127,19 +137,36 @@ test('H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/
   expect(reloaded.trainingItemSettingChanges).toEqual(stored.trainingItemSettingChanges)
 })
 
+function backupFixture() {
+  const fixture = canonicalData()
+  return {
+    ...fixture,
+    trainingItems: (fixture.trainingItems as object[]).map(item => ({ ...item, managementMode: 'MAN' })),
+    menus: (fixture.menus as object[]).map(menu => ({ ...menu, managementMode: 'MAN' })),
+  }
+}
+
 test('H12 canonical backup preview, invalid non-destructive restore, full replacement/read-back/reload', async ({ page }, testInfo) => {
   await page.clock.install({ time: monday })
-  const original = canonicalData()
-  original.appliedProposalIds = ['already-applied']
+  const original = { ...backupFixture(), appliedProposalIds: ['already-applied'] }
   await seedCanonicalAndReload(page, original)
+  const storedBeforeExport = await readCanonicalState(page)
+  expect(storedBeforeExport).toEqual(original)
   await settings(page)
   await page.getByRole('button', { name: /^データ管理 / }).click()
   const downloadEvent = page.waitForEvent('download')
   await page.getByRole('button', { name: 'バックアップを作成' }).click()
   const download = await downloadEvent
   const exported = JSON.parse(await readFile((await download.path())!, 'utf8'))
-  expect(exported.payload).toEqual(original)
-  expect(await readCanonicalState(page)).toEqual(original)
+  const displayPreferences = {
+    defaultSort: { priority: ['recommendedDay', 'completion', 'bodyRegion'], completionDirection: 'incompleteFirst' },
+    optionSort: { priority: ['completion', 'recommendedDay', 'bodyRegion'], completionDirection: 'incompleteFirst' },
+    bodyRegionOrder: ['胸', '背中', '腕', '肩', '下半身', '体幹', 'その他'],
+  }
+  const normalized = { ...original, displayPreferences }
+  expect(exported.payload).toEqual(normalized)
+  const storedAfterExport = await readCanonicalState(page)
+  expect(storedAfterExport).toEqual(storedBeforeExport)
   const legacyBefore = await readStoredState(page)
   await page.getByRole('button', { name: '‹ 戻る' }).click()
   await page.getByRole('button', { name: /^プロフィール / }).click()
@@ -149,7 +176,8 @@ test('H12 canonical backup preview, invalid non-destructive restore, full replac
   await page.getByRole('button', { name: '＋ 追加トレーニングを登録', exact: true }).click()
   await page.getByRole('button', { name: /正規テストプレス/ }).click()
   await page.getByRole('button', { name: '種目を完了' }).click()
-  await expect(page.getByText('今週の実施総数')).toContainText('2/2')
+  // TOP T-08 counts one Session against the two active MenuEntries.
+  await expect(page.getByText('今週の実施総数')).toContainText('1/2')
   await settings(page)
   const modified = await readCanonicalState(page)
   expect(modified.sessions).toHaveLength(1)
@@ -160,18 +188,27 @@ test('H12 canonical backup preview, invalid non-destructive restore, full replac
     await expect(page.getByRole('button', { name: '全データを置き換えて復元' })).toHaveCount(0)
     expect(await readCanonicalState(page)).toEqual(modified)
   }
-  await upload(page, exported)
+  const oldBackup = { ...exported, payload: original }
+  await upload(page, oldBackup)
   await expect(page.getByRole('heading', { name: '復元内容の確認' })).toBeVisible()
   expect(await readCanonicalState(page)).toEqual(modified)
   await page.screenshot({ path: testInfo.outputPath('backup-preview.png'), fullPage: true })
+  await expect(page.getByText('displayPreferences.defaultSort:', { exact: false })).toBeVisible()
+  await expect(page.getByRole('button', { name: '全データを置き換えて復元' })).toBeDisabled()
+  await page.getByLabel('警告内容を確認しました').check()
   page.once('dialog', dialog => dialog.dismiss())
   await page.getByRole('button', { name: '全データを置き換えて復元' }).click()
   expect(await readCanonicalState(page)).toEqual(modified)
   page.once('dialog', dialog => dialog.accept())
   await page.getByRole('button', { name: '全データを置き換えて復元' }).click()
   await expect(page.getByRole('status')).toHaveText('復元しました。保存後の読み戻し一致を確認しました。')
-  expect(await readCanonicalState(page)).toEqual(original)
+  const restored = await readCanonicalState(page)
+  expect(restored).toEqual(normalized)
   expect(await readStoredState(page)).toEqual(legacyBefore)
+  await testInfo.attach('H12-snapshots', {
+    contentType: 'application/json',
+    body: JSON.stringify({ rawSeed: original, storedBeforeExport, storedAfterExport, exported, oldBackup, expectedNormalizedCandidate: normalized, restored }, null, 2),
+  })
   await page.reload()
   await settings(page)
   await page.getByRole('button', { name: /^プロフィール / }).click()
@@ -179,12 +216,14 @@ test('H12 canonical backup preview, invalid non-destructive restore, full replac
 })
 
 test('H12 restore read-back failure blocks stale editing and never declares success or falls back', async ({ page }) => {
-  await seedCanonicalAndReload(page, canonicalData())
+  await seedCanonicalAndReload(page, backupFixture())
   await settings(page)
   await page.getByRole('button', { name: /^データ管理 / }).click()
-  const replacement = { ...canonicalData(), profile: { weight: 77 } }
+  const replacement = { ...backupFixture(), profile: { weight: 77 } }
   await upload(page, { format: 'training-check-backup', schemaVersion: 1, createdAt: '2026-09-30T01:00:00Z', payload: replacement })
   await expect(page.getByRole('heading', { name: '復元内容の確認' })).toBeVisible()
+  await expect(page.getByRole('button', { name: '全データを置き換えて復元' })).toBeDisabled()
+  await page.getByLabel('警告内容を確認しました').check()
   // Failure injection is scoped to this isolated browser context and the next canonical read.
   await page.evaluate(() => {
     const originalGet = IDBObjectStore.prototype.get
@@ -207,7 +246,7 @@ test('H12 restore read-back failure blocks stale editing and never declares succ
 })
 
 test('H12 Settings retains Trainer interfaces and hides MAN helpers in release', async ({ page }, testInfo) => {
-  await seedCanonicalAndReload(page, canonicalData())
+  await seedCanonicalAndReload(page, backupFixture())
   await settings(page)
   if (testInfo.project.name === 'release') await expect(page.getByRole('button', { name: 'MAN用マスターを投入' })).toHaveCount(0)
   else await expect(page.getByRole('button', { name: 'MAN用マスターを投入' })).toBeVisible()
@@ -215,14 +254,16 @@ test('H12 Settings retains Trainer interfaces and hides MAN helpers in release',
   // D-01/02: one Settings entrance, one dedicated screen, two sections.
   await page.getByRole('button', { name: /^トレーナー連携 / }).click()
   await expect(page.getByRole('heading', { name: 'トレーナー連携', exact: true })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'メニュー提案を取り込む', exact: true })).toBeVisible()
-  await expect(page.getByRole('heading', { name: 'トレーニング履歴を出力', exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: '提案を受け取る', exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'トレーニング情報を渡す', exact: true })).toBeVisible()
+  await expect(page.getByLabel('提案ファイルを選ぶ')).toBeEnabled()
+  await expect(page.getByRole('button', { name: 'トレーナー用ファイルを作る', exact: true })).toBeEnabled()
 
 })
 
 test('H13 Top displays 260 average and 2.50 ACWR from canonical snapshots, not current Master', async ({ page }) => {
   await page.clock.install({ time: new Date('2026-09-30T12:00:00+09:00') })
-  const value = canonicalData()
+  const value = backupFixture()
   value.sessions = [['2026-08-24', 100], ['2026-09-07', 300], ['2026-09-14', 400], ['2026-09-21', 500], ['2026-09-29', 9000]].map(([date, weight]) => ({
     id: String(date), trainingItemId: 'canonical-item', date, performedAt: `${date}T12:00:00+09:00`, performedOrder: 0, weight, reps: 1, sets: 1,
     snapshot: { exerciseId: 'canonical-exercise', exerciseName: '保存時の種目名', trainingItemDisplayName: '保存時の項目名', measureType: 'reps', weightMode: 'total' },
@@ -234,7 +275,9 @@ test('H13 Top displays 260 average and 2.50 ACWR from canonical snapshots, not c
   await expect(summary.getByText('9,000 pt', { exact: true })).toBeVisible()
   await settings(page)
   await page.getByRole('button', { name: /^種目 / }).click()
-  await page.getByRole('button', { name: /^正規テストプレス / }).click()
+  await page.getByRole('button').filter({
+    has: page.locator('b').getByText('正規テストプレス', { exact: true }),
+  }).click()
   await page.getByLabel('重量の扱い').selectOption('perSide')
   await page.getByRole('button', { name: '保存', exact: true }).click()
   await top(page)
@@ -244,26 +287,28 @@ test('H13 Top displays 260 average and 2.50 ACWR from canonical snapshots, not c
 
 test('H12 Run history is item-scoped and completed status resets at the configured week boundary', async ({ page }) => {
   await page.clock.install({ time: monday })
-  const value = canonicalData()
+  const value = backupFixture()
   const items = value.trainingItems as Array<Record<string, unknown>>
   items.push({ ...items[0], id: 'other-item', displayName: '別項目', standardMemo: '別メモ' })
   const changes = value.trainingItemSettingChanges as Array<Record<string, unknown>>
   changes.push({ ...changes[0], id: 'other-change', trainingItemId: 'other-item', changeReason: '別項目の変更理由' })
   await seedCanonicalAndReload(page, value)
-  await page.getByRole('button', { name: /^胸 / }).click()
-  await page.getByRole('button', { name: /^正規テストプレス / }).first().click()
+  await page.getByRole('button', { name: '部位表示', exact: true }).click()
+  await page.getByRole('button').filter({ has: page.locator('b').getByText('胸', { exact: true }) }).click()
+  await page.locator('[data-menu-entry-id="canonical-entry-a"]').click()
   await page.getByRole('button', { name: /この実施項目の設定履歴を見る/ }).click()
   await expect(page.getByText('初回設定（削除できません）')).toHaveCount(1)
   await expect(page.getByText('変更理由: 別項目の変更理由')).toHaveCount(0)
   await page.getByRole('button', { name: '‹ 戻る' }).click()
   await page.getByRole('button', { name: '種目を完了' }).click()
   await top(page)
-  await expect(page.getByText('今週の実施総数')).toContainText('2/2')
+  await expect(page.getByText('今週の実施総数')).toContainText('1/2')
   await page.clock.setFixedTime(new Date('2026-09-28T10:00:00+09:00'))
   await page.reload()
   await expect(page.getByText('今週の実施総数')).toContainText('0/2')
-  await page.getByRole('button', { name: /^胸 / }).click()
-  await page.getByRole('button', { name: /^正規テストプレス / }).first().click()
+  await page.getByRole('button', { name: '部位表示', exact: true }).click()
+  await page.getByRole('button').filter({ has: page.locator('b').getByText('胸', { exact: true }) }).click()
+  await page.locator('[data-menu-entry-id="canonical-entry-a"]').click()
   await expect(page.getByRole('button', { name: '種目を完了' })).toBeVisible()
   await expect(page.getByRole('button', { name: /の実行を取り消す/ })).toHaveCount(0)
 })

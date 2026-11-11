@@ -1,0 +1,57 @@
+{
+  "sourceSHA": "7d9a42aa55a5a33731404b5aec40cf683257aac3",
+  "deployed": false,
+  "reason": "QA Fixture B/C expectation clarification pending",
+  "files": [
+    {
+      "path": "assets/index-CcJYeMCu.js",
+      "bytes": 25891,
+      "sha256": "63e5541fddcf14f9bc01a974f2f14cba02de5927480dfdbd73a0caa4679f9427"
+    },
+    {
+      "path": "assets/main-BulAohuB.js",
+      "bytes": 348973,
+      "sha256": "a13c130c767fd5825d5a2d79f1c8a20d712e8517ab9ce0db6c7da01136c56af4"
+    },
+    {
+      "path": "assets/main-CVHoY4uC.css",
+      "bytes": 14303,
+      "sha256": "5d0c1dedbd1ce464d757df03c846e762c300148678ad60ca8742c0814fbacadd"
+    },
+    {
+      "path": "candidate-build.json",
+      "bytes": 219,
+      "sha256": "3d882fbde0b274869c2898136b22f2defb3a1ab4102872d7ca0d008079036d71"
+    },
+    {
+      "path": "icon-192.png",
+      "bytes": 941,
+      "sha256": "f87e2cd16fa4b07a5fdcd2da3e5b4252118e8c3880adede47824f3b0d4965f9f"
+    },
+    {
+      "path": "icon-512.png",
+      "bytes": 5657,
+      "sha256": "35f7a0fbe56586ef90564c661ebda0522e447d00b16e0c8cb8dbef2f0fbd3c80"
+    },
+    {
+      "path": "index.html",
+      "bytes": 403,
+      "sha256": "383eebb31a01895667dd0b0d7a391fdf18f837820ddc1c7e655fe05a4811f3a5"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 369,
+      "sha256": "400d66d634614aca98c4154f3334017f48d4bf2615ed2b0b1e2390ef0b1311a7"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 1285,
+      "sha256": "4f350b6280565edf2ded4e9e0e9bc13dd26f6b27d2dd288d223a5906d6fb550e"
+    },
+    {
+      "path": "workbox-5bc3ec07.js",
+      "bytes": 14848,
+      "sha256": "95f6de361e1478054d96a198292198e6feee680dfc3d068420c77b46e73ee0ab"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+name: Legacy MenuProposal E2E
+
+on:
+  # Historical MenuProposal contract. Run only on explicit request.
+  workflow_dispatch:
+
+jobs:
+  legacy-menu-proposal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright test --config playwright.legacy.config.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: legacy-menu-proposal-report
+          path: |
+            playwright-report-legacy/
+            test-results-legacy/

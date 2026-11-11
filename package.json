@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "candidate:build": "tsc --noEmit && vite build --config vite.candidate.config.ts --configLoader runner",
+    "candidate:preview": "vite preview --config vite.candidate.config.ts --configLoader runner"
   },
   "dependencies": {
     "idb": "^8.0.3",

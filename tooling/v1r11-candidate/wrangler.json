@@ -1,0 +1,11 @@
+{
+  "name": "my-app-simple-118ff493",
+  "account_id": "3185994b9e184d33b828a7aa4ecff9df",
+  "compatibility_date": "2026-10-07",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "../../dist-v1r11-candidate",
+    "not_found_handling": "none"
+  }
+}

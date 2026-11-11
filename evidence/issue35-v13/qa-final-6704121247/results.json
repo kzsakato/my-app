@@ -1,0 +1,62 @@
+{
+  "productSourceSha": "e629c53dee6b611c380470631bb3137e11f546b8",
+  "cases": [
+    {
+      "title": "PR-04: Owner write advances revision and stale Trainer tab cannot mutate the ledger",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 618,
+      "status": "passed",
+      "durationMs": 1236,
+      "artifacts": [
+        "owner-write-stale-trainer.json"
+      ]
+    },
+    {
+      "title": "exports archived TI and legal ZERO with the local-day window",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 580,
+      "status": "passed",
+      "durationMs": 1794,
+      "artifacts": [
+        "pacific-context-v2.json"
+      ]
+    },
+    {
+      "title": "AN-G05/G07: legal ZERO at 360px with enlarged text",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 644,
+      "status": "passed",
+      "durationMs": 1290,
+      "artifacts": [
+        "AN-G05-zero-360.png",
+        "AN-G05-zero-plot.json"
+      ]
+    },
+    {
+      "title": "UI-03: post-commit read-back fault blocks Trainer standard retry and preserves Session",
+      "file": "issue35-v13-ui.spec.ts",
+      "line": 181,
+      "status": "passed",
+      "durationMs": 6054,
+      "artifacts": [
+        "trainer-standard-unknown.json"
+      ]
+    },
+    {
+      "title": "UI-01 and UI-02: independent sort drafts and fixed settings description",
+      "file": "issue35-v13-ui.spec.ts",
+      "line": 31,
+      "status": "passed",
+      "durationMs": 10486,
+      "artifacts": []
+    },
+    {
+      "title": "UI-04: removes the decorative glyph while preserving history and Run entry",
+      "file": "issue35-v13-ui.spec.ts",
+      "line": 96,
+      "status": "passed",
+      "durationMs": 2382,
+      "artifacts": []
+    }
+  ]
+}

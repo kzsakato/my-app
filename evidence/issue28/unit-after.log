@@ -1,0 +1,26 @@
+
+ RUN  v3.2.7 C:/Users/kzsak/Documents/Codex/2026-09-30/a/work/issue28-owner-fixes
+
+ ✓ src/canonical/history.test.ts (9 tests) 36ms
+ ✓ src/canonical/topProjection.test.ts (3 tests) 31ms
+ ✓ src/history.test.ts (5 tests) 16ms
+ ✓ src/canonical/legacy.test.ts (5 tests) 33ms
+ ✓ src/canonical/analysis.test.ts (4 tests) 124ms
+ ✓ src/canonical/runtime.test.ts (3 tests) 37ms
+ ✓ src/canonical/trainer.test.ts (8 tests) 73ms
+ ✓ src/canonical/masterBootstrap.test.ts (5 tests) 70ms
+ ✓ src/canonical/v1r-calendar.test.ts (17 tests) 84ms
+ ✓ src/canonical/canonical.test.ts (17 tests) 84ms
+ ✓ src/canonical/baseline.test.ts (7 tests) 63ms
+ ✓ src/canonical/manMenuProposal.test.ts (4 tests) 57ms
+ ✓ src/canonical/cutover.test.ts (11 tests) 138ms
+ ✓ src/canonical/backup.test.ts (8 tests) 130ms
+ ✓ src/canonical/v1r-ordering.test.ts (15 tests) 219ms
+ ✓ src/itemValidation.test.ts (2 tests) 20ms
+ ✓ src/canonical/cancelSession.test.ts (1 test) 11ms
+
+ Test Files  17 passed (17)
+      Tests  124 passed (124)
+   Start at  16:06:33
+   Duration  6.08s (transform 6.67s, setup 0ms, collect 18.65s, tests 1.23s, environment 24ms, prepare 15.34s)
+

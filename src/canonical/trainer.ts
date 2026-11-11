@@ -86,7 +86,7 @@ export function validateMenuProposal(input: unknown, data: CanonicalAppData): Pr
     errors.push(issue(key, 'Ver1 MenuProposalでは未対応のフィールドです。Master更新や既存Menu更新は受け付けません')))
   if (input.contractVersion !== MENU_PROPOSAL_CONTRACT_VERSION) errors.push(issue('contractVersion', '対応していないMenuProposal contractVersionです'))
   if (!isText(input.proposalId)) errors.push(issue('proposalId', '空でない文字列が必要です'))
-  if (isText(input.proposalId) && (data.appliedProposalIds ?? []).includes(input.proposalId)) errors.push(issue('proposalId', 'このproposalIdは既に適用済みです'))
+  if (isText(input.proposalId) && (data.appliedProposalIds ?? []).includes(input.proposalId.trim())) errors.push(issue('proposalId', 'このproposalIdは既に適用済みです'))
   const menuInput = input.menu
   const menuName = isRecord(menuInput) && isText(menuInput.name) ? menuInput.name.trim() : undefined
   if (!isRecord(menuInput)) errors.push(issue('menu', 'オブジェクトが必要です'))
@@ -130,7 +130,7 @@ export function validateMenuProposal(input: unknown, data: CanonicalAppData): Pr
 /** Creates a candidate only. It does not persist or change the active Menu. */
 export function createMenuProposalCandidate(data: CanonicalAppData, proposal: MenuProposal, newId: () => string): { data: CanonicalAppData; menu: Menu } {
   if ((data.appliedProposalIds ?? []).includes(proposal.proposalId)) throw new Error('proposalId is already applied')
-  const menu: Menu = { id: newId(), lifecycle: 'active', name: proposal.menu.name, ...(proposal.menu.memo ? { memo: proposal.menu.memo } : {}) }
+  const menu: Menu = { id: newId(), lifecycle: 'active', managementMode: 'MAN', name: proposal.menu.name, ...(proposal.menu.memo ? { memo: proposal.menu.memo } : {}) }
   const entries: MenuEntry[] = proposal.entries.map(entry => ({ id: newId(), lifecycle: 'active', menuId: menu.id, trainingItemId: entry.trainingItemId, order: entry.order, ...(entry.recommendedDay === undefined ? {} : { recommendedDay: entry.recommendedDay }) }))
   return { menu, data: { ...data, menus: [...data.menus, menu], menuEntries: [...data.menuEntries, ...entries], appliedProposalIds: [...(data.appliedProposalIds ?? []), proposal.proposalId] } }
 }

@@ -1,0 +1,8 @@
+{
+  "sourceSHA": "2f1cbfa473f91c4058234cf9c4b56f57cf14551e",
+  "origin": "https://my-app-staging-v1r.kzsakato-lab.workers.dev",
+  "testOnly": false,
+  "restoreEnabled": true,
+  "db": "training-check-v12-local-man",
+  "pwaId": "/v12-local-man"
+}

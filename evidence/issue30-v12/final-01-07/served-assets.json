@@ -1,0 +1,56 @@
+{
+  "result": "PASS",
+  "files": [
+    {
+      "path": "assets/index-D6UPItjx.js",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "assets/main-Bfosi4XN.js",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "assets/main-CVHoY4uC.css",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "candidate-build.json",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "icon-192.png",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "icon-512.png",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "manifest.webmanifest",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "sw.js",
+      "status": 200,
+      "matches": true
+    },
+    {
+      "path": "workbox-5bc3ec07.js",
+      "status": 200,
+      "matches": true
+    }
+  ],
+  "protectedInvariants": "PASS"
+}

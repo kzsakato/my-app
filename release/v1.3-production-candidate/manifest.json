@@ -1,0 +1,84 @@
+{
+  "status": "READY_FOR_DEPLOYMENT",
+  "readyForDeployment": true,
+  "productCommit": "0f1b87cc7b8bf26d6053a041b7ae96e23727c58c",
+  "integrationCommit": "478ae75dbbf3598d20e99d98bfa36412a991ec87",
+  "mainPreserved": "90552c9bce58848f19740a13054c087147b71803",
+  "build": "Build 2026-11-11 / 0f1b87cc",
+  "buildCommand": "VITE_V13_PRODUCTION=true VITE_BUILD_DATE=2026-11-11 VITE_BUILD_SHA=0f1b87cc7b8bf26d6053a041b7ae96e23727c58c pnpm build",
+  "productionUrl": "https://kzsakato.github.io/my-app/",
+  "productionDatabase": "training-check",
+  "reason": "Owner V1.3 production GO; Data Design #6790281328, Data Integration contract #6790408200, Tech #6790181370 and QA LIMITED #6790432942 reviewed. Current V1.3 staging latest Backup to production via existing normal whole-replacement Restore only; Owner actual restore/MAN remains separate. No extra safety gates.",
+  "productFiles": [
+    {
+      "path": "assets/index-BPwO8NUU.js",
+      "bytes": 385884,
+      "sha256": "aa777339ef1a877b0b87e0e7fc1a7d5dc347f3de647bf46351d368281297388d"
+    },
+    {
+      "path": "assets/index-DIXRco9J.css",
+      "bytes": 14779,
+      "sha256": "df190ac37917166f3f01c37dd903ebd34eed5e3b2c6f1aedbee3b91a22ce609b"
+    },
+    {
+      "path": "index.html",
+      "bytes": 549,
+      "sha256": "139776d5b415b2db9d867fecc80be327053e57e2f251f4be96889b8ec51d58be"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 193,
+      "sha256": "125b20ad76486349c25f02b46f473c0ec7a885c9f6e7514f37eaab98266f7031"
+    },
+    {
+      "path": "prototypes/oic-012-density-prototype.html",
+      "bytes": 13847,
+      "sha256": "6732ad15481c821fe1abf83d27d87356b1a488dec91feefc31155c59d9305f8c"
+    },
+    {
+      "path": "registerSW.js",
+      "bytes": 136,
+      "sha256": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 1188,
+      "sha256": "9288d7e94501d23ea833babee84da4e0ecbf3e9f85d89fead5f341c1ecf06e79"
+    },
+    {
+      "path": "test/assets/index-BcchCwVd.js",
+      "bytes": 318844,
+      "sha256": "089545c0b5b116fe5b5c65ba3404c51dfca1ccb1150d3d3a800ea07a5dec06a4"
+    },
+    {
+      "path": "test/assets/index-DIXRco9J.css",
+      "bytes": 14779,
+      "sha256": "df190ac37917166f3f01c37dd903ebd34eed5e3b2c6f1aedbee3b91a22ce609b"
+    },
+    {
+      "path": "test/index.html",
+      "bytes": 510,
+      "sha256": "7b54efee465e1abe52155f220eb5c3552a95703fdff838536ac9f38728641f0f"
+    },
+    {
+      "path": "test/manifest.webmanifest",
+      "bytes": 239,
+      "sha256": "9b117cfbbf824b7e4e5eb7d453c170cc4895ab92a435e73c955dd381c18e5c28"
+    },
+    {
+      "path": "test/prototypes/oic-012-density-prototype.html",
+      "bytes": 13755,
+      "sha256": "2ff27e5ab3e9e7a4d01684d01870c035bd45c27f2c8ef7ed93d3f6c9941130ca"
+    },
+    {
+      "path": "test/v13-worker.js",
+      "bytes": 1437,
+      "sha256": "dad18eb62664439d0a62330d384b27daba9ee1c00fbe819e52f78ee1e04d161d"
+    },
+    {
+      "path": "workbox-9c191d2f.js",
+      "bytes": 15112,
+      "sha256": "04b086f1b2f4215ee4b659a7bc9c76162894abdb43fa876247bc7c0bd6fd1c37"
+    }
+  ]
+}

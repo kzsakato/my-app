@@ -1,0 +1,75 @@
+{
+  "atUTC": "2026-10-26T03:27:31.885638+00:00",
+  "origin": "https://my-app-staging-v1r.kzsakato-lab.workers.dev",
+  "anonymous": true,
+  "files": [
+    {
+      "path": "assets/index-rHQlwv83.js",
+      "status": 200,
+      "sha256": "28164bf60cd29e82297130efbfe5c254e5ad534693a453b98ae2ba773697b169",
+      "matches": true
+    },
+    {
+      "path": "assets/main-CnmrNIox.css",
+      "status": 200,
+      "sha256": "5d0fa1b00e7ff2e5ab8344e062f6214f008b924a29bb9f39f9ee6eb5beca7433",
+      "matches": true
+    },
+    {
+      "path": "assets/main-DyfJXBPc.js",
+      "status": 200,
+      "sha256": "aeada22eeb73027066615951c6d7943e886cb731e71d83ee45e12dd731e26784",
+      "matches": true
+    },
+    {
+      "path": "candidate-build.json",
+      "status": 200,
+      "sha256": "3776986c59c17a4c0696b7dfbcfc8916b6f031491e90faef326400a84722f4ea",
+      "matches": true
+    },
+    {
+      "path": "dummy-backup-warning.json",
+      "status": 200,
+      "sha256": "eff7055cd4c81ad72899f247eadaa83750b3c9d7cdfb5317a9fb36c6df235dca",
+      "matches": true
+    },
+    {
+      "path": "icon-192.png",
+      "status": 200,
+      "sha256": "f87e2cd16fa4b07a5fdcd2da3e5b4252118e8c3880adede47824f3b0d4965f9f",
+      "matches": true
+    },
+    {
+      "path": "icon-512.png",
+      "status": 200,
+      "sha256": "35f7a0fbe56586ef90564c661ebda0522e447d00b16e0c8cb8dbef2f0fbd3c80",
+      "matches": true
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "sha256": "7aff1c5636af6e2d8889f6de732f793ff42b8abc437c934f2884229d37edbd73",
+      "matches": true
+    },
+    {
+      "path": "manifest.webmanifest",
+      "status": 200,
+      "sha256": "9f44b892b5242ceafd32c0c2bd3eb65fdbb5299efc0039793d1ed284a0527bf1",
+      "matches": true
+    },
+    {
+      "path": "sw.js",
+      "status": 200,
+      "sha256": "c7f72ab748ae501c4868ec9431e7cfd7857d2df920f0f945c584fb9f0bfff7a6",
+      "matches": true
+    },
+    {
+      "path": "workbox-5bc3ec07.js",
+      "status": 200,
+      "sha256": "95f6de361e1478054d96a198292198e6feee680dfc3d068420c77b46e73ee0ab",
+      "matches": true
+    }
+  ],
+  "oldPreparationGETStatus": 404,
+  "result": "PASS"
+}

@@ -1,0 +1,16 @@
+{
+  "source": "da06f78f8021af1b72f174ce994d732da887123d",
+  "oracle": "QA #6432486797 / PMO #6432524698",
+  "mode": "Option",
+  "priority": [
+    "completion",
+    "recommendedDay",
+    "bodyRegion"
+  ],
+  "direction": "completeFirst",
+  "plannedY": 473,
+  "actualY": 535,
+  "expected": "actualY < plannedY",
+  "result": "FAIL",
+  "ownerDataUsed": false
+}

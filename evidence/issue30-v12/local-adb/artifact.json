@@ -1,0 +1,56 @@
+{
+  "sourceSHA": "36dbb58009709b0244dae39aa114fec50597ce1d",
+  "files": [
+    {
+      "path": "assets/index-CINl_JP8.js",
+      "bytes": 25875,
+      "sha256": "cffbe555972e0a7b05de2134fe63631c198e15464e29c0a822c522be63e791bf"
+    },
+    {
+      "path": "assets/main-6eAD3rn2.js",
+      "bytes": 347733,
+      "sha256": "04dcedd3800ab92268eb8be4c1c3c3259eecd34247e339deb1bbfd400b4a51cb"
+    },
+    {
+      "path": "assets/main-CnmrNIox.css",
+      "bytes": 13940,
+      "sha256": "5d0fa1b00e7ff2e5ab8344e062f6214f008b924a29bb9f39f9ee6eb5beca7433"
+    },
+    {
+      "path": "dummy-backup-warning.json",
+      "bytes": 2475,
+      "sha256": "eff7055cd4c81ad72899f247eadaa83750b3c9d7cdfb5317a9fb36c6df235dca"
+    },
+    {
+      "path": "icon-192.png",
+      "bytes": 941,
+      "sha256": "f87e2cd16fa4b07a5fdcd2da3e5b4252118e8c3880adede47824f3b0d4965f9f"
+    },
+    {
+      "path": "icon-512.png",
+      "bytes": 5657,
+      "sha256": "35f7a0fbe56586ef90564c661ebda0522e447d00b16e0c8cb8dbef2f0fbd3c80"
+    },
+    {
+      "path": "index.html",
+      "bytes": 405,
+      "sha256": "ac6048f13fba8060376fc87d5176f17fcc61489d6bf3ef671708f65da377aa5a"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 374,
+      "sha256": "9f44b892b5242ceafd32c0c2bd3eb65fdbb5299efc0039793d1ed284a0527bf1"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 1285,
+      "sha256": "d54cbe12720806dea0bce318ce595e9d923ccfa7bad01e0a8e9ed36fcbff26e2"
+    },
+    {
+      "path": "workbox-5bc3ec07.js",
+      "bytes": 14848,
+      "sha256": "95f6de361e1478054d96a198292198e6feee680dfc3d068420c77b46e73ee0ab"
+    }
+  ],
+  "inventorySHA256": "2446dd36e3ad80d465065ffa546c12f83fc9418e3ee348ebbd1886b029042923"
+}

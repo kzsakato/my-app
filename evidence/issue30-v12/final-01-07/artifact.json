@@ -1,0 +1,57 @@
+{
+  "sourceSHA": "2f1cbfa473f91c4058234cf9c4b56f57cf14551e",
+  "origin": "https://my-app-staging-v1r.kzsakato-lab.workers.dev",
+  "files": [
+    {
+      "path": "assets/index-D6UPItjx.js",
+      "bytes": 25891,
+      "sha256": "e30fd94b36c063278109cf70f33a864f57e8735272547102a26d768acc667e97"
+    },
+    {
+      "path": "assets/main-Bfosi4XN.js",
+      "bytes": 347988,
+      "sha256": "fe5cf602f77673bad14f78dd4aafd735d75cce4d53b6bef51e05d1c042b92b55"
+    },
+    {
+      "path": "assets/main-CVHoY4uC.css",
+      "bytes": 14303,
+      "sha256": "5d0c1dedbd1ce464d757df03c846e762c300148678ad60ca8742c0814fbacadd"
+    },
+    {
+      "path": "candidate-build.json",
+      "bytes": 219,
+      "sha256": "36569faffb2a4b49c254d76232b3dbed62a673abfba8fe1b6226ba016a514475"
+    },
+    {
+      "path": "icon-192.png",
+      "bytes": 941,
+      "sha256": "f87e2cd16fa4b07a5fdcd2da3e5b4252118e8c3880adede47824f3b0d4965f9f"
+    },
+    {
+      "path": "icon-512.png",
+      "bytes": 5657,
+      "sha256": "35f7a0fbe56586ef90564c661ebda0522e447d00b16e0c8cb8dbef2f0fbd3c80"
+    },
+    {
+      "path": "index.html",
+      "bytes": 403,
+      "sha256": "5c56f40138373219a9ed638047e0cff9e894c5bf506a2820c98a830becaaee07"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 369,
+      "sha256": "400d66d634614aca98c4154f3334017f48d4bf2615ed2b0b1e2390ef0b1311a7"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 1285,
+      "sha256": "c27a73fa8bf62ac0cac555c4202f8c75040d1bca5b0927092750b350d8cda93c"
+    },
+    {
+      "path": "workbox-5bc3ec07.js",
+      "bytes": 14848,
+      "sha256": "95f6de361e1478054d96a198292198e6feee680dfc3d068420c77b46e73ee0ab"
+    }
+  ],
+  "inventorySHA256": "cffb541f0316797b8d47c75d8d7cffb2853c5ba5161a20e7d329e03b95295900"
+}

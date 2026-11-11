@@ -1,0 +1,38 @@
+{
+  "result": "PASS",
+  "baselineHeight": 57,
+  "geometry": {
+    "row": {
+      "x": 16,
+      "y": 222,
+      "width": 328,
+      "height": 57,
+      "top": 222,
+      "right": 344,
+      "bottom": 279,
+      "left": 16
+    },
+    "history": {
+      "x": 162.9375,
+      "y": 253.5,
+      "width": 176,
+      "height": 15,
+      "top": 253.5,
+      "right": 338.9375,
+      "bottom": 268.5,
+      "left": 162.9375
+    },
+    "details": {
+      "x": 16,
+      "y": 252,
+      "width": 322.9375,
+      "height": 17,
+      "top": 252,
+      "right": 338.9375,
+      "bottom": 269,
+      "left": 16
+    },
+    "fits": true,
+    "pageFits": true
+  }
+}

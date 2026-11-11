@@ -7,7 +7,7 @@ export type ManMasterBootstrapEntry = {
   sourceExerciseId: string
   sourceTrainingItemId: string
   exercise: Omit<Exercise, 'id' | 'lifecycle'>
-  trainingItem: Omit<TrainingItem, 'id' | 'lifecycle' | 'exerciseId'>
+  trainingItem: Omit<TrainingItem, 'id' | 'lifecycle' | 'exerciseId' | 'managementMode'>
 }
 
 export type ManMasterBootstrapMapping = {
@@ -107,7 +107,7 @@ export function createManMasterBootstrapCandidate(
     const exercise: Exercise = { id: freshId(), lifecycle: 'active', ...structuredClone(entry.exercise) }
     // `weightMode` is absent by definition for `usesWeight=false` canonical Exercise records.
     if (!exercise.usesWeight) delete exercise.weightMode
-    const trainingItem: TrainingItem = { id: freshId(), lifecycle: 'active', exerciseId: exercise.id, ...structuredClone(entry.trainingItem) }
+    const trainingItem: TrainingItem = { id: freshId(), lifecycle: 'active', managementMode: 'MAN', exerciseId: exercise.id, ...structuredClone(entry.trainingItem) }
     value = { ...value, exercises: [...value.exercises, exercise] }
     value = addTrainingItem(value, trainingItem, { newId: freshId, now: options.now })
     mappings.push({

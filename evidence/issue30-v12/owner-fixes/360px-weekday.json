@@ -1,0 +1,111 @@
+{
+  "actionsLast": true,
+  "labels": [
+    {
+      "x": 25,
+      "y": 474,
+      "width": 50,
+      "height": 31,
+      "top": 474,
+      "right": 75,
+      "bottom": 505,
+      "left": 25
+    },
+    {
+      "x": 81,
+      "y": 474,
+      "width": 50,
+      "height": 31,
+      "top": 474,
+      "right": 131,
+      "bottom": 505,
+      "left": 81
+    },
+    {
+      "x": 137,
+      "y": 474,
+      "width": 50,
+      "height": 31,
+      "top": 474,
+      "right": 187,
+      "bottom": 505,
+      "left": 137
+    },
+    {
+      "x": 193,
+      "y": 474,
+      "width": 50,
+      "height": 31,
+      "top": 474,
+      "right": 243,
+      "bottom": 505,
+      "left": 193
+    },
+    {
+      "x": 249,
+      "y": 474,
+      "width": 50,
+      "height": 31,
+      "top": 474,
+      "right": 299,
+      "bottom": 505,
+      "left": 249
+    },
+    {
+      "x": 25,
+      "y": 511,
+      "width": 50,
+      "height": 31,
+      "top": 511,
+      "right": 75,
+      "bottom": 542,
+      "left": 25
+    },
+    {
+      "x": 81,
+      "y": 511,
+      "width": 50,
+      "height": 31,
+      "top": 511,
+      "right": 131,
+      "bottom": 542,
+      "left": 81
+    }
+  ],
+  "buttons": [
+    {
+      "rect": {
+        "x": 25,
+        "y": 548,
+        "width": 151,
+        "height": 44,
+        "top": 548,
+        "right": 176,
+        "bottom": 592,
+        "left": 25
+      },
+      "fontSize": "14.6667px",
+      "parentFont": "16px",
+      "whiteSpace": "nowrap",
+      "scrollWidth": 147,
+      "clientWidth": 147
+    },
+    {
+      "rect": {
+        "x": 184,
+        "y": 548,
+        "width": 151,
+        "height": 44,
+        "top": 548,
+        "right": 335,
+        "bottom": 592,
+        "left": 184
+      },
+      "fontSize": "14.6667px",
+      "parentFont": "16px",
+      "whiteSpace": "nowrap",
+      "scrollWidth": 147,
+      "clientWidth": 147
+    }
+  ]
+}

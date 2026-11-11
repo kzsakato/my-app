@@ -1,0 +1,10 @@
+[WebServer] (node:15636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:54204) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\grouped-baseline.spec.ts:252:1 › H13 Top displays 260 average and 2.50 ACWR from canonical snapshots, not current Master (9.2s)
+
+  1 passed (16.5s)

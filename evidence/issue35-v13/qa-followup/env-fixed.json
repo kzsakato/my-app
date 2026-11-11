@@ -1,0 +1,15 @@
+{
+  "result": "FAIL_PARENT_FALLBACK",
+  "fixedRootWorkerSha256": "ea2611aad2dbac4e11add67e330c15d428f8dc8b110906d812ca15aa58536115",
+  "servedRootWorkerSha256": "ea2611aad2dbac4e11add67e330c15d428f8dc8b110906d812ca15aa58536115",
+  "chromium": "153.0.8010.12",
+  "url": "http://127.0.0.1:58601/v13-test/",
+  "navigationFromServiceWorker": true,
+  "controller": "http://127.0.0.1:58601/sw.js",
+  "databases": [
+    {
+      "name": "training-check",
+      "version": 7
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+"- banner:\n  - button \"‹ 戻る\"\n  - heading \"設定履歴\" [level=1]\n  - button \"共通メニュー\": ≡\n- main:\n  - text: 部位\n  - combobox \"部位\":\n    - option \"選択してください\" [selected]\n    - option \"胸\"\n    - option \"背中\"\n  - text: 実施項目\n  - combobox \"実施項目\":\n    - option \"選択してください\" [selected]\n    - option \"ダンベルプレス\"\n    - option \"未実施の背中項目\""

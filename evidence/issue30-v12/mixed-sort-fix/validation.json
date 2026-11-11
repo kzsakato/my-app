@@ -1,0 +1,19 @@
+{
+  "sourceSHA": "7d9a42aa55a5a33731404b5aec40cf683257aac3",
+  "result": "PARTIAL_PASS_PENDING_QA_B_C",
+  "unit": {
+    "passed": 159,
+    "files": 19
+  },
+  "e2e": {
+    "matrixAndReproduction": 38,
+    "sessionOnlyAndEmpty": 8,
+    "previousBehaviorRegression": 16,
+    "totalPassed": 62
+  },
+  "typecheck": "PASS",
+  "workerBuild": "PASS",
+  "dryRun": "PASS",
+  "deployed": false,
+  "unchangedWorkerSourceSHA": "2f1cbfa473f91c4058234cf9c4b56f57cf14551e"
+}

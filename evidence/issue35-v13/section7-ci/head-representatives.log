@@ -1,0 +1,7 @@
+  x  1 [chromium] › e2e\grouped-baseline.spec.ts:18:1 › H12 grouped real route: cutover, Exercise/setup/list/edit/back, Menu, Run/history/standard/complete/cancel/reload (1.1m)
+  x  2 [chromium] › e2e\grouped-baseline.spec.ts:252:1 › H13 Top displays 260 average and 2.50 ACWR from canonical snapshots, not current Master (11.2s)
+  x  3 [chromium] › e2e\grouped-baseline.spec.ts:274:1 › H12 Run history is item-scoped and completed status resets at the configured week boundary (11.5s)
+      - waiting for getByRole('button', { name: /^復旧ルートプレス / })
+      - waiting for getByRole('button', { name: /^正規テストプレス / })
+      - waiting for getByRole('button', { name: /^胸 / })
+  3 failed
