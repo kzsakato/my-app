@@ -1,0 +1,84 @@
+{
+  "status": "BLOCKED_PRODUCTION_MODE",
+  "readyForDeployment": false,
+  "productCommit": "945baba12a0fcbf4facb2ab9a627f3d6d7e5783e",
+  "integrationCommit": "478ae75dbbf3598d20e99d98bfa36412a991ec87",
+  "mainPreserved": "90552c9bce58848f19740a13054c087147b71803",
+  "build": "Build 2026-11-11 / 945baba1",
+  "buildCommand": "VITE_BUILD_DATE=2026-11-11 VITE_BUILD_SHA=945baba12a0fcbf4facb2ab9a627f3d6d7e5783e pnpm build",
+  "productionUrl": "https://kzsakato.github.io/my-app/",
+  "productionDatabase": "training-check",
+  "reason": "Default production build does not enable AnalysisV13 or initial v2 contribution import. Isolated build uses another DB and requires initial restore/controller scope. No approved production data activation mapping verified.",
+  "productFiles": [
+    {
+      "path": "assets/index-1DURiORF.js",
+      "bytes": 380219,
+      "sha256": "59dd5e6439ad461a2fbb24def2bdee9ed676278074275b217faed4451cadd0f6"
+    },
+    {
+      "path": "assets/index-DIXRco9J.css",
+      "bytes": 14779,
+      "sha256": "df190ac37917166f3f01c37dd903ebd34eed5e3b2c6f1aedbee3b91a22ce609b"
+    },
+    {
+      "path": "index.html",
+      "bytes": 549,
+      "sha256": "5d53a0b439a3559b9efef3f6cc6a6ae76a377ab349dc4fb605325977fe9de74a"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 193,
+      "sha256": "125b20ad76486349c25f02b46f473c0ec7a885c9f6e7514f37eaab98266f7031"
+    },
+    {
+      "path": "prototypes/oic-012-density-prototype.html",
+      "bytes": 13847,
+      "sha256": "6732ad15481c821fe1abf83d27d87356b1a488dec91feefc31155c59d9305f8c"
+    },
+    {
+      "path": "registerSW.js",
+      "bytes": 136,
+      "sha256": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 1188,
+      "sha256": "62e6dd431e9b26f13535ca3180dd86bafb5b68e6c712404c11ccf8d200b44b38"
+    },
+    {
+      "path": "test/assets/index-BcchCwVd.js",
+      "bytes": 318844,
+      "sha256": "089545c0b5b116fe5b5c65ba3404c51dfca1ccb1150d3d3a800ea07a5dec06a4"
+    },
+    {
+      "path": "test/assets/index-DIXRco9J.css",
+      "bytes": 14779,
+      "sha256": "df190ac37917166f3f01c37dd903ebd34eed5e3b2c6f1aedbee3b91a22ce609b"
+    },
+    {
+      "path": "test/index.html",
+      "bytes": 510,
+      "sha256": "7b54efee465e1abe52155f220eb5c3552a95703fdff838536ac9f38728641f0f"
+    },
+    {
+      "path": "test/manifest.webmanifest",
+      "bytes": 239,
+      "sha256": "9b117cfbbf824b7e4e5eb7d453c170cc4895ab92a435e73c955dd381c18e5c28"
+    },
+    {
+      "path": "test/prototypes/oic-012-density-prototype.html",
+      "bytes": 13755,
+      "sha256": "2ff27e5ab3e9e7a4d01684d01870c035bd45c27f2c8ef7ed93d3f6c9941130ca"
+    },
+    {
+      "path": "test/v13-worker.js",
+      "bytes": 1437,
+      "sha256": "dad18eb62664439d0a62330d384b27daba9ee1c00fbe819e52f78ee1e04d161d"
+    },
+    {
+      "path": "workbox-9c191d2f.js",
+      "bytes": 15112,
+      "sha256": "04b086f1b2f4215ee4b659a7bc9c76162894abdb43fa876247bc7c0bd6fd1c37"
+    }
+  ]
+}
