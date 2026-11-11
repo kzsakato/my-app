@@ -300,7 +300,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   if (page === "history")
     return <HistoryPage data={data} onBack={toTop} {...header} />;
   if (page === "analysis")
-    return import.meta.env.VITE_V13_ISOLATED === "true"
+    return import.meta.env.VITE_V13_FEATURES === "true"
       ? <Frame title="分析" back={() => openSettings()} {...header}><AnalysisV13 data={data} /></Frame>
       : <AnalysisPage data={data} onBack={() => openSettings()} {...header} />;
   if (page === "trainer") return (
@@ -1787,7 +1787,7 @@ function BackupPage({ data, onApplied, onBack, onSettings, onTop }: {
     if (!file) return;
     try {
       const raw = await file.text();
-      if (readGeneration.current === generation) setPreview(previewCanonicalRestore(raw));
+      if (readGeneration.current === generation) setPreview(previewCanonicalRestore(raw, import.meta.env.VITE_V13_FEATURES === "true"));
     } catch {
       if (readGeneration.current === generation) setPreview({ errors: [{ path: "file", message: "ファイルを読み込めませんでした" }], warnings: [] });
     }
@@ -1817,11 +1817,11 @@ function BackupPage({ data, onApplied, onBack, onSettings, onTop }: {
         <p>プロフィール・種目・実施項目・メニュー・実施履歴・設定履歴を含む全データを保存します。</p>
         <button className="primary" disabled={pending} onClick={async () => {
           try {
-            const isolated = import.meta.env.VITE_V13_ISOLATED === "true";
-            const latest = isolated ? await readV13Canonical() : data;
+            const v13 = import.meta.env.VITE_V13_FEATURES === "true";
+            const latest = v13 ? await readV13Canonical() : data;
             if (!latest) throw new Error("V13_CANONICAL_UNAVAILABLE");
             const backup = createCanonicalBackup(latest, new Date().toISOString());
-            downloadJson(`training-check-backup-${localDate()}.json`, isolated ? { ...backup, schemaVersion: 2 } : backup);
+            downloadJson(`training-check-backup-${localDate()}.json`, v13 ? { ...backup, schemaVersion: 2 } : backup);
             setMessage("バックアップを作成しました。");
           }
           catch (error) { setMessage(`出力できません: ${String(error)}`); }

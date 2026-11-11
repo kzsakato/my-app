@@ -8,6 +8,7 @@ const buildSha = (process.env.VITE_BUILD_SHA ?? process.env.GITHUB_SHA ?? 'local
 export default defineConfig({
   base: './',
   define: {
+    'import.meta.env.VITE_V13_FEATURES': JSON.stringify(process.env.VITE_V13_PRODUCTION === 'true' ? 'true' : 'false'),
     __BUILD_IDENTIFIER__: JSON.stringify(`Build ${buildDate} / ${buildSha}`),
   },
   plugins: [

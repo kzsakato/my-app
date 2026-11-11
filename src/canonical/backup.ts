@@ -1,3 +1,5 @@
+import { contributionError, exactKeys, record } from './contributions'
+import { parseUniqueJson } from './trainerV11'
 import { identifyInput } from './identify'
 import { recoverCanonical, type CanonicalStorage, type StorageResult } from './cutover'
 import { validateBackupEnvelope } from './validate'
@@ -13,9 +15,19 @@ export function createCanonicalBackup(data: CanonicalAppData, createdAt: string)
   return envelope
 }
 
-export function previewCanonicalRestore(raw: string): BackupPreview {
+export function previewCanonicalRestore(raw: string, v13 = false): BackupPreview {
   let input: unknown
-  try { input = JSON.parse(raw) }
+  try {
+    input = v13 ? parseUniqueJson(raw) : JSON.parse(raw)
+    if (v13) {
+      if (!record(input) || !exactKeys(input, ['format', 'schemaVersion', 'createdAt', 'payload']) ||
+          input.format !== 'training-check-backup' || input.schemaVersion !== 2 || !record(input.payload) ||
+          contributionError(input.payload as CanonicalAppData)) {
+        return { errors: [{ path: 'format/schema', message: 'V1.3正規バックアップの形式または寄与率が不正です' }], warnings: [] }
+      }
+      input = { ...input, schemaVersion: 1 }
+    }
+  }
   catch { return { errors: [{ path: 'JSON', message: 'JSONを解析できません' }], warnings: [] } }
   const kind = identifyInput(input)
   if (kind !== 'canonical-backup-envelope') return { errors: [{ path: 'format/schema', message: `正規バックアップではありません (${kind})。rawデータ・旧形式の自動変換には対応していません。` }], warnings: [] }

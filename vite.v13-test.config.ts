@@ -7,6 +7,7 @@ const path = '/v13-test/'
 export default defineConfig({
   base: path,
   define: {
+    'import.meta.env.VITE_V13_FEATURES': JSON.stringify('true'),
     __BUILD_IDENTIFIER__: JSON.stringify(`V1.3 検証 / ${(process.env.GITHUB_SHA ?? 'local').slice(0, 8)}`),
     'import.meta.env.VITE_V13_ISOLATED': JSON.stringify('true'),
   },

@@ -10,7 +10,7 @@ function download(name: string, value: unknown) {
   const link = document.createElement('a'); link.href = url; link.download = name
   document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
-const isolated = import.meta.env.VITE_V13_ISOLATED === 'true'
+const v13 = import.meta.env.VITE_V13_FEATURES === 'true'
 
 type Props = { data: CanonicalAppData; onApplied: (data: CanonicalAppData) => void; onPending: (pending: boolean) => void }
 
@@ -50,7 +50,7 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
         return
       }
       if (!value || typeof value !== 'object' || (value as { format?: unknown }).format !== 'training-project.trainer-proposal') { setImportMessage(messages.wrongFormat); return }
-      if (isolated && (value as { version?: unknown }).version === 2) {
+      if (v13 && (value as { version?: unknown }).version === 2) {
         busy.current = true; setPending(true); onPending(true)
         try {
           const result = await applyInitialV13Proposal(raw)
@@ -98,9 +98,9 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
     try {
       const state = await canonicalStorage.readCutoverState()
       if (state.trainerPendingProposalId || state.v13Pending) { setHeld(true); setImportMessage(messages.inconsistent); setDiagnostic({ stage: 'export', code: 'UNRESOLVED_AI_APPLY', proposalId: state.trainerPendingProposalId }); return }
-      const latest = isolated ? await readV13Canonical() : await canonicalStorage.readCanonical()
+      const latest = v13 ? await readV13Canonical() : await canonicalStorage.readCanonical()
       if (!latest) throw new Error('Missing canonical')
-      const value = isolated ? createTrainerContextV2(latest, new Date(), true) : createTrainerContextV11(latest, new Date())
+      const value = v13 ? createTrainerContextV2(latest, new Date(), true) : createTrainerContextV11(latest, new Date())
       download(`trainer-context-${value.exportedLocalDate}.json`, value)
       setExportMessage(`${value.history.length === 0 ? messages.empty + '\n' : ''}${messages.exported}`)
     } catch (error) {

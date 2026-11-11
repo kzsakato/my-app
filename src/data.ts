@@ -29,6 +29,7 @@ export const base:AppData={version:DATA_VERSION,activeMenuId:seedId('ramp'),prof
 const isV11Candidate=import.meta.env.VITE_V1R11_CANDIDATE === 'true'
 const candidateOrigin=import.meta.env.VITE_V1R11_ORIGIN ?? 'http://127.0.0.1:4177'
 if(isV11Candidate && location.origin !== candidateOrigin)throw new Error('V1.1候補版は指定された専用originで開いてください')
+const v13Features = import.meta.env.VITE_V13_FEATURES === 'true'
 const isV13Isolated = import.meta.env.VITE_V13_ISOLATED === 'true'
 const openAppDB = () => openDB(isV13Isolated ? 'training-check-v13-test' : isV11Candidate ? 'training-check-v1r11-candidate' : 'training-check',7,{upgrade(db){
  if(!db.objectStoreNames.contains('state'))db.createObjectStore('state')
@@ -70,7 +71,7 @@ export async function commitOwnerCanonical(base: CanonicalAppData, next: Canonic
    }
   }
   const candidate=withDisplayPreferences(rebaseOwnerChange(base,next,initializeOwnerManagement(stored)))
-  if (isV13Isolated) {
+  if (v13Features) {
    if (stored.trainerDataRevision !== base.trainerDataRevision) throw new Error('V13_STALE_OWNER_WRITE')
    const state = await tx.objectStore('cutover').get(cutoverKey)
    candidate.trainerDataRevision = nextV13Revision(stored, state)
@@ -109,7 +110,7 @@ export async function applyTrainerCanonical(input: unknown, legacyWarnings?: str
    candidate = { data: withDisplayPreferences(next.data), mapping: {}, touched: {} }
    if (validateCanonicalDomain(candidate.data).errors.length) throw new Error('MenuProposalの保存候補が不正です')
   }
-  if (isV13Isolated) candidate.data.trainerDataRevision = nextV13Revision(stored, state)
+  if (v13Features) candidate.data.trainerDataRevision = nextV13Revision(stored, state)
   await tx.objectStore('canonical').put(candidate.data,canonicalKey)
   await tx.objectStore('cutover').put({...state,trainerPendingProposalId:proposalId},cutoverKey)
   await tx.done;committed=true
@@ -128,7 +129,7 @@ export async function applyTrainerCanonical(input: unknown, legacyWarnings?: str
  }
 }
 function nextV13Revision(data: CanonicalAppData, state: CutoverState | undefined) {
- if (!state?.authoritative || !state.v13InitialRestore || state.v13Pending || state.trainerPendingProposalId ||
+ if (!state?.authoritative || (isV13Isolated && !state.v13InitialRestore) || state.v13Pending || state.trainerPendingProposalId ||
      contributionError(data) || data.trainerDataRevision === Number.MAX_SAFE_INTEGER) {
   throw new Error('V13_CANONICAL_WRITE_HELD')
  }
@@ -136,8 +137,7 @@ function nextV13Revision(data: CanonicalAppData, state: CutoverState | undefined
 }
 
 export async function readV13Canonical() {
- if (!isV13Isolated) throw new Error('V13_ISOLATION_REQUIRED')
-  assertIsolatedV13Controller()
+ if (isV13Isolated) assertIsolatedV13Controller()
  const db = await dbPromise
  const tx = db.transaction(['canonical', 'cutover'])
  const state = await tx.objectStore('cutover').get(cutoverKey) as CutoverState | undefined
@@ -145,7 +145,7 @@ export async function readV13Canonical() {
  await tx.done
  if (state?.v13Pending || state?.trainerPendingProposalId) throw new Error('V13_CANONICAL_WRITE_HELD')
  if (!state && !value) return undefined
- if (!state?.authoritative || !state.v13InitialRestore || !value || contributionError(value) ||
+ if (!state?.authoritative || (isV13Isolated && !state.v13InitialRestore) || !value || contributionError(value) ||
      validateCanonicalDomain(value).errors.length) throw new Error('INVALID_V13_CANONICAL')
  return value
 }
@@ -220,8 +220,7 @@ export async function applyInitialV13Proposal(raw: string): Promise<V13WriteResu
  let started = false
  let held = false
  try {
-  if (!isV13Isolated) throw new Error('V13_ISOLATION_REQUIRED')
-  assertIsolatedV13Controller()
+  if (isV13Isolated) assertIsolatedV13Controller()
   const proposal = parseTrainerProposalV2(raw)
   const db = await dbPromise
   const tx = db.transaction(['canonical', 'cutover'], 'readwrite')
