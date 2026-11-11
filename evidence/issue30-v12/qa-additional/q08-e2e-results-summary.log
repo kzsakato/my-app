@@ -1,0 +1,3 @@
+Derived case log from q08-e2e-results.json (not raw process stdout).
+pc: PASS Q08 independent Default/Option editing persists both; discard and failed save preserve previous effective definitions
+narrow-pc-emulation: PASS Q08 independent Default/Option editing persists both; discard and failed save preserve previous effective definitions

@@ -1,0 +1,13 @@
+{
+  "result": "FAIL_PARENT_FALLBACK",
+  "chromium": "153.0.8010.12",
+  "url": "http://127.0.0.1:60059/v13-test/",
+  "navigationFromServiceWorker": true,
+  "controller": "http://127.0.0.1:60059/sw.js",
+  "databases": [
+    {
+      "name": "training-check",
+      "version": 7
+    }
+  ]
+}

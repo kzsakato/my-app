@@ -1,0 +1,2 @@
+import {defineConfig} from '@playwright/test'
+export default defineConfig({testDir:'./e2e',testMatch:'owner-v12-*.spec.ts',workers:1,retries:0,reporter:'list',use:{baseURL:'http://127.0.0.1:4177',locale:'ja-JP',timezoneId:'Asia/Tokyo'},projects:[{name:'pc',use:{viewport:{width:1280,height:900}}},{name:'360px',use:{viewport:{width:360,height:800}}}],webServer:{command:'pnpm exec vite --config vite.candidate.config.ts --configLoader runner',url:'http://127.0.0.1:4177',reuseExistingServer:false}})

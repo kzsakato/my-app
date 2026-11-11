@@ -1,0 +1,75 @@
+{
+  "atUTC": "2026-10-26T01:59:24.561Z",
+  "platform": "win32",
+  "node": "v24.21.0",
+  "adb": "synthetic executable; no Android accessed",
+  "tests": [
+    {
+      "name": "Windows CMD wrappers with safe no-device failures and idempotent stop",
+      "pass": true
+    },
+    {
+      "name": "none",
+      "pass": true
+    },
+    {
+      "name": "unauthorized",
+      "pass": true
+    },
+    {
+      "name": "multiple",
+      "pass": true
+    },
+    {
+      "name": "ADB missing; no install/mapping",
+      "pass": true
+    },
+    {
+      "name": "existing mapping unchanged",
+      "pass": true
+    },
+    {
+      "name": "artifact hash mismatch stops before mapping",
+      "pass": true
+    },
+    {
+      "name": "occupied port does not kill unrelated listener",
+      "pass": true
+    },
+    {
+      "name": "PC CDP read-only candidate collector + synthetic ADB forward cleanup (not Android)",
+      "pass": true,
+      "facts": {
+        "origin": "http://localhost:4182",
+        "secure": true,
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.12 Safari/537.36",
+        "displayMode": "browser",
+        "buildText": "V1.2 MAN候補・ダミー専用：実データ／実Backupを持ち込まないでください",
+        "db": {
+          "name": "training-check-v12-local-man",
+          "version": 7,
+          "authoritative": true,
+          "counts": {
+            "exercises": 1,
+            "menus": 1,
+            "sessions": 1
+          }
+        },
+        "sw": {
+          "controller": "http://localhost:4182/sw.js",
+          "scopes": [
+            "http://localhost:4182/"
+          ]
+        },
+        "caches": [
+          "v12-local-man-precache-v2-http://localhost:4182/"
+        ]
+      }
+    },
+    {
+      "name": "start/read-back, duplicate start, PID mismatch, changed mapping preservation, owned cleanup and duplicate stop",
+      "pass": true
+    }
+  ],
+  "result": "PASS"
+}

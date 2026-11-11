@@ -1,0 +1,402 @@
+{
+  "before": {
+    "schemaVersion": 1,
+    "weekStartsOn": 0,
+    "activeMenuId": "menu-1",
+    "profile": {
+      "weight": 66
+    },
+    "exercises": [
+      {
+        "id": "exercise-1",
+        "lifecycle": "active",
+        "name": "ダンベルプレス",
+        "measureType": "reps",
+        "usesWeight": true,
+        "weightMode": "perSide",
+        "classifications": [
+          {
+            "kind": "bodyRegion",
+            "label": "背中"
+          }
+        ]
+      },
+      {
+        "id": "ex-other",
+        "lifecycle": "active",
+        "name": "別種目",
+        "measureType": "reps",
+        "usesWeight": true,
+        "weightMode": "perSide",
+        "classifications": [
+          {
+            "kind": "bodyRegion",
+            "label": "背中"
+          }
+        ]
+      }
+    ],
+    "trainingItems": [
+      {
+        "id": "item-1",
+        "lifecycle": "active",
+        "managementMode": "TRAINER",
+        "exerciseId": "exercise-1",
+        "displayName": "プルダウン",
+        "weight": 18,
+        "reps": 15,
+        "sets": 5,
+        "seat": "標準1",
+        "standardMemo": "標準メモ"
+      },
+      {
+        "id": "ti-other",
+        "lifecycle": "active",
+        "managementMode": "MAN",
+        "exerciseId": "ex-other",
+        "displayName": "とても長い未実施の種目名・背中のトレーニング表示確認",
+        "weight": 18,
+        "reps": 15,
+        "sets": 5,
+        "seat": "未実施4",
+        "standardMemo": "標準メモ"
+      }
+    ],
+    "menus": [
+      {
+        "id": "menu-1",
+        "lifecycle": "active",
+        "managementMode": "MAN",
+        "name": "通常メニュー"
+      }
+    ],
+    "menuEntries": [
+      {
+        "id": "entry-0",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "item-1",
+        "recommendedDay": 0,
+        "order": 0
+      },
+      {
+        "id": "entry-1",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "item-1",
+        "recommendedDay": 1,
+        "order": 1
+      },
+      {
+        "id": "entry-2",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "ti-other",
+        "recommendedDay": 0,
+        "order": 2
+      },
+      {
+        "id": "entry-3",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "ti-other",
+        "recommendedDay": 1,
+        "order": 3
+      },
+      {
+        "id": "entry-4",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "ti-other",
+        "recommendedDay": 0,
+        "order": 4
+      },
+      {
+        "id": "entry-5",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "ti-other",
+        "recommendedDay": 1,
+        "order": 5
+      }
+    ],
+    "sessions": [
+      {
+        "id": "mon-normal",
+        "trainingItemId": "item-1",
+        "menuEntryId": "entry-1",
+        "date": "2026-10-19",
+        "performedAt": "2026-10-19T00:30:00+09:00",
+        "performedOrder": 0,
+        "weight": 42.25,
+        "reps": 8,
+        "sets": 3,
+        "bodyWeight": 66,
+        "seat": "実績3",
+        "memo": "実績メモ",
+        "snapshot": {
+          "exerciseId": "exercise-1",
+          "exerciseName": "ダンベルプレス",
+          "trainingItemDisplayName": "プルダウン",
+          "measureType": "reps",
+          "weightMode": "perSide",
+          "classifications": [
+            {
+              "kind": "bodyRegion",
+              "label": "背中"
+            }
+          ]
+        }
+      }
+    ],
+    "trainingItemSettingChanges": [
+      {
+        "id": "change-1",
+        "trainingItemId": "item-1",
+        "changedAt": "2026-09-24T09:00:00+09:00",
+        "isInitial": true,
+        "snapshot": {
+          "weight": 18,
+          "reps": 15,
+          "sets": 5,
+          "seat": "標準1",
+          "standardMemo": "標準メモ"
+        }
+      },
+      {
+        "id": "change-other",
+        "trainingItemId": "ti-other",
+        "changedAt": "2026-09-24T09:00:00+09:00",
+        "isInitial": true,
+        "snapshot": {
+          "weight": 18,
+          "reps": 15,
+          "sets": 5,
+          "seat": "標準1",
+          "standardMemo": "標準メモ"
+        }
+      },
+      {
+        "id": "e628255d-da73-4396-ba20-25dbad7d9edc",
+        "trainingItemId": "ti-other",
+        "changedAt": "2026-10-20T03:00:00.000Z",
+        "isInitial": false,
+        "snapshot": {
+          "weight": 18,
+          "reps": 15,
+          "sets": 5,
+          "seat": "未実施4",
+          "standardMemo": "標準メモ"
+        }
+      }
+    ],
+    "appliedProposalIds": []
+  },
+  "after": {
+    "schemaVersion": 1,
+    "weekStartsOn": 0,
+    "activeMenuId": "menu-1",
+    "profile": {
+      "weight": 66
+    },
+    "exercises": [
+      {
+        "id": "exercise-1",
+        "lifecycle": "active",
+        "name": "ダンベルプレス",
+        "measureType": "reps",
+        "usesWeight": true,
+        "weightMode": "perSide",
+        "classifications": [
+          {
+            "kind": "bodyRegion",
+            "label": "背中"
+          }
+        ]
+      },
+      {
+        "id": "ex-other",
+        "lifecycle": "active",
+        "name": "別種目",
+        "measureType": "reps",
+        "usesWeight": true,
+        "weightMode": "perSide",
+        "classifications": [
+          {
+            "kind": "bodyRegion",
+            "label": "背中"
+          }
+        ]
+      }
+    ],
+    "trainingItems": [
+      {
+        "id": "item-1",
+        "lifecycle": "active",
+        "managementMode": "TRAINER",
+        "exerciseId": "exercise-1",
+        "displayName": "プルダウン",
+        "weight": 42.25,
+        "reps": 8,
+        "sets": 3,
+        "seat": "実績3",
+        "standardMemo": "標準メモ"
+      },
+      {
+        "id": "ti-other",
+        "lifecycle": "active",
+        "managementMode": "MAN",
+        "exerciseId": "ex-other",
+        "displayName": "とても長い未実施の種目名・背中のトレーニング表示確認",
+        "weight": 18,
+        "reps": 15,
+        "sets": 5,
+        "seat": "未実施4",
+        "standardMemo": "標準メモ"
+      }
+    ],
+    "menus": [
+      {
+        "id": "menu-1",
+        "lifecycle": "active",
+        "managementMode": "MAN",
+        "name": "通常メニュー"
+      }
+    ],
+    "menuEntries": [
+      {
+        "id": "entry-0",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "item-1",
+        "recommendedDay": 0,
+        "order": 0
+      },
+      {
+        "id": "entry-1",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "item-1",
+        "recommendedDay": 1,
+        "order": 1
+      },
+      {
+        "id": "entry-2",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "ti-other",
+        "recommendedDay": 0,
+        "order": 2
+      },
+      {
+        "id": "entry-3",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "ti-other",
+        "recommendedDay": 1,
+        "order": 3
+      },
+      {
+        "id": "entry-4",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "ti-other",
+        "recommendedDay": 0,
+        "order": 4
+      },
+      {
+        "id": "entry-5",
+        "lifecycle": "active",
+        "menuId": "menu-1",
+        "trainingItemId": "ti-other",
+        "recommendedDay": 1,
+        "order": 5
+      }
+    ],
+    "sessions": [
+      {
+        "id": "mon-normal",
+        "trainingItemId": "item-1",
+        "menuEntryId": "entry-1",
+        "date": "2026-10-19",
+        "performedAt": "2026-10-19T00:30:00+09:00",
+        "performedOrder": 0,
+        "weight": 42.25,
+        "reps": 8,
+        "sets": 3,
+        "bodyWeight": 66,
+        "seat": "実績3",
+        "memo": "実績メモ",
+        "snapshot": {
+          "exerciseId": "exercise-1",
+          "exerciseName": "ダンベルプレス",
+          "trainingItemDisplayName": "プルダウン",
+          "measureType": "reps",
+          "weightMode": "perSide",
+          "classifications": [
+            {
+              "kind": "bodyRegion",
+              "label": "背中"
+            }
+          ]
+        }
+      }
+    ],
+    "trainingItemSettingChanges": [
+      {
+        "id": "change-1",
+        "trainingItemId": "item-1",
+        "changedAt": "2026-09-24T09:00:00+09:00",
+        "isInitial": true,
+        "snapshot": {
+          "weight": 18,
+          "reps": 15,
+          "sets": 5,
+          "seat": "標準1",
+          "standardMemo": "標準メモ"
+        }
+      },
+      {
+        "id": "change-other",
+        "trainingItemId": "ti-other",
+        "changedAt": "2026-09-24T09:00:00+09:00",
+        "isInitial": true,
+        "snapshot": {
+          "weight": 18,
+          "reps": 15,
+          "sets": 5,
+          "seat": "標準1",
+          "standardMemo": "標準メモ"
+        }
+      },
+      {
+        "id": "e628255d-da73-4396-ba20-25dbad7d9edc",
+        "trainingItemId": "ti-other",
+        "changedAt": "2026-10-20T03:00:00.000Z",
+        "isInitial": false,
+        "snapshot": {
+          "weight": 18,
+          "reps": 15,
+          "sets": 5,
+          "seat": "未実施4",
+          "standardMemo": "標準メモ"
+        }
+      },
+      {
+        "id": "5a9c13f9-65c4-4531-986d-7d8ee036bac7",
+        "trainingItemId": "item-1",
+        "changedAt": "2026-10-20T03:00:00.000Z",
+        "isInitial": false,
+        "snapshot": {
+          "weight": 42.25,
+          "reps": 8,
+          "sets": 3,
+          "seat": "実績3",
+          "standardMemo": "標準メモ"
+        }
+      }
+    ],
+    "appliedProposalIds": []
+  },
+  "sessionsUnchanged": true
+}

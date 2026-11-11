@@ -2,6 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 import { canonicalData, seedCanonicalAndReload, readCanonicalState, readStoredState } from './helpers/state'
 import { createCanonicalSession } from '../src/canonical/runtime'
 import { addTrainingItem } from '../src/canonical/operations'
+import { defaultDisplayPreferences } from '../src/canonical/displayPreferences'
 import { validateCanonical } from '../src/canonical/validate'
 import type { CanonicalAppData, Session } from '../src/canonical/types'
 
@@ -22,7 +23,8 @@ async function actuals(page: Page) {
 }
 async function ownActual(page: Page, session: Session) {
   await page.locator(`[data-session-id="${session.id}"]`).first().click()
-  await expect(page.getByRole('region', { name: '当該実績' })).toContainText(`${session.weight} kg × ${session.reps} 回 × ${session.sets} セット`)
+  await expect(page.locator('.run-slot').filter({ hasText: '回数' }).locator('b')).toHaveText(`${session.reps} 回`)
+  await expect(page.locator('.run-slot').filter({ hasText: '実施セット数' }).locator('b')).toHaveText(String(session.sets))
   await expect(page.getByLabel('シート位置')).toHaveValue(session.seat!)
   await expect(page.getByLabel('今回メモ')).toHaveValue(session.memo!)
   await expect(page.getByText(`${session.weight!.toFixed(2)} kg`, { exact: true })).toBeVisible()
@@ -30,8 +32,8 @@ async function ownActual(page: Page, session: Session) {
   await expect(page.getByRole('region', { name: '前回実績' })).toHaveCount(0)
 }
 async function projections(page: Page, remaining: Session[], entryCount: number) {
-  await expect(page.getByText('今日の実施総数')).toContainText(`${remaining.length ? 1 : 0}/1`)
-  await expect(page.getByText('今週の実施総数')).toContainText(`${remaining.length ? entryCount : 0}/${entryCount}`)
+  await expect(page.getByText('今日の実施総数').locator('b')).toHaveText(`${remaining.length}/1`)
+  await expect(page.getByText('今週の実施総数').locator('b')).toHaveText(`${remaining.length}/${entryCount}`)
   // Independent 14-day oracle: all three actuals are on Oct 3. No product helper.
   const expected = `${'○'.repeat(13)}${remaining.length ? '●' : '○'}`
   for (const marker of await page.locator('.item-history').all()) {
@@ -45,6 +47,10 @@ for (const membership of ['same-item-two-entries', 'same-item-same-entry', 'two-
     test.setTimeout(60000)
     await page.clock.install({ time: instant }); await page.clock.setFixedTime(instant)
     let data = canonicalData() as unknown as CanonicalAppData
+    data.trainingItems[0].managementMode = 'MAN'
+    data.menus[0].managementMode = 'MAN'
+    data.displayPreferences = structuredClone(defaultDisplayPreferences)
+    data.appliedProposalIds = []
     if (membership === 'two-items-same-exercise') {
       data = addTrainingItem(data, { ...data.trainingItems[0], id: 'item-b', displayName: '別設定プレス', reps: 15 }, { newId: () => 'change-b', now: () => '2026-10-01T00:00:00Z' })
       data.menuEntries[1].trainingItemId = 'item-b'
@@ -126,23 +132,26 @@ for (const weekStartsOn of [0, 6]) {
     await page.getByRole('button', { name: '推奨曜日', exact: true }).click()
     await expect(page.locator('[data-session-id]')).toHaveCount(0)
     await page.getByLabel('実施済も表示').check()
-    await expect(page.locator('[data-session-id="future-normal"]')).toBeVisible()
-    await expect(page.locator('[data-session-id="future-extra"]')).toBeVisible()
-    const filter = page.getByRole('button', { name: /表示する推奨曜日:/ })
-    await expect(filter).toHaveText('表示する推奨曜日: 土')
+    // TOP T-16 / TO-04: actual rows follow Session.date, not the Entry's recommended day.
+    await expect(page.locator('[data-session-id]')).toHaveCount(0)
+    const filter = page.getByRole('button', { name: /^曜日指定:/ })
+    await expect(filter).toHaveText('曜日指定: 土')
     await filter.click()
     await expect(page.getByRole('checkbox', { name: '日', exact: true })).not.toBeChecked()
     await page.getByRole('checkbox', { name: '土', exact: true }).uncheck()
-    for (const day of ['日', '金', '水', '月', '土', '木', '火']) await page.getByRole('checkbox', { name: day, exact: true }).check()
-    await expect(filter).toHaveText('表示する推奨曜日: 月・火・水・木・金・土・日')
+    await page.getByRole('checkbox', { name: '金', exact: true }).check()
+    await expect(page.locator('[data-session-id="future-normal"]')).toBeVisible()
+    await expect(page.locator('[data-session-id="future-extra"]')).toBeVisible()
+    for (const day of ['日', '水', '月', '土', '木', '火']) await page.getByRole('checkbox', { name: day, exact: true }).check()
+    await expect(filter).toHaveText('曜日指定: 月・火・水・木・金・土・日')
     await page.getByRole('checkbox', { name: '月', exact: true }).uncheck()
     await page.getByRole('checkbox', { name: '月', exact: true }).check()
-    await expect(filter).toHaveText('表示する推奨曜日: 月・火・水・木・金・土・日')
+    await expect(filter).toHaveText('曜日指定: 月・火・水・木・金・土・日')
     for (const day of ['月', '火', '水', '木', '金', '日']) await page.getByRole('checkbox', { name: day, exact: true }).uncheck()
     await filter.click()
     await page.getByLabel('実施済も表示').uncheck()
     await expect(page.locator('[data-session-id]')).toHaveCount(0)
-    await expect(filter).toHaveText('表示する推奨曜日: 土')
+    await expect(filter).toHaveText('曜日指定: 土')
     expect(await readCanonicalState(page)).toEqual(JSON.parse(JSON.stringify(data)))
   })
 }
@@ -150,6 +159,8 @@ for (const weekStartsOn of [0, 6]) {
 test('H06 A6/A7/A8 zero defaults, canonical save blocking and form-local error lifecycle', async ({ page }, info) => {
   await page.clock.install({ time: instant })
   const data = canonicalData() as unknown as CanonicalAppData
+  data.trainingItems[0].managementMode = 'MAN'
+  data.menus[0].managementMode = 'MAN'
   data.exercises.push({ id: 'time-exercise', lifecycle: 'active', name: '時間テスト', measureType: 'time', usesWeight: false, classifications: [{ kind: 'bodyRegion', label: '体幹' }] })
   await seedCanonicalAndReload(page, data as unknown as Record<string, unknown>)
   await items(page)
@@ -170,7 +181,7 @@ test('H06 A6/A7/A8 zero defaults, canonical save blocking and form-local error l
   await expect(page.getByRole('alert')).not.toContainText('回数')
   await page.getByRole('button', { name: '‹ 戻る' }).click()
   await expect(page.getByRole('alert')).toHaveCount(0)
-  await page.getByRole('button', { name: /^正規テストプレス / }).click()
+  await page.getByRole('button').filter({ has: page.locator('b').getByText('正規テストプレス', { exact: true }) }).click()
   await expect(page.getByRole('alert')).toHaveCount(0)
   await expect(page.getByLabel('回数', { exact: true })).toHaveValue('10')
   await expect(page.getByLabel('セット数', { exact: true })).toHaveValue('3')

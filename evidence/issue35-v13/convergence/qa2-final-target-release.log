@@ -1,0 +1,27 @@
+[WebServer] (node:22436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 18 tests using 1 worker
+
+(node:5388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok  1 [release] › e2e\v1r-acceptance.spec.ts:56:3 › H-03 focused 1 same-day multiple Sessions retain marker until last cancellation (11.8s)
+  ok  2 [release] › e2e\v1r-acceptance.spec.ts:56:3 › H-03 focused 2 single Session cancellation clears its date marker (5.6s)
+  ok  3 [release] › e2e\v1r-acceptance.spec.ts:56:3 › H-03 focused 3 past-first consecutive cancellations change only the target date (11.6s)
+  ok  4 [release] › e2e\v1r-acceptance.spec.ts:93:1 › H-03 focused 4/5 + H06 A5: UI Extra completion has own actual and visible completed Exercise (7.3s)
+  ok  5 [release] › e2e\v1r-acceptance.spec.ts:429:3 › Clock local midnight/week/month/year boundary 2026-10-04T23:59:59+09:00 (2.3s)
+  ok  6 [release] › e2e\v1r-acceptance.spec.ts:429:3 › Clock local midnight/week/month/year boundary 2026-10-05T00:00:00+09:00 (2.4s)
+  ok  7 [release] › e2e\v1r-acceptance.spec.ts:429:3 › Clock local midnight/week/month/year boundary 2026-12-31T23:59:59+09:00 (2.3s)
+  ok  8 [release] › e2e\v1r-acceptance.spec.ts:429:3 › Clock local midnight/week/month/year boundary 2027-01-01T00:00:00+09:00 (2.3s)
+  ok  9 [release] › e2e\v1r-acceptance.spec.ts:429:3 › Clock local midnight/week/month/year boundary 2026-10-31T23:59:59+09:00 (2.2s)
+  ok 10 [release] › e2e\v1r-acceptance.spec.ts:429:3 › Clock local midnight/week/month/year boundary 2026-11-01T00:00:00+09:00 (2.1s)
+  ok 11 [release] › e2e\v1r-acceptance.spec.ts:441:1 › OIC-015: all seven week starts warn/cancel, persist exact setting without rewriting historical facts (4.2s)
+  ok 12 [release] › e2e\v1r-final-correction.spec.ts:46:3 › H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-two-entries (13.5s)
+  ok 13 [release] › e2e\v1r-final-correction.spec.ts:46:3 › H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-same-entry (11.2s)
+  ok 14 [release] › e2e\v1r-final-correction.spec.ts:46:3 › H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: two-items-same-exercise (8.9s)
+  ok 15 [release] › e2e\v1r-q5-identity.spec.ts:65:3 › H09 independent Session identity, both modes and cancellation: different-items-extra (9.3s)
+  ok 16 [release] › e2e\v1r-q5-identity.spec.ts:65:3 › H09 independent Session identity, both modes and cancellation: different-entries (7.7s)
+  ok 17 [release] › e2e\v1r-q5-identity.spec.ts:65:3 › H09 independent Session identity, both modes and cancellation: same-membership (8.0s)
+  ok 18 [release] › e2e\v1r-q5-identity.spec.ts:103:1 › H09 snapshot-only Category destination and unclassified compatibility in recommended (1.8s)
+
+  18 passed (2.1m)

@@ -1,0 +1,28 @@
+{
+  "atUTC": "2026-10-26T02:35:30.472Z",
+  "tests": [
+    {
+      "name": "default client rejects untrusted test certificate",
+      "pass": true
+    },
+    {
+      "name": "explicit test-client CA validates TLS; wrong hostname rejected (not Android trust)",
+      "pass": true
+    },
+    {
+      "name": "Chromium stops on untrusted cert; no warning bypass",
+      "pass": true
+    },
+    {
+      "name": "LAN HTTP is non-secure; candidate fails before DB",
+      "pass": true,
+      "facts": {
+        "secure": false,
+        "dbs": []
+      }
+    }
+  ],
+  "androidMeasured": false,
+  "systemTrustChanged": false,
+  "result": "PASS_BOUNDARIES_ONLY"
+}

@@ -1,0 +1,11 @@
+[WebServer] (node:50588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:55556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"producerContract":"1.0","hasFormat":false,"consumerRejected":true}
+  ok 1 [chromium] › e2e\training-check.spec.ts:141:1 › canonical MAN bootstrap downloads an H-07 MenuProposal that imports without changing the active menu (10.6s)
+
+  1 passed (15.1s)

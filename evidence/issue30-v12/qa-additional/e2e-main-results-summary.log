@@ -1,0 +1,43 @@
+Derived case log from e2e-main-results.json (not raw process stdout).
+pc: PASS Q09 invalid JSON/envelope/core never applies or writes any IndexedDB store
+pc: PASS Q09 invalid defaultSort: independent valid settings survive, effective preview, acknowledgement/cancel/apply/readback
+pc: PASS Q09 invalid optionSort: independent valid settings survive, effective preview, acknowledgement/cancel/apply/readback
+pc: PASS Q09 invalid bodyRegionOrder: independent valid settings survive, effective preview, acknowledgement/cancel/apply/readback
+pc: PASS Q09 Restore quota failure: no success/no mutation, retained preview and explicit retry
+pc: PASS Q10 classification missing: no first/Other assignment, warning/edit repair and historical facts unchanged
+pc: PASS Q10 classification multiple: no first/Other assignment, warning/edit repair and historical facts unchanged
+pc: PASS Q10 classification invalid-trim: no first/Other assignment, warning/edit repair and historical facts unchanged
+pc: PASS Q14/Q15/Q16 target screen visible/accessible wording, geometry and CSS, including warning/edit routes
+pc: PASS Q10/Q15 ambiguous classification across current-Exercise UI routes never picks the first label
+narrow-pc-emulation: PASS Q09 invalid JSON/envelope/core never applies or writes any IndexedDB store
+narrow-pc-emulation: PASS Q09 invalid defaultSort: independent valid settings survive, effective preview, acknowledgement/cancel/apply/readback
+narrow-pc-emulation: PASS Q09 invalid optionSort: independent valid settings survive, effective preview, acknowledgement/cancel/apply/readback
+narrow-pc-emulation: PASS Q09 invalid bodyRegionOrder: independent valid settings survive, effective preview, acknowledgement/cancel/apply/readback
+narrow-pc-emulation: PASS Q09 Restore quota failure: no success/no mutation, retained preview and explicit retry
+narrow-pc-emulation: PASS Q10 classification missing: no first/Other assignment, warning/edit repair and historical facts unchanged
+narrow-pc-emulation: PASS Q10 classification multiple: no first/Other assignment, warning/edit repair and historical facts unchanged
+narrow-pc-emulation: PASS Q10 classification invalid-trim: no first/Other assignment, warning/edit repair and historical facts unchanged
+narrow-pc-emulation: PASS Q14/Q15/Q16 target screen visible/accessible wording, geometry and CSS, including warning/edit routes
+narrow-pc-emulation: PASS Q10/Q15 ambiguous classification across current-Exercise UI routes never picks the first label
+pc: PASS display editor: approved controls, discard, explicit save/reload/readback and no non-target changes
+pc: PASS Extra AND exclusion N+1, all TIs per Exercise, future outside, Option reset and snapshot invariants
+pc: PASS MENU one Option affects both projections but never order/model/save payload; EX/TI lists reset Option
+pc: PASS classification warning edits only the explicit Exercise; snapshot history survives
+pc: PASS old Backup preview warns with effective values; cancel is no-op; explicit restore/export/reload keeps exact candidate
+pc: PASS TOP weekday all ON/OFF preserves completed flag; approved +1pt status and unchanged run weight
+pc: PASS display save quota failure remains on draft, preserves storage and supports explicit retry
+pc: PASS TOP two projections: complete Entries remain with independent sort/filters; every Session and counts/load are preserved
+pc: PASS REGION current planned vs snapshot actual, missing snapshot stays only in TOP; completed Entry always opens PLAN-RUN
+pc: PASS specific repeated Session cancellation removes only selected ID and leaves Exercise completion via other actuals
+pc: PASS completed Entry re-execution adds a new Session without replacing any existing actual or saved Entry order
+narrow-pc-emulation: PASS display editor: approved controls, discard, explicit save/reload/readback and no non-target changes
+narrow-pc-emulation: PASS Extra AND exclusion N+1, all TIs per Exercise, future outside, Option reset and snapshot invariants
+narrow-pc-emulation: PASS MENU one Option affects both projections but never order/model/save payload; EX/TI lists reset Option
+narrow-pc-emulation: PASS classification warning edits only the explicit Exercise; snapshot history survives
+narrow-pc-emulation: PASS old Backup preview warns with effective values; cancel is no-op; explicit restore/export/reload keeps exact candidate
+narrow-pc-emulation: PASS TOP weekday all ON/OFF preserves completed flag; approved +1pt status and unchanged run weight
+narrow-pc-emulation: PASS display save quota failure remains on draft, preserves storage and supports explicit retry
+narrow-pc-emulation: PASS TOP two projections: complete Entries remain with independent sort/filters; every Session and counts/load are preserved
+narrow-pc-emulation: PASS REGION current planned vs snapshot actual, missing snapshot stays only in TOP; completed Entry always opens PLAN-RUN
+narrow-pc-emulation: PASS specific repeated Session cancellation removes only selected ID and leaves Exercise completion via other actuals
+narrow-pc-emulation: PASS completed Entry re-execution adds a new Session without replacing any existing actual or saved Entry order

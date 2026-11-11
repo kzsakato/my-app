@@ -1,0 +1,33 @@
+{
+  "atUTC": "2026-10-26T03:27:22.482Z",
+  "origin": "https://my-app-staging-v1r.kzsakato-lab.workers.dev",
+  "sourceSHA": "0c9788379eb86ef0f95ebc1ee9d409fa210ac84c",
+  "pcChromium": "153.0.8010.12",
+  "androidMeasured": false,
+  "ownerProfileUsed": false,
+  "facts": {
+    "secure": true,
+    "dbs": [
+      {
+        "name": "training-check-v12-local-man",
+        "version": 7
+      }
+    ],
+    "authority": true,
+    "menu": "MANダミーメニュー",
+    "counts": {
+      "exercises": 1,
+      "sessions": 1
+    },
+    "date": "2026-10-26",
+    "controller": "https://my-app-staging-v1r.kzsakato-lab.workers.dev/sw.js",
+    "scopes": [
+      "https://my-app-staging-v1r.kzsakato-lab.workers.dev/"
+    ],
+    "caches": [
+      "v12-local-man-precache-v2-https://my-app-staging-v1r.kzsakato-lab.workers.dev/"
+    ]
+  },
+  "newTabReadbackUnchanged": true,
+  "result": "PASS_PC_REMOTE_ONLY"
+}

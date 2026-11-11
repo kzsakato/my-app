@@ -1,0 +1,315 @@
+{
+  "result": "PASS_SYNTHETIC_SIBLINGS_ONLY",
+  "fixedRootWorkerSha256": "ea2611aad2dbac4e11add67e330c15d428f8dc8b110906d812ca15aa58536115",
+  "servedRootWorkerSha256": "ea2611aad2dbac4e11add67e330c15d428f8dc8b110906d812ca15aa58536115",
+  "chromium": "153.0.8010.12",
+  "origin": "http://127.0.0.1:56855",
+  "rootCanonicalAndOtherStoresUnchanged": true,
+  "restoreReadbackFaultHeldAfterReload": true,
+  "exactRestoreReadback": true,
+  "exactProposalReadback": true,
+  "replayAndInvalidBatchUnchanged": true,
+  "dbs": [
+    {
+      "name": "training-check",
+      "version": 7
+    },
+    {
+      "name": "training-check-v13-test",
+      "version": 7
+    }
+  ],
+  "caches": [
+    "workbox-precache-v2-http://127.0.0.1:56855/my-app/",
+    "training-check-v13-test-static:cc8536dbb2ea488c573440b5938c90c1:d545950da95c2454779f87f0f18ae609:70a3614905cdd480cc0708feec3bd129:assets/index-DIXRco9J.css:assets/index-D6fq72sl.js:cc8536dbb2ea488c573440b5938c90c1"
+  ],
+  "registrations": [
+    [
+      "http://127.0.0.1:56855/my-app/",
+      "http://127.0.0.1:56855/my-app/sw.js"
+    ],
+    [
+      "http://127.0.0.1:56855/v13-test/",
+      "http://127.0.0.1:56855/v13-test/v13-worker.js"
+    ]
+  ],
+  "controller": "http://127.0.0.1:56855/v13-test/v13-worker.js",
+  "manifest": {
+    "name": "筋トレ消化チェック V1.3 検証",
+    "short_name": "V1.3 検証",
+    "start_url": "/v13-test/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#42b883",
+    "lang": "ja",
+    "scope": "/v13-test/",
+    "id": "/v13-test/"
+  },
+  "inventory": {
+    "productCommit": "c4fe4514ab093a9e2084dc286310d46f81ab8864",
+    "sourceTree": "b4ba5d9800d1556ef92bcdc15d8714e47987992b",
+    "build": "Build 2026-10-28 / c4fe4514",
+    "status": "PREPARED - NOT DEPLOYED",
+    "target": "https://kzsakato.github.io/my-app/",
+    "buildCommand": "VITE_BUILD_DATE=2026-10-28 VITE_BUILD_SHA=c4fe4514ab093a9e2084dc286310d46f81ab8864 npm run build",
+    "installCommand": "pnpm install --frozen-lockfile",
+    "config": "vite.config.ts unchanged from approved source; VITE_*/V12_* env unset except explicit build date/SHA; no dotenv files",
+    "node": "24.21.0",
+    "pnpm": "12.6.0",
+    "lockSha256": "3dc37f885ac152f90b05c86163a305c9f35097ea9180a231fde9c8bfc4502fe0",
+    "productFiles": [
+      {
+        "path": "assets/index-CVHoY4uC.css",
+        "bytes": 14303,
+        "sha256": "5d0c1dedbd1ce464d757df03c846e762c300148678ad60ca8742c0814fbacadd"
+      },
+      {
+        "path": "assets/index-Dvu4JjdW.js",
+        "bytes": 370059,
+        "sha256": "5dfea8b50053b662b1f4751e69b2b7f8e5d0a2b78fd6605b64e0aece6a6a4ba2"
+      },
+      {
+        "path": "index.html",
+        "bytes": 549,
+        "sha256": "9462ff0ee837658830dadceb947d827c47fa5df2f2ec5e18c2e5c7901c19af10"
+      },
+      {
+        "path": "manifest.webmanifest",
+        "bytes": 193,
+        "sha256": "125b20ad76486349c25f02b46f473c0ec7a885c9f6e7514f37eaab98266f7031"
+      },
+      {
+        "path": "prototypes/oic-012-density-prototype.html",
+        "bytes": 13847,
+        "sha256": "6732ad15481c821fe1abf83d27d87356b1a488dec91feefc31155c59d9305f8c"
+      },
+      {
+        "path": "registerSW.js",
+        "bytes": 136,
+        "sha256": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7"
+      },
+      {
+        "path": "sw.js",
+        "bytes": 1188,
+        "sha256": "ea2611aad2dbac4e11add67e330c15d428f8dc8b110906d812ca15aa58536115"
+      },
+      {
+        "path": "workbox-9c191d2f.js",
+        "bytes": 15112,
+        "sha256": "04b086f1b2f4215ee4b659a7bc9c76162894abdb43fa876247bc7c0bd6fd1c37"
+      }
+    ]
+  },
+  "rootPageBefore": {
+    "url": "http://127.0.0.1:56855/my-app/",
+    "manifestUrl": "http://127.0.0.1:56855/my-app/manifest.webmanifest",
+    "manifest": {
+      "name": "筋トレ消化チェック",
+      "short_name": "筋トレチェック",
+      "start_url": ".",
+      "display": "standalone",
+      "background_color": "#f4f7f2",
+      "theme_color": "#326a41",
+      "lang": "ja",
+      "scope": "./"
+    },
+    "manifestStart": "http://127.0.0.1:56855/my-app/",
+    "manifestScope": "http://127.0.0.1:56855/my-app/",
+    "scripts": [
+      "http://127.0.0.1:56855/my-app/assets/index-Dvu4JjdW.js",
+      "http://127.0.0.1:56855/my-app/registerSW.js"
+    ],
+    "controller": "http://127.0.0.1:56855/my-app/sw.js",
+    "registrations": [
+      [
+        "http://127.0.0.1:56855/my-app/",
+        "http://127.0.0.1:56855/my-app/sw.js"
+      ]
+    ],
+    "caches": [
+      "workbox-precache-v2-http://127.0.0.1:56855/my-app/"
+    ],
+    "cacheEntries": [
+      [
+        "workbox-precache-v2-http://127.0.0.1:56855/my-app/",
+        [
+          "http://127.0.0.1:56855/my-app/assets/index-CVHoY4uC.css",
+          "http://127.0.0.1:56855/my-app/assets/index-Dvu4JjdW.js",
+          "http://127.0.0.1:56855/my-app/index.html?__WB_REVISION__=6b357303718a0601ce85362e433cbaf8",
+          "http://127.0.0.1:56855/my-app/manifest.webmanifest?__WB_REVISION__=ee3c2890cab558b5087ca2d2d44091bc",
+          "http://127.0.0.1:56855/my-app/prototypes/oic-012-density-prototype.html?__WB_REVISION__=70a3614905cdd480cc0708feec3bd129",
+          "http://127.0.0.1:56855/my-app/registerSW.js?__WB_REVISION__=402b66900e731ca748771b6fc5e7a068"
+        ]
+      ]
+    ]
+  },
+  "childPage": {
+    "url": "http://127.0.0.1:56855/v13-test/",
+    "manifestUrl": "http://127.0.0.1:56855/v13-test/manifest.webmanifest",
+    "manifest": {
+      "name": "筋トレ消化チェック V1.3 検証",
+      "short_name": "V1.3 検証",
+      "start_url": "/v13-test/",
+      "display": "standalone",
+      "background_color": "#ffffff",
+      "theme_color": "#42b883",
+      "lang": "ja",
+      "scope": "/v13-test/",
+      "id": "/v13-test/"
+    },
+    "manifestStart": "http://127.0.0.1:56855/v13-test/",
+    "manifestScope": "http://127.0.0.1:56855/v13-test/",
+    "scripts": [
+      "http://127.0.0.1:56855/v13-test/assets/index-D6fq72sl.js"
+    ],
+    "controller": "http://127.0.0.1:56855/v13-test/v13-worker.js",
+    "registrations": [
+      [
+        "http://127.0.0.1:56855/my-app/",
+        "http://127.0.0.1:56855/my-app/sw.js"
+      ],
+      [
+        "http://127.0.0.1:56855/v13-test/",
+        "http://127.0.0.1:56855/v13-test/v13-worker.js"
+      ]
+    ],
+    "caches": [
+      "training-check-v13-test-static:cc8536dbb2ea488c573440b5938c90c1:d545950da95c2454779f87f0f18ae609:70a3614905cdd480cc0708feec3bd129:assets/index-DIXRco9J.css:assets/index-D6fq72sl.js:cc8536dbb2ea488c573440b5938c90c1",
+      "workbox-precache-v2-http://127.0.0.1:56855/my-app/"
+    ],
+    "cacheEntries": [
+      [
+        "training-check-v13-test-static:cc8536dbb2ea488c573440b5938c90c1:d545950da95c2454779f87f0f18ae609:70a3614905cdd480cc0708feec3bd129:assets/index-DIXRco9J.css:assets/index-D6fq72sl.js:cc8536dbb2ea488c573440b5938c90c1",
+        [
+          "http://127.0.0.1:56855/v13-test/assets/index-D6fq72sl.js",
+          "http://127.0.0.1:56855/v13-test/assets/index-DIXRco9J.css",
+          "http://127.0.0.1:56855/v13-test/index.html",
+          "http://127.0.0.1:56855/v13-test/manifest.webmanifest",
+          "http://127.0.0.1:56855/v13-test/prototypes/oic-012-density-prototype.html"
+        ]
+      ],
+      [
+        "workbox-precache-v2-http://127.0.0.1:56855/my-app/",
+        [
+          "http://127.0.0.1:56855/my-app/assets/index-CVHoY4uC.css",
+          "http://127.0.0.1:56855/my-app/assets/index-Dvu4JjdW.js",
+          "http://127.0.0.1:56855/my-app/index.html?__WB_REVISION__=6b357303718a0601ce85362e433cbaf8",
+          "http://127.0.0.1:56855/my-app/manifest.webmanifest?__WB_REVISION__=ee3c2890cab558b5087ca2d2d44091bc",
+          "http://127.0.0.1:56855/my-app/prototypes/oic-012-density-prototype.html?__WB_REVISION__=70a3614905cdd480cc0708feec3bd129",
+          "http://127.0.0.1:56855/my-app/registerSW.js?__WB_REVISION__=402b66900e731ca748771b6fc5e7a068"
+        ]
+      ]
+    ]
+  },
+  "firstNavigation": {
+    "url": "http://127.0.0.1:56855/v13-test/",
+    "status": 200,
+    "fromServiceWorker": false
+  },
+  "scriptResponses": [
+    {
+      "url": "http://127.0.0.1:56855/v13-test/assets/index-D6fq72sl.js",
+      "status": 200,
+      "fromServiceWorker": false
+    },
+    {
+      "url": "http://127.0.0.1:56855/v13-test/assets/index-D6fq72sl.js",
+      "status": 200,
+      "fromServiceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:56855/v13-test/assets/index-D6fq72sl.js",
+      "status": 200,
+      "fromServiceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:56855/v13-test/assets/index-D6fq72sl.js",
+      "status": 200,
+      "fromServiceWorker": true
+    }
+  ],
+  "reopens": [
+    {
+      "url": "http://127.0.0.1:56855/my-app/",
+      "offline": false,
+      "controller": "http://127.0.0.1:56855/my-app/sw.js",
+      "fromServiceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:56855/v13-test/",
+      "offline": false,
+      "controller": "http://127.0.0.1:56855/v13-test/v13-worker.js",
+      "fromServiceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:56855/v13-test/",
+      "offline": true,
+      "controller": "http://127.0.0.1:56855/v13-test/v13-worker.js",
+      "fromServiceWorker": true
+    },
+    {
+      "url": "http://127.0.0.1:56855/my-app/",
+      "offline": true,
+      "controller": "http://127.0.0.1:56855/my-app/sw.js",
+      "fromServiceWorker": true
+    }
+  ],
+  "finalPage": {
+    "url": "http://127.0.0.1:56855/v13-test/",
+    "manifestUrl": "http://127.0.0.1:56855/v13-test/manifest.webmanifest",
+    "manifest": {
+      "name": "筋トレ消化チェック V1.3 検証",
+      "short_name": "V1.3 検証",
+      "start_url": "/v13-test/",
+      "display": "standalone",
+      "background_color": "#ffffff",
+      "theme_color": "#42b883",
+      "lang": "ja",
+      "scope": "/v13-test/",
+      "id": "/v13-test/"
+    },
+    "manifestStart": "http://127.0.0.1:56855/v13-test/",
+    "manifestScope": "http://127.0.0.1:56855/v13-test/",
+    "scripts": [
+      "http://127.0.0.1:56855/v13-test/assets/index-D6fq72sl.js"
+    ],
+    "controller": "http://127.0.0.1:56855/v13-test/v13-worker.js",
+    "registrations": [
+      [
+        "http://127.0.0.1:56855/my-app/",
+        "http://127.0.0.1:56855/my-app/sw.js"
+      ],
+      [
+        "http://127.0.0.1:56855/v13-test/",
+        "http://127.0.0.1:56855/v13-test/v13-worker.js"
+      ]
+    ],
+    "caches": [
+      "training-check-v13-test-static:cc8536dbb2ea488c573440b5938c90c1:d545950da95c2454779f87f0f18ae609:70a3614905cdd480cc0708feec3bd129:assets/index-DIXRco9J.css:assets/index-D6fq72sl.js:cc8536dbb2ea488c573440b5938c90c1",
+      "workbox-precache-v2-http://127.0.0.1:56855/my-app/"
+    ],
+    "cacheEntries": [
+      [
+        "training-check-v13-test-static:cc8536dbb2ea488c573440b5938c90c1:d545950da95c2454779f87f0f18ae609:70a3614905cdd480cc0708feec3bd129:assets/index-DIXRco9J.css:assets/index-D6fq72sl.js:cc8536dbb2ea488c573440b5938c90c1",
+        [
+          "http://127.0.0.1:56855/v13-test/assets/index-D6fq72sl.js",
+          "http://127.0.0.1:56855/v13-test/assets/index-DIXRco9J.css",
+          "http://127.0.0.1:56855/v13-test/index.html",
+          "http://127.0.0.1:56855/v13-test/manifest.webmanifest",
+          "http://127.0.0.1:56855/v13-test/prototypes/oic-012-density-prototype.html"
+        ]
+      ],
+      [
+        "workbox-precache-v2-http://127.0.0.1:56855/my-app/",
+        [
+          "http://127.0.0.1:56855/my-app/assets/index-CVHoY4uC.css",
+          "http://127.0.0.1:56855/my-app/assets/index-Dvu4JjdW.js",
+          "http://127.0.0.1:56855/my-app/index.html?__WB_REVISION__=6b357303718a0601ce85362e433cbaf8",
+          "http://127.0.0.1:56855/my-app/manifest.webmanifest?__WB_REVISION__=ee3c2890cab558b5087ca2d2d44091bc",
+          "http://127.0.0.1:56855/my-app/prototypes/oic-012-density-prototype.html?__WB_REVISION__=70a3614905cdd480cc0708feec3bd129",
+          "http://127.0.0.1:56855/my-app/registerSW.js?__WB_REVISION__=402b66900e731ca748771b6fc5e7a068"
+        ]
+      ]
+    ]
+  }
+}

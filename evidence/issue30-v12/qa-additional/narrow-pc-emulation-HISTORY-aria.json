@@ -1,0 +1,1 @@
+"- main:\n  - button \"‹ 戻る\"\n  - heading \"設定履歴\" [level=1]\n  - button \"共通メニュー\": ≡\n  - heading \"ダンベルプレス\" [level=2]\n  - article:\n    - time: 2026-09-24\n    - text: 初回設定 重量\n    - strong: 18kg\n    - text: 回数\n    - strong: 15回\n    - text: セット数\n    - strong: 5セット\n    - text: シート位置：— 初回設定（削除できません）"

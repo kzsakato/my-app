@@ -1,0 +1,21 @@
+[WebServer] (node:48500) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:40440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:31644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:49024) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:17788) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\issue35-v13-ui.spec.ts:28:1 › UI-01 and UI-02: independent sort drafts and fixed settings description (7.0s)
+  ok 2 [chromium] › e2e\issue35-v13-ui.spec.ts:78:1 › UI-04: removes the decorative glyph while preserving history and Run entry (3.3s)
+  ok 3 [chromium] › e2e\issue35-v13-ui.spec.ts:89:1 › UI-03: cancel preserves Trainer authority, confirmation saves standard and releases it (3.6s)
+  ok 4 [chromium] › e2e\issue35-v13-ui.spec.ts:136:1 › UI-01: touch drag reorders only its own section (2.9s)
+  ok 5 [chromium] › e2e\owner-v12-07.spec.ts:8:1 › V12-07: existing row height preserved, fourteen days right aligned, data unchanged (3.0s)
+  ok 6 [chromium] › e2e\worker-restore.spec.ts:5:1 › canonical V1.1 Backup normal Restore stays local, preserves confirmation and persists offline (3.2s)
+
+  6 passed (54.9s)

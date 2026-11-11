@@ -1,0 +1,16 @@
+{
+  "source": "working tree after c39c4d7",
+  "oracle": "QA #6432486797 / PMO #6432524698",
+  "mode": "Default",
+  "priority": [
+    "completion",
+    "recommendedDay",
+    "bodyRegion"
+  ],
+  "direction": "completeFirst",
+  "plannedY": 535,
+  "actualY": 473,
+  "expected": "actualY < plannedY",
+  "result": "PASS",
+  "ownerDataUsed": false
+}

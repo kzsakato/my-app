@@ -1,0 +1,12 @@
+[WebServer] (node:20088) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 3 tests using 1 worker
+
+(node:48264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\v1r-final-correction.spec.ts:46:3 › H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-two-entries (32.4s)
+  ok 2 [chromium] › e2e\v1r-final-correction.spec.ts:46:3 › H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: same-item-same-entry (17.6s)
+  ok 3 [chromium] › e2e\v1r-final-correction.spec.ts:46:3 › H06 A1/A4/A5 normal A/B + UI Extra C cancellation identity: two-items-same-exercise (16.7s)
+
+  3 passed (1.4m)

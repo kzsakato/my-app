@@ -1,0 +1,48 @@
+{
+  "result": "PASS_SYNTHETIC_PARENT_DENYLIST_ONLY",
+  "fixedRootWorkerSha256": "ea2611aad2dbac4e11add67e330c15d428f8dc8b110906d812ca15aa58536115",
+  "servedRootWorkerSha256": "f356a9c8ad45d6d4432f7842a97b26e20eed250f4ba98dfa7943a7f2a7606b1f",
+  "chromium": "153.0.8010.12",
+  "origin": "http://127.0.0.1:62678",
+  "rootCanonicalAndOtherStoresUnchanged": true,
+  "restoreReadbackFaultHeldAfterReload": true,
+  "exactRestoreReadback": true,
+  "exactProposalReadback": true,
+  "replayAndInvalidBatchUnchanged": true,
+  "dbs": [
+    {
+      "name": "training-check",
+      "version": 7
+    },
+    {
+      "name": "training-check-v13-test",
+      "version": 7
+    }
+  ],
+  "caches": [
+    "workbox-precache-v2-http://127.0.0.1:62678/",
+    "training-check-v13-test-static:cc8536dbb2ea488c573440b5938c90c1:c1f780962a4a2507d9f1bb266f3a4e4c:70a3614905cdd480cc0708feec3bd129:assets/index-DIXRco9J.css:assets/index-CZSDj7s-.js:cc8536dbb2ea488c573440b5938c90c1"
+  ],
+  "registrations": [
+    [
+      "http://127.0.0.1:62678/",
+      "http://127.0.0.1:62678/sw.js"
+    ],
+    [
+      "http://127.0.0.1:62678/v13-test/",
+      "http://127.0.0.1:62678/v13-test/v13-worker.js"
+    ]
+  ],
+  "controller": "http://127.0.0.1:62678/v13-test/v13-worker.js",
+  "manifest": {
+    "name": "筋トレ消化チェック V1.3 検証",
+    "short_name": "V1.3 検証",
+    "start_url": "/v13-test/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#42b883",
+    "lang": "ja",
+    "scope": "/v13-test/",
+    "id": "/v13-test/"
+  }
+}

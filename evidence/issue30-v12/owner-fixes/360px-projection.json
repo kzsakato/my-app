@@ -1,0 +1,36 @@
+{
+  "ownerDataUsed": false,
+  "result": "REPORTED_SESSION_DUPLICATION_NOT_REPRODUCED",
+  "facts": [
+    {
+      "screen": "TOP",
+      "off": {
+        "planned": 2,
+        "actual": 0
+      },
+      "on": {
+        "planned": 2,
+        "actualIDs": [
+          "session-2",
+          "session-1"
+        ]
+      },
+      "dataUnchanged": true
+    },
+    {
+      "screen": "REGION",
+      "off": {
+        "planned": 2,
+        "actual": 0
+      },
+      "on": {
+        "planned": 2,
+        "actualIDs": [
+          "session-2",
+          "session-1"
+        ]
+      },
+      "dataUnchanged": true
+    }
+  ]
+}

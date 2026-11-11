@@ -1,0 +1,90 @@
+{
+  "productSourceSha": "1426e2cd3d97a670c9a9f39df45aca6200f19aaa",
+  "baselineSourceSha": "c4fe4514ab093a9e2084dc286310d46f81ab8864",
+  "cases": [
+    {
+      "group": "app",
+      "title": "AN-G05/06/07: year-boundary unallocated plot with weekStartsOn=0",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 680,
+      "status": "passed",
+      "durationMs": 1726,
+      "artifacts": [
+        "AN-G05-unallocated-360.png",
+        "AN-year-boundary-0.json"
+      ]
+    },
+    {
+      "group": "app",
+      "title": "AN-G05/06/07: year-boundary unallocated plot with weekStartsOn=1",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 680,
+      "status": "passed",
+      "durationMs": 985,
+      "artifacts": [
+        "AN-year-boundary-1.json"
+      ]
+    },
+    {
+      "group": "app",
+      "title": "CTX-02: a Context v1 payload relabeled version 2 is rejected at the browser file boundary",
+      "file": "issue35-v13-app.spec.ts",
+      "line": 738,
+      "status": "passed",
+      "durationMs": 667,
+      "artifacts": [
+        "spoofed-context-rejection.json"
+      ]
+    },
+    {
+      "group": "ui",
+      "title": "UI-01: touch handle reorder does not scroll a vertically scrolled settings page",
+      "file": "issue35-v13-ui.spec.ts",
+      "line": 253,
+      "status": "failed",
+      "durationMs": 10275,
+      "errors": [
+        {
+          "location": {
+            "file": "C:\\Users\\kzsak\\Documents\\Codex\\2026-11-06\\training-project-app-development-test-execution\\work\\my-app\\e2e\\issue35-v13-ui.spec.ts",
+            "column": 55,
+            "line": 305
+          },
+          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -12,13 +12,13 @@\u001b[39m\n\u001b[2m        \"その他\",\u001b[22m\n\u001b[2m      ],\u001b[22m\n\u001b[2m      \"defaultSort\": Object {\u001b[22m\n\u001b[2m        \"completionDirection\": \"incompleteFirst\",\u001b[22m\n\u001b[2m        \"priority\": Array [\u001b[22m\n\u001b[32m-         \"bodyRegion\",\u001b[39m\n\u001b[2m          \"recommendedDay\",\u001b[22m\n\u001b[2m          \"completion\",\u001b[22m\n\u001b[31m+         \"bodyRegion\",\u001b[39m\n\u001b[2m        ],\u001b[22m\n\u001b[2m      },\u001b[22m\n\u001b[2m      \"optionSort\": Object {\u001b[22m\n\u001b[2m        \"completionDirection\": \"incompleteFirst\",\u001b[22m\n\u001b[2m        \"priority\": Array [\u001b[22m\n\nCall Log:\n- Timeout 5000ms exceeded while waiting on the predicate\n\n  303 |       } },\n  304 |     }\n> 305 |     await expect.poll(() => readCanonicalState(page)).toEqual(expected)\n      |                                                       ^\n  306 |     await page.reload()\n  307 |     expect(await readCanonicalState(page)).toEqual(expected)\n  308 |     await info.attach('touch-scroll-readback', { body: JSON.stringify({ cancelScroll, saveScroll, before: fixture, after: expected }), contentType: 'application/json' })\n    at C:\\Users\\kzsak\\Documents\\Codex\\2026-11-06\\training-project-app-development-test-execution\\work\\my-app\\e2e\\issue35-v13-ui.spec.ts:305:55"
+        }
+      ]
+    },
+    {
+      "group": "base",
+      "title": "UI-01 and UI-02: independent sort drafts and fixed settings description",
+      "file": "issue35-shot.local.spec.ts",
+      "line": 31,
+      "status": "passed",
+      "durationMs": 6377
+    },
+    {
+      "group": "base",
+      "title": "UI-04: removes the decorative glyph while preserving history and Run entry",
+      "file": "issue35-shot.local.spec.ts",
+      "line": 88,
+      "status": "passed",
+      "durationMs": 1215
+    },
+    {
+      "group": "head",
+      "title": "UI-01 and UI-02: independent sort drafts and fixed settings description",
+      "file": "issue35-shot.local.spec.ts",
+      "line": 31,
+      "status": "passed",
+      "durationMs": 6086
+    },
+    {
+      "group": "head",
+      "title": "UI-04: removes the decorative glyph while preserving history and Run entry",
+      "file": "issue35-shot.local.spec.ts",
+      "line": 88,
+      "status": "passed",
+      "durationMs": 976
+    }
+  ]
+}

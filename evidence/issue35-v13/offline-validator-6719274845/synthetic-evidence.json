@@ -1,0 +1,180 @@
+{
+  "bundleSha256": "58edcf557dda8466baea1b162dc492693b2fc5020be56994545adcd6c5b82a0f",
+  "node": "v24.21.0",
+  "esbuild": "0.28.2",
+  "permissionMode": "only bundle and exact input file reads allowed; no fs-write grant",
+  "externalImports": [
+    "node:crypto",
+    "node:fs"
+  ],
+  "cases": [
+    {
+      "case": "v12-ok",
+      "exitCode": 0,
+      "syntheticInputUnchanged": true,
+      "sourceCommit": "cfe668b8903ad9e41c2b4e7189762cdcb73e09c3",
+      "mode": "v12",
+      "result": "PASS",
+      "inputSha256": "56c78fb2af9553b7be90476e935b074ba5e865f2d7b5eec7b52e60e891d3da9a",
+      "errors": {
+        "count": 0,
+        "categories": {}
+      },
+      "warnings": {
+        "count": 0,
+        "categories": {}
+      }
+    },
+    {
+      "case": "v13-ok",
+      "exitCode": 0,
+      "syntheticInputUnchanged": true,
+      "sourceCommit": "cfe668b8903ad9e41c2b4e7189762cdcb73e09c3",
+      "mode": "v13",
+      "result": "PASS",
+      "inputSha256": "df6b1b71ac7f02b8d9efa7434fd2b43e1c465b064a7123e23ea11a0e4ca43cc4",
+      "errors": {
+        "count": 0,
+        "categories": {}
+      },
+      "warnings": {
+        "count": 0,
+        "categories": {}
+      }
+    },
+    {
+      "case": "v12-warning",
+      "exitCode": 0,
+      "syntheticInputUnchanged": true,
+      "sourceCommit": "cfe668b8903ad9e41c2b4e7189762cdcb73e09c3",
+      "mode": "v12",
+      "result": "PASS",
+      "inputSha256": "b75c8a995cf3bd1570d1571163df7f9e73b1f30f10aafbf082cffc82f17d0f08",
+      "errors": {
+        "count": 0,
+        "categories": {}
+      },
+      "warnings": {
+        "count": 1,
+        "categories": {
+          "displayPreferences": 1
+        }
+      }
+    },
+    {
+      "case": "v13-warning",
+      "exitCode": 0,
+      "syntheticInputUnchanged": true,
+      "sourceCommit": "cfe668b8903ad9e41c2b4e7189762cdcb73e09c3",
+      "mode": "v13",
+      "result": "PASS",
+      "inputSha256": "1f46c00d6b93c3f8619d7e3e6f4129993e2bc206c7f73a19a3fa73ff65b42b08",
+      "errors": {
+        "count": 0,
+        "categories": {}
+      },
+      "warnings": {
+        "count": 1,
+        "categories": {
+          "displayPreferences": 1
+        }
+      }
+    },
+    {
+      "case": "v12-wrong-envelope",
+      "exitCode": 1,
+      "syntheticInputUnchanged": true,
+      "sourceCommit": "cfe668b8903ad9e41c2b4e7189762cdcb73e09c3",
+      "mode": "v12",
+      "result": "FAIL",
+      "inputSha256": "df6b1b71ac7f02b8d9efa7434fd2b43e1c465b064a7123e23ea11a0e4ca43cc4",
+      "errors": {
+        "count": 1,
+        "categories": {
+          "format/schema": 1
+        }
+      },
+      "warnings": {
+        "count": 0,
+        "categories": {}
+      }
+    },
+    {
+      "case": "v13-wrong-envelope",
+      "exitCode": 1,
+      "syntheticInputUnchanged": true,
+      "sourceCommit": "cfe668b8903ad9e41c2b4e7189762cdcb73e09c3",
+      "mode": "v13",
+      "result": "FAIL",
+      "inputSha256": "56c78fb2af9553b7be90476e935b074ba5e865f2d7b5eec7b52e60e891d3da9a",
+      "errors": {
+        "count": 1,
+        "categories": {
+          "V13_BACKUP_VERSION_REQUIRED": 1
+        }
+      },
+      "warnings": null
+    },
+    {
+      "case": "v12-malformed",
+      "exitCode": 1,
+      "syntheticInputUnchanged": true,
+      "sourceCommit": "cfe668b8903ad9e41c2b4e7189762cdcb73e09c3",
+      "mode": "v12",
+      "result": "FAIL",
+      "inputSha256": "021fb596db81e6d02bf3d2586ee3981fe519f275c0ac9ca76bbcf2ebb4097d96",
+      "errors": {
+        "count": 1,
+        "categories": {
+          "JSON": 1
+        }
+      },
+      "warnings": {
+        "count": 0,
+        "categories": {}
+      }
+    },
+    {
+      "case": "v13-duplicate",
+      "exitCode": 1,
+      "syntheticInputUnchanged": true,
+      "sourceCommit": "cfe668b8903ad9e41c2b4e7189762cdcb73e09c3",
+      "mode": "v13",
+      "result": "FAIL",
+      "inputSha256": "ba4cd2230545073f43a77c8a041df74c0de4b88671286a20cebb18db87c9f4b8",
+      "errors": {
+        "count": 1,
+        "categories": {
+          "DUPLICATE_JSON_KEY": 1
+        }
+      },
+      "warnings": null
+    },
+    {
+      "case": "v13-invalid-revision",
+      "exitCode": 1,
+      "syntheticInputUnchanged": true,
+      "sourceCommit": "cfe668b8903ad9e41c2b4e7189762cdcb73e09c3",
+      "mode": "v13",
+      "result": "FAIL",
+      "inputSha256": "2c034a5bddad3ecb6e1db8a1c2c3123663d4be07f8c6ead899ed62cfc679b41a",
+      "errors": {
+        "count": 1,
+        "categories": {
+          "INVALID_INITIAL_V13_BACKUP": 1
+        }
+      },
+      "warnings": null
+    },
+    {
+      "case": "sha-mismatch",
+      "exitCode": 2,
+      "syntheticInputUnchanged": true,
+      "sourceCommit": "cfe668b8903ad9e41c2b4e7189762cdcb73e09c3",
+      "mode": "v12",
+      "result": "NOT_RUN",
+      "reason": "INPUT_SHA256_MISMATCH",
+      "inputSha256": "56c78fb2af9553b7be90476e935b074ba5e865f2d7b5eec7b52e60e891d3da9a"
+    }
+  ]
+}

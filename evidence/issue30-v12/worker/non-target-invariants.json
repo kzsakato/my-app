@@ -1,0 +1,12 @@
+{
+  "result": "PASS",
+  "protectedWorkerDeploymentsUnchanged": [
+    "my-app-staging",
+    "my-app-simple-118ff493"
+  ],
+  "productionPagesSettingsUnchanged": true,
+  "productionMainUnchanged": true,
+  "customDomainsUnchanged": true,
+  "targetSubdomainPreviewUnchanged": true,
+  "targetNamedBindingsNowEmpty": true
+}

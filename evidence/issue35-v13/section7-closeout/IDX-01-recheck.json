@@ -1,0 +1,26 @@
+{
+  "result": "PASS_SYNTHETIC_INDEX_ONLY",
+  "sourceSha256": "ad7ce37d69ca70bab1eeafb4e379b8bfc2f323ac17d41e8664a4e72f8b6070e9",
+  "executionPresence": [
+    {
+      "trainingItemId": "ti-A",
+      "hasSessionInWindow": true,
+      "lastSessionDateInWindow": "2026-11-02"
+    },
+    {
+      "trainingItemId": "ti-B",
+      "hasSessionInWindow": true,
+      "lastSessionDateInWindow": "2026-11-03"
+    },
+    {
+      "trainingItemId": "ti-C",
+      "hasSessionInWindow": true,
+      "lastSessionDateInWindow": "2026-11-04"
+    },
+    {
+      "trainingItemId": "ti-Z",
+      "hasSessionInWindow": false,
+      "lastSessionDateInWindow": null
+    }
+  ]
+}

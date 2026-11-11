@@ -1,0 +1,67 @@
+diff --git a/e2e/issue35-v13-ui.spec.ts b/e2e/issue35-v13-ui.spec.ts
+index 836ef3a..618be16 100644
+--- a/e2e/issue35-v13-ui.spec.ts
++++ b/e2e/issue35-v13-ui.spec.ts
+@@ -249,3 +249,62 @@ test('UI-03: post-commit read-back fault blocks Trainer standard retry and prese
+   expect(await readCanonicalState(page)).toEqual(saved)
+   await info.attach('trainer-standard-unknown', { body: JSON.stringify({ probe, diagnostic, before: fixture, saved }), contentType: 'application/json' })
+ })
++
++test('UI-01: touch handle reorder does not scroll a vertically scrolled settings page', async ({ browser, baseURL }, info) => {
++  const context = await browser.newContext({ baseURL, viewport: { width: 360, height: 400 }, hasTouch: true, isMobile: true, timezoneId: 'Asia/Tokyo' })
++  try {
++    const page = await context.newPage()
++    const fixture = {
++      ...structuredClone(canonicalFixture),
++      trainingItems: canonicalFixture.trainingItems.map(item => ({ ...item, managementMode: 'MAN' as const })),
++      menus: canonicalFixture.menus.map(menu => ({ ...menu, managementMode: 'MAN' as const })),
++      displayPreferences: structuredClone(defaultDisplayPreferences),
++      appliedProposalIds: [],
++    }
++    await seed(page, fixture)
++    await page.getByRole('button', { name: '共通メニュー' }).tap()
++    await page.getByRole('button', { name: '設定', exact: true }).tap()
++    const display = page.getByRole('button', { name: /^表示設定/ })
++    await display.tap()
++    const defaultSort = page.getByRole('region', { name: 'Default', exact: true })
++    const option = page.getByRole('region', { name: 'Option', exact: true })
++    const beforeOption = await option.textContent()
++    const cdp = await context.newCDPSession(page)
++    const scrollY = () => page.evaluate(() => window.scrollY)
++    const drag = async () => {
++      const handles = defaultSort.locator('.sort-drag-handle')
++      await handles.last().scrollIntoViewIfNeeded()
++      const initialScroll = await scrollY()
++      expect(initialScroll).toBeGreaterThan(0)
++      const point = async (index: number) => {
++        const box = (await handles.nth(index).boundingBox())!
++        const y = box.y + box.height / 2
++        expect(y).toBeGreaterThan(0)
++        expect(y).toBeLessThan(400)
++        return { x: box.x + box.width / 2, y }
++      }
++      await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [await point(2)] })
++      await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [await point(0)] })
++      await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
++      expect(await scrollY()).toBe(initialScroll)
++      await expect(handles.first().locator('..').locator('span:first-child')).toHaveText('1 部位')
++      expect(await option.textContent()).toBe(beforeOption)
++      return initialScroll
++    }
++    const cancelScroll = await drag()
++    await page.getByRole('button', { name: /戻る/ }).tap()
++    expect(await readCanonicalState(page)).toEqual(fixture)
++    await display.tap()
++    const saveScroll = await drag()
++    await page.getByRole('button', { name: '設定を保存' }).tap()
++    const expected = {
++      ...fixture, displayPreferences: { ...fixture.displayPreferences, defaultSort: {
++        ...fixture.displayPreferences.defaultSort, priority: ['bodyRegion', 'recommendedDay', 'completion'],
++      } },
++    }
++    await expect.poll(() => readCanonicalState(page)).toEqual(expected)
++    await page.reload()
++    expect(await readCanonicalState(page)).toEqual(expected)
++    await info.attach('touch-scroll-readback', { body: JSON.stringify({ cancelScroll, saveScroll, before: fixture, after: expected }), contentType: 'application/json' })
++  } finally { await context.close() }
++})
