@@ -1,19 +1,19 @@
 {
-  "status": "BLOCKED_PRODUCTION_MODE",
+  "status": "PREPARED_PENDING_LIMITED_QA",
   "readyForDeployment": false,
-  "productCommit": "945baba12a0fcbf4facb2ab9a627f3d6d7e5783e",
+  "productCommit": "0f1b87cc7b8bf26d6053a041b7ae96e23727c58c",
   "integrationCommit": "478ae75dbbf3598d20e99d98bfa36412a991ec87",
   "mainPreserved": "90552c9bce58848f19740a13054c087147b71803",
-  "build": "Build 2026-11-11 / 945baba1",
-  "buildCommand": "VITE_BUILD_DATE=2026-11-11 VITE_BUILD_SHA=945baba12a0fcbf4facb2ab9a627f3d6d7e5783e pnpm build",
+  "build": "Build 2026-11-11 / 0f1b87cc",
+  "buildCommand": "VITE_V13_PRODUCTION=true VITE_BUILD_DATE=2026-11-11 VITE_BUILD_SHA=0f1b87cc7b8bf26d6053a041b7ae96e23727c58c pnpm build",
   "productionUrl": "https://kzsakato.github.io/my-app/",
   "productionDatabase": "training-check",
-  "reason": "Default production build does not enable AnalysisV13 or initial v2 contribution import. Isolated build uses another DB and requires initial restore/controller scope. No approved production data activation mapping verified.",
+  "reason": "Root feature/Restore targeted verification passed. Await limited QA and PMO readiness decision per #6789917630.",
   "productFiles": [
     {
-      "path": "assets/index-1DURiORF.js",
-      "bytes": 380219,
-      "sha256": "59dd5e6439ad461a2fbb24def2bdee9ed676278074275b217faed4451cadd0f6"
+      "path": "assets/index-BPwO8NUU.js",
+      "bytes": 385884,
+      "sha256": "aa777339ef1a877b0b87e0e7fc1a7d5dc347f3de647bf46351d368281297388d"
     },
     {
       "path": "assets/index-DIXRco9J.css",
@@ -23,7 +23,7 @@
     {
       "path": "index.html",
       "bytes": 549,
-      "sha256": "5d53a0b439a3559b9efef3f6cc6a6ae76a377ab349dc4fb605325977fe9de74a"
+      "sha256": "139776d5b415b2db9d867fecc80be327053e57e2f251f4be96889b8ec51d58be"
     },
     {
       "path": "manifest.webmanifest",
@@ -43,7 +43,7 @@
     {
       "path": "sw.js",
       "bytes": 1188,
-      "sha256": "62e6dd431e9b26f13535ca3180dd86bafb5b68e6c712404c11ccf8d200b44b38"
+      "sha256": "9288d7e94501d23ea833babee84da4e0ecbf3e9f85d89fead5f341c1ecf06e79"
     },
     {
       "path": "test/assets/index-BcchCwVd.js",
