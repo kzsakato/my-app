@@ -1,4 +1,5 @@
-import { useState, type PointerEvent } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { effectiveDisplayPreferences, validSort, type SortKey, type SortPreference } from './canonical/displayPreferences'
 import type { CanonicalAppData } from './canonical/types'
 
@@ -17,29 +18,15 @@ export function DisplayPreferencesEditor({ data, commit, onSaved }: { data: Cano
       return { ...current, [section]: { ...current[section], priority } }
     })
   }
-  const drop = (event: PointerEvent<HTMLSpanElement>, section: 'defaultSort' | 'optionSort', from: number) => {
-    const handle = event.currentTarget
-    if (!handle.hasPointerCapture(event.pointerId)) return
-    const group = handle.closest('fieldset')
-    const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('.sort-priority-row')
-    if (!group || !target || target.closest('fieldset') !== group) return
-    const to = [...group.querySelectorAll('.sort-priority-row')].indexOf(target)
-    if (to !== from && to >= 0) move(section, from, to)
-  }
   return <>
     {(['defaultSort', 'optionSort'] as const).map(section => <section className="card display-preference-section" key={section} aria-label={section === 'defaultSort' ? 'Default' : 'Option'}>
       <h2>{section === 'defaultSort' ? 'Default' : 'Option'}</h2>
       <fieldset disabled={pending}><legend>ソート優先順位</legend>
-        {draft[section].priority.map((key, index) => <div className="sort-priority-row" key={key}>
+        {draft[section].priority.map((key, index) => <PriorityRow key={key} index={index} disabled={pending} label={labels[key]} onMove={to=>move(section,index,to)}>
           <span>{index + 1} {labels[key]}</span>
-          <span className="sort-drag-handle" aria-hidden="true"
-            onPointerDown={event => {
-              if (!pending && event.isPrimary && event.button === 0) event.currentTarget.setPointerCapture(event.pointerId)
-            }}
-            onPointerUp={event => drop(event, section, index)}>≡</span>
           <button className="small" aria-label={`${labels[key]}を上へ`} disabled={index === 0} onClick={() => move(section, index, index - 1)}>↑</button>
           <button className="small" aria-label={`${labels[key]}を下へ`} disabled={index === 2} onClick={() => move(section, index, index + 1)}>↓</button>
-        </div>)}
+        </PriorityRow>)}
       </fieldset>
       <fieldset disabled={pending}><legend>実施状況</legend>
         {(['incompleteFirst', 'completeFirst'] as const).map(value => <label className="check" key={value}><input type="radio" name={section} checked={draft[section].completionDirection === value} onChange={() => setDraft({ ...draft, [section]: { ...draft[section], completionDirection: value } })} />{value === 'incompleteFirst' ? '未実施先' : '実施済先'}</label>)}
@@ -58,4 +45,41 @@ export function DisplayPreferencesSummary({ data }: { data: CanonicalAppData }) 
     {(['defaultSort', 'optionSort'] as const).map(section => <div key={section}><dt>{section === 'defaultSort' ? 'Default' : 'Option'}</dt><dd>{value[section].priority.map(key => labels[key]).join(' → ')} / {value[section].completionDirection === 'incompleteFirst' ? '未実施先' : '実施済先'}</dd></div>)}
     <div><dt>部位</dt><dd>{value.bodyRegionOrder.join(' → ')}</dd></div>
   </dl>
+}
+
+// Movement intent is an internal heuristic, not a long-press requirement.
+// Fast vertical swipes retain the browser's normal scrolling; deliberate movement lifts a row.
+function PriorityRow({index,label,disabled,onMove,children}:{index:number;label:string;disabled:boolean;onMove:(to:number)=>void;children:ReactNode}) {
+ const ref=useRef<HTMLDivElement>(null)
+ const gesture=useRef<{x:number;y:number;t:number;mode:'pending'|'drag'|'scroll';rect:DOMRect}|null>(null)
+ const [floating,setFloating]=useState<{x:number;y:number;rect:DOMRect}|null>(null)
+ const [target,setTarget]=useState<number>()
+ const onMoveRef=useRef(onMove);onMoveRef.current=onMove
+ const begin=(x:number,y:number)=>{if(!ref.current||disabled)return;gesture.current={x,y,t:performance.now(),mode:'pending',rect:ref.current.getBoundingClientRect()}}
+ const track=(x:number,y:number,touch:boolean)=>{
+  const g=gesture.current;if(!g)return false
+  const distance=Math.hypot(x-g.x,y-g.y)
+  if(g.mode==='pending'&&distance>=6)g.mode=touch&&Math.abs(y-g.y)>Math.abs(x-g.x)&&distance/Math.max(1,performance.now()-g.t)>.7?'scroll':'drag'
+  if(g.mode!=='drag'||ref.current?.closest('fieldset')?.disabled)return false
+  setFloating({x,y,rect:g.rect})
+  const group=ref.current?.closest('fieldset'),hit=document.elementFromPoint(x,y)?.closest('.sort-priority-row')
+  setTarget(group&&hit&&hit.closest('fieldset')===group?[...group.querySelectorAll('.sort-priority-row')].indexOf(hit):undefined)
+  return true
+ }
+ const finish=()=>{if(!disabled&&gesture.current?.mode==='drag'&&target!==undefined&&target!==index)onMoveRef.current(target);gesture.current=null;setFloating(null);setTarget(undefined)}
+ const finishRef=useRef(finish);finishRef.current=finish
+ useEffect(()=>{
+  const el=ref.current;if(!el)return
+  const start=(e:TouchEvent)=>{if((e.target as Element).closest('button'))return;const p=e.touches[0];begin(p.clientX,p.clientY)}
+  const move=(e:TouchEvent)=>{const p=e.touches[0];if(p&&track(p.clientX,p.clientY,true))e.preventDefault()}
+  const end=()=>finishRef.current()
+  const cancel=()=>{gesture.current=null;setFloating(null);setTarget(undefined)}
+  el.addEventListener('touchstart',start,{passive:true});el.addEventListener('touchmove',move,{passive:false});el.addEventListener('touchend',end);el.addEventListener('touchcancel',cancel)
+  return()=>{el.removeEventListener('touchstart',start);el.removeEventListener('touchmove',move);el.removeEventListener('touchend',end);el.removeEventListener('touchcancel',cancel)}
+ },[])
+ return <><div ref={ref} className={`sort-priority-row ${floating?'v14-drag-source':''}`} data-drag-key={label}
+ onPointerDown={e=>{if(e.pointerType==='touch'||(e.target as Element).closest('button'))return;begin(e.clientX,e.clientY);e.currentTarget.setPointerCapture(e.pointerId)}}
+ onPointerMove={e=>{if(e.pointerType!=='touch')track(e.clientX,e.clientY,false)}} onPointerUp={e=>{if(e.pointerType!=='touch')finish()}}
+ onPointerCancel={()=>{gesture.current=null;setFloating(null);setTarget(undefined)}}>{children}{floating&&target!==undefined&&<small className="v14-drop-candidate">{target+1}位へ</small>}</div>
+ {floating&&createPortal(<div className="v14-drag-ghost" style={{left:floating.rect.left,top:floating.y+12,width:floating.rect.width}} aria-hidden="true">{label}</div>,document.body)}</>
 }

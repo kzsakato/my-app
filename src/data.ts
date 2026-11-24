@@ -1,3 +1,4 @@
+import { prepareContributionV3 } from './canonical/trainerV14'
 import { previewInitialV13Restore } from './canonical/backupV13'
 import { contributionError } from './canonical/contributions'
 import { parseTrainerProposalV2, previewInitialContributions } from './canonical/trainerV13'
@@ -283,3 +284,40 @@ export async function saveRecoveryPoint(rawJson:string,sourceKind:string):Promis
 export async function getRecoveryPoint():Promise<RecoveryPoint|undefined>{const db=await dbPromise;return db.get('recovery','latest-legacy-source')}
 export function localDate(d=new Date()){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
 export function weekStart(d=new Date()){const x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));x.setHours(0,0,0,0);return x}
+
+/** V3 uses the established canonical+cutover transaction and independent whole-scope read-back. */
+export async function applyContributionV3(raw: string): Promise<{status:'SUCCESS'|'NO_CHANGE';value:CanonicalAppData;changedCount:number}|{status:'UNKNOWN_HELD'|'REJECTED_ZERO_MUTATION';reason:string}> {
+ let started=false, held=false
+ try {
+  if (isV13Isolated) assertIsolatedV13Controller()
+  const db=await dbPromise, tx=db.transaction(['canonical','cutover'],'readwrite')
+  // idb's done can reject on a bubbling request error before the abort event.
+  // Wait for the terminal event to distinguish definite rollback from committed UNKNOWN.
+  const terminal=new Promise<'abort'|'complete'>(resolve=>{
+   tx.addEventListener('abort',()=>resolve('abort'),{once:true})
+   tx.addEventListener('complete',()=>resolve('complete'),{once:true})
+  })
+  const canonical=tx.objectStore('canonical'),cutover=tx.objectStore('cutover'),marker=crypto.randomUUID()
+  let result:ReturnType<typeof prepareContributionV3>
+  try {
+   const state=await cutover.get(cutoverKey) as CutoverState|undefined
+   held=Boolean(state?.v13Pending||state?.trainerPendingProposalId)
+   const stored=await canonical.get(canonicalKey) as CanonicalAppData|undefined
+   if (!state?.authoritative||held||!stored) throw new Error('V3_CANONICAL_UNAVAILABLE')
+   result=prepareContributionV3(raw,stored)
+   if (!result.changedCount) { await tx.done;return {status:'NO_CHANGE',value:stored,changedCount:0} }
+   nextV13Revision(stored,state)
+   started=true
+   await canonical.put(result.candidate,canonicalKey)
+   await cutover.put({...state,v13Pending:marker},cutoverKey)
+   await tx.done
+  } catch(error) {
+   try {tx.abort();started=false} catch { /* outcome cannot be established here */ }
+   await tx.done.catch(()=>{})
+   if(await terminal==='abort')started=false
+   throw error
+  }
+  await verifyV13Commit(db,result.candidate,marker)
+  return {status:'SUCCESS',value:result.candidate,changedCount:result.changedCount}
+ } catch(error) {return {status:started||held?'UNKNOWN_HELD':'REJECTED_ZERO_MUTATION',reason:String(error)}}
+}

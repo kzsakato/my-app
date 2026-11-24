@@ -5,3 +5,17 @@
 .row-link{display:flex;align-items:center;justify-content:space-between;gap:8px;flex:1;min-width:0;padding:0;border:0;background:transparent;text-align:left;color:inherit}.order-buttons{display:flex;gap:4px;margin-left:6px}.top-switch{display:flex;gap:8px;margin:12px 0}.top-switch button{flex:1}.top-switch .active{background:#326a41;color:#fff}.recommended-title{margin:18px 0 6px;font-size:16px}
 
 .measurement-settings{border:1px solid #d7dfdc;border-radius:10px;margin:14px 0;padding:12px}.measurement-settings legend{font-size:14px;color:#536457}
+
+.v14-region-legend { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem }
+.v14-region-legend .check { min-width:0;flex-wrap:wrap;overflow-wrap:anywhere }
+.v14-weekly {width:100%;height:auto;overflow:visible}
+.v14-weekly text {font-size:26px;fill:currentColor}
+.v14-body-legend {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));font-size:.85rem;gap:.5rem}
+.sort-priority-row {position:relative;cursor:grab;user-select:none}
+.v14-drag-source {outline:2px dashed #326a41;background:#e7f0e5}
+.v14-drag-ghost {position:fixed;z-index:1000;pointer-events:none;background:#e7f0e5;border:2px solid #326a41;padding:1rem;box-shadow:0 8px 18px #0003;border-radius:8px}
+.v14-drop-candidate {color:#326a41;font-weight:bold}
+
+.v14-region-meter::-webkit-meter-optimum-value { background:var(--region-color); }
+.v14-region-meter::-moz-meter-bar { background:var(--region-color); }
+

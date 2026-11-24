@@ -7,11 +7,12 @@ export function displayedSessionOrder(left: Session, right: Session): number {
   return sessionOrder(left, right) || (left.id < right.id ? -1 : left.id > right.id ? 1 : 0)
 }
 
-/** Exercise completion answers only a boolean; it cannot select an actual. */
+/** V14-03: only a matching active Entry in the selected active Menu is complete.
+ * Caller supplies the current configured week; Extra never implies membership. */
 export function completedEntryIds(data: CanonicalAppData, entries: MenuEntry[], sessions: Session[]): Set<string> {
-  const exercises = new Set(sessions.map(session => session.snapshot.exerciseId))
-  const items = new Map(data.trainingItems.map(item => [item.id, item]))
-  return new Set(entries.filter(entry => exercises.has(items.get(entry.trainingItemId)?.exerciseId ?? '')).map(entry => entry.id))
+  const activeMenu = data.menus.find(menu => menu.id === data.activeMenuId && menu.lifecycle === 'active')
+  const ids = new Set(sessions.map(session => session.menuEntryId).filter(Boolean))
+  return new Set(entries.filter(entry => activeMenu && entry.menuId === activeMenu.id && entry.lifecycle === 'active' && ids.has(entry.id)).map(entry => entry.id))
 }
 
 export type CompletedSessionRow = {
