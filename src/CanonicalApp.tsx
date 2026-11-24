@@ -6,7 +6,7 @@ import { bodyRegions, compareBodyRegions, compareNames, effectiveDisplayPreferen
 import { compareInstants } from "./canonical/instant";
 import { useMemo, useRef, useState } from "react";
 import { currentWeekSessions, shiftLocalDate, weeklyLoadSummary } from "./canonical/baseline";
-import { completedEntryIds, completedSessionRows, displayedSessionOrder, sortMixedTopRows, type CompletedSessionRow } from "./canonical/topProjection";
+import { completedEntryIds, legacyCompletedEntryIds, completedSessionRows, displayedSessionOrder, sortMixedTopRows, type CompletedSessionRow } from "./canonical/topProjection";
 import { cancelSession } from "./canonical/cancelSession";
 import { itemValidationMessages } from "./itemValidation";
 import { applyCanonicalRestore, createCanonicalBackup, previewCanonicalRestore, type BackupPreview } from "./canonical/backup";
@@ -285,7 +285,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
           item={item}
           exercise={exercise}
           completedSession={selectedSession}
-          onBack={() => selectedSession ? selectedRegion ? setPage("cat") : toTop() : setExtraItemId(undefined)}
+          onBack={() => selectedSession ? selectedRegion ? setPage("cat") : toTop() : import.meta.env.VITE_V13_FEATURES === "true" ? setExtraItemId(undefined) : toTop()}
           onComplete={finish}
           commit={commit}
           {...header}
@@ -389,7 +389,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
         setRunEntryId(id);
         setPage("run");
       }}
-      viewState={page === "cat" ? regionView : undefined} onView={page === "cat" ? setRegionView : undefined}
+      viewState={page === "cat" && import.meta.env.VITE_V13_FEATURES === "true" ? regionView : undefined} onView={page === "cat" && import.meta.env.VITE_V13_FEATURES === "true" ? setRegionView : undefined}
       region={page === "cat" ? selectedRegion : undefined}
       onEditExercise={editExercise}
       onCategory={region => { setRegionView({option:false,completed:false}); setSelectedRegion(region); setPage("cat"); }}
@@ -450,7 +450,7 @@ function TopPage({
   const setCategoryShowCompleted=(completed:boolean)=>{setCompletedLocal(completed);onView?.({option,completed})};
   const [dayFilterOpen, setDayFilterOpen] = useState(false);
   const weekSessions = currentWeekSessions(data, today).sort(displayedSessionOrder);
-  const completedEntries = completedEntryIds(data, entries, weekSessions);
+  const completedEntries = (import.meta.env.VITE_V13_FEATURES === "true" ? completedEntryIds : legacyCompletedEntryIds)(data, entries, weekSessions);
   // Owner contract 799df27: completed planned Entries stay in data, not in either list.
   const sortEntries = (rows: MenuEntry[]) => sortDisplayRows(rows.filter(entry => !completedEntries.has(entry.id)), entry => {
     const item = data.trainingItems.find(item => item.id === entry.trainingItemId)!;
@@ -1143,10 +1143,11 @@ function SettingsPage(props: SettingsPageProps) {
   const preferences = effectiveDisplayPreferences(data);
   const sorted = <T,>(rows: T[], id: (row: T) => string, name: (row: T) => string, exerciseId: (row: T) => string) => sortDisplayRows(rows, row => ({ id: id(row), name: name(row), bodyRegion: region(exerciseId(row)) }), preferences, option, ['bodyRegion']);
   const openEdit=(id:string|null)=>{listReturn.current={option,hidden};setEdit(id)};
-  const editExercise = (id: string) => { if(route==='menu'&&typeof edit==='string')setMenuReturn(edit); setRoute("exercise"); setEdit(id); setOption(false); };
+  const editExercise = (id: string) => { if(import.meta.env.VITE_V13_FEATURES === "true"&&route==='menu'&&typeof edit==='string')setMenuReturn(edit); setRoute("exercise"); setEdit(id); setOption(false); };
   const root = () => { setMenuReturn(undefined);createdExercise.current=undefined;listReturn.current=undefined; setOption(false); setRoute(undefined); setEdit(undefined); setHistoryOpen(false); };
   const list = () => { setMenuReturn(undefined);createdExercise.current=undefined;listReturn.current=undefined; setOption(false); setEdit(undefined); setPreset(undefined); if (route === "menu") setMenuHidden(false); };
   const backFromEdit=()=>{
+    if(import.meta.env.VITE_V13_FEATURES !== "true"){list();return}
     if(route==='exercise'&&menuReturn){setRoute('menu');setEdit(menuReturn);setMenuReturn(undefined);return}
     if(route==='item'&&createdExercise.current){setRoute('exercise');setEdit(createdExercise.current);setPreset(undefined);createdExercise.current=undefined;return}
     setEdit(undefined);setPreset(undefined);
@@ -1183,7 +1184,7 @@ function SettingsPage(props: SettingsPageProps) {
       {data.menus.filter(value => hidden ? value.lifecycle === "archived" : value.lifecycle === "active").sort((a, b) => compareNames(a.name, b.name) || a.id.localeCompare(b.id)).map(value => row(`${value.name}${value.id === data.activeMenuId ? "（使用中）" : ""}`, `${data.menuEntries.filter(entry => entry.menuId === value.id && entry.lifecycle === "active").length}項目`, () => openEdit(value.id)))}
       <button className="primary" onClick={() => openEdit(null)}>＋ 週メニューを登録</button>
     </> : edit !== undefined ? route === "exercise" ? <>
-      <ExerciseEditor key={edit ?? "new"} initialExercise={data.exercises.find(value => value.id === edit)} onSaved={list} data={data} commit={commit} onConfigure={id => { createdExercise.current=id; setPreset(id); setRoute("item"); setEdit(null); }} />
+      <ExerciseEditor key={edit ?? "new"} initialExercise={data.exercises.find(value => value.id === edit)} onSaved={list} data={data} commit={commit} onConfigure={id => { createdExercise.current=import.meta.env.VITE_V13_FEATURES === "true"?id:undefined; setPreset(id); setRoute("item"); setEdit(null); }} />
       {edit && <button className="archive" onClick={() => archiveExercise(data.exercises.find(value => value.id === edit)!)}>{data.exercises.find(value => value.id === edit)?.lifecycle === "active" ? "この種目を非表示にする" : "再表示する"}</button>}
     </> : <>
       <ItemEditor key={`${edit}:${preset}`} data={data} commit={commit} itemId={edit} presetExerciseId={preset} onSaved={list} />
