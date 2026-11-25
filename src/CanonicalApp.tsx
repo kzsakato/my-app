@@ -974,12 +974,24 @@ function AnalysisV13({ data }: { data: CanonicalAppData }) {
         <span>{name}</span><meter className="v14-region-meter" style={{"--region-color":analysisColors[index]} as React.CSSProperties} aria-label={name} max={Math.max(1, ...value.regions)} value={value.regions[index]} />
         <span>{Number(value.regions[index].toFixed(2))}</span>
       </div>)}
+      {import.meta.env.VITE_V13_FEATURES === "true" ? <section className="card v14-allocation-card" aria-label="④ 部位別配分">
+        <div className="v14-allocation-heading"><span aria-hidden="true">④</span><h3>部位別配分</h3></div>
+        <p className="meta">配賦済Dの内部で100% · 未配賦Uは帯の外</p>
+        <p className="v14-allocation-period">{value.buckets[0].start} ～ {value.buckets[value.buckets.length-1].start}（今期途中） · 12{periods.find(option=>option.value===period)?.label}</p>
+        {value.shares ? <>
+          <div className="v13-analysis-shares" aria-hidden="true">{value.shares.map((share,index)=><span key={index} style={{width:`${share*100}%`,background:analysisColors[index]}} />)}</div>
+          <div className="v14-allocation-legend">{value.shares.map((share,index)=><span key={index} style={{color:analysisColors[index]}}><i aria-hidden="true" style={{background:analysisColors[index]}} /><span>{contributionLabels[index]} {Number((share*100).toFixed(1))}%</span></span>)}</div>
+          <p className="meta">配賦済D={Number(value.allocated.toFixed(2))}の内部で100%</p>
+        </> : <p>配賦済D=0 · 配分は未定義です。</p>}
+        <p className="v14-allocation-u">100%の外：未配賦U {Number(value.unallocated.toFixed(2))}セット</p>
+      </section> : <>
       <h3>部位別配分</h3>
       {value.shares && <>
         <div className="v13-analysis-shares" aria-hidden="true">{value.shares.map((share, index) => <span key={index} style={{ width: `${share * 100}%`, background: analysisColors[index] }} />)}</div>
         <ul>{value.shares.map((share, index) => <li key={index}>{contributionLabels[index]} {Number((share * 100).toFixed(1))}%</li>)}</ul>
       </>}
       {value.unallocated > 0 && <p>未配賦 {value.unallocated}</p>}
+      </>}
       <h3>種目別構成比</h3>
       <label>部位<select aria-label="部位" value={selected} onChange={event => setSelected(Number(event.target.value))}>
         {contributionLabels.map((name, index) => <option key={name} value={index}>{name}</option>)}
