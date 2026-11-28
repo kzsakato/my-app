@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import type { CanonicalAppData } from './canonical/types'
-import { canonicalStorage, applyTrainerCanonical, applyInitialV13Proposal, readV13Canonical } from './data'
+import { canonicalStorage, applyTrainerCanonical, applyInitialV13Proposal, applyContributionV3, readV13Canonical } from './data'
 import { validateMenuProposal, type ProposalCheck } from './canonical/trainer'
-import { createTrainerContextV2 } from './canonical/trainerV13'
+import { createTrainerContextV3 } from './canonical/trainerV14'
 import { createTrainerContextV11, parseUniqueJson, previewTrainerProposal, trainerDiagnosticCategory, trainerMessages as messages, type TrainerProposalPreview } from './canonical/trainerV11'
 
 function download(name: string, value: unknown) {
@@ -50,13 +50,14 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
         return
       }
       if (!value || typeof value !== 'object' || (value as { format?: unknown }).format !== 'training-project.trainer-proposal') { setImportMessage(messages.wrongFormat); return }
-      if (v13 && (value as { version?: unknown }).version === 2) {
+      if (v13 && [2,3].includes((value as { version: number }).version)) {
         busy.current = true; setPending(true); onPending(true)
         try {
-          const result = await applyInitialV13Proposal(raw)
-          if (result.status === 'SUCCESS') {
+          const isV3 = (value as {version:number}).version === 3
+          const result = isV3 ? await applyContributionV3(raw) : await applyInitialV13Proposal(raw)
+          if ('value' in result) {
             onApplied(result.value)
-            setImportMessage('初回寄与率を登録しました。')
+            setImportMessage(isV3 ? result.status === 'NO_CHANGE' ? '寄与率に変更はありませんでした。' : `寄与率を更新しました（${'changedCount' in result ? result.changedCount : 0}件）。` : '初回寄与率を登録しました。')
           } else {
             const unknown = result.status === 'UNKNOWN_HELD'
             setHeld(unknown)
@@ -100,7 +101,7 @@ export function TrainerPanel({ data, onApplied, onPending }: Props) {
       if (state.trainerPendingProposalId || state.v13Pending) { setHeld(true); setImportMessage(messages.inconsistent); setDiagnostic({ stage: 'export', code: 'UNRESOLVED_AI_APPLY', proposalId: state.trainerPendingProposalId }); return }
       const latest = v13 ? await readV13Canonical() : await canonicalStorage.readCanonical()
       if (!latest) throw new Error('Missing canonical')
-      const value = v13 ? createTrainerContextV2(latest, new Date(), true) : createTrainerContextV11(latest, new Date())
+      const value = v13 ? createTrainerContextV3(latest, new Date(), true) : createTrainerContextV11(latest, new Date())
       download(`trainer-context-${value.exportedLocalDate}.json`, value)
       setExportMessage(`${value.history.length === 0 ? messages.empty + '\n' : ''}${messages.exported}`)
     } catch (error) {

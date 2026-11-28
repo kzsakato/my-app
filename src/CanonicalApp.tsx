@@ -1,3 +1,4 @@
+import { RecentWeeklyChart } from './RecentWeeklyChart';
 import { projectAnalysisV13 } from './canonical/analysisV13';
 import { contributionLabels } from './canonical/contributions';
 import { DisplayPreferencesEditor, DisplayPreferencesSummary, OptionSort } from "./DisplayPreferencesEditor";
@@ -5,7 +6,7 @@ import { bodyRegions, compareBodyRegions, compareNames, effectiveDisplayPreferen
 import { compareInstants } from "./canonical/instant";
 import { useMemo, useRef, useState } from "react";
 import { currentWeekSessions, shiftLocalDate, weeklyLoadSummary } from "./canonical/baseline";
-import { completedEntryIds, completedSessionRows, displayedSessionOrder, sortMixedTopRows, type CompletedSessionRow } from "./canonical/topProjection";
+import { completedEntryIds, legacyCompletedEntryIds, completedSessionRows, displayedSessionOrder, sortMixedTopRows, type CompletedSessionRow } from "./canonical/topProjection";
 import { cancelSession } from "./canonical/cancelSession";
 import { itemValidationMessages } from "./itemValidation";
 import { applyCanonicalRestore, createCanonicalBackup, previewCanonicalRestore, type BackupPreview } from "./canonical/backup";
@@ -171,6 +172,8 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   const [selectedRegion, setSelectedRegion] = useState<string>();
   const [extraItemId, setExtraItemId] = useState<string>();
   const [viewSessionId, setViewSessionId] = useState<string>();
+  const [regionView,setRegionView]=useState({option:false,completed:false});
+  const [extraView,setExtraView]=useState({filter:'',excludeDays:0,option:false});
   const [notice, setNotice] = useState("");
   const [needsRecovery, setNeedsRecovery] = useState(false);
   const [trainerStandardUnknown, setTrainerStandardUnknown] = useState(false);
@@ -210,6 +213,8 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   };
   const toTop = () => {
     if (writeBusy.current) return;
+    setRegionView({option:false,completed:false});
+    setExtraView({filter:"",excludeDays:0,option:false});
     setPage("top");
     setSelectedRegion(undefined);
     setRunEntryId(undefined);
@@ -280,7 +285,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
           item={item}
           exercise={exercise}
           completedSession={selectedSession}
-          onBack={() => selectedSession && selectedRegion ? setPage("cat") : toTop()}
+          onBack={() => selectedSession ? selectedRegion ? setPage("cat") : toTop() : import.meta.env.VITE_V13_FEATURES === "true" ? setExtraItemId(undefined) : toTop()}
           onComplete={finish}
           commit={commit}
           {...header}
@@ -290,6 +295,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
   if (page === "extra")
     return (
       <ExtraPage
+        view={extraView} onView={setExtraView}
         data={data}
         onBack={toTop}
         onChoose={setExtraItemId}
@@ -383,9 +389,10 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
         setRunEntryId(id);
         setPage("run");
       }}
+      viewState={page === "cat" && import.meta.env.VITE_V13_FEATURES === "true" ? regionView : undefined} onView={page === "cat" && import.meta.env.VITE_V13_FEATURES === "true" ? setRegionView : undefined}
       region={page === "cat" ? selectedRegion : undefined}
       onEditExercise={editExercise}
-      onCategory={region => { setSelectedRegion(region); setPage("cat"); }}
+      onCategory={region => { setRegionView({option:false,completed:false}); setSelectedRegion(region); setPage("cat"); }}
       onActual={session => { setViewSessionId(session.id); setExtraItemId(session.trainingItemId); setPage("extra"); }}
       onExtra={() => setPage("extra")}
       onHistory={() => setPage("history")}
@@ -395,6 +402,7 @@ export function CanonicalApp({ initial }: { initial: CanonicalAppData }) {
 }
 
 function TopPage({
+  viewState,onView,
   onEditExercise,
   region,
   onCategory,
@@ -413,6 +421,7 @@ function TopPage({
   onTop,
 }: {
   onEditExercise: (id: string) => void;
+  viewState?: {option:boolean;completed:boolean}; onView?: (value:{option:boolean;completed:boolean})=>void;
   region?: string;
   onCategory: (region: string) => void;
   onActual: (session: Session) => void;
@@ -435,11 +444,13 @@ function TopPage({
   const start = weekStart(today, data.weekStartsOn);
   const selectedDays = [...preferences.days].sort((left, right) => left - right);
   const topMode = preferences.mode;
-  const [option, setOption] = useState(false);
-  const [categoryShowCompleted, setCategoryShowCompleted] = useState(false);
+  const [option, setOptionLocal] = useState(viewState?.option??false);
+  const [categoryShowCompleted, setCompletedLocal] = useState(viewState?.completed??false);
+  const setOption=(option:boolean)=>{setOptionLocal(option);onView?.({option,completed:categoryShowCompleted})};
+  const setCategoryShowCompleted=(completed:boolean)=>{setCompletedLocal(completed);onView?.({option,completed})};
   const [dayFilterOpen, setDayFilterOpen] = useState(false);
   const weekSessions = currentWeekSessions(data, today).sort(displayedSessionOrder);
-  const completedEntries = completedEntryIds(data, entries, weekSessions);
+  const completedEntries = (import.meta.env.VITE_V13_FEATURES === "true" ? completedEntryIds : legacyCompletedEntryIds)(data, entries, weekSessions);
   // Owner contract 799df27: completed planned Entries stay in data, not in either list.
   const sortEntries = (rows: MenuEntry[]) => sortDisplayRows(rows.filter(entry => !completedEntries.has(entry.id)), entry => {
     const item = data.trainingItems.find(item => item.id === entry.trainingItemId)!;
@@ -825,10 +836,11 @@ function RegionWarning({ exercise, onEdit }: { exercise: Exercise; onEdit: (id: 
   return <div className="region-warning" role="alert"><span>bodyRegion classification が不正です</span><button className="small" onClick={() => onEdit(exercise.id)}>編集</button></div>;
 }
 
-function ExtraPage({ data, onBack, onChoose, onEditExercise, onSettings, onTop }: { data: CanonicalAppData; onBack: () => void; onChoose: (id: string) => void; onEditExercise: (id: string) => void; onSettings: () => void; onTop: () => void }) {
-  const [filter, setFilter] = useState("");
-  const [excludeDays, setExcludeDays] = useState(0);
-  const [option, setOption] = useState(false);
+function ExtraPage({ view,onView,data, onBack, onChoose, onEditExercise, onSettings, onTop }: { view:{filter:string;excludeDays:number;option:boolean};onView:(v:{filter:string;excludeDays:number;option:boolean})=>void; data: CanonicalAppData; onBack: () => void; onChoose: (id: string) => void; onEditExercise: (id: string) => void; onSettings: () => void; onTop: () => void }) {
+  const {filter,excludeDays,option}=view;
+  const setFilter=(filter:string)=>onView({...view,filter});
+  const setExcludeDays=(excludeDays:number)=>onView({...view,excludeDays});
+  const setOption=(option:boolean)=>onView({...view,option});
   const preferences = effectiveDisplayPreferences(data);
   const regions = bodyRegions({ ...data, exercises: active(data.exercises) });
   const excluded = excludeDays ? recentlyPerformedExercises(data.sessions, localDate(), excludeDays) : new Set<string>();
@@ -891,7 +903,7 @@ const analysisLabel = (start: string, period: AnalysisPeriod) => {
   return year;
 };
 
-function AnalysisChart({ series, labels, unit, compact = false }: { series: (AnalysisSeries & { color?: string })[]; labels: string[]; unit: string; compact?: boolean }) {
+function AnalysisChart({ series, labels, unit, compact = false, hideLegend = false }: { series: (AnalysisSeries & { color?: string })[]; labels: string[]; unit: string; compact?: boolean; hideLegend?: boolean }) {
   const max = Math.max(1, ...series.flatMap((value) => value.values));
   const width = compact ? 320 : 640;
   const height = compact ? 188 : 300;
@@ -918,9 +930,9 @@ function AnalysisChart({ series, labels, unit, compact = false }: { series: (Ana
           <polyline key={value.id} data-series={value.id} data-values={JSON.stringify(value.values)} points={value.values.map(point).join(" ")} fill="none" stroke={value.color ?? analysisColors[index % analysisColors.length]} strokeWidth="3" />
         ))}
       </svg>
-      <div className="legend">
+      {!hideLegend && <div className="legend">
         {series.map((value, index) => <span key={value.id} style={{ color: value.color ?? analysisColors[index % analysisColors.length] }}>● {value.name}</span>)}
-      </div>
+      </div>}
     </section>
   );
 }
@@ -935,47 +947,61 @@ function AnalysisV13({ data }: { data: CanonicalAppData }) {
     <label>期間<select value={period} onChange={event => setPeriod(event.target.value as AnalysisPeriod)}>
       {periods.map(option => <option key={option.value} value={option.value}>{option.label}</option>)}
     </select></label>
-    {value.state === "UNAVAILABLE" ? <p role="status">分析データを表示できません。</p> : <>
+    {value.state === "UNAVAILABLE" ? <><p role="status">分析データを表示できません。</p><RecentWeeklyChart data={data} today={localDate()} colors={analysisColors} /></> : <>
       <h2>総トレーニング負荷（参考）</h2>
       <AnalysisChart series={[{ id: "pt", name: "全体", values: value.buckets.map(bucket => bucket.pt) }]}
         labels={value.buckets.map((bucket, index) => index % 4 === 0 || index === 11 ? bucket.start.slice(2) : "")} unit="pt" compact />
       <p className="meta">今期途中</p>
       <h2>6部位の推移</h2>
-      <fieldset><legend>推定セット相当量</legend>
+      <fieldset className="v14-region-legend"><legend>推定セット相当量</legend>
         {contributionLabels.map((name, index) => <label className="check" key={name}>
           <input type="checkbox" checked={visible[index]} onChange={event => {
             const checked = event.target.checked;
             setVisible(current => current.map((item, at) => at === index ? checked : item));
-          }} />{name}
+          }} /><span style={{color:analysisColors[index]}}>{name}</span>
         </label>)}
       </fieldset>
       <AnalysisChart series={contributionLabels.map((name, index) => ({
         id: name, name, color: analysisColors[index], values: value.buckets.map(bucket => bucket.regions[index]),
       })).filter((_, index) => visible[index])}
-        labels={value.buckets.map((bucket, index) => index % 4 === 0 || index === 11 ? bucket.start.slice(2) : "")} unit="" compact />
+        labels={value.buckets.map((bucket, index) => index % 4 === 0 || index === 11 ? bucket.start.slice(2) : "")} unit="" compact hideLegend />
       {value.unallocated > 0 && <p role="status">寄与率未設定の種目があります。</p>}
+      <RecentWeeklyChart data={data} today={localDate()} colors={analysisColors} />
       <h2>トレーニング内容を検討する</h2>
       <h3>部位別トレーニング量</h3>
       {value.total === 0 && <p>実績なし</p>}
       {contributionLabels.map((name, index) => <div className="v13-analysis-amount" key={name}>
-        <span>{name}</span><meter aria-label={name} max={Math.max(1, ...value.regions)} value={value.regions[index]} />
+        <span>{name}</span><meter className="v14-region-meter" style={{"--region-color":analysisColors[index]} as React.CSSProperties} aria-label={name} max={Math.max(1, ...value.regions)} value={value.regions[index]} />
         <span>{Number(value.regions[index].toFixed(2))}</span>
       </div>)}
+      {import.meta.env.VITE_V13_FEATURES === "true" ? <section className="card v14-allocation-card" aria-label="④ 部位別配分">
+        <div className="v14-allocation-heading"><span aria-hidden="true">④</span><h3>部位別配分</h3></div>
+        <p className="meta">配賦済Dの内部で100% · 未配賦Uは帯の外</p>
+        <p className="v14-allocation-period">{value.buckets[0].start} ～ {value.buckets[value.buckets.length-1].start}（今期途中） · 12{periods.find(option=>option.value===period)?.label}</p>
+        {value.shares ? <>
+          <div className="v13-analysis-shares" aria-hidden="true">{value.shares.map((share,index)=><span key={index} style={{width:`${share*100}%`,background:analysisColors[index]}} />)}</div>
+          <div className="v14-allocation-legend">{value.shares.map((share,index)=><span key={index} style={{color:analysisColors[index]}}><i aria-hidden="true" style={{background:analysisColors[index]}} /><span>{contributionLabels[index]} {Number((share*100).toFixed(1))}%</span></span>)}</div>
+          <p className="meta">配賦済D={Number(value.allocated.toFixed(2))}の内部で100%</p>
+        </> : <p>配賦済D=0 · 配分は未定義です。</p>}
+        <p className="v14-allocation-u">100%の外：未配賦U {Number(value.unallocated.toFixed(2))}セット</p>
+      </section> : <>
       <h3>部位別配分</h3>
       {value.shares && <>
         <div className="v13-analysis-shares" aria-hidden="true">{value.shares.map((share, index) => <span key={index} style={{ width: `${share * 100}%`, background: analysisColors[index] }} />)}</div>
         <ul>{value.shares.map((share, index) => <li key={index}>{contributionLabels[index]} {Number((share * 100).toFixed(1))}%</li>)}</ul>
       </>}
       {value.unallocated > 0 && <p>未配賦 {value.unallocated}</p>}
-      <h3>種目別内訳</h3>
+      </>}
+      <h3>種目別構成比</h3>
       <label>部位<select aria-label="部位" value={selected} onChange={event => setSelected(Number(event.target.value))}>
         {contributionLabels.map((name, index) => <option key={name} value={index}>{name}</option>)}
       </select></label>
+      {value.regions[selected] === 0 && <p>構成比は未定義です。</p>}
       {[...value.byExercise].filter(([, amounts]) => amounts[selected] > 0).map(([id, amounts]) =>
         <div className="v13-analysis-amount" key={id} data-exercise-id={id}>
           <span>{data.exercises.find(exercise => exercise.id === id)?.name}</span>
           <meter aria-label={data.exercises.find(exercise => exercise.id === id)?.name} max={Math.max(1, value.regions[selected])} value={amounts[selected]} />
-          <span>{Number(amounts[selected].toFixed(2))}</span>
+          <span>{(100*amounts[selected]/value.regions[selected]).toFixed(1)}%</span>
         </div>)}
     </>}
   </>;
@@ -1110,6 +1136,9 @@ function SettingsPage(props: SettingsPageProps) {
   const { data, commit, onTop, onBackup, onMenuImport, onAnalysis } = props;
   const [route, setRoute] = useState<SettingsTab | undefined>(props.exerciseEditId ? "exercise" : props.menuToInspectId ? "menu" : undefined);
   const [edit, setEdit] = useState<string | null | undefined>(props.exerciseEditId ?? props.menuToInspectId);
+  const [menuReturn,setMenuReturn]=useState<string>();
+  const listReturn=useRef<{option:boolean;hidden:boolean}|undefined>(undefined);
+  const createdExercise=useRef<string|undefined>(undefined);
   const [option, setOption] = useState(false);
   const [preset, setPreset] = useState<string>();
   const [menuHidden, setMenuHidden] = useState(false);
@@ -1125,16 +1154,25 @@ function SettingsPage(props: SettingsPageProps) {
   const regions = bodyRegions(data);
   const preferences = effectiveDisplayPreferences(data);
   const sorted = <T,>(rows: T[], id: (row: T) => string, name: (row: T) => string, exerciseId: (row: T) => string) => sortDisplayRows(rows, row => ({ id: id(row), name: name(row), bodyRegion: region(exerciseId(row)) }), preferences, option, ['bodyRegion']);
-  const editExercise = (id: string) => { setRoute("exercise"); setEdit(id); setOption(false); };
-  const root = () => { setOption(false); setRoute(undefined); setEdit(undefined); setHistoryOpen(false); };
-  const list = () => { setOption(false); setEdit(undefined); setPreset(undefined); if (route === "menu") setMenuHidden(false); };
+  const openEdit=(id:string|null)=>{listReturn.current={option,hidden};setEdit(id)};
+  const editExercise = (id: string) => { if(import.meta.env.VITE_V13_FEATURES === "true"&&route==='menu'&&typeof edit==='string')setMenuReturn(edit); setRoute("exercise"); setEdit(id); setOption(false); };
+  const root = () => { setMenuReturn(undefined);createdExercise.current=undefined;listReturn.current=undefined; setOption(false); setRoute(undefined); setEdit(undefined); setHistoryOpen(false); };
+  const list = () => { setMenuReturn(undefined);createdExercise.current=undefined;listReturn.current=undefined; setOption(false); setEdit(undefined); setPreset(undefined); if (route === "menu") setMenuHidden(false); };
+  const backFromEdit=()=>{
+    if(import.meta.env.VITE_V13_FEATURES !== "true"){list();return}
+    if(route==='exercise'&&menuReturn){setRoute('menu');setEdit(menuReturn);setMenuReturn(undefined);return}
+    if(route==='item'&&createdExercise.current){setRoute('exercise');setEdit(createdExercise.current);setPreset(undefined);createdExercise.current=undefined;return}
+    setEdit(undefined);setPreset(undefined);
+    if(listReturn.current){setOption(listReturn.current.option);if(route==='menu')setMenuHidden(listReturn.current.hidden)}
+  };
   const labels = { profile: "プロフィール", exercise: "種目", item: "実施項目", menu: "週メニュー", settingHistory: "設定履歴", displayPreferences: "表示設定" };
   const title = !route ? "設定" : edit !== undefined ? `${labels[route]}を${edit === null ? "登録" : "編集"}` : labels[route];
   const navigate = (next: SettingsTab) => { setOption(false); setRoute(next); setEdit(undefined); if (next === "menu") setMenuHidden(false); if (next === "settingHistory") { setHistoryItem(""); setHistoryRegion(""); setHistoryOpen(false); } };
   const row = (name: string, sub: string, action: () => void) => <button className={`row ${edit === undefined && (route === "exercise" || route === "item") ? "settings-list-v11" : ""}`} key={name} title={sub} onClick={action}><span>{edit === undefined && (route === "exercise" || route === "item") ? <><small>{sub.split("　")[0]}</small><b>{name}</b></> : <><b>{name}</b><small>{sub}</small></>}</span><span>›</span></button>;
   const archiveExercise = async (value: Exercise) => { if (value.lifecycle === "active" && !confirm("この種目を非表示にしますか？")) return; if (await commit({ ...data, exercises: data.exercises.map(candidate => candidate.id === value.id ? { ...candidate, lifecycle: value.lifecycle === "active" ? "archived" : "active" } : candidate) })) list(); };
   const archiveItem = async (value: TrainingItem) => { if (value.lifecycle === "active" && !confirm("この実施項目を非表示にしますか？")) return; if (await commit({ ...data, trainingItems: data.trainingItems.map(candidate => candidate.id === value.id ? { ...candidate, lifecycle: value.lifecycle === "active" ? "archived" : "active" } : candidate) })) list(); };
-  return <Frame outerHeader={!!route && !historyOpen} title={title} back={!route ? undefined : historyOpen ? () => setHistoryOpen(false) : edit !== undefined ? list : root} onSettings={root} onTop={onTop}>
+  return <Frame outerHeader={!!route && !historyOpen} title={title} back={!route ? undefined : historyOpen ? () => setHistoryOpen(false) : edit !== undefined ? backFromEdit : root} onSettings={root} onTop={onTop}>
+    {((route==='menu'&&edit!==undefined)||menuReturn) && <div hidden={route!=='menu'}><MenuEditor key={menuReturn??edit??'new'} data={data} commit={commit} menuId={menuReturn??edit!} onSaved={list} onEditExercise={editExercise}/></div>}
     {props.notice && <p role="alert">{props.notice}</p>}
     {!route ? <>
       {import.meta.env.DEV && <button className="save-setting" onClick={props.onMasterBootstrap}>MAN用マスターを投入</button>}
@@ -1153,12 +1191,12 @@ function SettingsPage(props: SettingsPageProps) {
       <label>実施項目<select value={historyItem} onChange={event => setHistoryItem(event.target.value)}><option value="">選択してください</option>{active(data.trainingItems).filter(value => !historyRegion || region(value.exerciseId) === historyRegion).sort((a, b) => compareNames(a.displayName, b.displayName) || a.id.localeCompare(b.id)).map(value => <option key={value.id} value={value.id}>{value.displayName}</option>)}</select></label>
       {historyItem && <RegionWarning exercise={data.exercises.find(exercise => exercise.id === data.trainingItems.find(item => item.id === historyItem)?.exerciseId)!} onEdit={editExercise} />}
       {historyItem && <button className="primary" onClick={() => setHistoryOpen(true)}>設定履歴を見る</button>}
-    </> : route === "menu" ? edit !== undefined ? <MenuEditor key={edit ?? "new"} data={data} commit={commit} menuId={edit} onSaved={list} onEditExercise={editExercise} /> : <>
+    </> : route === "menu" ? edit !== undefined ? null : <>
       <label className="check"><input type="checkbox" checked={hidden} onChange={event => setHidden(event.target.checked)} />非表示データを表示</label>
-      {data.menus.filter(value => hidden ? value.lifecycle === "archived" : value.lifecycle === "active").sort((a, b) => compareNames(a.name, b.name) || a.id.localeCompare(b.id)).map(value => row(`${value.name}${value.id === data.activeMenuId ? "（使用中）" : ""}`, `${data.menuEntries.filter(entry => entry.menuId === value.id && entry.lifecycle === "active").length}項目`, () => setEdit(value.id)))}
-      <button className="primary" onClick={() => setEdit(null)}>＋ 週メニューを登録</button>
+      {data.menus.filter(value => hidden ? value.lifecycle === "archived" : value.lifecycle === "active").sort((a, b) => compareNames(a.name, b.name) || a.id.localeCompare(b.id)).map(value => row(`${value.name}${value.id === data.activeMenuId ? "（使用中）" : ""}`, `${data.menuEntries.filter(entry => entry.menuId === value.id && entry.lifecycle === "active").length}項目`, () => openEdit(value.id)))}
+      <button className="primary" onClick={() => openEdit(null)}>＋ 週メニューを登録</button>
     </> : edit !== undefined ? route === "exercise" ? <>
-      <ExerciseEditor key={edit ?? "new"} initialExercise={data.exercises.find(value => value.id === edit)} onSaved={list} data={data} commit={commit} onConfigure={id => { setPreset(id); setRoute("item"); setEdit(null); }} />
+      <ExerciseEditor key={edit ?? "new"} initialExercise={data.exercises.find(value => value.id === edit)} onSaved={list} data={data} commit={commit} onConfigure={id => { createdExercise.current=import.meta.env.VITE_V13_FEATURES === "true"?id:undefined; setPreset(id); setRoute("item"); setEdit(null); }} />
       {edit && <button className="archive" onClick={() => archiveExercise(data.exercises.find(value => value.id === edit)!)}>{data.exercises.find(value => value.id === edit)?.lifecycle === "active" ? "この種目を非表示にする" : "再表示する"}</button>}
     </> : <>
       <ItemEditor key={`${edit}:${preset}`} data={data} commit={commit} itemId={edit} presetExerciseId={preset} onSaved={list} />
@@ -1166,8 +1204,8 @@ function SettingsPage(props: SettingsPageProps) {
     </> : <>
       <select aria-label="部位" value={filter} onChange={event => setFilter(event.target.value)}><option value="">部位：すべて</option>{regions.map(value => <option key={value}>{value}</option>)}</select>
       <div className="list-checks"><label className="check"><input type="checkbox" checked={hidden} onChange={event => setHidden(event.target.checked)} />非表示データを表示</label><OptionSort checked={option} onChange={setOption} /></div>
-      {route === "exercise" ? sorted(data.exercises.filter(value => (hidden ? value.lifecycle === "archived" : value.lifecycle === "active") && (!filter || region(value.id) === filter)), value => value.id, value => value.name, value => value.id).map(value => <div key={value.id}>{row(value.name, `${region(value.id) ?? ""}　${value.measureType === "reps" ? "回数型" : "時間型"}${value.usesWeight ? value.weightMode === "perSide" ? "　片側×2" : "　合計×1" : ""}`, () => setEdit(value.id))}<RegionWarning exercise={value} onEdit={editExercise} /></div>) : sorted(data.trainingItems.filter(value => (hidden ? value.lifecycle === "archived" : value.lifecycle === "active") && (!filter || region(value.exerciseId) === filter)), value => value.id, value => value.displayName, value => value.exerciseId).map(value => <div key={value.id}>{row(value.displayName, region(value.exerciseId) ?? "", () => setEdit(value.id))}<RegionWarning exercise={data.exercises.find(exercise => exercise.id === value.exerciseId)!} onEdit={editExercise} /></div>)}
-      <button className="primary" onClick={() => setEdit(null)}>＋ {labels[route]}を登録</button>
+      {route === "exercise" ? sorted(data.exercises.filter(value => (hidden ? value.lifecycle === "archived" : value.lifecycle === "active") && (!filter || region(value.id) === filter)), value => value.id, value => value.name, value => value.id).map(value => <div key={value.id}>{row(value.name, `${region(value.id) ?? ""}　${value.measureType === "reps" ? "回数型" : "時間型"}${value.usesWeight ? value.weightMode === "perSide" ? "　片側×2" : "　合計×1" : ""}`, () => openEdit(value.id))}<RegionWarning exercise={value} onEdit={editExercise} /></div>) : sorted(data.trainingItems.filter(value => (hidden ? value.lifecycle === "archived" : value.lifecycle === "active") && (!filter || region(value.exerciseId) === filter)), value => value.id, value => value.displayName, value => value.exerciseId).map(value => <div key={value.id}>{row(value.displayName, region(value.exerciseId) ?? "", () => openEdit(value.id))}<RegionWarning exercise={data.exercises.find(exercise => exercise.id === value.exerciseId)!} onEdit={editExercise} /></div>)}
+      <button className="primary" onClick={() => openEdit(null)}>＋ {labels[route]}を登録</button>
     </>}
   </Frame>;
 }

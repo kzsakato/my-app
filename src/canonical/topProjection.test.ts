@@ -3,12 +3,13 @@ import { canonicalFixture } from './fixtures'
 import { completedEntryIds, completedSessionRows, displayedSessionOrder } from './topProjection'
 import { validateCanonical } from './validate'
 
-it('aggregates Exercise completion across memberships without returning any representative actual', () => {
+it('V14-03 completion matches Entry identity; Extra never completes memberships', () => {
   const data = structuredClone(canonicalFixture)
   const entry = data.menuEntries[0]
   const entries = [entry, { ...entry, id: 'second-membership' }]
   const extra = { ...data.sessions[0], menuEntryId: undefined }
-  expect(completedEntryIds(data, entries, [extra])).toEqual(new Set(entries.map(row => row.id)))
+  expect(completedEntryIds(data, entries, [extra])).toEqual(new Set())
+  expect(completedEntryIds(data, entries, data.sessions)).toEqual(new Set([entry.id]))
   expect(completedEntryIds(data, entries, [])).toEqual(new Set())
   expect(completedEntryIds(data, entries, [{ ...extra, snapshot: { ...extra.snapshot, exerciseId: 'other' } }])).toEqual(new Set())
 })
