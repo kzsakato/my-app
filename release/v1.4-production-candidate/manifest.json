@@ -1,0 +1,91 @@
+{
+  "status": "PREPARATION",
+  "readyForDeployment": false,
+  "productCommit": "ea53eb4ca3a8fa3a8ce14e3d7b63c3994a629873",
+  "preparationBaseCommit": "ea53eb4ca3a8fa3a8ce14e3d7b63c3994a629873",
+  "build": "Build 2026-11-25 / ea53eb4c",
+  "feature": "VITE_V13_PRODUCTION=true",
+  "artifactSource": {
+    "repository": "kzsakato/training-project",
+    "commit": "f62a98c5aa4eda19695a484df2608b027de7d2ae",
+    "zip": "release/V1.4/evidence/LIMITED_REWORK_20261125/candidate-ea53eb4c.zip",
+    "sha256": "9e5516bd4c72984ad39de375efbd57a4fa5cc478cc912e09f99256d777df828f",
+    "stagingEvidence": "d12da42c63a834f3f5277b69b56b001374f95cb9"
+  },
+  "productionUrl": "https://kzsakato.github.io/my-app/",
+  "productionDatabase": "training-check",
+  "preservedTestSource": "0912d2b963e7101098b74d86d3f89ac3be362e13:release/v1.3-production-candidate/product/test",
+  "reason": "Owner V1.4 production GO received in Issue42 PMO #7238576970. Preparation only; PMO owns ready change, merge and deployment after scoped verification/role review. Existing QA LIMITED/unproven cases retained. No product rebuild or new product behavior.",
+  "productFiles": [
+    {
+      "path": "assets/index-DpmnhYSi.css",
+      "bytes": 17358,
+      "sha256": "8d84c493c5c930e5d326d475c804f6828e39070903ef0835ccb9681235675e87"
+    },
+    {
+      "path": "assets/index-lx-H1r1a.js",
+      "bytes": 397709,
+      "sha256": "9404e47f0ceb4e90013c3700a76d821730c539f6e9420dcbd52b603ab1d7d6ee"
+    },
+    {
+      "path": "index.html",
+      "bytes": 549,
+      "sha256": "24a2df82be0fe85c00c58fd79aeae6864bbf0650fd312718a0449b43cb6fe152"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "bytes": 193,
+      "sha256": "125b20ad76486349c25f02b46f473c0ec7a885c9f6e7514f37eaab98266f7031"
+    },
+    {
+      "path": "prototypes/oic-012-density-prototype.html",
+      "bytes": 13847,
+      "sha256": "6732ad15481c821fe1abf83d27d87356b1a488dec91feefc31155c59d9305f8c"
+    },
+    {
+      "path": "registerSW.js",
+      "bytes": 136,
+      "sha256": "e12c8db54e3cc247034427f2b661b305a78fea7e7cdec1eac179fecec3da0fc7"
+    },
+    {
+      "path": "sw.js",
+      "bytes": 1188,
+      "sha256": "f2ab09b73219a8ab2679e175edaa91446f139c070a246de6661726a3e3f07d34"
+    },
+    {
+      "path": "test/assets/index-BcchCwVd.js",
+      "bytes": 318844,
+      "sha256": "089545c0b5b116fe5b5c65ba3404c51dfca1ccb1150d3d3a800ea07a5dec06a4"
+    },
+    {
+      "path": "test/assets/index-DIXRco9J.css",
+      "bytes": 14779,
+      "sha256": "df190ac37917166f3f01c37dd903ebd34eed5e3b2c6f1aedbee3b91a22ce609b"
+    },
+    {
+      "path": "test/index.html",
+      "bytes": 510,
+      "sha256": "7b54efee465e1abe52155f220eb5c3552a95703fdff838536ac9f38728641f0f"
+    },
+    {
+      "path": "test/manifest.webmanifest",
+      "bytes": 239,
+      "sha256": "9b117cfbbf824b7e4e5eb7d453c170cc4895ab92a435e73c955dd381c18e5c28"
+    },
+    {
+      "path": "test/prototypes/oic-012-density-prototype.html",
+      "bytes": 13755,
+      "sha256": "2ff27e5ab3e9e7a4d01684d01870c035bd45c27f2c8ef7ed93d3f6c9941130ca"
+    },
+    {
+      "path": "test/v13-worker.js",
+      "bytes": 1437,
+      "sha256": "dad18eb62664439d0a62330d384b27daba9ee1c00fbe819e52f78ee1e04d161d"
+    },
+    {
+      "path": "workbox-9c191d2f.js",
+      "bytes": 15112,
+      "sha256": "04b086f1b2f4215ee4b659a7bc9c76162894abdb43fa876247bc7c0bd6fd1c37"
+    }
+  ]
+}

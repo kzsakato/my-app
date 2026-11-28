@@ -27,10 +27,11 @@ jobs:
           node-version: 24
       - run: node release/verify.mjs
       - run: node release/verify-v13.mjs --require-ready
+      - run: node release/verify-v14.mjs --require-ready
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: release/v1.3-production-candidate/product
+          path: release/v1.4-production-candidate/product
 
   deploy:
     needs: artifact
