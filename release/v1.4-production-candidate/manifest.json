@@ -1,6 +1,6 @@
 {
-  "status": "PREPARATION",
-  "readyForDeployment": false,
+  "status": "READY_FOR_DEPLOYMENT",
+  "readyForDeployment": true,
   "productCommit": "ea53eb4ca3a8fa3a8ce14e3d7b63c3994a629873",
   "preparationBaseCommit": "ea53eb4ca3a8fa3a8ce14e3d7b63c3994a629873",
   "build": "Build 2026-11-25 / ea53eb4c",
@@ -15,7 +15,7 @@
   "productionUrl": "https://kzsakato.github.io/my-app/",
   "productionDatabase": "training-check",
   "preservedTestSource": "0912d2b963e7101098b74d86d3f89ac3be362e13:release/v1.3-production-candidate/product/test",
-  "reason": "Owner V1.4 production GO received in Issue42 PMO #7238576970. Preparation only; PMO owns ready change, merge and deployment after scoped verification/role review. Existing QA LIMITED/unproven cases retained. No product rebuild or new product behavior.",
+  "reason": "Owner production GO #7238576970; QA LIMITED, production connection recommended #7239013640; PMO activation for approved fixed artifact. Residuals retained; no product rebuild.",
   "productFiles": [
     {
       "path": "assets/index-DpmnhYSi.css",
